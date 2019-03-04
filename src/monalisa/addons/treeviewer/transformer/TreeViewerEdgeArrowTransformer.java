@@ -1,0 +1,50 @@
+/*
+ *
+ *  This file ist part of the software MonaLisa.
+ *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *
+ *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *
+ */
+
+package monalisa.addons.treeviewer.transformer;
+
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Context;
+import java.awt.Shape;
+import java.awt.geom.GeneralPath;
+import monalisa.addons.treeviewer.TreeViewer;
+import monalisa.addons.treeviewer.TreeViewerEdge;
+import monalisa.addons.treeviewer.TreeViewerNode;
+import org.apache.commons.collections15.Transformer;
+
+/**
+ *
+ * @author Jens Einloft
+ */
+public class TreeViewerEdgeArrowTransformer implements Transformer<Context<Graph<TreeViewerNode, TreeViewerEdge>, TreeViewerEdge>, Shape> {
+
+    @Override
+    public Shape transform(Context<Graph<TreeViewerNode, TreeViewerEdge>, TreeViewerEdge> i) {        
+        Double dFactor;
+        
+        if(i.element.getEdgeType().equalsIgnoreCase(TreeViewer.CLUSTEREDGE)) {
+            //dFactor = 1.0;
+            //draw line instead of arrow
+            dFactor = 0.0; 
+        } else {
+            dFactor = 0.0;
+        }
+
+        Double height = 10.0*dFactor;
+        Double base = 8.0*dFactor;
+
+        GeneralPath arrow = new GeneralPath();
+        arrow.moveTo(0,0);
+        arrow.lineTo(-height, base/2.0f);
+        arrow.lineTo(-height, -base/2.0f);
+        arrow.lineTo(0,0);
+        
+        return arrow;
+    }
+}

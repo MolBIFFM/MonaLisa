@@ -1,0 +1,9 @@
+Änderungen:
+jsbml von 1.1 auf 1.4 ändern -> behebt den fehler in der annotation
+
+monalisa.results: t.<String>getProperty("name") //<String> als typerwartung mit angeben
+
+monalisa.util.MonaLisaInputStream int ist ab java8 ein long (Zeile 64)
+
+monalisa.tools.tinv tinvariantcalculator.java os erkennung -> sinnvoll verbessert und else für nicht erkannte betriebssystem
+

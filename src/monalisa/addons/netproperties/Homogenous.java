@@ -1,0 +1,56 @@
+/*
+ *
+ *  This file ist part of the software MonaLisa.
+ *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *
+ *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
+ *
+ */
+
+package monalisa.addons.netproperties;
+
+import monalisa.data.pn.PetriNetFacade;
+import monalisa.data.pn.Place;
+import monalisa.data.pn.Transition;
+
+/**
+ *
+ * @author daniel
+ */
+
+public class Homogenous extends NetPropertieAlgorithm<Boolean>{
+    public Homogenous (PetriNetFacade pn) {
+        super(pn);
+    }
+    
+    
+    /**
+     * A net is homogenous, if for any place p, all arcs starting at p have the
+     * same multiplicity.
+     */
+    @Override
+    public void runAlgorithm(){
+        algorithmName = "homogenous";
+        algorithmValue = true;
+        int arcValue;
+        for(Place p : petriNet.places()) { //checks all Places.
+            if(p.outputs().isEmpty()){
+                continue;
+            }
+            else{
+                arcValue = petriNet.getArc(p, p.outputs().get(0)).weight();
+            }
+            for(Transition t : p.outputs()) { //checks all output Transitions of the Place p.
+                if(arcValue != petriNet.getArc(p, t).weight()){
+                    algorithmValue = false;
+                    break;
+                }
+
+            }
+
+        }
+    }
+
+    
+}

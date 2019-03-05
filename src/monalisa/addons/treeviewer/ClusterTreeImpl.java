@@ -1,9 +1,10 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
  *
  */
 package monalisa.addons.treeviewer;

@@ -1,0 +1,5 @@
+13:32:19.977 [main] INFO  monalisa.MonaLisa - Logging Start
+13:32:20.305 [main] INFO  monalisa.Settings - Trying to load settings from file
+13:32:20.305 [main] INFO  monalisa.Settings - Initializing settings
+13:32:20.305 [main] WARN  monalisa.Settings - Could not load settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+13:32:20.336 [main] WARN  monalisa.MonaLisa - No config file found. Creating new config file.

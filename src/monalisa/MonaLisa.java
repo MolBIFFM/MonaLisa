@@ -25,7 +25,7 @@ import monalisa.gui.MainDialog;
  * @author Konrad Rudolph
  */
 public final class MonaLisa implements Runnable {
-    private static final Logger LOGGER = LogManager.getLogger(MonaLisa.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(MonaLisa.class);
     private static final String OS_NAME = System.getProperty("os.name");
     public static final boolean IS_MACOSX = OS_NAME.toLowerCase(Locale.ENGLISH).startsWith("mac os x");
     public static final String APPLICATION_TITLE = "MonaLisa";

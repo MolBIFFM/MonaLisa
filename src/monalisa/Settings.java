@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.io.*;
 import java.util.Properties;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -27,6 +29,7 @@ import java.util.Map;
  */
 public class Settings {
 
+    private static final Logger LOGGER = LogManager.getLogger(Settings.class);
     /** The settings which are currently in use. */
     static private Properties cfg;
 
@@ -37,6 +40,7 @@ public class Settings {
     private static final String configFile = System.getProperty("user.home")+"/.monalisaSettings";
 
     public static void init() {
+        LOGGER.info("Initializing settings");
         cfg = new Properties();
         def = new Properties();
 
@@ -50,7 +54,7 @@ public class Settings {
      * @return whether the settings could be loaded from the specified file
      */
     public static Boolean load() {
-        
+        LOGGER.info("Trying to load settings from file");
         init();
         
         Boolean res = false;
@@ -63,11 +67,11 @@ public class Settings {
             }
             res = true;
         } catch (Exception e) {
-            System.err.println("WARNING: Settings: Could not load settings from properties file '" + configFile + "'." );
+            LOGGER.warn("Could not load settings from properties file '" + configFile + "'." );
             res = false;
         }
 
-        System.out.println("  Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
+        LOGGER.info("  Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
         
         return(res);
     }
@@ -77,6 +81,7 @@ public class Settings {
      * Deletes all currently loaded properties. Note that the settings file is NOT deleted or emptied (unless you call writeToFile() afterwards).
      */
     public static void empty() {
+        LOGGER.warn("Deleting currently loaded properties");
         cfg = new Properties();
     }
 
@@ -84,6 +89,7 @@ public class Settings {
      * Deletes all default properties. Note that the settings file is NOT deleted or emptied (unless you call writeToFile() afterwards).
      */
     public static void defEmpty() {
+        LOGGER.warn("Deleting default properties");
         def = new Properties();
     }
 
@@ -92,16 +98,17 @@ public class Settings {
      * @return always true
      */
     public static Boolean resetAll() {
+        LOGGER.info("Trying to reset properties to default values");
         cfg = new Properties();
-        setDefaults();
-
+        setDefaults(); 
+        LOGGER.info("Creating deep copy of default to assign to settings");
         // make a deep copy of the default settings and assign it to cfg
         for (Map.Entry<Object, Object> entry : def.entrySet()) {
             String key = (String)entry.getKey();
             String value = (String)entry.getValue();
             cfg.setProperty(key, value);
         }
-
+        LOGGER.info("Successfully reset all properties to default");
         return(true);
     }
 
@@ -111,7 +118,7 @@ public class Settings {
      * @return always true
      */
     public static Boolean setDefaults() {
-
+        LOGGER.info("Setting properties to default values");
         def = new Properties();
 
         defSet("tinvColorR", "255");
@@ -189,7 +196,7 @@ public class Settings {
         defSet("recentlyProjects", "");
         
         defSet("latestDirectory", "");
-        
+        LOGGER.info("Finished setting properties to default values");
         return(true);
     }
 
@@ -201,15 +208,18 @@ public class Settings {
      */
     public static Boolean initSingleSettingFromDefault(String key) {
         if(defContains(key)) {
+            LOGGER.info("Setting property for " + key + "to default value");
             cfg.setProperty(key, def.getProperty(key));
             return(true);
         }
         else {
+            LOGGER.error("No default value found for key " + key);
             return(false);
         }
     }
 
     public static void setColorOption(String key, Color value) throws FileNotFoundException, IOException {
+        LOGGER.info("Setting color properties for RGB");
         cfg.setProperty(key+"R", (new Integer(value.getRed())).toString());
         cfg.setProperty(key+"G", (new Integer(value.getGreen())).toString());
         cfg.setProperty(key+"B", (new Integer(value.getBlue())).toString());
@@ -220,11 +230,14 @@ public class Settings {
      * @return true if it worked out, false otherwise
      */
     public static Boolean createDefaultConfigFile() {
+        LOGGER.info("Trying to create new config file with default values");
         if(resetAll()) {
             if(writeToFile(defaultFile)) {
+                LOGGER.info("Successfully created new config file with default values");
                 return(true);
             }
         }
+        LOGGER.error("Failed to create new config file with default values");
         return(false);
     }
 
@@ -235,6 +248,7 @@ public class Settings {
      * @return the value of the key as an Integer
      */
     public static Integer getInteger(String key) {
+        LOGGER.info("Trying to cast '" + key + "' to Integer");
         Integer i = null;
         String s = get(key);
 
@@ -242,9 +256,10 @@ public class Settings {
             i = Integer.valueOf(s);
         }
         catch (Exception e) {
-            System.err.println("ERROR: Settings: Could not load setting '" + key + "' from settings as an Integer, invalid format.");
+            LOGGER.fatal("Could not load setting '" + key + "' from settings as an Integer, invalid format.");
             System.exit(1);
         }
+        LOGGER.info("Successfully cast '" + key + "' to Integer");
         return(i);
     }
 
@@ -255,9 +270,12 @@ public class Settings {
      * @return true if it is in default setting, false if this setting has been changed by the user (via command line or config file)
      */
     public static Boolean isAtDefaultSetting(String key) {
+        LOGGER.info("Checking whether value for '" + key + "' equals default value");
         if(get(key).equals(defGet(key))) {
+            LOGGER.info("Value for " + key + " matches default value");
             return(true);
         }
+        LOGGER.info("Value for '" + key + "' doesn't match default value");
         return(false);
     }
 
@@ -268,6 +286,7 @@ public class Settings {
      * @return the value of the key as a Float
      */
     public static Float getFloat(String key) {
+        LOGGER.info("Trying to cast '" + key + "' to Float");
         Float f = null;
         String s = get(key);
 
@@ -275,9 +294,10 @@ public class Settings {
             f = Float.valueOf(s);
         }
         catch (Exception e) {
-            System.err.println("ERROR: Settings: Could not load setting '" + key + "' from settings as a Float, invalid format.");
+            LOGGER.fatal("Could not load setting '" + key + "' from settings as a float, invalid format.");
             System.exit(1);
         }
+        LOGGER.info("Successfully cast '" + key + "' to Float");
         return(f);
     }
 
@@ -289,17 +309,20 @@ public class Settings {
      * @return the value of the key as a Boolean
      */
     public static Boolean getBoolean(String key) {
+        LOGGER.info("Trying to cast '" + key + "' to Boolean");
         Boolean b = null;
         String s = null;
 
         s = get(key);
         switch (s.toLowerCase()) {
             case "true":
+                LOGGER.info("Successfully cast '" + key + "' to Boolean");
                 return(true);
             case "false":
+                LOGGER.info("Successfully cast '" + key + "' to Boolean");
                 return(false);
             default:
-                System.err.println("ERROR: Settings: Could not load setting '" + key + "' from settings as Boolean, invalid format.");
+                LOGGER.fatal("Could not load setting '" + key + "' from settings as a boolean, invalid format.");
                 System.exit(1);
                 return(false);
         }
@@ -311,13 +334,14 @@ public class Settings {
      * @return the value of the key as a Color
      */
     public static Color getAsColor(String key) {
+        LOGGER.info("Casting '" + key + "' to Color");
         try {
             return new Color( Integer.parseInt((String) get(key+"R")) , Integer.parseInt((String) get(key+"G")), Integer.parseInt((String) get(key+"B")));
         }
         catch(NullPointerException e) {
-            System.err.println("ERROR: Settings: Could not load setting '" + key + "' from settings as Color, invalid format.");
+            LOGGER.fatal("Could not load setting '" + key + "' from settings as a Color, invalid format.");
             System.exit(1);
-            return Color.BLACK;
+            return Color.BLACK; // Never reached because of System.exit(1), compiler needs it
         }
      }    
 
@@ -327,21 +351,19 @@ public class Settings {
      */
     public static String getConfigFile() {
         return(configFile);
-
     }
-
 
     /**
      * Prints all settings to STDOUT.
      */
     public static void printAll() {
-        System.out.println("Printing all " + cfg.size() + " settings.");
+        LOGGER.info("Printing all " + cfg.size() + " settings");
 
         for (Object key : cfg.keySet()) {
-            System.out.println((String)key + "=" + cfg.get(key));
+            LOGGER.info((String)key + "=" + cfg.get(key));
         }
 
-        System.out.println("Printing of all " + cfg.size() + " settings done.");
+        LOGGER.info("Printing of all " + cfg.size() + " settings done.");
     }
 
 
@@ -349,13 +371,13 @@ public class Settings {
      * Prints all settings to STDOUT.
      */
     public static void defPrintAll() {
-        System.out.println("Printing all " + def.size() + " default settings.");
+        LOGGER.info("Printing all " + def.size() + " default settings.");
 
         for (Object key : def.keySet()) {
-            System.out.println((String)key + "=" + def.get(key));
+            LOGGER.info((String)key + "=" + def.get(key));
         }
 
-        System.out.println("Printing of all " + def.size() + " default settings done.");
+        LOGGER.info("Printing of all " + def.size() + " default settings done.");
     }
 
 
@@ -366,27 +388,24 @@ public class Settings {
      * @return the value of the specified key
      */
     public static String get(String key) {
-
+        LOGGER.info("Trying to return key '" + key + "' as String");
         if(cfg.containsKey(key)) {
+            LOGGER.info("Key '" + key + "' found, returning as String.");
             return((String)cfg.getProperty(key));
         }
         else {
-            System.out.println("INFO: Settings: Setting '" + key + "' not defined in config file. Trying internal default.");
+            LOGGER.info("Setting '" + key + "' not defined in config file. Trying internal default.");
 
             if(initSingleSettingFromDefault(key)) {
                 String s = defGet(key);
-                
                 cfg.put(key, s);
-                
                 writeToFile(configFile);
-                
-                System.out.println("INFO: Settings: Using internal default value '" + s + "' for setting '" + key + "'. Edit config file to override.");
-
+                LOGGER.info("Using internal default value '" + s + "' for setting '" + key + "'. Edit config file to override.");
                 return(s);
             } else {
-                System.err.println("ERROR: Settings: No config file or default value for setting '" + key + "' exists, setting invalid.");
+                LOGGER.fatal("No config file or default value for setting '" + key + "' exists, setting invalid.");
                 System.exit(1);
-                return("ERROR");    // for the IDE
+                return("ERROR");    // Never reached because of System.exit(1), compiler needs it
             }
         }
 
@@ -398,9 +417,9 @@ public class Settings {
      * @return the value of the specified key
      */
     public static String defGet(String key) {
-
-
+        LOGGER.info("Trying to return default value for key '" + key + "' as a String");
         if(def.containsKey(key)) {
+            LOGGER.info("Default value found, returning as a String");
             return((String)def.getProperty(key));
         }
         else {
@@ -454,9 +473,11 @@ public class Settings {
      * @return True if the file was written successfully, false if an error occurred.
      */
     public static Boolean writeToFile(String file) {
+        LOGGER.info("Writing current properties to file '" + file + "'");
         Boolean res = false;
 
         if(file.equals("")) {
+            LOGGER.info("Empty filepath, using default path");
             file = defaultFile;
         }
 
@@ -464,10 +485,10 @@ public class Settings {
             cfg.store(new FileOutputStream(file), "These are the settings for MonaLisa.");
             res = true;
         } catch(Exception e) {
-            System.err.println("WARNING: Settings: Could not write current properties to file '" + file + "'.");
+            LOGGER.error("Could not write current properties to file '" + file + "'.");
             res = false;
         }
-        
+
         return(res);
     }
 }

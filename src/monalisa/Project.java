@@ -843,6 +843,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */
     private void setHasResults(Tool tool) {
+        LOGGER.info("Setting tool results for" + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
         panel.setComment(strings.get("ToolHasResults"));
         panel.setTitleShade(HAS_RESULT_COLOR);
@@ -853,6 +854,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */
     private void setHasNoResults(Tool tool) {
+        LOGGER.info("Seeting lack of tool results for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
         panel.setComment("");
         panel.setTitleShade(NOT_FINISHED_COLOR);
@@ -863,6 +865,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */
     private void setComplete(Tool tool) {
+        LOGGER.info("Setting tool complete for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
         panel.setComment(strings.get("ToolComplete"));
         panel.setTitleShade(COMPLETE_COLOR);
@@ -873,6 +876,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */    
     private void setCompleteWithWarnings(Tool tool, ErrorLog log) {
+        LOGGER.warn("Setting tool as complete with warnings for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
         panel.setComment(strings.get("ToolCompleteWithWarnings"));
         panel.setTitleShade(WARNING_COLOR);
@@ -883,6 +887,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */      
     private void setFailed(Tool tool, ErrorLog log) {
+        LOGGER.warn("Setting tool as failed for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolFailure"));
         panel.setTitleShade(ERROR_COLOR);
@@ -890,6 +895,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     @Override
     public void progressUpdated(ProgressEvent e) {
+        LOGGER.info("Updating progress for a tool");
         fireToolStatusUpdate((Tool) e.getSource(), e.getPercent());
     }
     
@@ -920,8 +926,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     @Override
     public void changed(BooleanChangeEvent e) {
         Tool tool = (Tool) e.getSource();
-        
+        LOGGER.info("Change in requirements for " + strings.get(Tools.name(tool)));
         if (e.getNewValue()) {
+            LOGGER.info("Selecting requirements for tool configuration of " + strings.get(Tools.name(tool)) + "that are not yet calculated");
             // Select all requirements for the tool configuration that are not
             // yet calculated.
             List<Pair<Class<? extends Tool>, Configuration>> requirements =
@@ -933,6 +940,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             }
         }
         else {
+            LOGGER.info("Deselecting all tools that are dependent on " + strings.get(Tools.name(tool)));
             // Deselect all tools that depend on this tool.
             for (Tool otherTool : tools) {
                 List<Pair<Class<? extends Tool>, Configuration>> requirements =
@@ -966,6 +974,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException 
      */
     public void exportResults(List<Class<? extends Tool>> toolList) throws IOException {
+        LOGGER.info("Exporting results for tool run");
         ExportDialog exportDialog = new ExportDialog(this, toolList);
 
         if (exportDialog.isCancelled())
@@ -1006,6 +1015,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
             result.export(outputFile, export.second(), this);
         }
+        LOGGER.info("Finished exporting File");
     }
        
     /**
@@ -1013,8 +1023,12 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @return Returns <code> true </code> if the projected has changed, otherwise <code> false </code>
      */
     public Boolean isProjectChanged() {
-        if(projectChanged == null)
+        LOGGER.info("Checking whether project has changed");
+        if(projectChanged == null){
+            LOGGER.info("projectChanged is null, defaulting to true");
             return true;
+        }
+        LOGGER.info("projectChanged: " + projectChanged.toString());
         return projectChanged;
     }
     
@@ -1023,6 +1037,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param projectChanged 
      */
     public void setProjectChanged(Boolean projectChanged) {
+        LOGGER.info("Setting projectChanged to " + projectChanged.toString());
         this.projectChanged = projectChanged;
     }    
     
@@ -1042,6 +1057,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @return The property, cast to type <code>T</code>.
      */
     public <T> T getProperty(String key) {
+        LOGGER.info("Getting property for " + key);
         return properties.<T>get(key);
     }
     
@@ -1050,7 +1066,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param key 
      */
     public void removeProperty(String key) {
+        LOGGER.info("Removing property for key " + key + "if it exists");
         if(properties.has(key)) {
+            LOGGER.info(key + "property exists, removing");
             properties.remove(key);
         }
     }    
@@ -1081,10 +1099,13 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      */
     public <T> T getValueOrDefault(String key, T defaultValue) {
         if (hasProperty(key)) {
+            LOGGER.info("Getting property for " + key);
             return (T)getProperty(key);
         }
-        else
+        else {
+            LOGGER.warn("No property for " + key + "found, returning default value");
             return defaultValue;
+        }
     }
     
     /**
@@ -1096,6 +1117,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public <T> void putProperty(String key, T value) {
         if(key.equals("name"))
             value = (T)((String)value).replace(" ", "_");
+        LOGGER.info("Adding value for " + key);
         properties.put(key, value);
     }     
     
@@ -1122,6 +1144,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param addOns 
      */
     public void transferStorageToAddOns(List<AddonPanel> addOns) {
+        LOGGER.info("Transfering stored data to addon panels");
         for(AddonPanel a : addOns) {
             if(addonStorage.get(a.getAddOnName()) != null) {
                 a.reciveStoredObjects(addonStorage.get(a.getAddOnName()));
@@ -1135,7 +1158,8 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param objectOutput
      * @throws IOException 
      */
-    private void writeObject(ObjectOutputStream objectOutput) throws IOException {         
+    private void writeObject(ObjectOutputStream objectOutput) throws IOException {  
+        LOGGER.info("Collecting data from addons for saving");
         if(registeredAddOns != null) {
             for(AddonPanel a : registeredAddOns) {
                 if(a.getObjectsForStorage() != null) {
@@ -1143,6 +1167,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 }
             }
         }
+        LOGGER.info("Writing to Output");
         objectOutput.defaultWriteObject();      
         
     }    
@@ -1154,15 +1179,18 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws ClassNotFoundException 
      */
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
+        LOGGER.info("Reading storage from input");
         objectInput.defaultReadObject();
         
         // Short workaround for older versions.
         if(addonStorage == null) {
+            LOGGER.warn("Workaround for older versions, creating new HashMap");
             addonStorage = new HashMap<>();
         } 
         
         // Workaround for older projects
         if(synchronizer == null) {
+            LOGGER.warn("Workaround for older projects, creating new Synchronizer");
             synchronizer = new Synchronizer(petriNet);
         }        
     }    

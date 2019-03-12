@@ -60,6 +60,8 @@ import monalisa.synchronisation.Synchronizer;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
 import monalisa.util.MonaLisaObjectInputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A MonaLisa project folder. This saves all the information, configurations
@@ -71,6 +73,7 @@ import monalisa.util.MonaLisaObjectInputStream;
  */
 public final class Project implements Serializable, ProgressListener, BooleanChangeListener {
     private static final long serialVersionUID = -7900422748294040894L;
+    private static final Logger LOGGER = LogManager.getLogger(Project.class);
 
     public static final String FILENAME_EXTENSION = "mlproject";
     public static final String TFILENAME_EXTENSION = "res";
@@ -110,6 +113,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException 
      */
     private Project(File petriNetFile) throws IOException {
+        LOGGER.info("Creating new project from external file.");
         this.petriNet = PetriNetInputHandlers.load(petriNetFile);
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();;
@@ -125,12 +129,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.projectChanged = false;
         
         this.synchronizer = new Synchronizer(this.petriNet);
+        LOGGER.info("Finished creating new project from external file.");
     }
     
     /**
      * Creates a new, empty project.
      */
     public Project() {
+        LOGGER.info("Creating new empty project.");
         this.petriNet = new PetriNet();
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();
@@ -145,7 +151,8 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         
         this.properties = new PropertyList();
         
-        this.synchronizer = new Synchronizer(this.petriNet);        
+        this.synchronizer = new Synchronizer(this.petriNet);
+        LOGGER.info("Finished creating new empty project.");
     }
     
     /**
@@ -153,6 +160,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param pn 
      */
     private Project(PetriNet pn) {
+        LOGGER.info("Creating new project from Petri net.");
         this.petriNet = pn;
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();
@@ -166,6 +174,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.projectChanged = false;
         
         this.synchronizer = new Synchronizer(this.petriNet);
+        LOGGER.info("Finished creating new project from Petri net.");
     }     
     
     /**
@@ -174,6 +183,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param newProjectFile 
      */
     private Project(Project oldProject, File newProjectFile) {
+        LOGGER.info("Cloning project for 'Save as...'");
         this.petriNet = oldProject.petriNet;
         this.results = oldProject.results;
         this.toolStatusUpdateListeners = oldProject.toolStatusUpdateListeners;
@@ -183,6 +193,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.synchronizer = oldProject.synchronizer;            
         this.tools = oldProject.tools;    
         this.projectPath = newProjectFile;
+        LOGGER.info("Finished cloning project for 'Save as...'");
     }
     
     /**
@@ -367,13 +378,15 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param result The result.
      */
     public void putResult(Class<? extends Tool> tool, Configuration config, Result result) {
+        LOGGER.info("Putting result.");
         if(results.containsKey(tool))
             results.get(tool).put(config, result);
         else {
             Map<Configuration, Result> map = new HashMap<>();
             map.put(config, result);
             results.put(tool, map);
-        }            
+        }
+        LOGGER.info("Finished putting result");
     }
     
     /**
@@ -450,7 +463,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     /**
      * Create a new Project from a given Project (Save as...)
-     * @param pn
+     * @param newProjectFile
      * @param oldProject
      * @return
      * @throws IOException
@@ -476,10 +489,12 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException
      */
     public void save(File location) throws IOException {
+        LOGGER.info("Saving to given file.");
         projectPath = location;
         try (ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(location))) {
             oout.writeObject(this);
         }
+        LOGGER.info("Finished saving to given file.");
     }
 
     /**
@@ -488,6 +503,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException
      */
     public boolean save() throws IOException {
+        LOGGER.info("Saving project.");
         boolean ret = false;
 
         if(projectPath == null) {
@@ -542,6 +558,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         }
 
         save(projectPath);
+        LOGGER.info("Finished saving project.");
         return ret;
     }
 
@@ -552,6 +569,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException
      */
     public static Project load(File location) throws IOException {
+        LOGGER.info("Loading project from file.");
         try (MonaLisaObjectInputStream oin = new MonaLisaObjectInputStream(new FileInputStream(location))) {
             Project project = (Project) oin.readObject();
 
@@ -568,9 +586,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                     project.results.put(toolType, new HashMap<Configuration, Result>());
                 }
             }                        
-            
+            LOGGER.info("Finished loading project from file.");
             return project;
         } catch (ClassNotFoundException e) {
+            LOGGER.error("Error while loading project from file: ", e.getMessage());
             // Thrown if an older version is loaded with yet non existing classes / tools
             throw new RuntimeException(e);
         }
@@ -583,18 +602,21 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws InterruptedException
      */
     public void loadTFile(File TFile) throws IOException, InterruptedException {
+        LOGGER.info("Loading from given TFile.");
         Result loadTFileResults = TInputHandlers.load(TFile, this.petriNet);
         Configuration loadTFileConfig = new TInvariantsConfiguration();
         Tool tool = new TInvariantTool();
         this.putResult(tool, loadTFileConfig, loadTFileResults);        
         tool.finishedState(Project.this);
         setComplete(tool);
+        LOGGER.info("Finished loading from given TFile.");
     }
     
     /**
      * Initialize all tools.
      */
     public void initTools() {
+        LOGGER.info("Initializing tools.");
         this.tools = new ArrayList<>();        
         for (Class<? extends Tool> toolType : Tools.toolTypes()) {
             try {
@@ -611,6 +633,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * Reset all results of all tools.
      */
     public void resetTools() {
+        LOGGER.info("Resetting tool results");
         results.clear();
         initTools();        
         for (Class<? extends Tool> toolType : Tools.toolTypes())
@@ -623,12 +646,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param strings 
      */
     public void createUI(final JComponent container, StringResources strings) {
+        LOGGER.info("Creating UI for Analyze Frame.");
         GroupLayout containerLayout = (GroupLayout) container.getLayout();
         ParallelGroup horizontal = containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         SequentialGroup vertical = containerLayout.createSequentialGroup();
         
         toolPanels = new HashMap<>();
         if(tools != null) {
+            LOGGER.info("Laying out tools.");
             JPanel[] allPanels = new JPanel[tools.size()];
             int panelIndex = 0;
             boolean first = false;
@@ -673,13 +698,16 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             containerLayout.setHorizontalGroup(horizontal);
             containerLayout.setVerticalGroup(vertical);
             containerLayout.linkSize(SwingConstants.HORIZONTAL, allPanels);
-        }       
+            LOGGER.info("Finished laying out tools.");
+        }
+        LOGGER.info("Finished creating UI for Analyze Frame.");
     }
     
     /**
      * Starts all selected Tools.
      */
     public void runSelectedTools() {
+        LOGGER.info("Running selected tools.");
         toolMessages = new ErrorLog();
         toolsThread = new Thread() {
             @Override
@@ -692,7 +720,6 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 fireToolStatusUpdate(new ToolStatusUpdateEvent(Project.this, null, Status.FINISHED_ALL));
             }
         };
-
         toolsThread.start();
     }
     
@@ -700,6 +727,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * Starts all given tools.
      */
     public void runGivenTools(final List<String> givenTool) {
+        LOGGER.info("Running given tools.");
         toolMessages = new ErrorLog();
         toolsThread = new Thread() {
             @Override
@@ -715,7 +743,6 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 fireToolStatusUpdate(new ToolStatusUpdateEvent(Project.this, null, Status.FINISHED_ALL));
             }
         };
-
         toolsThread.start();
     }
     
@@ -723,9 +750,11 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * Stops all running tools.
      */
     public void stopRunningTools() {
+        LOGGER.warn("Aborting the running of tools.");
         toolsThread.interrupt();
         fireToolStatusUpdate(
             new ToolStatusUpdateEvent(this, null, Status.ABORTED));
+        LOGGER.warn("Finished aborting the running tools.");
     }
     
     /**
@@ -733,7 +762,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool 
      */
     private void runSingleTool(Tool tool) {
-        if (tool.isActive()) {            
+        if (tool.isActive()) {
             if (!checkToolRequirements(tool)) {
                 setFailed(tool, new ErrorLog());
                 return;
@@ -741,7 +770,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             
             tool.addProgressListener(Project.this);
             fireToolStatusUpdate(tool, Status.STARTED);
-            System.out.println(panelName(tool) + " started");
+            LOGGER.info(panelName(tool) + " started");
 
             ErrorLog log = new ErrorLog();
             ToolRunner runner = new ToolRunner(tool, Project.this, log);
@@ -752,9 +781,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 runner.join();
             } catch (InterruptedException e) {
                 runner.interrupt();
-                System.out.println("Interrupt caught.");
+                LOGGER.warn("Interrupt caught.");
                 Thread.currentThread().interrupt();
-                System.out.println("Interrupt propagated.");
+                LOGGER.warn("Interrupt propagated.");
                 return;
             }
             finally {
@@ -775,7 +804,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
             toolMessages.logAll(log);
             fireToolStatusUpdate(tool, Status.FINISHED);
-            System.out.println(panelName(tool) + " finished");
+            LOGGER.info(panelName(tool) + " finished");
         }
     }
     
@@ -785,6 +814,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @return <code> true </code> if all requirements are fulfilled, otherwise <code> false </code>
      */
     private boolean checkToolRequirements(Tool tool) {
+        LOGGER.info("Checking requirements for tool " + strings.get(Tools.name(tool)));
         List<Pair<Class<? extends Tool>, Configuration>> requirements =
             tool.getRequirements();
         boolean requirementsSatisfied = true;
@@ -797,13 +827,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         
         if (!requirementsSatisfied) {
             String toolName = strings.get(Tools.name(tool));
+            LOGGER.warn("Requirements for tool " + toolName + "not met.");
             JOptionPane.showMessageDialog(
                 MonaLisa.appMainWindow(),
                 strings.get("NotAllRequirementsSatisfiedMessage", toolName),
                 strings.get("NotAllRequirementsSatisfiedTitle", toolName),
                 JOptionPane.ERROR_MESSAGE);
         }
-        
+        LOGGER.info("Requirements for tool " + strings.get(Tools.name(tool))+ "met.");
         return requirementsSatisfied;
     }
     

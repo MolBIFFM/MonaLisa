@@ -16,6 +16,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.logging.log4j.*;
 import monalisa.gui.MainDialog;
 
 /**
@@ -24,6 +25,7 @@ import monalisa.gui.MainDialog;
  * @author Konrad Rudolph
  */
 public final class MonaLisa implements Runnable {
+    private static final Logger LOGGER = LogManager.getLogger(MonaLisa.class.getName());
     private static final String OS_NAME = System.getProperty("os.name");
     public static final boolean IS_MACOSX = OS_NAME.toLowerCase(Locale.ENGLISH).startsWith("mac os x");
     public static final String APPLICATION_TITLE = "MonaLisa";
@@ -49,22 +51,30 @@ public final class MonaLisa implements Runnable {
      * @throws ClassNotFoundException
      */
     public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-        if (IS_MACOSX) {
+        LOGGER.info("Logging Start");
+        try {
+            if (IS_MACOSX) {
             // Set system properties for correct styling under OS X.
-            System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE);
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        }
+                System.setProperty("apple.laf.useScreenMenuBar", "true");
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE);
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
                                
-        UIManager.setLookAndFeel(new PgsLookAndFeel());                
+            UIManager.setLookAndFeel(new PgsLookAndFeel());                
         
-        SwingUtilities.invokeLater(new MonaLisa());
+            SwingUtilities.invokeLater(new MonaLisa());
         
-        // First start of MonaLisa? Than write the config file for the settings
-        if(!Settings.load()) 
-            Settings.createDefaultConfigFile();     
-        
-        ToolTipManager.sharedInstance().setDismissDelay(12000);
+            // First start of MonaLisa? Then write the config file for the settings
+            if(!Settings.load()){
+               LOGGER.warn("No config file found. Creating new config file.");
+               Settings.createDefaultConfigFile();
+            }
+            ToolTipManager.sharedInstance().setDismissDelay(12000);
+        }
+        catch(ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+            LOGGER.error("Error during startup", e.getMessage());
+        }
+
     }
 
     @Override

@@ -66,7 +66,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * A MonaLisa project folder. This saves all the information, configurations
  * and calculated results belonging to a project.
- * 
+ *
  * @author Konrad Rudolph
  * @author Anja Thormann
  * @author Jens Einloft
@@ -79,13 +79,13 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public static final String TFILENAME_EXTENSION = "res";
 
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
-    
+
     private static final Color COMPLETE_COLOR = Settings.getAsColor("completeResult");
     private static final Color HAS_RESULT_COLOR = Settings.getAsColor("hasResults");
     private static final Color WARNING_COLOR = Settings.getAsColor("warning");
     private static final Color ERROR_COLOR = Settings.getAsColor("error");
     private static final Color NOT_FINISHED_COLOR = Settings.getAsColor("notFinished");
-    
+
     private final PetriNet petriNet;
     private Map<Class<? extends Tool>, Map<Configuration, Result> > results;
 
@@ -93,24 +93,24 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     transient private List<Tool> tools;
     transient private Map<Class<? extends Tool>, CollapsiblePanel> toolPanels;
     transient private List<ToolStatusUpdateListener> toolStatusUpdateListeners;
- 
+
     transient private Thread toolsThread;
     transient private ErrorLog toolMessages;
-    
+
     private Boolean projectChanged;
-    
+
     private PropertyList properties;
-    
+
     private Synchronizer synchronizer;
-    
+
     private transient List<AddonPanel> registeredAddOns;
     private Map<String , Map<String, Object>> addonStorage;
 
     /**
-     * Create a new Project out of a external file. For the given file the correct file handler is searched. 
-     * If no file handler is found an IOException is thrown. 
+     * Create a new Project out of a external file. For the given file the correct file handler is searched.
+     * If no file handler is found an IOException is thrown.
      * @param petriNetFile The external file that should be loaded
-     * @throws IOException 
+     * @throws IOException
      */
     private Project(File petriNetFile) throws IOException {
         LOGGER.info("Creating new project from external file.");
@@ -118,20 +118,20 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();;
         this.addonStorage = new HashMap<>();
-        
+
         initTools();
-        
+
         for (Class<? extends Tool> toolType : Tools.toolTypes())
             results.put(toolType, new HashMap<Configuration, Result>());
-        
+
         this.properties = new PropertyList();
-        
+
         this.projectChanged = false;
-        
+
         this.synchronizer = new Synchronizer(this.petriNet);
         LOGGER.info("Finished creating new project from external file.");
     }
-    
+
     /**
      * Creates a new, empty project.
      */
@@ -141,23 +141,23 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();
         this.addonStorage = new HashMap<>();
-        
+
         initTools();
-        
+
         for (Class<? extends Tool> toolType : Tools.toolTypes())
             results.put(toolType, new HashMap<Configuration, Result>());
-        
+
         this.projectChanged = false;
-        
+
         this.properties = new PropertyList();
-        
+
         this.synchronizer = new Synchronizer(this.petriNet);
         LOGGER.info("Finished creating new empty project.");
     }
-    
+
     /**
      * Create a new Project out of a given Petri net.
-     * @param pn 
+     * @param pn
      */
     private Project(PetriNet pn) {
         LOGGER.info("Creating new project from Petri net.");
@@ -165,22 +165,22 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.results = new HashMap<>();
         this.toolStatusUpdateListeners = new ArrayList<>();
         this.addonStorage = new HashMap<>();
-        
+
         initTools();
 
         for (Class<? extends Tool> toolType : Tools.toolTypes())
             results.put(toolType, new HashMap<Configuration, Result>());
-        
+
         this.projectChanged = false;
-        
+
         this.synchronizer = new Synchronizer(this.petriNet);
         LOGGER.info("Finished creating new project from Petri net.");
-    }     
-    
+    }
+
     /**
      * Clones a given project. Used for the "Save project as..." function
      * @param oldProject
-     * @param newProjectFile 
+     * @param newProjectFile
      */
     private Project(Project oldProject, File newProjectFile) {
         LOGGER.info("Cloning project for 'Save as...'");
@@ -190,38 +190,38 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         this.addonStorage = oldProject.addonStorage;
         this.results = oldProject.results;
         this.properties = oldProject.properties;
-        this.synchronizer = oldProject.synchronizer;            
-        this.tools = oldProject.tools;    
+        this.synchronizer = oldProject.synchronizer;
+        this.tools = oldProject.tools;
         this.projectPath = newProjectFile;
         LOGGER.info("Finished cloning project for 'Save as...'");
     }
-    
+
     /**
      * Returns the instance of the Synchronizer of the project.
-     * @return 
+     * @return
      */
     public Synchronizer getSynchronizer() {
         return this.synchronizer;
     }
-   
+
     /**
      * Add a new ToolStatusUpdateListener to the project.
-     * @param listener 
+     * @param listener
      */
     public synchronized void addToolStatusUpdateListener(ToolStatusUpdateListener listener) {
         if (!toolStatusUpdateListeners.contains(listener))
             toolStatusUpdateListeners.add(listener);
     }
-    
+
     /**
      * Removes a ToolStatusUpdateListener to the project.
-     * @param listener 
+     * @param listener
      */
     public synchronized void removeToolStatusUpdateListener(
             ToolStatusUpdateListener listener) {
         toolStatusUpdateListeners.remove(listener);
     }
-    
+
     /**
      * Returns the Petri net of the project.
      * @return The instance of the PetriNet class of the project.
@@ -229,10 +229,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public PetriNet getPetriNet() {
         return petriNet;
     }
-    
+
     /**
      * Returns the path of the file of the project.
-     * @return 
+     * @return
      */
     public File getPath() {
         return projectPath;
@@ -241,7 +241,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     /**
      * Returns the name of the file of the project. Cuts out the path and the extension of the path.
-     * @return 
+     * @return
      */
     public String getName() {
          String dirName;
@@ -252,7 +252,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         // Cut file extension.
         return dirName.replace("\\..*$", "");
     }
-    
+
     /**
      * Returns all error messages and warnings generated by the last run of the
      * tools, or {@code null} if the tools have not yet been run.
@@ -260,7 +260,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public ErrorLog getToolMessages() {
         return toolMessages;
     }
-    
+
     /**
      * Tests whether a specific result has already been calculated.
      * A result is identified by the {@link Tool} calculating it, as well as a
@@ -273,7 +273,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public boolean hasResult(Class<? extends Tool> tool, Configuration config) {
         return results.get(tool).containsKey(config);
     }
-    
+
     /**
      * Tests whether a specific result has already been calculated.
      * A result is identified by the {@link Tool} calculating it, as well as a
@@ -287,18 +287,18 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public boolean hasResult(Tool tool, Configuration config) {
         return hasResult(tool.getClass(), config);
     }
-    
+
     /**
      * Tests whether the specified tool already has calculated some results.
      * @param tool The type of the tool class.
      * @return Returns <code>true</code> if at least one result is associated
      *          with the tool, otherwise <code>false</code>.
      */
-    public boolean hasResults(Class<? extends Tool> tool) {        
+    public boolean hasResults(Class<? extends Tool> tool) {
         Map<Configuration, Result> res = results.get(tool);
         return res != null && res.size() > 0;
     }
-    
+
     /**
      * Tests whether the specified tool already has calculated some results.
      * @param tool The tool.
@@ -309,7 +309,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public boolean hasResults(Tool tool) {
         return hasResults(tool.getClass());
     }
-    
+
     /**
      * Test whether all possible results have been calculated for a given tool.
      * Since the project doesn't know which results are possible, the expected
@@ -324,7 +324,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public boolean hasAllResults(Class<? extends Tool> tool, int expectedNumber) {
         return results.get(tool).size() == expectedNumber;
     }
-    
+
     /**
      * Test whether all possible results have been calculated for a given tool.
      * Since the project doesn't know which results are possible, the expected
@@ -340,7 +340,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public boolean hasAllResults(Tool tool, int expectedNumber) {
         return hasAllResults(tool.getClass(), expectedNumber);
     }
-    
+
     /**
      * Retrieves the result specified by a tool and a configuration.
      * @param <T> The type of the result.
@@ -356,7 +356,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             putResult(tool, config, null);
         return (T) results.get(tool).get(config);
     }
-    
+
     /**
      * Retrieves the result specified by a tool and a configuration.
      * @param <T> The type of the result.
@@ -370,7 +370,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public <T> T getResult(Tool tool, Configuration config) {
         return (T)getResult(tool.getClass(), config);
     }
-    
+
     /**
      * Stores a new result calculated by the given tool class and configuration.
      * @param tool The type of the tool class that calculated the result.
@@ -388,7 +388,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         }
         LOGGER.info("Finished putting result");
     }
-    
+
     /**
      * Stores a new result calculated by the given tool class and configuration.
      * @param tool The tool that calculated the result.
@@ -399,7 +399,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public void putResult(Tool tool, Configuration config, Result result) {
         putResult(tool.getClass(), config, result);
     }
-    
+
     /**
      * Returns all results calculated by the specified tool.
      * @param tool The type of the tool class that calculated the results.
@@ -410,7 +410,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public Map<Configuration, Result> getResults(Class<? extends Tool> tool) {
         return Collections.unmodifiableMap(results.get(tool));
     }
-    
+
     /**
      * Returns all results calculated by the specified tool.
      * @param tool The tool that calculated the results.
@@ -440,7 +440,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
         // Check for existing results and mark these tools as calculated
         Tool t;
-        for(Class<? extends Tool> toolClass : Tools.toolTypes()) {            
+        for(Class<? extends Tool> toolClass : Tools.toolTypes()) {
             t = getTool(toolClass);
             if(hasResults(t)) {
                 setHasResults(t);
@@ -509,7 +509,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         if(projectPath == null) {
             File projectFile;
             MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
-                     
+
             projectLocationChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
@@ -526,22 +526,22 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 return false;
 
             projectFile = projectLocationChooser.getSelectedFile();
-            
+
             if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(projectFile)))
                 projectFile = new File(projectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-            
+
             projectPath = projectFile;
-            
+
             String recentlyProjects = Settings.get("recentlyProjects");
             // If project are in the list, set it to the last place
             if(recentlyProjects.contains(projectFile.getAbsolutePath())) {
-                recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath()+",", "");      
+                recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath()+",", "");
             }
-            else {               
+            else {
                 // Check if the list is to large and delte the first element
                 String projects[] = recentlyProjects.split(",");
-                if(projects.length == 10) {            
-                    String tmp = "";             
+                if(projects.length == 10) {
+                    String tmp = "";
                     for(int i = 1; i < 10; i++) {
                         tmp += projects[i] + ",";
                     }
@@ -552,8 +552,8 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             recentlyProjects += projectFile.getAbsolutePath()+",";
 
             Settings.set("recentlyProjects", recentlyProjects);
-            Settings.writeToFile(Settings.getConfigFile());                
-            
+            Settings.writeToFile(Settings.getConfigFile());
+
             ret = true;
         }
 
@@ -576,16 +576,16 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             // Explicitly set projectPath.
             project.projectPath = location;
             project.toolStatusUpdateListeners = new ArrayList<>();
-            
+
             project.initTools();
-                        
+
             // Add tools that have been newly added to the MonaLisa
-            // application since the project has been saved.            
+            // application since the project has been saved.
             for (Class<? extends Tool> toolType : Tools.toolTypes()) {
                 if (!project.results.containsKey(toolType)) {
                     project.results.put(toolType, new HashMap<Configuration, Result>());
                 }
-            }                        
+            }
             LOGGER.info("Finished loading project from file.");
             return project;
         } catch (ClassNotFoundException e) {
@@ -606,18 +606,18 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         Result loadTFileResults = TInputHandlers.load(TFile, this.petriNet);
         Configuration loadTFileConfig = new TInvariantsConfiguration();
         Tool tool = new TInvariantTool();
-        this.putResult(tool, loadTFileConfig, loadTFileResults);        
+        this.putResult(tool, loadTFileConfig, loadTFileResults);
         tool.finishedState(Project.this);
         setComplete(tool);
         LOGGER.info("Finished loading from given TFile.");
     }
-    
+
     /**
      * Initialize all tools.
      */
     public void initTools() {
         LOGGER.info("Initializing tools.");
-        this.tools = new ArrayList<>();        
+        this.tools = new ArrayList<>();
         for (Class<? extends Tool> toolType : Tools.toolTypes()) {
             try {
                 this.tools.add(toolType.newInstance());
@@ -628,29 +628,29 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             }
         }
     }
-    
+
     /**
      * Reset all results of all tools.
      */
     public void resetTools() {
         LOGGER.info("Resetting tool results");
         results.clear();
-        initTools();        
+        initTools();
         for (Class<? extends Tool> toolType : Tools.toolTypes())
             results.put(toolType, new HashMap<Configuration, Result>());
     }
-    
+
     /**
      * Creates the GUI for the Analyze Frame.
      * @param container
-     * @param strings 
+     * @param strings
      */
     public void createUI(final JComponent container, StringResources strings) {
         LOGGER.info("Creating UI for Analyze Frame.");
         GroupLayout containerLayout = (GroupLayout) container.getLayout();
         ParallelGroup horizontal = containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         SequentialGroup vertical = containerLayout.createSequentialGroup();
-        
+
         toolPanels = new HashMap<>();
         if(tools != null) {
             LOGGER.info("Laying out tools.");
@@ -702,7 +702,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         }
         LOGGER.info("Finished creating UI for Analyze Frame.");
     }
-    
+
     /**
      * Starts all selected Tools.
      */
@@ -722,7 +722,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         };
         toolsThread.start();
     }
-    
+
     /**
      * Starts all given tools.
      */
@@ -732,11 +732,11 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         toolsThread = new Thread() {
             @Override
             public void run() {
-                for (Tool tool : tools) {                    
+                for (Tool tool : tools) {
                     if(givenTool.contains(tool.getClass().getName())) {
                         tool.setActive(true);
                         if (toolsThread.isInterrupted())
-                            return;                        
+                            return;
                         runSingleTool(tool);
                     }
                 }
@@ -745,7 +745,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         };
         toolsThread.start();
     }
-    
+
     /**
      * Stops all running tools.
      */
@@ -756,10 +756,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             new ToolStatusUpdateEvent(this, null, Status.ABORTED));
         LOGGER.warn("Finished aborting the running tools.");
     }
-    
+
     /**
      * Run a single tool.
-     * @param tool 
+     * @param tool
      */
     private void runSingleTool(Tool tool) {
         if (tool.isActive()) {
@@ -767,16 +767,16 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 setFailed(tool, new ErrorLog());
                 return;
             }
-            
+
             tool.addProgressListener(Project.this);
             fireToolStatusUpdate(tool, Status.STARTED);
             LOGGER.info(panelName(tool) + " started");
 
             ErrorLog log = new ErrorLog();
             ToolRunner runner = new ToolRunner(tool, Project.this, log);
-            
+
             runner.start();
-            
+
             try {
                 runner.join();
             } catch (InterruptedException e) {
@@ -789,10 +789,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             finally {
                 tool.removeProgressListener(Project.this);
             }
-            
+
             for (Map.Entry<Configuration, Result> entry : runner.results().entrySet())
                 putResult(tool, entry.getKey(), entry.getValue());
-            
+
             if (log.has(ErrorLog.Severity.ERROR))
                 setFailed(tool, log);
             else if (log.has(ErrorLog.Severity.WARNING))
@@ -807,9 +807,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             LOGGER.info(panelName(tool) + " finished");
         }
     }
-    
+
     /**
-     * Checks if all requirements for a given tool are fulfilled. 
+     * Checks if all requirements for a given tool are fulfilled.
      * @param tool The Tool to be checked
      * @return <code> true </code> if all requirements are fulfilled, otherwise <code> false </code>
      */
@@ -824,7 +824,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
                 break;
             }
         }
-        
+
         if (!requirementsSatisfied) {
             String toolName = strings.get(Tools.name(tool));
             LOGGER.warn("Requirements for tool " + toolName + "not met.");
@@ -837,55 +837,55 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         LOGGER.info("Requirements for tool " + strings.get(Tools.name(tool))+ "met.");
         return requirementsSatisfied;
     }
-    
+
     /**
      * Marks a given tool with the "has results" tag
      * @param tool The tool to be marked
      */
     private void setHasResults(Tool tool) {
         LOGGER.info("Setting tool results for" + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
+        CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolHasResults"));
         panel.setTitleShade(HAS_RESULT_COLOR);
     }
-    
+
     /**
      * Marks a given tool with the "has no results" tag
      * @param tool The tool to be marked
      */
     private void setHasNoResults(Tool tool) {
         LOGGER.info("Seeting lack of tool results for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
+        CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment("");
         panel.setTitleShade(NOT_FINISHED_COLOR);
     }
-    
+
     /**
      *  Marks a given tool with the "complete" tag
      * @param tool The tool to be marked
      */
     private void setComplete(Tool tool) {
         LOGGER.info("Setting tool complete for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
+        CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolComplete"));
         panel.setTitleShade(COMPLETE_COLOR);
     }
-    
+
     /**
      *  Marks a given tool with the "complete with warnings" tag
      * @param tool The tool to be marked
-     */    
+     */
     private void setCompleteWithWarnings(Tool tool, ErrorLog log) {
         LOGGER.warn("Setting tool as complete with warnings for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass()); 
+        CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolCompleteWithWarnings"));
         panel.setTitleShade(WARNING_COLOR);
     }
-    
+
     /**
      *  Marks a given tool with the "failed" tag
      * @param tool The tool to be marked
-     */      
+     */
     private void setFailed(Tool tool, ErrorLog log) {
         LOGGER.warn("Setting tool as failed for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass());
@@ -898,24 +898,24 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         LOGGER.info("Updating progress for a tool");
         fireToolStatusUpdate((Tool) e.getSource(), e.getPercent());
     }
-    
+
     /**
      * Returns the name of the panel of a given tool.
      * @param tool
-     * @return 
+     * @return
      */
     private String panelName(Tool tool) {
         return Tools.name(tool);
     }
-    
+
     private void fireToolStatusUpdate(Tool tool, Status status) {
         fireToolStatusUpdate(new ToolStatusUpdateEvent(this, panelName(tool), status));
     }
-    
+
     private void fireToolStatusUpdate(Tool tool, int progress) {
         fireToolStatusUpdate(new ToolStatusUpdateEvent(this, panelName(tool), progress));
     }
-    
+
     private synchronized void fireToolStatusUpdate(ToolStatusUpdateEvent e) {
         List<ToolStatusUpdateListener> listeners =
             new ArrayList<>(toolStatusUpdateListeners);
@@ -954,24 +954,24 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             }
         }
     }
-    
+
     /**
      * Returns the instance of a given Tool.
      * @param toolType The class of the requested tool.
-     * @return 
+     * @return
      */
     private Tool getTool(Class<? extends Tool> toolType) {
         for (Tool tool : tools)
             if(toolType.isInstance(tool))
                 return tool;
-        
+
         return null;
     }
-    
+
     /**
-     * Opens a dialog to export the results. 
+     * Opens a dialog to export the results.
      * @param toolList A List of the tools to be exported
-     * @throws IOException 
+     * @throws IOException
      */
     public void exportResults(List<Class<? extends Tool>> toolList) throws IOException {
         LOGGER.info("Exporting results for tool run");
@@ -1017,7 +1017,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         }
         LOGGER.info("Finished exporting File");
     }
-       
+
     /**
      * Returns if the project has changed since loading. Changes are events like manipulating the Petri net.
      * @return Returns <code> true </code> if the projected has changed, otherwise <code> false </code>
@@ -1031,16 +1031,16 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         LOGGER.info("projectChanged: " + projectChanged.toString());
         return projectChanged;
     }
-    
+
     /**
      * Set the "changed" flag of the project.
-     * @param projectChanged 
+     * @param projectChanged
      */
     public void setProjectChanged(Boolean projectChanged) {
         LOGGER.info("Setting projectChanged to " + projectChanged.toString());
         this.projectChanged = projectChanged;
-    }    
-    
+    }
+
     /**
      * Test whether the entity has a given property.
      * @param key The key to look for.
@@ -1048,8 +1048,8 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      */
     public boolean hasProperty(String key) {
         return properties.has(key);
-    }  
-    
+    }
+
     /**
      * Retrieve a strongly typed property, based on its key.
      * @param <T> The type of the property to retrieve.
@@ -1060,10 +1060,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         LOGGER.info("Getting property for " + key);
         return properties.<T>get(key);
     }
-    
+
     /**
-     * Removes a property from the properties list 
-     * @param key 
+     * Removes a property from the properties list
+     * @param key
      */
     public void removeProperty(String key) {
         LOGGER.info("Removing property for key " + key + "if it exists");
@@ -1071,24 +1071,24 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             LOGGER.info(key + "property exists, removing");
             properties.remove(key);
         }
-    }    
-    
+    }
+
     /**
      * Retrieve the whole PropertyList
      * @return The PropertyList of the PetriNetEntity
      */
     public PropertyList getPropertyList() {
         return this.properties;
-    } 
-    
+    }
+
     /**
      * Set a new PropertyList
-     * @param pl 
+     * @param pl
      */
     public void setPropertyList(PropertyList pl) {
         this.properties = pl;
-    } 
-        
+    }
+
     /**
      * Retrieve a strongly typed property, based on its key.
      * If the property key doesn't exist, return a default value instead.
@@ -1107,7 +1107,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             return defaultValue;
         }
     }
-    
+
     /**
      * Add a property to the Petri net entity.
      * @param <T> The type of the property.
@@ -1119,8 +1119,8 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             value = (T)((String)value).replace(" ", "_");
         LOGGER.info("Adding value for " + key);
         properties.put(key, value);
-    }     
-    
+    }
+
     /**
      * Returns a facade for the current PetriNet object.
      * @return The Facade object
@@ -1128,20 +1128,20 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public PetriNetFacade getPNFacade() {
         return new PetriNetFacade(this.petriNet);
     }
-    
+
     /**
      * Get a list off AddonPanels and register them in the project.
      * If the project is saved, all these AddOns get a request to send their data to store in the project.
-     * @param addOns 
+     * @param addOns
      */
     public void registerAddOns(List<AddonPanel> addOns) {
         this.registeredAddOns = addOns;
     }
-    
+
     /**
-     * Get a list of AddonPanels and send them their stored data. 
+     * Get a list of AddonPanels and send them their stored data.
      * The list of AddOn Panels is needed, to get the current instances of the AddonPanels.
-     * @param addOns 
+     * @param addOns
      */
     public void transferStorageToAddOns(List<AddonPanel> addOns) {
         LOGGER.info("Transfering stored data to addon panels");
@@ -1151,14 +1151,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             }
         }
     }
-    
+
     /**
-     * Function is called if the Project is saved. 
+     * Function is called if the Project is saved.
      * First the function collects all data from AddOns, that should be saved, too.
      * @param objectOutput
-     * @throws IOException 
+     * @throws IOException
      */
-    private void writeObject(ObjectOutputStream objectOutput) throws IOException {  
+    private void writeObject(ObjectOutputStream objectOutput) throws IOException {
         LOGGER.info("Collecting data from addons for saving");
         if(registeredAddOns != null) {
             for(AddonPanel a : registeredAddOns) {
@@ -1168,30 +1168,30 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             }
         }
         LOGGER.info("Writing to Output");
-        objectOutput.defaultWriteObject();      
-        
-    }    
-    
+        objectOutput.defaultWriteObject();
+
+    }
+
     /**
      * Function is called, if a project is loaded.
      * @param objectInput
      * @throws IOException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
         LOGGER.info("Reading storage from input");
         objectInput.defaultReadObject();
-        
+
         // Short workaround for older versions.
         if(addonStorage == null) {
             LOGGER.warn("Workaround for older versions, creating new HashMap");
             addonStorage = new HashMap<>();
-        } 
-        
+        }
+
         // Workaround for older projects
         if(synchronizer == null) {
             LOGGER.warn("Workaround for older projects, creating new Synchronizer");
             synchronizer = new Synchronizer(petriNet);
-        }        
-    }    
+        }
+    }
 }

@@ -32,11 +32,11 @@ public class ToolStatusUpdateEvent extends EventObject {
         ABORTED,
         FINISHED_ALL,
     }
-    
+
     private final String toolName;
     private final Status status;
     private final int progress;
-    
+
     public ToolStatusUpdateEvent(Object source, String toolName, int progress) {
         this(source, toolName, Status.PROGRESS, progress);
     }
@@ -59,7 +59,7 @@ public class ToolStatusUpdateEvent extends EventObject {
     public Status getStatus() {
         return status;
     }
-    
+
     public int getProgress() {
         return progress;
     }

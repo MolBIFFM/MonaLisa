@@ -10,18 +10,23 @@
 
 package monalisa.addons.annotations;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author Jens Einloft
  */
 public class ModellerWrapper {
 
+    private static final Logger LOGGER = LogManager.getLogger(ModellerWrapper.class);
     private final String fName;
     private final String lName;
     private final String organisation;
     private final String email;
-    
+
     public ModellerWrapper(String fName, String lName, String organisation, String email) {
+        LOGGER.info("Creating new ModellerWrapper");
         this.fName = fName;
         this.lName = lName;
         this.organisation = organisation;
@@ -43,10 +48,10 @@ public class ModellerWrapper {
     public String getEmail() {
         return email;
     }
-    
+
     @Override
     public String toString() {
         return fName+" "+lName;
     }
-    
+
 }

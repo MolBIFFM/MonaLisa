@@ -21,7 +21,7 @@ import monalisa.gui.MainDialog;
 
 /**
  * Application entry point class for MonaLisa.
- * 
+ *
  * @author Konrad Rudolph
  */
 public final class MonaLisa implements Runnable {
@@ -31,19 +31,19 @@ public final class MonaLisa implements Runnable {
     public static final String APPLICATION_TITLE = "MonaLisa";
 
     private static MainDialog applicationMainWindow;
-    
+
     /**
      * Returns a reference to the application's main window.
      */
     public static MainDialog appMainWindow() {
         return applicationMainWindow;
     }
-    
+
     private MonaLisa() { }
 
     /**
      * Application entry point
-     * 
+     *
      * @param args
      * @throws UnsupportedLookAndFeelException
      * @throws IllegalAccessException
@@ -59,11 +59,11 @@ public final class MonaLisa implements Runnable {
                 System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE);
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
-                               
-            UIManager.setLookAndFeel(new PgsLookAndFeel());                
-        
+
+            UIManager.setLookAndFeel(new PgsLookAndFeel());
+
             SwingUtilities.invokeLater(new MonaLisa());
-        
+
             // First start of MonaLisa? Then write the config file for the settings
             if(!Settings.load()){
                LOGGER.warn("No config file found. Creating new config file.");

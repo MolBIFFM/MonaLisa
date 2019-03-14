@@ -16,17 +16,17 @@ import java.util.Map;
  * @author jens
  */
 public interface AddonStorageManagment {
-       
+
     /**
      * Provides a map of the objects with their identifier, which should be stored in the project file.
      * @return Map<String, Object>
      */
     public Map<String, Object> getObjectsForStorage();
-    
+
     /**
      * This function is called, after the project is loaded and gives the Addon class their stored data back.
-     * @param storage 
+     * @param storage
      */
     public void reciveStoredObjects(Map<String, Object> storage);
-    
+
 }

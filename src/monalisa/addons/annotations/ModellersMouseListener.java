@@ -19,40 +19,46 @@ import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPopupMenu;
+import monalisa.MonaLisa;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Jens Einloft
  */
 public class ModellersMouseListener extends AbstractPopupGraphMousePlugin implements MouseListener {
-    
+
+    private static final Logger LOGGER = LogManager.getLogger(ModellersMouseListener.class);
     private final JList owner;
     private final AnnotationsPanel ap;
-    
+
     public ModellersMouseListener(AnnotationsPanel ap, JList owner) {
         this.owner = owner;
-        this.ap = ap;        
+        this.ap = ap;
     }
-    
+
     @Override
     protected void handlePopup(MouseEvent me) {
         JPopupMenu popup = new JPopupMenu();
         final List<ModellerWrapper> selectedValue = owner.getSelectedValuesList();
-        
+
         popup.add(new AbstractAction("Edit") {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                LOGGER.info("Editing Modeller value in AnnotationsPanel");
                 ap.editModeller(selectedValue.get(0), owner.getSelectedIndex());
             }
-        });        
-        
+        });
+
         popup.add(new AbstractAction("Delete") {
             @Override
             public void actionPerformed(ActionEvent ae) {
+                LOGGER.info("Deleting Modeller value in AnnotationsPanel");
                 ((DefaultListModel)owner.getModel()).removeElement(selectedValue.get(0));
             }
         });
-                                        
+
         popup.show(owner, me.getX(), me.getY());
     }
 

@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
@@ -36,6 +34,8 @@ import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.util.ComboboxToolTipRenderer;
 import monalisa.util.MonaLisaHyperlinkListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -50,36 +50,39 @@ import org.sbml.jsbml.CVTerm.Qualifier;
 public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     private static final ResourceManager resources = ResourceManager.instance();
-    private static final StringResources strings = resources.getDefaultStrings();       
-    
+    private static final StringResources strings = resources.getDefaultStrings();
+    private static final Logger LOGGER = LogManager.getLogger(CompartmentAnnotationFrame.class);
+
     private final Component parent;
     private final Compartment compartment;
-    
+
     private DefaultListModel<MiriamWrapper> miModel;
-    
+
     protected Map<String, Integer> miriamRegistryMap = new HashMap<>();
-    
+
     private boolean editMiriamIdentifier;
-    private MiriamWrapper identifierInEdit;    
-    
+    private MiriamWrapper identifierInEdit;
+
 
     /**
      * Creates new form CompartmentAnnotationFrame
      */
     public CompartmentAnnotationFrame(Component parent, Compartment c) {
+        LOGGER.info("Initializing CompartmentAnnotationFrame");
         this.compartment = c;
         this.parent = parent;
-        
+
         setLocationRelativeTo(parent);
         setTitle("Compartment Annotation");
-        setIconImage(resources.getImage("icon-16.png"));     
-        
+        setIconImage(resources.getImage("icon-16.png"));
+
         initComponents();
-        
+
         compartmentLabel.setText(compartment.getName());
-        
-        // START: MIRIAM 
-        miModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiers.getModel();        
+
+        // START: MIRIAM
+        LOGGER.info("Starting MIRIAM part");
+        miModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiers.getModel();
         qualifier.addItem(CVTerm.Qualifier.BQB_ENCODES);
         qualifier.addItem(CVTerm.Qualifier.BQB_HAS_PART);
         qualifier.addItem(CVTerm.Qualifier.BQB_HAS_PROPERTY);
@@ -93,80 +96,86 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         qualifier.addItem(CVTerm.Qualifier.BQB_IS_PROPERTY_OF);
         qualifier.addItem(CVTerm.Qualifier.BQB_IS_VERSION_OF);
         qualifier.addItem(CVTerm.Qualifier.BQB_OCCURS_IN);
-        qualifier.addItem(CVTerm.Qualifier.BQB_UNKNOWN);          
-        
+        qualifier.addItem(CVTerm.Qualifier.BQB_UNKNOWN);
+
         if(compartment.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
             int childCount;
-            for(CVTerm cvt : (List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)) {                                
+            for(CVTerm cvt : (List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)) {
                 childCount =  cvt.getChildCount();
                 if(childCount > 1) {
-                    for(int i=0; i < cvt.getChildCount(); i++) {                                                                                
+                    for(int i=0; i < cvt.getChildCount(); i++) {
                         miModel.addElement(new MiriamWrapper(cvt.getBiologicalQualifierType(), cvt.getChildAt(i).toString()));
                     }
                 } else {
                     miModel.addElement(new MiriamWrapper(cvt));
-                }                                                                                                
-            } 
+                }
+            }
         }
-        
+        LOGGER.info("Finished MIRIAM part");
+        LOGGER.info("Starting SBO part");
         // START: SBO
         ComboboxToolTipRenderer sboCbRenderer = new ComboboxToolTipRenderer();
         sboCb.setRenderer(sboCbRenderer);
-        ArrayList<String> sboToolTips = new ArrayList<>();                     
-        
+        ArrayList<String> sboToolTips = new ArrayList<>();
+
         SAXBuilder builder = new SAXBuilder();
         Document doc = null;
         try {
-            URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");        
-            InputStream istream = sboURL.openStream();                              
+            LOGGER.info("Reading from 'SBO_XML.xml'");
+            URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");
+            InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        } catch (IOException ex) {
-            Logger.getLogger(AnnotationsPanel.class.getName()).log(Level.SEVERE, null, ex);        
-        } catch (JDOMException e) { }
-              
+        }
+        catch (IOException | JDOMException ex) {
+            LOGGER.error(ex);
+        }
         Element root = doc.getRootElement();
         Element e;
-        sboCb.addItem("No Term set"); 
+        sboCb.addItem("No Term set");
         sboToolTips.add("");
+        LOGGER.info("Adding SBO tooltips to compartment");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
-            sboCb.addItem(((Element)e.getContent().get(1)).getValue());     
+            sboCb.addItem(((Element)e.getContent().get(1)).getValue());
             sboToolTips.add(((Element)e.getContent().get(3)).getValue()+" : "+((Element)e.getContent().get(7)).getValue().trim());
-        }        
-        sboCbRenderer.setTooltips(sboToolTips);        
-        
+        }
+        sboCbRenderer.setTooltips(sboToolTips);
+        LOGGER.info("Finished SBO part");
         // START: MIRIAM registry
+        LOGGER.info("Starting MIRIAM registry part");
         ComboboxToolTipRenderer miriamRegistryCbRenderer = new ComboboxToolTipRenderer();
         miriamRegistry.setRenderer(miriamRegistryCbRenderer);
-        ArrayList<String> miriamRegistryToolTips = new ArrayList<>();        
-        
+        ArrayList<String> miriamRegistryToolTips = new ArrayList<>();
+
         builder = new SAXBuilder();
         try {
-            URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");        
-            InputStream istream = sboURL.openStream();                              
+            LOGGER.info("Reading from 'miriam_registry.xml'");
+            URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");
+            InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        } catch (IOException ex) {
-            Logger.getLogger(AnnotationsPanel.class.getName()).log(Level.SEVERE, null, ex);        
-        } catch (JDOMException ex) { }                
-        
+        }
+        catch (IOException | JDOMException ex) {
+            LOGGER.error(ex);
+        }
         root = doc.getRootElement();
         MiriamRegistryWrapper mrw;
         Integer counter = 0;
         String name, comment, url = "";
         Pattern pattern;
+        LOGGER.info("Adding MIRIAM URLs to compartment");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
-            
-            if(e.getAttribute("obsolete") != null) 
+
+            if(e.getAttribute("obsolete") != null)
                 continue;
             if(e.getName().equals("listOfTags"))
                 continue;
-            
+
             pattern = Pattern.compile(e.getAttributeValue("pattern"));
-            
+
             name = e.getChild("name", e.getNamespace()).getValue();
             comment = e.getChild("definition", e.getNamespace()).getValue();
-            
+
             Element uri;
             for(Object u : e.getChild("uris", e.getNamespace()).getChildren()) {
                 uri = (Element) u;
@@ -176,54 +185,61 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-            
+
             mrw = new MiriamRegistryWrapper(name, url, comment, pattern);
             miriamRegistry.addItem(mrw);
             miriamRegistryToolTips.add(mrw.getComment());
             miriamRegistryMap.put(url, counter);
             counter++;
-        }               
-        miriamRegistryCbRenderer.setTooltips(miriamRegistryToolTips);            
-     
+        }
+        miriamRegistryCbRenderer.setTooltips(miriamRegistryToolTips);
+        LOGGER.info("Finished MIRIAM registry part");
+        LOGGER.info("Setting SBO terms to compartments");
         sboCb.setSelectedIndex(0);
         if(compartment.hasProperty(SBO_TERM)) {
-            sboCb.setSelectedItem(compartment.getProperty(SBO_TERM));                                                        
+            sboCb.setSelectedItem(compartment.getProperty(SBO_TERM));
         } else {
             sboCb.setSelectedIndex(0);
-        }                    
+        }
     }
 
-    public void deleteMiriamIdentifier(MiriamWrapper mw, JList owner) {     
+    public void deleteMiriamIdentifier(MiriamWrapper mw, JList owner) {
+        LOGGER.info("Deleting MIRIAM identifier from compartment");
         if(identifierInEdit != null) {
             uri.setText("");
             editMiriamIdentifier = false;
             addMiriamIdentifier.setText("Add");
-            identifierInEdit = null;   
+            identifierInEdit = null;
         }
 
-        ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).remove(mw.getCVTerm());                   
+        ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).remove(mw.getCVTerm());
         miModel.removeElement(mw);
-    }    
-    
+        LOGGER.info("Successfully deleted MIRIAM identifier from compartment");
+    }
+
     public void editMiriamIdentifier(MiriamWrapper mw, JList owner) {
+        LOGGER.info("Editing MIRIAM identifier for compartment");
         qualifier.setSelectedItem(mw.getCVTerm().getBiologicalQualifierType());
         uri.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1));
         miriamRegistry.setSelectedIndex(miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1)));
         editMiriamIdentifier = true;
         addMiriamIdentifier.setText("Save");
-        identifierInEdit = mw;                
-    }    
-    
+        identifierInEdit = mw;
+        LOGGER.info("Successfully edited MIRIAM identifier for compartment");
+    }
+
     public void goToMiriamIdentifier(MiriamWrapper mw) {
+        LOGGER.info("Going to MIRIAM identifier for compartment");
         if(Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI(mw.getCVTerm().getResourceURI(0)));
-            } catch (IOException | URISyntaxException ex) {
-                Logger.getLogger(MonaLisaHyperlinkListener.class.getName()).log(Level.SEVERE, null, ex);
-            }        
+            }
+            catch (IOException | URISyntaxException ex) {
+                LOGGER.error(ex);
+            }
         }
-    }    
-    
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -432,19 +448,23 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addMiriamIdentifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMiriamIdentifierActionPerformed
+        LOGGER.info("Trying to add MIRIAM identifier entry to compartment");
         if(!uri.getText().isEmpty()) {
             // Edit a entry
             if(editMiriamIdentifier == true) {
+                LOGGER.info("Editing an entry for a compartment");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistry.getSelectedItem();
                 Matcher m = mrw.getPattern().matcher(uri.getText().trim());
                 if(!m.matches()) {
-                    JOptionPane.showMessageDialog(this, "Unvalid accession number");
+                    LOGGER.warn("Invalid accession number");
+                    JOptionPane.showMessageDialog(this, "Invalid accession number");
                     return;
                 }
 
                 List<CVTerm> cvts = (List<CVTerm>) compartment.getProperty(MIRIAM_BIO_QUALIFIERS);
 
                 // Same identifier = update the uri
+                LOGGER.info("Same identifier, updating the uri");
                 if(identifierInEdit.getCVTerm().getBiologicalQualifierType().equals((Qualifier) qualifier.getSelectedItem())) {
                     for(CVTerm cvt : cvts) {
                         if((identifierInEdit.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
@@ -453,6 +473,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                         }
                     }
                 } else { // new identifier = update the identifier and the uri
+                    LOGGER.info("New identifier, updating identifier and uri");
                     // first: delete the old one
                     CVTerm toRemove = null;
                     for(CVTerm cvt : cvts) {
@@ -465,10 +486,11 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                         }
                     }
                     if(toRemove != null) {
+                        LOGGER.info("Removing old one");
                         cvts.remove(toRemove);
                         compartment.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
                     }
-
+                    LOGGER.info("Adding new ones");
                     // now add the new ones
                     cvts = (List<CVTerm>) compartment.getProperty(MIRIAM_BIO_QUALIFIERS);
                     boolean qualifierWasThere = false;
@@ -494,13 +516,16 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                 addMiriamIdentifier.setText("Add");
                 identifierInEdit = null;
                 miriamIdentifiers.repaint();
+                LOGGER.info("Finished editing entry for a compartment");
             }
             else if(editMiriamIdentifier == false) {
+                LOGGER.info("Adding new entry for a compartment");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistry.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uri.getText().trim());
                 if(!m.matches()) {
-                    JOptionPane.showMessageDialog(this, "Unvalid accession number");
+                    LOGGER.warn("Invalid accession number");
+                    JOptionPane.showMessageDialog(this, "Invalid accession number");
                     return;
                 }
 
@@ -524,16 +549,21 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                 if(!qualifierWasThere) {
                     ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).add(mw.getCVTerm());
                 }
+                LOGGER.info("Finished adding new entry for compartment");
             }
 
             uri.setText("");
         }
+        LOGGER.info("Finished adding MIRIAM identifier entry for compartment");
     }//GEN-LAST:event_addMiriamIdentifierActionPerformed
 
     private void saveSBOTermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSBOTermActionPerformed
+        LOGGER.info("Adding SBO term to compartment");
         if(sboCb.getSelectedItem() != null && sboCb.getSelectedIndex() > 0) {
             compartment.putProperty(SBO_TERM, (String)sboCb.getSelectedItem());
         }
+        LOGGER.info("Succesfully added SBO term to compartment");
+        // Shouldn't there also be a function to remove SBO terms like in AnnotationsPanel?
     }//GEN-LAST:event_saveSBOTermActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

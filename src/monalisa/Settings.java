@@ -56,7 +56,7 @@ public class Settings {
     public static Boolean load() {
         LOGGER.info("Trying to load settings from file");
         init();
-        
+
         Boolean res = false;
 
         cfg = new Properties();
@@ -72,7 +72,7 @@ public class Settings {
         }
 
         LOGGER.info("  Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
-        
+
         return(res);
     }
 
@@ -100,7 +100,7 @@ public class Settings {
     public static Boolean resetAll() {
         LOGGER.info("Trying to reset properties to default values");
         cfg = new Properties();
-        setDefaults(); 
+        setDefaults();
         LOGGER.info("Creating deep copy of default to assign to settings");
         // make a deep copy of the default settings and assign it to cfg
         for (Map.Entry<Object, Object> entry : def.entrySet()) {
@@ -124,10 +124,10 @@ public class Settings {
         defSet("tinvColorR", "255");
         defSet("tinvColorG", "0");
         defSet("tinvColorB", "0");
-        
+
         defSet("pinvColorR", "255");
         defSet("pinvColorG", "0");
-        defSet("pinvColorB", "0");        
+        defSet("pinvColorB", "0");
 
         defSet("mctsColorR", "0");
         defSet("mctsColorG", "0");
@@ -148,14 +148,14 @@ public class Settings {
         defSet("notKnockedOutColorR", "0");
         defSet("notKnockedOutColorG", "255");
         defSet("notKnockedOutColorB", "0");
-        
+
         defSet("mcsObjectivColorR", "255");
         defSet("mcsObjectivColorG", "200");
         defSet("mcsObjectivColorB", "0");
-        
+
         defSet("mcsColorR", "0");
         defSet("mcsColorG", "0");
-        defSet("mcsColorB", "255");        
+        defSet("mcsColorB", "255");
 
         defSet("backgroundColorR", "255");
         defSet("backgroundColorG", "255");
@@ -171,30 +171,30 @@ public class Settings {
 
         defSet("egdeColorR", "255");
         defSet("egdeColorG", "255");
-        defSet("egdeColorB", "255");        
-        
+        defSet("egdeColorB", "255");
+
         defSet("completeResultR", "132");
         defSet("completeResultG", "182");
-        defSet("completeResultB", "31");   
-        
+        defSet("completeResultB", "31");
+
         defSet("hasResultsR", "132");
         defSet("hasResultsG", "182");
-        defSet("hasResultsB", "31");           
-        
+        defSet("hasResultsB", "31");
+
         defSet("warningR", "233");
         defSet("warningG", "180");
-        defSet("warningB", "76");           
-      
+        defSet("warningB", "76");
+
         defSet("errorR", "176");
         defSet("errorG", "61");
-        defSet("errorB", "61");               
-        
+        defSet("errorB", "61");
+
         defSet("notFinishedR", "128");
         defSet("notFinishedG", "128");
-        defSet("notFinishedB", "128");          
-        
+        defSet("notFinishedB", "128");
+
         defSet("recentlyProjects", "");
-        
+
         defSet("latestDirectory", "");
         LOGGER.info("Finished setting properties to default values");
         return(true);
@@ -327,7 +327,7 @@ public class Settings {
                 return(false);
         }
     }
-    
+
     /**
      * Tries to extract the value of the property key 'key' as a Color and return it. If this fails it is considered a fatal error.
      * @param key the key of the properties hashmap
@@ -343,7 +343,7 @@ public class Settings {
             System.exit(1);
             return Color.BLACK; // Never reached because of System.exit(1), compiler needs it
         }
-     }    
+     }
 
     /**
      * Returns the path to the currently used config file as a String.
@@ -437,7 +437,7 @@ public class Settings {
      * @param value the value for the entry with the given key
      */
     public static void set(String key, String value) {
-        cfg.setProperty(key, value);        
+        cfg.setProperty(key, value);
     }
 
     /**

@@ -18,18 +18,18 @@ import monalisa.addons.tokensimulator.TokenSimPanel;
 import monalisa.addons.topological.TopologyPanel;
 
 /**
- * A list of all available Addons for MonaLisa 
+ * A list of all available Addons for MonaLisa
  * @author Jens Einloft
  */
 public class Addons {
-    
+
     public static final List<Class<? extends AddonPanel>> addons = new ArrayList<>();
-    
+
     static {
         addons.add(TokenSimPanel.class);
         addons.add(CentralityPanel.class);
         addons.add(AnnotationsPanel.class);
-        addons.add(TopologyPanel.class);  
-    }    
-    
+        addons.add(TopologyPanel.class);
+    }
+
 }

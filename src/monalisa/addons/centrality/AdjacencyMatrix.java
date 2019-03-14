@@ -57,7 +57,7 @@ public class AdjacencyMatrix {
                 reverseTranlationMap.put(counter, p.id());  // stores the ID of a node for each value
                 counter++;
             }
-            LOGGER.info("Filling matrix based on transitions");
+            LOGGER.info("Filling matrix based on places");
             for (Transition t : transitions){
                 for (Place p1 : t.inputs()){
                     for (Place p2 : t.outputs()){
@@ -77,6 +77,7 @@ public class AdjacencyMatrix {
                 reverseTranlationMap.put(counter, t.id());
                 counter++;
             }
+            LOGGER.info("Filling matrix based on transitions");
             for (Place p : places){
                 for (Transition t1 : p.inputs()){
                     for (Transition t2 : p.outputs()){
@@ -87,6 +88,7 @@ public class AdjacencyMatrix {
                 }
             }
         }
+        LOGGER.info("Finished creating new adjacency matrix");
     }
 
 

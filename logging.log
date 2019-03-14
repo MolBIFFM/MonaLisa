@@ -3,3 +3,1370 @@
 13:32:20.305 [main] INFO  monalisa.Settings - Initializing settings
 13:32:20.305 [main] WARN  monalisa.Settings - Could not load settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
 13:32:20.336 [main] WARN  monalisa.MonaLisa - No config file found. Creating new config file.
+11:03:27.305 [main] INFO  monalisa.MonaLisa - Logging Start
+11:03:29.074 [main] INFO  monalisa.Settings - Trying to load settings from file
+11:03:29.074 [main] INFO  monalisa.Settings - Initializing settings
+11:03:29.074 [main] INFO  monalisa.Settings - Setting properties to default values
+11:03:29.090 [main] INFO  monalisa.Settings - Finished setting properties to default values
+11:03:29.121 [main] INFO  monalisa.Settings -   Loaded 56 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+11:03:29.642 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+11:03:29.645 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+11:04:31.290 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'latestDirectory' as String
+11:04:31.290 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'latestDirectory' found, returning as String.
+11:05:05.371 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:05:05.574 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'completeResult' to Color
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultR' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultR' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultG' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultG' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultB' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultB' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'hasResults' to Color
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsR' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsR' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsG' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsG' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsB' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsB' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'warning' to Color
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningR' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningR' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningG' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningG' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningB' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningB' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'error' to Color
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorR' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorR' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorG' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorG' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorB' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorB' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'notFinished' to Color
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedR' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedR' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedG' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedG' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedB' as String
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedB' found, returning as String.
+11:05:05.590 [AWT-EventQueue-0] INFO  monalisa.Project - Creating new project from external file.
+11:05:05.777 [AWT-EventQueue-0] INFO  monalisa.Project - Initializing tools.
+11:05:06.105 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating new project from external file.
+11:05:06.105 [AWT-EventQueue-0] INFO  monalisa.Project - Creating UI for Analyze Frame.
+11:05:06.105 [AWT-EventQueue-0] INFO  monalisa.Project - Laying out tools.
+11:05:06.465 [AWT-EventQueue-0] INFO  monalisa.Project - Finished laying out tools.
+11:05:06.465 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating UI for Analyze Frame.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'tinvColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'pinvColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mctsColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'heatMapColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'knockedOutColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'alsoKnockedOutColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'notKnockedOutColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'backgroundColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mcsObjectivColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorB' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mcsColor' to Color
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorR' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorR' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorG' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorG' found, returning as String.
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorB' as String
+11:05:06.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorB' found, returning as String.
+11:05:13.404 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Simulator' to ToolBar
+11:05:13.482 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Centrality' to ToolBar
+11:05:13.591 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Annotations' to ToolBar
+11:05:13.591 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Initializing AnnotationsPanel
+11:05:14.029 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Initializing ModelInformationFrame
+11:05:14.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Starting ModelInformations part
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Finished ModelInformations part and initializing ModelInformationFrame
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Started MIRIAM part
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'false'
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'false'
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM part
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Started SBO part
+11:05:14.060 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Reading from 'SBO_XML.xml'
+11:05:14.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Adding SBO tooltips
+11:05:14.294 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished SBO part
+11:05:14.294 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Starting MIRIAM registry part
+11:05:14.294 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Reading from miriam_registry.xml
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Adding MIRIAM URLs
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEBI'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Enzyme Nomenclature'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Knowledgebase'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Taxonomy'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioModels Database'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry collection'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICD'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InterPro'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Pathway'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Compound'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Reaction'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIM'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PIRSF'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Reactome'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOI'
+11:05:14.513 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SGD'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Systems Biology Ontology'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Drug'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Glycan'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pfam'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Nucleotide Sequence Database'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FlyBase'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wormpep'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PROSITE'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-substance'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-compound'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'arXiv'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Genome Database'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Reaction'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RefSeq'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Transport Classification Database'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniParc'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MINT'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Interacting Proteins'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Signaling Gateway'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RESID'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Protein'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Gene'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Locus'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HMDB'
+11:05:14.529 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LIPID MAPS'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PeptideAtlas'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GEO'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Evidence Code Ontology'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Modification Ontology'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Saccharomyces genome database pathways'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioGRID'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Family'
+11:05:14.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPRINT'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand Expo'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aclame'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISBN'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PRIDE'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for '3DMET'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FMA'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MatrixDB'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Gene'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genes'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BRENDA'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-bioassay'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Commons'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOVERGEN'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Melanoma Molecular Map Project Biomaps'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiPathways'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MACiE'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase Sequence'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Gene'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Ontology'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rhea'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unipathway'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL compound'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL target'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Kinetic Record'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand-Gated Ion Channel database'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Pathways'
+11:05:15.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Disease'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Drug'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Drug'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Target'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuronDB'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroMorpho'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemIDplus'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSystems'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Chemical'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Disease'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Gene'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioNumbers'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'T3DB'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Small Molecule Pathway Database'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Protein'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneDB'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TEDDY'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KiSAO'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Interactions Ontology'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Type Ontology'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Brenda Tissue Ontology'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PATO'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Chemical Component Dictionary'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycomeDB'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LipidBank'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Orthology'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProDom'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SMART'
+11:05:16.075 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conserved Domain Database'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Relation Ontology'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Modeling Database'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMEx'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'iRefWeb'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Microbial Protein Interaction Database'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Residue'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroLex'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology for Biomedical Investigations'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK EC Record'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology of Physics for Biology'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JWS Online'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ModelDB'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiWiki'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCI Pathway Interaction Database: Pathway'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Model'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Pathway'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unit Ontology'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ClinicalTrials.gov'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemSpider'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIt'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCatalogue'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Ontology'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIA'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemBank'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CSA'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Candida Genome Database'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AntWeb'
+11:05:17.372 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed Central'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AmoebaDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CryptoDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PlasmoDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GiardiaDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MicrosporidiaDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ToxoDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TrichDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TriTrypDB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP insertion DB'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BeetleBase'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BOLD Taxonomy'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbEST'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbProbe'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbSNP'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniSTS'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoGene'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GABI'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GreenGenes'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GRIN Plant Taxonomy'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Locus'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Transcript'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Protein'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Sequence Metainformation'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Taxonomy'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IRD Segment Sequence'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISFinder'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Collection of Microorganisms'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Taxon'
+11:05:18.122 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Gene'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MaizeGDB Locus'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBank'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NITE Biological Research Center Catalogue'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pseudomonas Genome Database'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene protein'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene genes'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene Taxonomy'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene QTL'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sol Genomics Network'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Xenbase'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioPortal'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry resource'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EDAM Ontology'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Model Database'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AGD'
+11:05:18.482 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArachnoServer'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCyc'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAZy'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOA'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaleoDB'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Compulyeast'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DisProt'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EchoBASE'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'eggNOG'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Bacteria'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Protists'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Metazoa'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Plants'
+11:05:18.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Fungi'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HCVDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genatlas'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH superfamily'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH domain'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneFarm'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GPCRDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOGENOM'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneTree'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HSSP'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser tuberculosis'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser leprae'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser marinum'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser smegmatis'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Orphanet'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OrthoDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Peroxibase'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhylomeDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubstrateDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CutDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtClustDB'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PMP'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet ProteinCard'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet Cluster'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'REBASE'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SWISS-MODEL'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VectorBase'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Human Disease Ontology'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Cycle Ontology'
+11:05:18.935 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase mature sequence'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'nextProt'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAS'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genome'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Metagenome'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NARCIS'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Chemical Substance Dictionary'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Ontology'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Read Archive'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ScerTF'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Gene'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRNEST'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NAPP'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v3'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VIRsiRNA'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ELM'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MimoDB'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SitEx'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BYKdb'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conoserver'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TopFind'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIPModDB'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Image Library'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'COMBINE specifications'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Phenotype'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Expression'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CABRI'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CYGD'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HUGE'
+11:05:19.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BindingDB'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STRING'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STITCH'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical Vetinary'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phenol-Explorer'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SNOMED CT'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2012'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KnapSack'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Canadian Drug Product Database'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MassBank'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HomoloGene'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Compound'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ABS'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'APD'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemDB'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DPV'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR receptor'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aceview Worm'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ASAP'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ATCC'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP EST'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase Gene'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT LIGM'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Worfdb'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NEXTDB'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Genome Network'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SoyBase'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HAMAP'
+11:05:20.231 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rouge'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress Platform'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CGSC Strain'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB DNA'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Protein'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Locus'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Allele'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISSN'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS Family'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MGED Ontology'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NASC code'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NIAEST'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pazar Transcription Factor'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Ontology'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RNA Modification Database'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Independent Component'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Dependent Component'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeBASE'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tetrahymena Genome Database'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CMR Gene'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TIGRFAMS'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Animal TFDB Family'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR family'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBG2 Introns'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Spectral Database for Organic Compounds'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Vbase2'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPIKE Map'
+11:05:20.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'METLIN'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneCards'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MMRRC'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Reaction'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Enzyme'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Pathway'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Biotransformation Rule'
+11:05:20.950 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'mirEX'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase EST'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT HLA'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Flystock'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OPM'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Allergome'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PomBase'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPA'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JAX Mice'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'uBio NameBank'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YeTFasCo'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TarBase'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CharProt'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Protein'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Group'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Protein'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GenPept'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniGene'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Receptor'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Compound'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioProject'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSample'
+11:05:20.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PiroplasmaDB'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unite'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIm'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProGlycProt'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PolBase'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NucleaRDB'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SUPFAM'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rice Genome Annotation Project'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PINA'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tissue List'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Biography'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC Symbol'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSharing'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FungiDB'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DARC'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DRSC'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Schizosaccharomyces'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Saccharomyces'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PSCDB'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SCOP'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ENA'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOMMINO'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Node'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Consensus CDS'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Locus Reference Genomic'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPRD'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Gene'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Expt'
+11:05:21.481 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MetaboLights'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Bibliography Number'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ORCID'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChI'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wikipedia (En)'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Kinase'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Phosphoprotein'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChIKey'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Isoform'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Environ'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CLDB'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Experimental Factor Ontology'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGMD'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AphidBase Transcript'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Affymetrix Probeset'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeFam'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAPS-DB'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cube db'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IDEAL'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STAP'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pocketome'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD genome'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD metadata'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Protocol'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Expt'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tree of Life'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VariO'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViPR Strain'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EPD'
+11:05:21.858 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RFAM'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Fungal Barcode'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AFTOL'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Locus'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Protein'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank Target'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AutDB'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Map'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee family'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee gene'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee stage'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee organ'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCarta Pathway'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway Component'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Profile'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database GC-MS spectra'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Reference Substance'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Analyte'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct Molecule'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DEPOD'
+11:05:22.311 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Pathways'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Antibody'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Drug Code'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phytozome Locus'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiList'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DailyMed'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Drug'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Side Effect'
+11:05:22.327 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiGenes'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Broad Fungal Genome Initiative'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Coriell Cell Repositories'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CORUM'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoliWiki'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genome Properties'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JSTOR'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Adult Gross Anatomy'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UBERON'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unimod'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VBRC'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViralZone'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology Reference'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database qTL'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database strain'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOOR'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Degradome Database'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBD'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DATF'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR ligand'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molbase'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YRC PDR'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Yeast Intron Database'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Fly'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Human'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Mouse'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Yeast'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YDPM'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase RNAi'
+11:05:22.764 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FunCat'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PASS2'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg element'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg family'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Genus'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Gene'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2013'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Module'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Disease'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MedlinePlus'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LigandBox'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycoEpitope'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JCGGDB'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Gene'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Transcript'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Gene'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Mutant'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Strain'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Stage'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryza Tag Line'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Wiki'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Organism'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Protein'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank Ligand'
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM registry part
+11:05:23.280 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Topology' to ToolBar
+11:05:23.311 [AWT-EventQueue-0] INFO  monalisa.Project - Transfering stored data to addon panels
+11:05:23.311 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:06:48.322 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item state changed
+11:06:48.322 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item selected
+11:06:48.322 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'true'
+11:06:48.333 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'true'
+11:06:48.334 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Dealt with item state change
+11:07:00.600 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item state changed
+11:07:00.601 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item deselected
+11:07:00.602 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'false'
+11:07:00.618 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'false'
+11:07:00.619 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Dealt with item state change
+11:07:00.619 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item state changed
+11:07:00.619 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item selected
+11:07:00.619 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'true'
+11:07:00.624 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'true'
+11:07:00.629 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Dealt with item state change
+11:07:02.052 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item state changed
+11:07:02.052 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item deselected
+11:07:02.052 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'false'
+11:07:02.058 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'false'
+11:07:02.059 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Dealt with item state change
+11:07:02.059 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item state changed
+11:07:02.059 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Item selected
+11:07:02.059 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'true'
+11:07:02.070 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'true'
+11:07:02.071 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Dealt with item state change
+11:07:55.810 [main] INFO  monalisa.MonaLisa - Logging Start
+11:07:56.410 [main] INFO  monalisa.Settings - Trying to load settings from file
+11:07:56.411 [main] INFO  monalisa.Settings - Initializing settings
+11:07:56.411 [main] INFO  monalisa.Settings - Setting properties to default values
+11:07:56.412 [main] INFO  monalisa.Settings - Finished setting properties to default values
+11:07:56.463 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+11:07:56.873 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+11:07:56.876 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+11:07:57.267 [AWT-EventQueue-0] INFO  monalisa.Project - Checking whether project has changed
+11:07:57.268 [AWT-EventQueue-0] INFO  monalisa.Project - projectChanged: false
+11:07:57.489 [AWT-EventQueue-0] INFO  monalisa.MonaLisa - Shutting down Monalisa
+11:08:15.917 [main] INFO  monalisa.MonaLisa - Logging Start
+11:08:16.196 [main] INFO  monalisa.Settings - Trying to load settings from file
+11:08:16.200 [main] INFO  monalisa.Settings - Initializing settings
+11:08:16.203 [main] INFO  monalisa.Settings - Setting properties to default values
+11:08:16.206 [main] INFO  monalisa.Settings - Finished setting properties to default values
+11:08:16.231 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+11:08:16.454 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+11:08:16.456 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+11:08:16.855 [AWT-EventQueue-0] INFO  monalisa.MonaLisa - Shutting down Monalisa
+11:55:00.049 [main] INFO  monalisa.MonaLisa - Logging Start
+11:55:00.424 [main] INFO  monalisa.Settings - Trying to load settings from file
+11:55:00.439 [main] INFO  monalisa.Settings - Initializing settings
+11:55:00.439 [main] INFO  monalisa.Settings - Setting properties to default values
+11:55:00.439 [main] INFO  monalisa.Settings - Finished setting properties to default values
+11:55:00.486 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+11:55:00.767 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+11:55:00.783 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+11:55:10.317 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'latestDirectory' as String
+11:55:10.317 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'latestDirectory' found, returning as String.
+11:55:14.896 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:55:18.286 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:55:18.580 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'completeResult' to Color
+11:55:18.580 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultR' as String
+11:55:18.580 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultR' found, returning as String.
+11:55:18.580 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultG' as String
+11:55:18.580 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultG' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'completeResultB' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'completeResultB' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'hasResults' to Color
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsR' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsR' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsG' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsG' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'hasResultsB' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'hasResultsB' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'warning' to Color
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningR' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningR' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningG' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningG' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'warningB' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'warningB' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'error' to Color
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorR' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorR' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorG' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorG' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'errorB' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'errorB' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'notFinished' to Color
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedR' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedR' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedG' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedG' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notFinishedB' as String
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notFinishedB' found, returning as String.
+11:55:18.596 [AWT-EventQueue-0] INFO  monalisa.Project - Creating new project from external file.
+11:55:19.627 [AWT-EventQueue-0] INFO  monalisa.Project - Initializing tools.
+11:55:20.283 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating new project from external file.
+11:55:20.283 [AWT-EventQueue-0] INFO  monalisa.Project - Creating UI for Analyze Frame.
+11:55:20.283 [AWT-EventQueue-0] INFO  monalisa.Project - Laying out tools.
+11:55:26.341 [AWT-EventQueue-0] INFO  monalisa.Project - Finished laying out tools.
+11:55:26.356 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating UI for Analyze Frame.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'tinvColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'tinvColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'tinvColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'pinvColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'pinvColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'pinvColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mctsColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mctsColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mctsColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'heatMapColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'heatMapColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'heatMapColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'knockedOutColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'knockedOutColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'knockedOutColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'alsoKnockedOutColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'alsoKnockedOutColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'alsoKnockedOutColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'notKnockedOutColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorG' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'notKnockedOutColorB' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'notKnockedOutColorB' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'backgroundColor' to Color
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorR' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorR' found, returning as String.
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorG' as String
+11:55:26.575 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorG' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'backgroundColorB' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'backgroundColorB' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mcsObjectivColor' to Color
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorR' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorR' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorG' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorG' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsObjectivColorB' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsObjectivColorB' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Casting 'mcsColor' to Color
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorR' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorR' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorG' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorG' found, returning as String.
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'mcsColorB' as String
+11:55:26.591 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'mcsColorB' found, returning as String.
+11:55:30.659 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to cast 'SearchBar' to Boolean
+11:55:30.659 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'SearchBar' as String
+11:55:30.659 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'SearchBar' found, returning as String.
+11:55:30.675 [AWT-EventQueue-0] INFO  monalisa.Settings - Successfully cast 'SearchBar' to Boolean
+11:55:42.232 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Simulator' to ToolBar
+11:55:42.232 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to cast 'Simulator' to Boolean
+11:55:42.232 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'Simulator' as String
+11:55:42.232 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'Simulator' found, returning as String.
+11:55:42.232 [AWT-EventQueue-0] INFO  monalisa.Settings - Successfully cast 'Simulator' to Boolean
+11:55:42.997 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Centrality' to ToolBar
+11:55:42.997 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to cast 'Centrality' to Boolean
+11:55:42.997 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'Centrality' as String
+11:55:42.997 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'Centrality' found, returning as String.
+11:55:42.997 [AWT-EventQueue-0] INFO  monalisa.Settings - Successfully cast 'Centrality' to Boolean
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Annotations' to ToolBar
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to cast 'Annotations' to Boolean
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'Annotations' as String
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'Annotations' found, returning as String.
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.Settings - Successfully cast 'Annotations' to Boolean
+11:55:43.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Initializing AnnotationsPanel
+11:55:43.544 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Initializing ModelInformationFrame
+11:55:43.732 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Starting ModelInformations part
+11:55:43.732 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Finished ModelInformations part and initializing ModelInformationFrame
+11:55:43.732 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Started MIRIAM part
+11:55:43.732 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'false'
+11:55:43.732 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'false'
+11:55:43.747 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM part
+11:55:43.747 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Started SBO part
+11:55:43.778 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Reading from 'SBO_XML.xml'
+11:55:43.997 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Adding SBO tooltips
+11:55:44.013 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished SBO part
+11:55:44.013 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Starting MIRIAM registry part
+11:55:44.013 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Reading from miriam_registry.xml
+11:55:44.232 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Adding MIRIAM URLs
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEBI'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Enzyme Nomenclature'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Knowledgebase'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Taxonomy'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioModels Database'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry collection'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICD'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InterPro'
+11:55:44.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Pathway'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Compound'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Reaction'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIM'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PIRSF'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Reactome'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOI'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SGD'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Systems Biology Ontology'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Drug'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Glycan'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pfam'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Nucleotide Sequence Database'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FlyBase'
+11:55:44.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wormpep'
+11:55:44.325 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PROSITE'
+11:55:44.325 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-substance'
+11:55:44.325 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-compound'
+11:55:44.325 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'arXiv'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Genome Database'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Reaction'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RefSeq'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Transport Classification Database'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniParc'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MINT'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Interacting Proteins'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Signaling Gateway'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RESID'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Protein'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Gene'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Locus'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HMDB'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LIPID MAPS'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PeptideAtlas'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GEO'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Evidence Code Ontology'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Modification Ontology'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Saccharomyces genome database pathways'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioGRID'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Family'
+11:55:44.341 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPRINT'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand Expo'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aclame'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISBN'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PRIDE'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for '3DMET'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FMA'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MatrixDB'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Gene'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genes'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BRENDA'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-bioassay'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Commons'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOVERGEN'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Melanoma Molecular Map Project Biomaps'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiPathways'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MACiE'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase Sequence'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Gene'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Ontology'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rhea'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unipathway'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL compound'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL target'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Kinetic Record'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand-Gated Ion Channel database'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Pathways'
+11:55:44.685 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Disease'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Drug'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Drug'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Target'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuronDB'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroMorpho'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemIDplus'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSystems'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Chemical'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Disease'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Gene'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioNumbers'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'T3DB'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Small Molecule Pathway Database'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Protein'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneDB'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TEDDY'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KiSAO'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Interactions Ontology'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Type Ontology'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Brenda Tissue Ontology'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PATO'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Chemical Component Dictionary'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycomeDB'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LipidBank'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Orthology'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProDom'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SMART'
+11:55:44.966 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conserved Domain Database'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Relation Ontology'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Modeling Database'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMEx'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'iRefWeb'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Microbial Protein Interaction Database'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Residue'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroLex'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology for Biomedical Investigations'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK EC Record'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology of Physics for Biology'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JWS Online'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ModelDB'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiWiki'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCI Pathway Interaction Database: Pathway'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Model'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Pathway'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unit Ontology'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ClinicalTrials.gov'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemSpider'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIt'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCatalogue'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Ontology'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIA'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemBank'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CSA'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Candida Genome Database'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AntWeb'
+11:55:45.278 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed Central'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AmoebaDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CryptoDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PlasmoDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GiardiaDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MicrosporidiaDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ToxoDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TrichDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TriTrypDB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP insertion DB'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BeetleBase'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BOLD Taxonomy'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbEST'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbProbe'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbSNP'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniSTS'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoGene'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GABI'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GreenGenes'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GRIN Plant Taxonomy'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Locus'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Transcript'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Protein'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Sequence Metainformation'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Taxonomy'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IRD Segment Sequence'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISFinder'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Collection of Microorganisms'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Taxon'
+11:55:45.606 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Gene'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MaizeGDB Locus'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBank'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NITE Biological Research Center Catalogue'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pseudomonas Genome Database'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene protein'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene genes'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene Taxonomy'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene QTL'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sol Genomics Network'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Xenbase'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioPortal'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry resource'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EDAM Ontology'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Model Database'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AGD'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArachnoServer'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCyc'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAZy'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOA'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaleoDB'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Compulyeast'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DisProt'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EchoBASE'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'eggNOG'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Bacteria'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Protists'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Metazoa'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Plants'
+11:55:45.888 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Fungi'
+11:55:46.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HCVDB'
+11:55:46.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genatlas'
+11:55:46.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH superfamily'
+11:55:46.247 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH domain'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneFarm'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GPCRDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOGENOM'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneTree'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HSSP'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser tuberculosis'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser leprae'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser marinum'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser smegmatis'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Orphanet'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OrthoDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Peroxibase'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhylomeDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubstrateDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CutDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtClustDB'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PMP'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet ProteinCard'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet Cluster'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'REBASE'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SWISS-MODEL'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VectorBase'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Human Disease Ontology'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Cycle Ontology'
+11:55:46.263 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase mature sequence'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'nextProt'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAS'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genome'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Metagenome'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NARCIS'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Chemical Substance Dictionary'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Ontology'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Read Archive'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ScerTF'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Gene'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRNEST'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NAPP'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v3'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VIRsiRNA'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ELM'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MimoDB'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SitEx'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BYKdb'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conoserver'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TopFind'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIPModDB'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Image Library'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'COMBINE specifications'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Phenotype'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Expression'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CABRI'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CYGD'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HUGE'
+11:55:46.528 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BindingDB'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STRING'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STITCH'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical Vetinary'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phenol-Explorer'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SNOMED CT'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2012'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KnapSack'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Canadian Drug Product Database'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MassBank'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HomoloGene'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Compound'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ABS'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'APD'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemDB'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DPV'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR receptor'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aceview Worm'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ASAP'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ATCC'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP EST'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase Gene'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT LIGM'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Worfdb'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NEXTDB'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Genome Network'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SoyBase'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HAMAP'
+11:55:47.044 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rouge'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress Platform'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CGSC Strain'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB DNA'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Protein'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Locus'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Allele'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISSN'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS Family'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MGED Ontology'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NASC code'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NIAEST'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pazar Transcription Factor'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Ontology'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RNA Modification Database'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Independent Component'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Dependent Component'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeBASE'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tetrahymena Genome Database'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CMR Gene'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TIGRFAMS'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Animal TFDB Family'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR family'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBG2 Introns'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Spectral Database for Organic Compounds'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Vbase2'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPIKE Map'
+11:55:47.575 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'METLIN'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneCards'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MMRRC'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Reaction'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Enzyme'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Pathway'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Biotransformation Rule'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'mirEX'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase EST'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT HLA'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Flystock'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OPM'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Allergome'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PomBase'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPA'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JAX Mice'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'uBio NameBank'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YeTFasCo'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TarBase'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CharProt'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Protein'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Group'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Protein'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GenPept'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniGene'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Receptor'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Compound'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioProject'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSample'
+11:55:47.934 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PiroplasmaDB'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unite'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIm'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProGlycProt'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PolBase'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NucleaRDB'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SUPFAM'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rice Genome Annotation Project'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PINA'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tissue List'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Biography'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC Symbol'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSharing'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FungiDB'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DARC'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DRSC'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Schizosaccharomyces'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Saccharomyces'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PSCDB'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SCOP'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ENA'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOMMINO'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Node'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Consensus CDS'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Locus Reference Genomic'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPRD'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Gene'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Expt'
+11:55:48.262 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MetaboLights'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Bibliography Number'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ORCID'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChI'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wikipedia (En)'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Kinase'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Phosphoprotein'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChIKey'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Isoform'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Environ'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CLDB'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Experimental Factor Ontology'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGMD'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AphidBase Transcript'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Affymetrix Probeset'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeFam'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAPS-DB'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cube db'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IDEAL'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STAP'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pocketome'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD genome'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD metadata'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Protocol'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Expt'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tree of Life'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VariO'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViPR Strain'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EPD'
+11:55:48.517 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RFAM'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Fungal Barcode'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AFTOL'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Locus'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Protein'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank Target'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AutDB'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Map'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee family'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee gene'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee stage'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee organ'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCarta Pathway'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway Component'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Profile'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database GC-MS spectra'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Reference Substance'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Analyte'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct Molecule'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DEPOD'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Pathways'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Antibody'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Drug Code'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phytozome Locus'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiList'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DailyMed'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Drug'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Side Effect'
+11:55:48.798 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiGenes'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Broad Fungal Genome Initiative'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Coriell Cell Repositories'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CORUM'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoliWiki'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genome Properties'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JSTOR'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Adult Gross Anatomy'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UBERON'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unimod'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VBRC'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViralZone'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology Reference'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database qTL'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database strain'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOOR'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Degradome Database'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBD'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DATF'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR ligand'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molbase'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YRC PDR'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Yeast Intron Database'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Fly'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Human'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Mouse'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Yeast'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YDPM'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase RNAi'
+11:55:49.064 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FunCat'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PASS2'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg element'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg family'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Genus'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Gene'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2013'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Module'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Disease'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MedlinePlus'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LigandBox'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycoEpitope'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JCGGDB'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Gene'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Transcript'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Gene'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Mutant'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Strain'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Stage'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryza Tag Line'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Wiki'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Organism'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Protein'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank Ligand'
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM registry part
+11:55:49.345 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Topology' to ToolBar
+11:55:49.361 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to cast 'Topology' to Boolean
+11:55:49.361 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'Topology' as String
+11:55:49.361 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'Topology' found, returning as String.
+11:55:49.361 [AWT-EventQueue-0] INFO  monalisa.Settings - Successfully cast 'Topology' to Boolean
+11:55:49.564 [AWT-EventQueue-0] INFO  monalisa.Project - Transfering stored data to addon panels
+11:55:49.564 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+11:56:11.962 [AWT-EventQueue-0] INFO  monalisa.Project - Checking whether project has changed
+11:56:11.962 [AWT-EventQueue-0] INFO  monalisa.Project - projectChanged: false
+13:24:34.672 [main] INFO  monalisa.MonaLisa - Logging Start
+13:24:35.463 [main] INFO  monalisa.Settings - Trying to load settings from file
+13:24:35.463 [main] INFO  monalisa.Settings - Initializing settings
+13:24:35.463 [main] INFO  monalisa.Settings - Setting properties to default values
+13:24:35.463 [main] INFO  monalisa.Settings - Finished setting properties to default values
+13:24:35.495 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+13:24:35.792 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+13:24:35.792 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+13:58:43.519 [main] INFO  monalisa.MonaLisa - Logging Start
+13:58:43.740 [main] INFO  monalisa.Settings - Trying to load settings from file
+13:58:43.741 [main] INFO  monalisa.Settings - Initializing settings
+13:58:43.741 [main] INFO  monalisa.Settings - Setting properties to default values
+13:58:43.742 [main] INFO  monalisa.Settings - Finished setting properties to default values
+13:58:43.843 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+13:58:43.931 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+13:58:43.933 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+13:59:14.788 [main] INFO  monalisa.MonaLisa - Logging Start
+13:59:14.999 [main] INFO  monalisa.Settings - Trying to load settings from file
+13:59:14.999 [main] INFO  monalisa.Settings - Initializing settings
+13:59:14.999 [main] INFO  monalisa.Settings - Setting properties to default values
+13:59:14.999 [main] INFO  monalisa.Settings - Finished setting properties to default values
+13:59:15.053 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+13:59:15.183 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+13:59:15.183 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+14:07:09.278 [main] INFO  monalisa.MonaLisa - Logging Start
+14:07:09.498 [main] INFO  monalisa.Settings - Trying to load settings from file
+14:07:09.498 [main] INFO  monalisa.Settings - Initializing settings
+14:07:09.514 [main] INFO  monalisa.Settings - Setting properties to default values
+14:07:09.514 [main] INFO  monalisa.Settings - Finished setting properties to default values
+14:07:09.538 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+14:07:09.668 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+14:07:09.668 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+14:20:30.713 [main] INFO  monalisa.MonaLisa - Logging Start
+14:20:30.968 [main] INFO  monalisa.Settings - Trying to load settings from file
+14:20:30.968 [main] INFO  monalisa.Settings - Initializing settings
+14:20:30.969 [main] INFO  monalisa.Settings - Setting properties to default values
+14:20:30.970 [main] INFO  monalisa.Settings - Finished setting properties to default values
+14:20:30.979 [main] INFO  monalisa.Settings -   Loaded 61 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+14:20:31.104 [AWT-EventQueue-0] INFO  monalisa.Settings - Trying to return key 'recentlyProjects' as String
+14:20:31.104 [AWT-EventQueue-0] INFO  monalisa.Settings - Key 'recentlyProjects' found, returning as String.

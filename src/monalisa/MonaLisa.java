@@ -56,7 +56,7 @@ public final class MonaLisa implements Runnable {
             if (IS_MACOSX) {
             // Set system properties for correct styling under OS X.
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE);
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE)    ;
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
 

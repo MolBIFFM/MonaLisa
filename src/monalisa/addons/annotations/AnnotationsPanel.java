@@ -254,6 +254,7 @@ public class AnnotationsPanel extends AddonPanel {
         LOGGER.info("Finished MIRIAM registry part");
         editMiriamIdentifierEntry = false;
         mif.editMiriamIdentifierModel = false;
+        LOGGER.info("Successfully initialized AnnotationsPanel");
     }
 
     static void editCompartmentIdentifiers(Compartment c) {

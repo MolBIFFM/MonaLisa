@@ -26,6 +26,8 @@ import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A panel for the calculation and visualization of centrality measures
@@ -34,11 +36,12 @@ import monalisa.util.MonaLisaFileChooser;
  */
 public class CentralityPanel extends AddonPanel {
 
+    private static final Logger LOGGER = LogManager.getLogger(CentralityPanel.class);
     private Color heatMapColor;
-    
+
     private DefaultTableModel modelPlaces;
     private DefaultTableModel modelTransitions;
-    
+
     private AdjacencyMatrix adjMatrixPlaces;
     private AdjacencyMatrix adjMatrixTransitions;
 
@@ -46,46 +49,53 @@ public class CentralityPanel extends AddonPanel {
     private EccentricityCentrality ecc;
     private BetweennessCentrality bc;
     private EigenvectorCentrality ec;
-    
+
     /**
      * Creates a new form CentralityPanel
      */
     public CentralityPanel(final NetViewer netViewer, final PetriNetFacade petriNet) {
         super(netViewer, petriNet, "Centrality");
-
+        LOGGER.info("Initializing CentralityPanel");
         initComponents();
-        
+
         placesTable.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                //get the selected column   
+                LOGGER.info("Place selected in CentralityPanel");
+                //get the selected column
                 int col = placesTable.columnAtPoint(e.getPoint());
-                int row = placesTable.rowAtPoint(e.getPoint());                               
+                int row = placesTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
                 if (col == 0){
                     if(e.getClickCount() == 1) {
+                        LOGGER.info("Reflecting place selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode() , true);
                     }
-                }              
+                }
+                LOGGER.info("Handled place selection in CentralityPanel");
             }
-        });  
-        
-        transitionsTabel.addMouseListener(new MouseAdapter(){
+        });
+
+        transitionsTable.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                //get the selected column   
-                int col = transitionsTabel.columnAtPoint(e.getPoint());
-                int row = transitionsTabel.rowAtPoint(e.getPoint());                               
+                LOGGER.info("Transition selected in CentralityPanel");
+                //get the selected column
+                int col = transitionsTable.columnAtPoint(e.getPoint());
+                int row = transitionsTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
                 if (col == 0){
                     if(e.getClickCount() == 1) {
+                        LOGGER.info("Reflecting transition selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTabel.getValueAt(row, col)).getMasterNode() , true);
+                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode() , true);
                     }
-                }              
+                }
+                LOGGER.info("Handled transition selection in CentralityPanel");
             }
-        });  
+        });
+        LOGGER.info("Successfully initialized CentralityPanel");
     }
 
     /**
@@ -94,10 +104,11 @@ public class CentralityPanel extends AddonPanel {
      * @param rankingTransitions
      * @param rankingPlaces
      */
-
     public void labelNodes(Map<Integer, Double> rankingTransitions, Map<Integer, Double> rankingPlaces) {
+        LOGGER.info("Labelling nodes based on centrality ranking");
         heatMapColor = Settings.getAsColor("heatMapColor");
         if (rankingTransitions != null) {
+            LOGGER.info("Labelling transitions based on centrality ranking");
             double min = 0.0, max = 0.0, maxmin;
             float[] hsbvals = Color.RGBtoHSB(heatMapColor.getRed(), heatMapColor.getGreen(), heatMapColor.getBlue(), null);
 
@@ -105,6 +116,7 @@ public class CentralityPanel extends AddonPanel {
 
             this.netViewer.resetColor();
 
+            LOGGER.info("Finding minimum and maximum values for transitions");
             Iterator<Double> itInt = rankingTransitions.values().iterator();
             double value;
             while (itInt.hasNext()) {
@@ -117,9 +129,11 @@ public class CentralityPanel extends AddonPanel {
                 }
             }
             maxmin = max - min;
+            LOGGER.info("Found minimum and maximum values for transitions");
 
             Iterator<Map.Entry<Integer, Double>> itEntry = rankingTransitions.entrySet().iterator();
             Map.Entry<Integer, Double> entry;
+            LOGGER.info("Coloring transitions based on centrality ranking");
             while (itEntry.hasNext()) {
                 entry = itEntry.next();
                 if (maxmin == 0) {
@@ -134,15 +148,17 @@ public class CentralityPanel extends AddonPanel {
 
                 this.netViewer.getNodeFromTransitionId(entry.getKey()).setColorForAllNodes(new Color(Color.HSBtoRGB(hsbvals[0], (float) norm, hsbvals[2])));
             }
-
             this.netViewer.getVisualizationViewer().repaint();
+            LOGGER.info("Finished labelling transitions based on centrality ranking");
         }
         if (rankingPlaces != null) {
+            LOGGER.info("Labelling places based on centrality ranking");
             double min = 0.0, max = 0.0, maxmin;
             float[] hsbvals = Color.RGBtoHSB(heatMapColor.getRed(), heatMapColor.getGreen(), heatMapColor.getBlue(), null);
 
             double norm;
 
+            LOGGER.info("Finding minimum and maximum values for places");
             Iterator<Double> itInt = rankingPlaces.values().iterator();
             double value;
             while (itInt.hasNext()) {
@@ -155,9 +171,11 @@ public class CentralityPanel extends AddonPanel {
                 }
             }
             maxmin = max - min;
+            LOGGER.info("Found minimum and maximum value for places");
 
             Iterator<Map.Entry<Integer, Double>> itEntry = rankingPlaces.entrySet().iterator();
             Map.Entry<Integer, Double> entry;
+            LOGGER.info("Coloring places based on centrality ranking");
             while (itEntry.hasNext()) {
                 entry = itEntry.next();
                 if (maxmin == 0) {
@@ -172,7 +190,9 @@ public class CentralityPanel extends AddonPanel {
                 this.netViewer.getNodeFromPlaceId(entry.getKey()).setColorForAllNodes(new Color(Color.HSBtoRGB(hsbvals[0], (float) norm, hsbvals[2])));
             }
             this.netViewer.getVisualizationViewer().repaint();
+            LOGGER.info("Finished labelling places based on centrality value");
         }
+        LOGGER.info("Successfully labeled nodes based on centrality ranking");
     }
 
     /**
@@ -201,7 +221,7 @@ public class CentralityPanel extends AddonPanel {
         placesTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        transitionsTabel = new javax.swing.JTable();
+        transitionsTable = new javax.swing.JTable();
         exportButton = new javax.swing.JButton();
         heatMap = new javax.swing.JButton();
         centralityList = new javax.swing.JComboBox();
@@ -299,8 +319,8 @@ public class CentralityPanel extends AddonPanel {
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(350, 300));
 
-        transitionsTabel.setAutoCreateRowSorter(true);
-        transitionsTabel.setModel(new javax.swing.table.DefaultTableModel(
+        transitionsTable.setAutoCreateRowSorter(true);
+        transitionsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -323,18 +343,18 @@ public class CentralityPanel extends AddonPanel {
                 return canEdit [columnIndex];
             }
         });
-        transitionsTabel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        transitionsTabel.setColumnSelectionAllowed(true);
-        transitionsTabel.setEnabled(false);
-        transitionsTabel.setFillsViewportHeight(true);
-        jScrollPane2.setViewportView(transitionsTabel);
-        transitionsTabel.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (transitionsTabel.getColumnModel().getColumnCount() > 0) {
-            transitionsTabel.getColumnModel().getColumn(0).setPreferredWidth(100);
-            transitionsTabel.getColumnModel().getColumn(1).setPreferredWidth(100);
-            transitionsTabel.getColumnModel().getColumn(2).setPreferredWidth(100);
-            transitionsTabel.getColumnModel().getColumn(3).setPreferredWidth(100);
-            transitionsTabel.getColumnModel().getColumn(4).setPreferredWidth(100);
+        transitionsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        transitionsTable.setColumnSelectionAllowed(true);
+        transitionsTable.setEnabled(false);
+        transitionsTable.setFillsViewportHeight(true);
+        jScrollPane2.setViewportView(transitionsTable);
+        transitionsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (transitionsTable.getColumnModel().getColumnCount() > 0) {
+            transitionsTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+            transitionsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+            transitionsTable.getColumnModel().getColumn(2).setPreferredWidth(100);
+            transitionsTable.getColumnModel().getColumn(3).setPreferredWidth(100);
+            transitionsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
         }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -430,9 +450,8 @@ public class CentralityPanel extends AddonPanel {
      *
      * @param evt
      */
-
     private void computeRankingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeRankingButtonActionPerformed
-
+        LOGGER.info("Computing rankings of nodes");
         adjMatrixPlaces = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.PLACES);
         adjMatrixTransitions = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.TRANSITIONS);
 
@@ -447,9 +466,9 @@ public class CentralityPanel extends AddonPanel {
 
         int pL = adjMatrixPlaces.getLength();
         int tL = adjMatrixTransitions.getLength();
-                
+        LOGGER.info("Resetting old rankings");
         modelPlaces = (DefaultTableModel) placesTable.getModel();
-        modelTransitions = (DefaultTableModel) transitionsTabel.getModel();        
+        modelTransitions = (DefaultTableModel) transitionsTable.getModel();
 
         if(modelPlaces.getRowCount() > 0) {
             for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
@@ -462,7 +481,8 @@ public class CentralityPanel extends AddonPanel {
                 modelTransitions.removeRow(i);
             }
         }
-        
+        LOGGER.info("Finished resetting old rankings");
+        LOGGER.info("Filling model with new rankings for places");
         for (int i = 0; i < pL; i++) {
             modelPlaces.addRow(new Object[]{this.netViewer.getNodeFromPlaceId(adjMatrixPlaces.getIdForIndex(i)),
                 cc.rankingPlaces.get(adjMatrixPlaces.getIdForIndex(i)),
@@ -470,7 +490,8 @@ public class CentralityPanel extends AddonPanel {
                 bc.rankingPlaces.get(adjMatrixPlaces.getIdForIndex(i)),
                 ec.rankingPlaces.get(adjMatrixPlaces.getIdForIndex(i))});
         }
-
+        LOGGER.info("Successfully filled model with new rankings for places");
+        LOGGER.info("Filling model with new rankings for transitions");
         for (int i = 0; i < tL; i++) {
             modelTransitions.addRow(new Object[]{this.netViewer.getNodeFromTransitionId(adjMatrixTransitions.getIdForIndex(i)),
                 cc.rankingTransitions.get(adjMatrixTransitions.getIdForIndex(i)),
@@ -478,10 +499,11 @@ public class CentralityPanel extends AddonPanel {
                 bc.rankingTransitions.get(adjMatrixTransitions.getIdForIndex(i)),
                 ec.rankingTransitions.get(adjMatrixTransitions.getIdForIndex(i))});
         }
-        
+        LOGGER.info("Successfully filled model with new rankings for transitions");
         this.exportButton.setEnabled(true);
         this.centralityList.setEnabled(true);
         this.heatMap.setEnabled(true);
+        LOGGER.info("Successfully computed rankings of nodes");
     }//GEN-LAST:event_computeRankingButtonActionPerformed
 
     /**
@@ -489,29 +511,30 @@ public class CentralityPanel extends AddonPanel {
      *
      * @param evt
      */
-
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
+        LOGGER.info("Exporting centralities");
         MonaLisaFileChooser fileCh = new MonaLisaFileChooser();
         int returnValue = fileCh.showSaveDialog(null);
         File file = fileCh.getSelectedFile();
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            try {                                
-                
+            try {
+
                 if (!"csv".equalsIgnoreCase(FileUtils.getExtension(file))) {
-                    file = new File(file.getAbsolutePath() + ".csv");       
+                    file = new File(file.getAbsolutePath() + ".csv");
                 }
-                
-                if (!file.exists()) {                    
-                    SaveResults.saveResults(file, placesTable, transitionsTabel);
+
+                if (!file.exists()) {
+                    SaveResults.saveResults(file, placesTable, transitionsTable);
                 } else {
                     int option = JOptionPane.showConfirmDialog(this.netViewer, "The file already exists. Do you want to overwrite this file?", "Save", JOptionPane.OK_CANCEL_OPTION, 2);
                     if (option == JOptionPane.OK_OPTION) {
-                        SaveResults.saveResults(file, placesTable, transitionsTabel);
+                        SaveResults.saveResults(file, placesTable, transitionsTable);
                     }
                 }
+                LOGGER.info("Successfully exported centralities");
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("Issue while exporting centralities: ", e);
             }
         }
     }//GEN-LAST:event_exportButtonActionPerformed
@@ -526,33 +549,41 @@ public class CentralityPanel extends AddonPanel {
      *
      * @param evt
      */
-
     private void heatMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatMapActionPerformed
-
+        LOGGER.info("New centrality selected for heatmap");
+        //Why do we calculate these again on every seletion?
         if (getComboElement().equals("Closeness")) {
+            LOGGER.info("New centrality for heatmap will be closeness");
             cc = new ClosenessCentrality(this.petriNet);
             cc.calculate();
             Map<Integer, Double> rankingTransitions = cc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = cc.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
+            LOGGER.info("Successfully changed heatmap centrality to closeness");
         } else if (getComboElement().equals("Eccentricity")) {
+            LOGGER.info("New centrality for heatmap will be eccentricity");
             ecc = new EccentricityCentrality(this.petriNet);
             ecc.calculate();
             Map<Integer, Double> rankingTransitions = ecc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ecc.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
+            LOGGER.info("Successfully changed heatmap centrality to eccentricity");
         } else if (getComboElement().equals("Betweenness")) {
+            LOGGER.info("New centrality for heatmap will be betweenness");
             bc = new BetweennessCentrality(this.petriNet);
             bc.calculate();
             Map<Integer, Double> rankingTransitions = bc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = bc.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
+            LOGGER.info("Successfully changed heatmap centrality to betweenness");
         } else if (getComboElement().equals("Eigenvector")) {
+            LOGGER.info("New centrality for heatmap is eigenvector");
             ec = new EigenvectorCentrality(this.petriNet);
             ec.calculate();
             Map<Integer, Double> rankingTransitions = ec.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ec.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
+            LOGGER.info("Successfully changed heatmap centrality to eigenvector");
         }
     }//GEN-LAST:event_heatMapActionPerformed
 
@@ -571,12 +602,14 @@ public class CentralityPanel extends AddonPanel {
     private javax.swing.JPanel spacerLeft;
     private javax.swing.JPanel spacerRight;
     private javax.swing.JPanel spacerTop;
-    private javax.swing.JTable transitionsTabel;
+    private javax.swing.JTable transitionsTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void netChanged() {
+        LOGGER.info("Net changed");
         if(cc != null) {
+            LOGGER.warn("Resetting model because of net change");
             if(modelPlaces.getRowCount() > 0) {
                 for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                     modelPlaces.removeRow(i);
@@ -592,6 +625,7 @@ public class CentralityPanel extends AddonPanel {
             this.exportButton.setEnabled(false);
             this.centralityList.setEnabled(false);
             this.heatMap.setEnabled(false);
+            LOGGER.info("Finished resetting model because of net change");
         }
     }
 }

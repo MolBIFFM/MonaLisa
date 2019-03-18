@@ -14,6 +14,8 @@ import java.util.Collection;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -21,26 +23,28 @@ import monalisa.data.pn.Transition;
  * @author Lilya Mirzoyan
  */
 public class ClosenessCentrality extends CentralityAbstract {
-   
+
+    private static final Logger LOGGER = LogManager.getLogger(ClosenessCentrality.class);
     private final int[][] splMatrixPlaces;
     private final int[][] splMatrixTransitions;
     Collection<Place> places;
     Collection<Transition> transitions;
-        
+
     /**
      * Executes the Floyd-Warshall algorithm to compute the distance matrices for
      * places and transitions
-     * @param petriNet 
+     * @param petriNet
      */
     public ClosenessCentrality(PetriNetFacade petriNet) {
-       super(petriNet);   
-      
+       super(petriNet);
+
+       LOGGER.info("Initializing for closeness centrality");
        places = petriNet.places();
        transitions = petriNet.transitions();
-       
-       splMatrixPlaces = new FloydWarshall(adjMatrixPlaces).getDistMatrix();   
-       splMatrixTransitions = new FloydWarshall(adjMatrixTransitions).getDistMatrix();  
-      
+
+       splMatrixPlaces = new FloydWarshall(adjMatrixPlaces).getDistMatrix();
+       splMatrixTransitions = new FloydWarshall(adjMatrixTransitions).getDistMatrix();
+       LOGGER.info("Finished initialization for closeness centrality");
     }
 
     /**
@@ -49,7 +53,8 @@ public class ClosenessCentrality extends CentralityAbstract {
      */
     @Override
     public void calculate() {
-              
+        LOGGER.info("Beginning calculation of closeness centrality");
+        LOGGER.info("Calculating closeness centrality for places");
         for (Place p : places){
             int sum = 0;
             double closeness;
@@ -57,7 +62,7 @@ public class ClosenessCentrality extends CentralityAbstract {
                 sum += splMatrixPlaces[adjMatrixPlaces.getIndexForId(p.id())][i];
             }
             if (sum == 0){
-                closeness = 1.0; 
+                closeness = 1.0;
             }
             else {
                 closeness = 1.0 /(double) sum;
@@ -65,8 +70,8 @@ public class ClosenessCentrality extends CentralityAbstract {
 
             rankingPlaces.put(p.id(), closeness);
         }
-
-        
+        LOGGER.info("Finished calculating closeness centrality for places");
+        LOGGER.info("Calculating closeness centrality for transitions");
         for (Transition t : transitions){
             int sum = 0;
             double closeness;
@@ -74,7 +79,7 @@ public class ClosenessCentrality extends CentralityAbstract {
                 sum += splMatrixTransitions[adjMatrixTransitions.getIndexForId(t.id())][i];
             }
             if (sum == 0){
-                closeness = 1.0; 
+                closeness = 1.0;
             }
             else {
                 closeness = 1.0 /(double) sum;
@@ -82,5 +87,6 @@ public class ClosenessCentrality extends CentralityAbstract {
 
             rankingTransitions.put(t.id(), closeness);
         }
+        LOGGER.info("Finished calculating closeness centrality for transitions");
     }
   }

@@ -16,7 +16,7 @@ import monalisa.addons.annotations.AnnotationsPanel;
 import monalisa.addons.centrality.CentralityPanel;
 import monalisa.addons.tokensimulator.TokenSimPanel;
 import monalisa.addons.topological.TopologyPanel;
-// import monalisa.addons.netproperties.NetPropertiesPanel;
+import monalisa.addons.netproperties.NetPropertiesPanel;
 
 /**
  * A list of all available Addons for MonaLisa
@@ -31,7 +31,7 @@ public class Addons {
         addons.add(CentralityPanel.class);
         addons.add(AnnotationsPanel.class);
         addons.add(TopologyPanel.class);
-        // addons.add(NetPropertiesPanel.class);
+        addons.add(NetPropertiesPanel.class);
     }
 
 }

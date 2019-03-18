@@ -13,24 +13,28 @@ package monalisa.addons.netproperties;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 /**
  *
  * @author daniel
  */
-public class NonBlockingMultiplicity extends NetPropertieAlgorithm<Boolean>{
-    
+public class NonBlockingMultiplicity extends NetPropertyAlgorithm<Boolean>{
+
+    private static final Logger LOGGER = LogManager.getLogger(NonBlockingMultiplicity.class);
+
     public NonBlockingMultiplicity(PetriNetFacade pn){
         super(pn);
     }
-    
+
     /**
-     * Checks if for each place p, the minimum of multiplicities of the arcs 
+     * Checks if for each place p, the minimum of multiplicities of the arcs
      * ending at p is not less than the maximum of multiplicities of the arcs
      * starting at p.
      */
     @Override
     public void runAlgorithm(){
+        LOGGER.info("Checking whether non-blocking multiplicity applies");
         algorithmName = "non-blocking multiplicity";
         algorithmValue = true;
         for(Place p : petriNet.places()) { //checks all Places.
@@ -47,5 +51,6 @@ public class NonBlockingMultiplicity extends NetPropertieAlgorithm<Boolean>{
                 }
             }
         }
+        LOGGER.info("Successfully checked whether non-blocking multiplicity applies");
     }
 }

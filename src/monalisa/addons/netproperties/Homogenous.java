@@ -13,24 +13,30 @@ package monalisa.addons.netproperties;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author daniel
  */
 
-public class Homogenous extends NetPropertieAlgorithm<Boolean>{
+public class Homogenous extends NetPropertyAlgorithm<Boolean>{
+
+    private static final Logger LOGGER = LogManager.getLogger(Homogenous.class);
+
     public Homogenous (PetriNetFacade pn) {
         super(pn);
     }
-    
-    
+
+
     /**
      * A net is homogenous, if for any place p, all arcs starting at p have the
      * same multiplicity.
      */
     @Override
     public void runAlgorithm(){
+        LOGGER.info("Checking whether net is homogenous");
         algorithmName = "homogenous";
         algorithmValue = true;
         int arcValue;
@@ -46,11 +52,8 @@ public class Homogenous extends NetPropertieAlgorithm<Boolean>{
                     algorithmValue = false;
                     break;
                 }
-
             }
-
         }
+        LOGGER.info("Successfully checked whether net is homogenous");
     }
-
-    
 }

@@ -13,12 +13,16 @@ package monalisa.addons.netproperties;
 import monalisa.data.pn.Transition;
 import java.util.ArrayList;
 import monalisa.data.pn.PetriNetFacade;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * returns all transitions without pre places.
  * @author daniel
  */
-public class TransitionWithoutPrePlace extends NetPropertieAlgorithm <ArrayList<Transition>>{
+public class TransitionWithoutPrePlace extends NetPropertyAlgorithm <ArrayList<Transition>>{
+
+    private static final Logger LOGGER = LogManager.getLogger(NonBlockingMultiplicity.class);
 
     public TransitionWithoutPrePlace(PetriNetFacade pn) {
         super(pn);
@@ -26,6 +30,7 @@ public class TransitionWithoutPrePlace extends NetPropertieAlgorithm <ArrayList<
 
     @Override
     public void runAlgorithm() {
+        LOGGER.info("Checking whether net has transitions without pre-places");
         algorithmName = "transition withouth pre place";
         algorithmValue = new ArrayList();
         for(Transition t : petriNet.transitions()){
@@ -33,7 +38,8 @@ public class TransitionWithoutPrePlace extends NetPropertieAlgorithm <ArrayList<
                 algorithmValue.add(t);
             }
         }
+        LOGGER.info("Succesfully checked whether net has transitions without pre-places");
     }
-    
-    
+
+
 }

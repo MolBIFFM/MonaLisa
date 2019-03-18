@@ -21,6 +21,8 @@ import monalisa.data.pn.Transition;
 import monalisa.data.pn.UniquePetriNetEntity;
 import javax.swing.JFileChooser;
 import monalisa.data.pn.PetriNetFacade;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Panel (with its components) for the net properties.
@@ -45,19 +47,20 @@ public class NetPropertiesPanel extends AddonPanel {
     private PlaceWithoutPreTransition placeWithoutPreTransition;
     private PlaceWithoutPostTransition placeWithoutPostTransition;
 
-    private HashMap<JCheckBox, NetPropertieAlgorithm> algorithmMap = new HashMap<>();
-    private HashMap<JCheckBox, NetPropertieAlgorithm> oneSidedAlgorithmMap = new HashMap<>();
+    private HashMap<JCheckBox, NetPropertyAlgorithm> algorithmMap = new HashMap<>();
+    private HashMap<JCheckBox, NetPropertyAlgorithm> oneSidedAlgorithmMap = new HashMap<>();
     private HashMap<JCheckBox, JLabel> labelMap = new HashMap<>();
     private NetPropertiesPanelLogic netPropertiesPanelLogic;
     private final JFileChooser jFileChooser = new JFileChooser();
-    private boolean jButtonCheckAlgorithmIsSelected;  
+    private boolean jButtonCheckAlgorithmIsSelected;
+    private static final Logger LOGGER = LogManager.getLogger(NetPropertiesPanel.class);
 
     /**
      * Creates new form NetPropertiesPanel
      */
     public NetPropertiesPanel(NetViewer netViewer, PetriNetFacade petriNet) {
         super(netViewer, petriNet, "NetProperties");
-             
+        LOGGER.info("Initializing NetPropertiesPanel");
         initComponents();
 
         colorMap = new ColorMap();
@@ -68,17 +71,19 @@ public class NetPropertiesPanel extends AddonPanel {
         jLabelTransitionWithoutPrePlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPrePlaceColor));
         jLabelTransitionWithoutPostPlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPostPlaceColor));
         jLabelPlaceWithoutPreTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPreTransitionColor));
-        jLabelPlaceWithoutPostTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPostTransitionColor));       
+        jLabelPlaceWithoutPostTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPostTransitionColor));
+        LOGGER.info("Successfully initialized NetPropertiesPanel");
     }
 
     protected void setColorOfNetViewerNode(UniquePetriNetEntity upne, Color c) {
+        LOGGER.info("Setting color of NetViewer node");
         if (upne.getClass().getName().contains("Place")) {
             netViewer.getNodeFromVertex(upne).getMasterNode().setColorForAllNodes(c);
         } else if (upne.getClass().getName().contains("Transition")) {
             netViewer.getNodeFromVertex(((Transition) upne)).setColorForAllNodes(c);
         }
-
         netViewer.repaint();
+        LOGGER.info("Successfully set color of NetViewer node");
     }
 
     /**
@@ -495,17 +500,19 @@ public class NetPropertiesPanel extends AddonPanel {
     private void jCheckBoxTransitionWithoutPrePlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
         Color color = jLabelTransitionWithoutPrePlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPrePlace.isSelected()) {
+            LOGGER.info("Colouring transitions without pre-places");
             transitionWithoutPrePlace = new TransitionWithoutPrePlace(petriNet);
             transitionWithoutPrePlace.runAlgorithm();
 
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
                 this.setColorOfNetViewerNode(t, color);
-
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPrePlaceColor.removeMouseListener(jLabelTransitionWithoutPrePlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
+            LOGGER.info("Successfully coloured transitions without pre-places");
 
         } else {
+            LOGGER.info("Removing colouring from transitions without pre-places");
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
                 if (colorMap.getColorFromList(t.id()) == null) {
@@ -515,12 +522,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelTransitionWithoutPrePlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPrePlaceColor));
+            LOGGER.info("Successfully removed colouring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
 
     private void jCheckBoxTransitionWithoutPostPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
         Color color = jLabelTransitionWithoutPostPlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPostPlace.isSelected()) {
+            LOGGER.info("Colouring transitions without post-places");
             transitionWithoutPostPlace = new TransitionWithoutPostPlace(petriNet);
             transitionWithoutPostPlace.runAlgorithm();
 
@@ -530,8 +539,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPostPlaceColor.removeMouseListener(jLabelTransitionWithoutPostPlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
+            LOGGER.info("Successfully coloured transitions without post-places");
         } else {
-
+            LOGGER.info("Removing colouring from transitions without post-places");
             for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
                 if (colorMap.getColorFromList(t.id()) == null) {
@@ -541,12 +551,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelTransitionWithoutPostPlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPostPlaceColor));
+            LOGGER.info("Successfully removed colouring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
 
     private void jCheckBoxPlaceWithoutPreTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
         Color color = jLabelPlaceWithoutPreTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPreTransition.isSelected()) {
+            LOGGER.info("Colouring places without pre-transitions");
             placeWithoutPreTransition = new PlaceWithoutPreTransition(petriNet);
             placeWithoutPreTransition.runAlgorithm();
 
@@ -556,8 +568,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPreTransitionColor.removeMouseListener(jLabelPlaceWithoutPreTransitionColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
+            LOGGER.info("Successfully coloured places without pre-transitions");
         } else {
-
+            LOGGER.info("Removing colouring from places without pre-transitions");
             for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
                 if (colorMap.getColorFromList(p.id()) == null) {
@@ -567,12 +580,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelPlaceWithoutPreTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPreTransitionColor));
+            LOGGER.info("Successfully removed colouring from places without pre-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
 
     private void jCheckBoxPlaceWithoutPostTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
         Color color = jLabelPlaceWithoutPostTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPostTransition.isSelected()) {
+            LOGGER.info("Colouring places without post-transitions");
             placeWithoutPostTransition = new PlaceWithoutPostTransition(petriNet);
             placeWithoutPostTransition.runAlgorithm();
 
@@ -582,8 +597,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPostTransitionColor.removeMouseListener(jLabelPlaceWithoutPostTransitionColor.getMouseListeners()[0]); //removes the first MouseListener (MyColorOptionsMouseListener)
+            LOGGER.info("Successfully coloured places without post-transitions");
         } else {
-
+            LOGGER.info("Removing colouring from places without post-transitions");
             for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
                 if (colorMap.getColorFromList(p.id()) == null) {
@@ -593,23 +609,27 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelPlaceWithoutPostTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPostTransitionColor));
+            LOGGER.info("Successfully removed colouring from places without post-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
 
     private void jRadioButtonSelectAllAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonSelectAllAlgorithmsActionPerformed
         netPropertiesPanelLogic = new NetPropertiesPanelLogic(algorithmMap, labelMap);
         if (jRadioButtonSelectAllAlgorithms.isSelected()) {
+            LOGGER.info("Selected all algorithms");
             netPropertiesPanelLogic.selectAllAlgorithmsIsSelected();
-
         } else {
+            LOGGER.info("Deselected all algorithms");
             netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected();
         }
     }//GEN-LAST:event_jRadioButtonSelectAllAlgorithmsActionPerformed
 
     private void jButtonCheckAlgorithmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCheckAlgorithmsActionPerformed
+        LOGGER.info("Checking selected properties");
         if (jButtonCheckAlgorithmIsSelected == false) {
             netPropertiesPanelLogic = new NetPropertiesPanelLogic(algorithmMap, labelMap);
             if (petriNet.places().size() + petriNet.transitions().size() == 0) { //checks if there is a Petri net selected
+                LOGGER.info("No petri net selected to check for properties");
                 netPropertiesPanelLogic.checkAlgorithms(0); //set the return text to 'no net'
                 return;
             }
@@ -619,11 +639,12 @@ public class NetPropertiesPanel extends AddonPanel {
             netPropertiesPanelLogic.checkAlgorithmsNot();
             jButtonCheckAlgorithmIsSelected = false;
         }
+        LOGGER.info("Successfully checked selected properties");
     }//GEN-LAST:event_jButtonCheckAlgorithmsActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
-        HelpDialog hd = new HelpDialog();        
-        hd.setVisible(true); 
+        HelpDialog hd = new HelpDialog();
+        hd.setVisible(true);
     }//GEN-LAST:event_helpButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -680,7 +701,7 @@ public class NetPropertiesPanel extends AddonPanel {
      *
      * @return
      */
-    private HashMap<JCheckBox, NetPropertieAlgorithm> getAlgorithmMap() {
+    private HashMap<JCheckBox, NetPropertyAlgorithm> getAlgorithmMap() {
         ordinary = new Ordinary(petriNet);
         homogenous = new Homogenous(petriNet);
         nonBlockingMultiplicity = new NonBlockingMultiplicity(petriNet);
@@ -702,7 +723,7 @@ public class NetPropertiesPanel extends AddonPanel {
         return algorithmMap;
     }
 
-    private HashMap<JCheckBox, NetPropertieAlgorithm> getOneSidedAlgorithmMap() {
+    private HashMap<JCheckBox, NetPropertyAlgorithm> getOneSidedAlgorithmMap() {
         transitionWithoutPrePlace = new TransitionWithoutPrePlace(petriNet);
         transitionWithoutPostPlace = new TransitionWithoutPostPlace(petriNet);
         placeWithoutPreTransition = new PlaceWithoutPreTransition(petriNet);
@@ -737,7 +758,7 @@ public class NetPropertiesPanel extends AddonPanel {
     @Override
     public void netChanged() {
         if(netPropertiesPanelLogic != null) {
-            netPropertiesPanelLogic.checkAlgorithmsNot();        
+            netPropertiesPanelLogic.checkAlgorithmsNot();
             netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected();
         }
     }

@@ -16,16 +16,14 @@ import monalisa.data.pn.PetriNetFacade;
  *
  * @author daniel
  */
-public abstract class NetPropertieAlgorithm<T> implements NetPropertieInterface<T> {
+public abstract class NetPropertyAlgorithm<T> implements NetPropertyInterface<T> {
 
     protected PetriNetFacade petriNet;
     protected T algorithmValue;
     protected String algorithmName;
 
-    public NetPropertieAlgorithm(PetriNetFacade pn) {
+    public NetPropertyAlgorithm(PetriNetFacade pn) {
         this.petriNet = pn;
-        //this.algorithmValue = false;
-        
     }
 
 
@@ -36,7 +34,7 @@ public abstract class NetPropertieAlgorithm<T> implements NetPropertieInterface<
     @Override
     public T returnAlgorithmValue() {
         return algorithmValue;
-    }   
+    }
 
     /**
      *

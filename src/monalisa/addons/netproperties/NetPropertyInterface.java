@@ -14,7 +14,7 @@ package monalisa.addons.netproperties;
  * An interface representing Petri net algorithms.
  * @author daniel noll
  */
-public interface NetPropertieInterface<T> {   
+public interface NetPropertyInterface<T> {   
     public void runAlgorithm();
     public T returnAlgorithmValue();
     public String getAlgorithmName();

@@ -13,23 +13,28 @@ package monalisa.addons.netproperties;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Checks if a net is pure.
  * @author daniel
  */
-public class Pure extends NetPropertieAlgorithm<Boolean>{
+public class Pure extends NetPropertyAlgorithm<Boolean>{
+
+    private static final Logger LOGGER = LogManager.getLogger(Pure.class);
 
     public Pure(PetriNetFacade pn) {
         super(pn);
     }
-    
+
     /**
      * Checks if the net has no transitions, for which a pre-place is also a
      * post place. If there are n
      */
     @Override
     public void runAlgorithm() {
+        LOGGER.info("Checking whether net is pure");
         algorithmName = "pure";
         algorithmValue = true;
         for(Transition t : petriNet.transitions()) { //checks all Transitions.
@@ -40,6 +45,7 @@ public class Pure extends NetPropertieAlgorithm<Boolean>{
                 }
             }
         }
+        LOGGER.info("Successfully checked whether net is pure");
     }
-    
+
 }

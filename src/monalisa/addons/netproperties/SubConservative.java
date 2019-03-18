@@ -17,7 +17,7 @@ import monalisa.data.pn.PetriNetFacade;
  * @author daniel
  */
 
-public class SubConservative extends NetPropertieAlgorithm<Boolean>{
+public class SubConservative extends NetPropertyAlgorithm<Boolean>{
     private final Conservative conservative;
     
     public SubConservative(PetriNetFacade pn) {

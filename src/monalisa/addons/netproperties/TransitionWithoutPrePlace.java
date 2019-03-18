@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class TransitionWithoutPrePlace extends NetPropertyAlgorithm <ArrayList<Transition>>{
 
-    private static final Logger LOGGER = LogManager.getLogger(NonBlockingMultiplicity.class);
+    private static final Logger LOGGER = LogManager.getLogger(TransitionWithoutPrePlace.class);
 
     public TransitionWithoutPrePlace(PetriNetFacade pn) {
         super(pn);

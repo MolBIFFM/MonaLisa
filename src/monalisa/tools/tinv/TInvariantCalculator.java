@@ -35,25 +35,25 @@ public final class TInvariantCalculator {
             super(cause);
         }
     }
-    
+
     @SuppressWarnings("serial")
     private class InvokeProcessException extends Exception {
         public InvokeProcessException(Exception cause) {
             super(cause);
         }
     }
-    
+
     private final PetriNetFacade petriNet;
     private File pntFile = null;
     private TInvariants tinvariants = null;
     private MauritiusMap postScriptSource = null;
     private boolean hasPostScriptSource = false;
     private Map<Integer, Integer> transitionIds;
-    
+
     public TInvariantCalculator(PetriNetFacade petriNet) {
-       this.petriNet = petriNet; 
+       this.petriNet = petriNet;
     }
-    
+
     public TInvariantCalculator(PetriNetFacade petriNet, ErrorLog log) throws InterruptedException, TInvariantCalculationFailedException {
         this.petriNet = petriNet;
         File tempDir = FileUtils.getTempDir();
@@ -65,17 +65,17 @@ public final class TInvariantCalculator {
             throw new TInvariantCalculationFailedException(ex);
         }
         pntFile.deleteOnExit();
-        
+
         // The `tinv` tool ignores the IDs of places and transitions. Rather,
         // it simply increments a counter for them, starting at zero. To
         // account for that, and to re-establish a mapping between the tinv
         // output and our Petri net, we perform a little bookkeeping ...
-        
+
         Map<Integer, Integer> placeIds = new HashMap<>();
         int pid = 0;
         for (Place place : petriNet.places())
             placeIds.put(place.id(), pid++);
-        
+
         transitionIds = new HashMap<>();
         int tid = 0;
         for (Transition transition : petriNet.transitions())
@@ -89,7 +89,7 @@ public final class TInvariantCalculator {
             ex.printStackTrace();
             throw new TInvariantCalculationFailedException(ex);
         }
-    
+
         try {
             computeTinvariants(pntFile, tempDir);
         } catch (ExtractResourceException ex) {
@@ -102,7 +102,7 @@ public final class TInvariantCalculator {
             throw new TInvariantCalculationFailedException(ex);
         }
     }
-    
+
     public TInvariants tinvariants(ErrorLog log) throws TInvariantCalculationFailedException {
         if (tinvariants == null) {
             File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".inv"));
@@ -116,13 +116,13 @@ public final class TInvariantCalculator {
                 ex.printStackTrace();
                 throw new TInvariantCalculationFailedException(ex);
             }
-            
+
             tinvariants = new TInvariants(invParser.invariants());
         }
-        
+
         return tinvariants;
     }
-    
+
     public MauritiusMap postScriptSource(ErrorLog log) {
         if (!hasPostScriptSource) {
             File psFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".ps"));
@@ -133,7 +133,7 @@ public final class TInvariantCalculator {
                 log.log("#TInvariantPostScriptFileNotReadable", ErrorLog.Severity.WARNING);
                 e.printStackTrace();
             }
-            
+
             if (psCode != null)
                 postScriptSource = new MauritiusMap(psCode);
             hasPostScriptSource = true;
@@ -141,7 +141,7 @@ public final class TInvariantCalculator {
 
         return postScriptSource;
     }
-    
+
     private void computeTinvariants(File input, File output) throws ExtractResourceException, InvokeProcessException, InterruptedException {
         File toolFile = null;
         try {
@@ -174,11 +174,11 @@ public final class TInvariantCalculator {
         } catch (IOException e) {
             throw new InvokeProcessException(e);
         }
-        finally {            
+        finally {
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
             String[] extensions = { ".inv" };
-            
+
             for (String ext : extensions) {
                 File file = new File(baseName + ext);
                 if (file.exists())
@@ -186,13 +186,13 @@ public final class TInvariantCalculator {
             }
         }
     }
-    
+
     private final <T> Map<T, T> invertMap(Map<T, T> source) {
         Map<T, T> inverted = new HashMap<>();
-        
+
         for (Map.Entry<T, T> entry : source.entrySet())
             inverted.put(entry.getValue(), entry.getKey());
-        
+
         return inverted;
     }
 }

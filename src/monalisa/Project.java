@@ -827,14 +827,16 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
         if (!requirementsSatisfied) {
             String toolName = strings.get(Tools.name(tool));
-            LOGGER.warn("Requirements for tool " + toolName + "not met.");
+            LOGGER.warn("Requirements for tool " + toolName + " not met");
             JOptionPane.showMessageDialog(
                 MonaLisa.appMainWindow(),
                 strings.get("NotAllRequirementsSatisfiedMessage", toolName),
                 strings.get("NotAllRequirementsSatisfiedTitle", toolName),
                 JOptionPane.ERROR_MESSAGE);
         }
-        LOGGER.info("Requirements for tool " + strings.get(Tools.name(tool))+ "met.");
+        else {
+            LOGGER.info("Requirements for tool " + strings.get(Tools.name(tool))+ " met");
+        }
         return requirementsSatisfied;
     }
 

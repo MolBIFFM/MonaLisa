@@ -19,7 +19,7 @@ import monalisa.data.pn.PetriNetFacade;
 
 public class SubConservative extends NetPropertyAlgorithm<Boolean>{
     private final Conservative conservative;
-    
+
     public SubConservative(PetriNetFacade pn) {
         super(pn);
         conservative = new Conservative(pn);
@@ -31,7 +31,7 @@ public class SubConservative extends NetPropertyAlgorithm<Boolean>{
      */
     @Override
     public void runAlgorithm() {
-        
+
         conservative.runAlgorithm();
         algorithmValue = conservative.getSubConservativeValue();
     }

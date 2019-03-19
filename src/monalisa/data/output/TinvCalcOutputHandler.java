@@ -26,7 +26,7 @@ import monalisa.util.FileUtils;
 public final class TinvCalcOutputHandler {
     private final Map<Integer, Integer> placeIds;
     private final Map<Integer, Integer> transitionIds;
-    
+
     /**
      * For internal use only.
      */
@@ -35,23 +35,23 @@ public final class TinvCalcOutputHandler {
         this.placeIds = placeIds;
         this.transitionIds = transitionIds;
     }
-    
-    public void save(PetriNetFacade petriNet, OutputStream out) {         
-        
+
+    public void save(PetriNetFacade petriNet, OutputStream out) {
+
         PrintStream formatter = new PrintStream(out);
-        
+
         formatter.printf("P   M   PRE,POST  NETZ %s",
             petriNet.getValueOrDefault("id", 0));
         if (petriNet.hasProperty("name"))
             formatter.printf(":%s", petriNet.getProperty("name"));
         formatter.println();
-        
+
         // Net structure section.
-        
+
         for (Entry<Place, Long> mark : petriNet.marking().entrySet()) {
             Place place = mark.getKey();
             formatter.printf("  %d %d ", placeId(place), mark.getValue());
-            
+
             // List of output arcs.
             for(Transition transition : place.inputs()) {
                 formatter.print(transitionId(transition));
@@ -60,52 +60,52 @@ public final class TinvCalcOutputHandler {
                     formatter.printf(": %d", weight);
                 formatter.print(' ');
             }
-            
+
             // List of input arcs.
 
             if (!place.outputs().isEmpty())
                 formatter.print(", ");
-            
+
             for (Transition transition : place.outputs()) {
                 formatter.print(transitionId(transition));
-                int weight = petriNet.getArc(place, transition).weight(); 
+                int weight = petriNet.getArc(place, transition).weight();
                 if (weight != 1)
                     formatter.printf(": %d", weight);
                 formatter.print(' ');
             }
-            
+
             formatter.println();
         }
-        
+
         formatter.println("@");
-        
+
         // Place data section.
-        
+
         formatter.println("place nr.             name capacity time");
-        
+
         for (Place place : petriNet.places()) {
             formatter.printf("       %d: %s", placeId(place),
                 sanitize(place.getValueOrDefault("name", "")));
-            
+
             int capacity = place.getValueOrDefault("capacity", -1);
             if (capacity == -1)
                 formatter.print(" oo");
             else
                 formatter.printf(" %d", capacity);
-            
-            if (place.hasProperty("time"))
-                formatter.printf(" %d", place.getProperty("time"));
+
+            if (place.hasProperty("time")){
+                formatter.printf(" %d", place.getProperty("time"));}
             else
                 formatter.print(" 0");
             formatter.println();
         }
-        
+
         formatter.println("@");
-        
+
         // Transition data section.
 
         formatter.println("trans nr.             name priority time");
-        
+
         for (Transition transition : petriNet.transitions()) {
             formatter.printf("       %d: %s", transitionId(transition),
                 sanitize(transition.<String>getValueOrDefault("name", "")));
@@ -119,18 +119,18 @@ public final class TinvCalcOutputHandler {
                 formatter.print(" 0");
             formatter.println();
         }
-        
+
         formatter.println("@");
     }
-    
+
     private static String sanitize(String name) {
         return String.format("%-16s", name.replaceAll("[^a-zA-Z0-9]", "_"));
     }
-    
+
     private int placeId(Place p) {
         return placeIds != null ? placeIds.get(p.id()) : p.id();
     }
-    
+
     private int transitionId(Transition t) {
         return transitionIds != null ? transitionIds.get(t.id()) : t.id();
     }

@@ -40,6 +40,4 @@ public class TransitionWithoutPrePlace extends NetPropertyAlgorithm <ArrayList<T
         }
         LOGGER.info("Succesfully checked whether net has transitions without pre-places");
     }
-
-
 }

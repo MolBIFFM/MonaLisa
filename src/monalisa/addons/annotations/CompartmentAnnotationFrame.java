@@ -201,6 +201,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         } else {
             sboCb.setSelectedIndex(0);
         }
+        LOGGER.info("Finished initializing CompartmentAnnotationFrame");
     }
 
     public void deleteMiriamIdentifier(MiriamWrapper mw, JList owner) {

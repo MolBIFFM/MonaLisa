@@ -928,9 +928,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     @Override
     public void changed(BooleanChangeEvent e) {
         Tool tool = (Tool) e.getSource();
-        LOGGER.info("Change in requirements for " + strings.get(Tools.name(tool)));
+        LOGGER.info("Change in requirements for '" + strings.get(Tools.name(tool)) + "'");
         if (e.getNewValue()) {
-            LOGGER.info("Selecting requirements for tool configuration of " + strings.get(Tools.name(tool)) + "that are not yet calculated");
+            LOGGER.info("Selecting requirements for tool configuration of '" + strings.get(Tools.name(tool)) + "' that are not yet calculated");
             // Select all requirements for the tool configuration that are not
             // yet calculated.
             List<Pair<Class<? extends Tool>, Configuration>> requirements =

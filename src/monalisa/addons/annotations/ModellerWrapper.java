@@ -26,7 +26,7 @@ public class ModellerWrapper {
     private final String email;
 
     public ModellerWrapper(String fName, String lName, String organisation, String email) {
-        LOGGER.info("Creating new ModellerWrapper");
+        LOGGER.debug("Creating new ModellerWrapper");
         this.fName = fName;
         this.lName = lName;
         this.organisation = organisation;

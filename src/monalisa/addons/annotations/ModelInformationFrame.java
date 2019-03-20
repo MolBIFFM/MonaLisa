@@ -80,7 +80,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
         modelQualifier.addItem(CVTerm.Qualifier.BQM_IS_DESCRIBED_BY);
 
         // START: ModelInformations
-        LOGGER.info("Starting ModelInformations part");
+        LOGGER.debug("Starting ModelInformations part");
         modellersModel = (DefaultListModel<ModellerWrapper>) modellersList.getModel();
         datesModel = (DefaultListModel<DateWrapper>) datesList.getModel();
 
@@ -91,7 +91,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
             modelName.setText( (String) petriNet.getProperty(MODEL_NAME));
         }
         if(petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
-            LOGGER.info("Adding MIRIAM model qualifiers");
+            LOGGER.debug("Adding MIRIAM model qualifiers");
             List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
             int childCount;
             for(CVTerm cvt : cvts) {
@@ -109,7 +109,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
         }
 
         if(petriNet.hasProperty(HISTORY)) {
-            LOGGER.info("Adding Modeller information");
+            LOGGER.debug("Adding Modeller information");
             History hist = (History) petriNet.getProperty(HISTORY);
 
             if(hist != null) {
@@ -172,12 +172,12 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
         History hist = null;
         if(modellersModel.size() > 0 || datesModel.size() > 0) {
-            LOGGER.info("Creating new History");
+            LOGGER.debug("Creating new History");
             hist = new History();
         }
 
         if(hist != null && modellersModel.size() > 0) {
-            LOGGER.info("Filling history with Creators");
+            LOGGER.debug("Filling history with Creators");
             ModellerWrapper mw;
             for(int i = 0; i < modellersModel.size(); i++) {
                 mw = (ModellerWrapper) modellersModel.getElementAt(i);
@@ -186,7 +186,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
         }
 
         if(hist != null && datesModel.size() > 0) {
-            LOGGER.info("Adding dates to history");
+            LOGGER.debug("Adding dates to history");
             DateWrapper dw;
             for(int i = 0; i < datesModel.size(); i++) {
                 dw = (DateWrapper) datesModel.getElementAt(i);

@@ -81,7 +81,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         compartmentLabel.setText(compartment.getName());
 
         // START: MIRIAM
-        LOGGER.info("Starting MIRIAM part");
+        LOGGER.debug("Starting MIRIAM part");
         miModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiers.getModel();
         qualifier.addItem(CVTerm.Qualifier.BQB_ENCODES);
         qualifier.addItem(CVTerm.Qualifier.BQB_HAS_PART);
@@ -111,8 +111,8 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                 }
             }
         }
-        LOGGER.info("Finished MIRIAM part");
-        LOGGER.info("Starting SBO part");
+        LOGGER.debug("Finished MIRIAM part");
+        LOGGER.debug("Starting SBO part");
         // START: SBO
         ComboboxToolTipRenderer sboCbRenderer = new ComboboxToolTipRenderer();
         sboCb.setRenderer(sboCbRenderer);
@@ -121,7 +121,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         SAXBuilder builder = new SAXBuilder();
         Document doc = null;
         try {
-            LOGGER.info("Reading from 'SBO_XML.xml'");
+            LOGGER.debug("Reading from 'SBO_XML.xml'");
             URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
@@ -133,23 +133,23 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         Element e;
         sboCb.addItem("No Term set");
         sboToolTips.add("");
-        LOGGER.info("Adding SBO tooltips to compartment");
+        LOGGER.debug("Adding SBO tooltips to compartment");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
             sboCb.addItem(((Element)e.getContent().get(1)).getValue());
             sboToolTips.add(((Element)e.getContent().get(3)).getValue()+" : "+((Element)e.getContent().get(7)).getValue().trim());
         }
         sboCbRenderer.setTooltips(sboToolTips);
-        LOGGER.info("Finished SBO part");
+        LOGGER.debug("Finished SBO part");
         // START: MIRIAM registry
-        LOGGER.info("Starting MIRIAM registry part");
+        LOGGER.debug("Starting MIRIAM registry part");
         ComboboxToolTipRenderer miriamRegistryCbRenderer = new ComboboxToolTipRenderer();
         miriamRegistry.setRenderer(miriamRegistryCbRenderer);
         ArrayList<String> miriamRegistryToolTips = new ArrayList<>();
 
         builder = new SAXBuilder();
         try {
-            LOGGER.info("Reading from 'miriam_registry.xml'");
+            LOGGER.debug("Reading from 'miriam_registry.xml'");
             URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
@@ -162,7 +162,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         Integer counter = 0;
         String name, comment, url = "";
         Pattern pattern;
-        LOGGER.info("Adding MIRIAM URLs to compartment");
+        LOGGER.debug("Adding MIRIAM URLs to compartment");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
 
@@ -193,8 +193,8 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
             counter++;
         }
         miriamRegistryCbRenderer.setTooltips(miriamRegistryToolTips);
-        LOGGER.info("Finished MIRIAM registry part");
-        LOGGER.info("Setting SBO terms to compartments");
+        LOGGER.debug("Finished MIRIAM registry part");
+        LOGGER.debug("Setting SBO terms to compartments");
         sboCb.setSelectedIndex(0);
         if(compartment.hasProperty(SBO_TERM)) {
             sboCb.setSelectedItem(compartment.getProperty(SBO_TERM));

@@ -18,6 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.*;
 import monalisa.gui.MainDialog;
+import org.apache.logging.log4j.core.appender.FileAppender;
 
 /**
  * Application entry point class for MonaLisa.

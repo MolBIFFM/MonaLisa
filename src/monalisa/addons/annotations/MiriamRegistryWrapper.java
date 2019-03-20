@@ -27,7 +27,7 @@ public class MiriamRegistryWrapper {
     private final Pattern pattern;
 
     public MiriamRegistryWrapper(String name, String url, String comment, Pattern pattern) {
-        LOGGER.info("Creating new MiriamRegistryWrapper for '" + name + "'");
+        LOGGER.debug("Creating new MiriamRegistryWrapper for '" + name + "'");
         this.name = name;
         this.url = url;
         this.comment = comment;

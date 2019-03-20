@@ -86,7 +86,7 @@ public class AnnotationsPanel extends AddonPanel {
 
         identifierInEditEntry = null;
         mif.identifierInEditModel = null;
-        LOGGER.info("Started MIRIAM part");
+        LOGGER.debug("Started MIRIAM part");
         // START: MIRIAM
         miModelEntry = (DefaultListModel<MiriamWrapper>)miriamIdentifiersEntry.getModel();
         entryQualifier.addItem(Qualifier.BQB_ENCODES);
@@ -110,14 +110,14 @@ public class AnnotationsPanel extends AddonPanel {
         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
-                LOGGER.info("Item state changed");
+                LOGGER.debug("Item state changed");
                 if(ie.getStateChange() == ItemEvent.DESELECTED) {
-                    LOGGER.info("Item deselected");
+                    LOGGER.debug("Item deselected");
                     vertexNameLabel.setText("");
                     setIdentifierEnabled(false);
                 }
                 if(ie.getStateChange() == ItemEvent.SELECTED) {
-                    LOGGER.info("Item selected");
+                    LOGGER.debug("Item selected");
                     miModelEntry.removeAllElements();
                     Set<NetViewerNode> picked = netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().getPicked();
                     // Only one node is selected
@@ -158,13 +158,13 @@ public class AnnotationsPanel extends AddonPanel {
                         setIdentifierEnabled(false);
                     }
                 }
-            LOGGER.info("Dealt with item state change");
+            LOGGER.debug("Dealt with item state change");
             }
         });
 
         // END: MIRIAM
-        LOGGER.info("Finished MIRIAM part");
-        LOGGER.info("Started SBO part");
+        LOGGER.debug("Finished MIRIAM part");
+        LOGGER.debug("Started SBO part");
         // START: SBO
         ComboboxToolTipRenderer sboCbRenderer = new ComboboxToolTipRenderer();
         sboCb.setRenderer(sboCbRenderer);
@@ -173,7 +173,7 @@ public class AnnotationsPanel extends AddonPanel {
         SAXBuilder builder = new SAXBuilder();
         Document doc = null;
         try {
-            LOGGER.info("Reading from 'SBO_XML.xml'");
+            LOGGER.debug("Reading from 'SBO_XML.xml'");
             URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
@@ -186,7 +186,7 @@ public class AnnotationsPanel extends AddonPanel {
         sboCb.addItem("No Term set");
         sboToolTips.add("");
         String toolTip;
-        LOGGER.info("Adding SBO tooltips");
+        LOGGER.debug("Adding SBO tooltips");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
             sboCb.addItem(((Element)e.getContent().get(1)).getValue());
@@ -194,8 +194,8 @@ public class AnnotationsPanel extends AddonPanel {
             sboToolTips.add(toolTip);
         }
         sboCbRenderer.setTooltips(sboToolTips);
-        LOGGER.info("Finished SBO part");
-        LOGGER.info("Starting MIRIAM registry part");
+        LOGGER.debug("Finished SBO part");
+        LOGGER.debug("Starting MIRIAM registry part");
         // START: MIRIAM registry
         ComboboxToolTipRenderer miriamRegistryCbRenderer = new ComboboxToolTipRenderer();
         miriamRegistryEntry.setRenderer(miriamRegistryCbRenderer);
@@ -204,7 +204,7 @@ public class AnnotationsPanel extends AddonPanel {
 
         builder = new SAXBuilder();
         try {
-            LOGGER.info("Reading from miriam_registry.xml");
+            LOGGER.debug("Reading from miriam_registry.xml");
             URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
@@ -217,7 +217,7 @@ public class AnnotationsPanel extends AddonPanel {
         Integer counter = 0;
         String name, comment, url = "";
         Pattern pattern;
-        LOGGER.info("Adding MIRIAM URLs");
+        LOGGER.debug("Adding MIRIAM URLs");
         for(Object o : root.getChildren() ) {
             e = (Element) o;
 
@@ -251,7 +251,7 @@ public class AnnotationsPanel extends AddonPanel {
         miriamRegistryCbRenderer.setTooltips(miriamRegistryToolTips);
 
         // END: MIRIAM
-        LOGGER.info("Finished MIRIAM registry part");
+        LOGGER.debug("Finished MIRIAM registry part");
         editMiriamIdentifierEntry = false;
         mif.editMiriamIdentifierModel = false;
         LOGGER.info("Successfully initialized AnnotationsPanel");
@@ -363,7 +363,7 @@ public class AnnotationsPanel extends AddonPanel {
         mif.month.setText(dw.getMonth());
         mif.year.setText(dw.getYear());
         mif.day.setText(dw.getDay());
-        LOGGER.info("Editing date");
+        LOGGER.info("Finished editing date");
     }
 
     /**

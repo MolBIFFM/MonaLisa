@@ -54,7 +54,7 @@ public class ClosenessCentrality extends CentralityAbstract {
     @Override
     public void calculate() {
         LOGGER.info("Beginning calculation of closeness centrality");
-        LOGGER.info("Calculating closeness centrality for places");
+        LOGGER.debug("Calculating closeness centrality for places");
         for (Place p : places){
             int sum = 0;
             double closeness;
@@ -70,8 +70,8 @@ public class ClosenessCentrality extends CentralityAbstract {
 
             rankingPlaces.put(p.id(), closeness);
         }
-        LOGGER.info("Finished calculating closeness centrality for places");
-        LOGGER.info("Calculating closeness centrality for transitions");
+        LOGGER.debug("Finished calculating closeness centrality for places");
+        LOGGER.debug("Calculating closeness centrality for transitions");
         for (Transition t : transitions){
             int sum = 0;
             double closeness;

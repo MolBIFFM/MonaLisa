@@ -76,14 +76,14 @@ public class NetPropertiesPanel extends AddonPanel {
     }
 
     protected void setColorOfNetViewerNode(UniquePetriNetEntity upne, Color c) {
-        LOGGER.info("Setting color of NetViewer node");
+        LOGGER.debug("Setting color of NetViewer node");
         if (upne.getClass().getName().contains("Place")) {
             netViewer.getNodeFromVertex(upne).getMasterNode().setColorForAllNodes(c);
         } else if (upne.getClass().getName().contains("Transition")) {
             netViewer.getNodeFromVertex(((Transition) upne)).setColorForAllNodes(c);
         }
         netViewer.repaint();
-        LOGGER.info("Successfully set color of NetViewer node");
+        LOGGER.debug("Successfully set color of NetViewer node");
     }
 
     /**

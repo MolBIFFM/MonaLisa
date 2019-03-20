@@ -84,7 +84,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
     @Override
     protected void handlePopup(final MouseEvent me) {
-        LOGGER.info("Handling right-click popup in NetViewer");
+        LOGGER.debug("Handling right-click popup in NetViewer");
         JPopupMenu popup = new JPopupMenu();
 
         pickedVertices = vv.getPickedVertexState().getPicked();
@@ -103,7 +103,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
             // Mutli Vertex Popup Menu
             if(numberOfPickedVertices > 1) {
-                LOGGER.info("More than one vertex selected for popup");
+                LOGGER.debug("More than one vertex selected for popup");
                 // Vertex Setup
                 popup.add(new AbstractAction(strings.get("NVProperties")) {
                     @Override
@@ -176,7 +176,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
             // Edge Popup Menu
             if(numberOfPickedEdges > 1) {
-                LOGGER.info("More than one edge selected for popup");
+                LOGGER.debug("More than one edge selected for popup");
                 List<NetViewerEdge> bendList = pickedEdgesList.get(0).getMasterEdge().getBendEdges();
                 for (NetViewerEdge picked : pickedEdges) {
                     if (!bendList.contains(picked)) {
@@ -190,7 +190,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
             }
 
             if( (numberOfPickedEdges == 1 || bendedEdge) && numberOfPickedVertices == 0) {
-                LOGGER.info("No vertex and only one edge picked");
+                LOGGER.debug("No vertex and only one edge selected for popup");
                 final NetViewerEdge edge = pickedEdgesList.get(0);
 
                 // Edge Setup
@@ -253,7 +253,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
             // Vertex Popup Menu
             else if(numberOfPickedEdges == 0 && numberOfPickedVertices == 1) {
-                LOGGER.info("Only one vertex picked");
+                LOGGER.debug("Only one vertex selected for popup");
                 final NetViewerNode node = pickedVerticesList.get(0);
 
                 if(node.getNodeType().equals(NetViewer.BEND))
@@ -282,7 +282,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 popup.addSeparator();
                 switch (node.getNodeType()) {
                     case NetViewer.PLACE:
-                        LOGGER.info("Place selected for popup");
+                        LOGGER.debug("Place selected for popup");
                         // Add Transition
                         JMenu addTransitionMenu = new JMenu(strings.get("NVCreateTransition"));
                         addTransitionMenu.add(new AbstractAction(strings.get("NVIn")) {
@@ -314,7 +314,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         });
                         break;
                     case NetViewer.TRANSITION:
-                        LOGGER.info("Transition selected for popup");
+                        LOGGER.debug("Transition selected for popup");
                         // Add Place
                         JMenu addPlaceMenu = new JMenu(strings.get("NVCreateVertex"));
                         addPlaceMenu.add(new AbstractAction(strings.get("NVIn")) {
@@ -467,7 +467,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
             // General Options
             else if(numberOfPickedEdges == 0 && numberOfPickedVertices == 0) {
-                LOGGER.info("No nodes or edges selected for popup");
+                LOGGER.debug("No nodes or edges selected for popup");
                 // MouseMode
                 if(nv.getMouseMode()) {
                     popup.add(new AbstractAction(strings.get("NVGMTransforming")) {
@@ -506,9 +506,12 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
      * @param clickedNode
      */
     public void handlePicking(NetViewerNode clickedNode) {
+        LOGGER.debug("Handling clicked node in NetViewer");
         switch (this.mouseMode) {
             case EDGE:
+                LOGGER.debug("Edge mode, nothing happens");
             case SINGLE_EDGE:
+                LOGGER.debug("Single edge mode");
                 if(!clickedNode.getNodeType().equalsIgnoreCase(source.getNodeType()) && !clickedNode.getNodeType().equals(NetViewer.BEND)) {
                     Arc arc;
                     boolean error = false;
@@ -537,32 +540,38 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 }
                 break;
             case DOUBLE_EDGE:
+                LOGGER.debug("Double edge mode");
                 this.source = clickedNode;
                 setMouseModeToEdge();
                 break;
             case IN_VERTEX:
+                LOGGER.debug("In_vertex mode");
                 if(!clickedNode.getNodeType().equals(NetViewer.BEND)) {
                     synchronizer.addNode(clickedNode, NetViewer.INPUT);
                     nv.modificationActionHappend();
                 }
                 break;
             case OUT_VERTEX:
+                LOGGER.debug("Out_vertex mode");
                 if(!clickedNode.getNodeType().equals(NetViewer.BEND)) {
                     synchronizer.addNode(clickedNode, NetViewer.OUTPUT);
                     nv.modificationActionHappend();
                 }
                 break;
             case DELETE:
+                LOGGER.debug("Delete mode");
                 if(!clickedNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                     synchronizer.removeNode(clickedNode);
                     nv.modificationActionHappend();
                 }
                 break;
             case ALIGN_X:
+                LOGGER.debug("Align x mode");
                 if (!clickedNode.getNodeType().equalsIgnoreCase(NetViewer.BEND))
                     nv.alignVertices("X", clickedNode);
                 break;
             case ALIGN_Y:
+                LOGGER.debug("Align y mode");
                 if (!clickedNode.getNodeType().equalsIgnoreCase(NetViewer.BEND))
                     nv.alignVertices("Y", clickedNode);
                 break;
@@ -574,16 +583,20 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
      * @param clickedEdge
      */
     public void handlePicking(NetViewerEdge clickedEdge) {
+        LOGGER.debug("Handling clicked edge in NetViewer");
         switch (this.mouseMode) {
             case DELETE:
+                LOGGER.debug("Delete mode");
                 synchronizer.removeEdge(clickedEdge.getMasterEdge());
                 nv.modificationActionHappend();
                 break;
             case ADD_BEND:
+                LOGGER.debug("Add_bend mode");
                 Point mousePoint = vv.getMousePosition();
                 synchronizer.addBend(clickedEdge, (double) mousePoint.x, (double) mousePoint.y);
                 break;
             case DELETE_BEND:
+                LOGGER.debug("Delete_bend mode");
                 if(clickedEdge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND) || clickedEdge.getSource().getNodeType().equalsIgnoreCase(NetViewer.BEND))
                     synchronizer.removeBend(clickedEdge);
                 break;
@@ -639,5 +652,4 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
     public String getMouseMode() {
         return this.mouseMode;
     }
-
 }

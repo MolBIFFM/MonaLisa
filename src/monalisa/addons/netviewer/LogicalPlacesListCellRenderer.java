@@ -17,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * Renderer to show the LabelName of a node and not his name.
+ * Renderer to show the LabelName of a node and not its name.
  * @author Jens Einloft
  */
 public class LogicalPlacesListCellRenderer implements ListCellRenderer {

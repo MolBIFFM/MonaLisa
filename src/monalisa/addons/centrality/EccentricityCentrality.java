@@ -51,7 +51,7 @@ public class EccentricityCentrality extends CentralityAbstract {
     @Override
     public void calculate() {
         LOGGER.info("Beginning calculation of eccentricity centrality");
-        LOGGER.info("Calculating eccentricity centrality for places");
+        LOGGER.debug("Calculating eccentricity centrality for places");
         for (Place p : places){
             int max = 0;
             double eccentricity;
@@ -68,8 +68,8 @@ public class EccentricityCentrality extends CentralityAbstract {
             }
            rankingPlaces.put(p.id(), eccentricity);
         }
-        LOGGER.info("Finished calculating eccentricity centrality for places");
-        LOGGER.info("Calculating eccentricity centrality for transitions");
+        LOGGER.debug("Finished calculating eccentricity centrality for places");
+        LOGGER.debug("Calculating eccentricity centrality for transitions");
         for (Transition t : transitions){
             int max = 0;
             double eccentricity;

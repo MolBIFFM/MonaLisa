@@ -112,13 +112,13 @@ public class EigenvectorOfMaxEigenvalue {
      * @return length of a given vector
      */
     private double getLengthOfVector(double[] vector){
-        LOGGER.info("Computing length of vector");
+        LOGGER.debug("Computing length of vector");
         int n = startVector.length;
         double vectorSize = 0.0;
         for (int i = 0; i < n; i++){
             vectorSize += Math.pow(vector[i], 2.0);
         }
-        LOGGER.info("Successfully computed length of vector");
+        LOGGER.debug("Successfully computed length of vector");
         return Math.sqrt(vectorSize);
     }
 
@@ -128,7 +128,7 @@ public class EigenvectorOfMaxEigenvalue {
      * @return matrix-vector product
      */
     private double[] matrixVectorProduct(double[] vector){
-        LOGGER.info("Computing matrix-vector product");
+        LOGGER.debug("Computing matrix-vector product");
         int x = adjMatrix.getLength();
         int y = vector.length;
         newVector = new double[y];
@@ -138,7 +138,7 @@ public class EigenvectorOfMaxEigenvalue {
                 newVector[i] += corMatrix[i][j] * vector[j];
             }
         }
-        LOGGER.info("Successfully computed matrix-vector product");
+        LOGGER.debug("Successfully computed matrix-vector product");
         return newVector;
     }
 
@@ -149,14 +149,14 @@ public class EigenvectorOfMaxEigenvalue {
      * @return vector as a result of subtraction
      */
     private double[] vectorSubtraction(double[] penultimateVector, double[] lastVector){
-        LOGGER.info("Computing vector subtraction");
+        LOGGER.debug("Computing vector subtraction");
         int y = lastVector.length;
         subtractedVector = new double[y];
 
         for (int j = 0; j < y; j++){
             subtractedVector[j] = lastVector[j] - penultimateVector[j];
         }
-        LOGGER.info("Successfully computed vector subtraction");
+        LOGGER.debug("Successfully computed vector subtraction");
         return subtractedVector;
     }
 

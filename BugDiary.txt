@@ -21,3 +21,21 @@ What - Inserting bends and then removing them sometimes causes edges to become !
 Details - Seems like bending the edge causes it to "split" into two edges, of which one is then deleted without reconnecting the remaining "edge" to the corresponding vertex
 
 --
+
+Where - monalisa.addons.netviewer
+
+What - Checkboxes for colouring nodes in NetPropertiesFrame are not reset upon selecting "Reset coloring"
+
+--
+
+Where - monalisa.addons.netviewer
+
+What - EM selection is not properly reset upon selecting "Reset coloring" or selecting other EMs
+
+--
+
+Where - monalisa.addons.netviewer.NetViewer.hideColor
+
+What - java.lang.ClassCastException: class monalisa.addons.netviewer.transformer.VertexDrawPaintTransformer cannot be cast to class monalisa.addons.netviewer.transformer.VertexPaintTransformer
+
+Details - On selecting "Hide the color highlighting"

@@ -59,13 +59,13 @@ public class EigenvectorCentrality extends CentralityAbstract{
         double eigenvector;
         double[] placeVector = vectorForPlaces.getVector();
         double[] transitionVector = vectorForTransitions.getVector();
-        LOGGER.info("Calculating eigenvector centrality for places");
+        LOGGER.debug("Calculating eigenvector centrality for places");
         for (Place p : places){
             eigenvector = placeVector[adjMatrixPlaces.getIndexForId(p.id())];
             rankingPlaces.put(p.id(), eigenvector);
         }
-        LOGGER.info("Finished calculating eigenvector centrality for places");
-        LOGGER.info("Calculating eigenvector centrality for transitions");
+        LOGGER.debug("Finished calculating eigenvector centrality for places");
+        LOGGER.debug("Calculating eigenvector centrality for transitions");
         for (Transition t : transitions){
             eigenvector = transitionVector[adjMatrixTransitions.getIndexForId(t.id())];
             rankingTransitions.put(t.id(), eigenvector);

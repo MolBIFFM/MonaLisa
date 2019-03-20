@@ -29,7 +29,7 @@ public class DateWrapper {
     private final Logger LOGGER = LogManager.getLogger(DateWrapper.class);
 
     public DateWrapper(String year, String month, String day) {
-        LOGGER.info("Generating new DateWrapper");
+        LOGGER.debug("Generating new DateWrapper");
         this.year = new Integer(year);
         this.day = Integer.parseInt(day);
         this.month = new Integer(month);
@@ -38,14 +38,14 @@ public class DateWrapper {
 
         long timestamp = 0;
         try {
-            LOGGER.info("Generating timestamp");
+            LOGGER.debug("Generating timestamp");
             timestamp = dateFormat.parse(day+"/"+month+"/"+year+" 12:00:00").getTime();
         } catch (ParseException ex) {
             LOGGER.error(ex);
         }
 
         this.date = new Date(timestamp);
-        LOGGER.info("Successfully generated new DateWrapper");
+        LOGGER.debug("Successfully generated new DateWrapper");
     }
 
     public Date getDate() {

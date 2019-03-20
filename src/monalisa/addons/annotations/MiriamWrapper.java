@@ -28,18 +28,18 @@ public class MiriamWrapper {
     private CVTerm cvt;
 
     public MiriamWrapper(Qualifier qualifier, String uri) {
-        LOGGER.info("Creating new MiriamWrapper for qualifier '" + qualifier.toString() + "'");
+        LOGGER.debug("Creating new MiriamWrapper for qualifier '" + qualifier.toString() + "'");
         this.qualifier = qualifier;
         this.uri = uri;
 
         this.cvt = new CVTerm();
 
         if(qualifier.isBiologicalQualifier()) {
-            LOGGER.info("Qualifier type is biological");
+            LOGGER.debug("Qualifier type is biological");
             this.cvt.setQualifierType(Type.BIOLOGICAL_QUALIFIER);
             this.cvt.setBiologicalQualifierType(qualifier);
         } else if(qualifier.isModelQualifier()) {
-            LOGGER.info("Qualifier type is model");
+            LOGGER.debug("Qualifier type is model");
             this.cvt.setQualifierType(Type.MODEL_QUALIFIER);
             this.cvt.setModelQualifierType(qualifier);
         }
@@ -47,12 +47,12 @@ public class MiriamWrapper {
     }
 
     public MiriamWrapper(CVTerm cvt) {
-        LOGGER.info("Creating new MiriamWrapper for CVTerm '" + cvt.toString());
+        LOGGER.debug("Creating new MiriamWrapper for CVTerm '" + cvt.toString());
         if(cvt.getQualifierType().equals(Type.BIOLOGICAL_QUALIFIER)) {
-            LOGGER.info("Qualifier type is biological");
+            LOGGER.debug("Qualifier type is biological");
             this.qualifier = cvt.getBiologicalQualifierType();
         } else {
-            LOGGER.info("Qualifier type is model");
+            LOGGER.debug("Qualifier type is model");
             this.qualifier = cvt.getModelQualifierType();
         }
         this.uri = (String) (cvt.getResources().toArray())[0];
@@ -68,7 +68,7 @@ public class MiriamWrapper {
     }
 
     public void setURI(String uri) {
-        LOGGER.info("Setting uri for MiriamWrapper '" + this.toString() + "'");
+        LOGGER.debug("Setting uri for MiriamWrapper '" + this.toString() + "'");
         this.uri = uri;
 
         this.cvt = new CVTerm();
@@ -80,7 +80,7 @@ public class MiriamWrapper {
             this.cvt.setModelQualifierType(qualifier);
         }
         this.cvt.addResource(uri);
-        LOGGER.info("Finished setting uri for MiriamWrapper '" + this.toString() + "'");
+        LOGGER.debug("Finished setting uri for MiriamWrapper '" + this.toString() + "'");
     }
 
     public String getURI() {

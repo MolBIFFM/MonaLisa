@@ -71,7 +71,7 @@ public class Settings {
             res = false;
         }
 
-        LOGGER.info("  Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
+        LOGGER.info("Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
 
         return(res);
     }
@@ -248,7 +248,7 @@ public class Settings {
      * @return the value of the key as an Integer
      */
     public static Integer getInteger(String key) {
-        LOGGER.info("Trying to cast '" + key + "' to Integer");
+        LOGGER.debug("Trying to cast '" + key + "' to Integer");
         Integer i = null;
         String s = get(key);
 
@@ -259,7 +259,7 @@ public class Settings {
             LOGGER.fatal("Could not load setting '" + key + "' from settings as an Integer, invalid format.");
             System.exit(1);
         }
-        LOGGER.info("Successfully cast '" + key + "' to Integer");
+        LOGGER.debug("Successfully cast '" + key + "' to Integer");
         return(i);
     }
 
@@ -286,7 +286,7 @@ public class Settings {
      * @return the value of the key as a Float
      */
     public static Float getFloat(String key) {
-        LOGGER.info("Trying to cast '" + key + "' to Float");
+        LOGGER.debug("Trying to cast '" + key + "' to Float");
         Float f = null;
         String s = get(key);
 
@@ -297,7 +297,7 @@ public class Settings {
             LOGGER.fatal("Could not load setting '" + key + "' from settings as a float, invalid format.");
             System.exit(1);
         }
-        LOGGER.info("Successfully cast '" + key + "' to Float");
+        LOGGER.debug("Successfully cast '" + key + "' to Float");
         return(f);
     }
 
@@ -309,17 +309,17 @@ public class Settings {
      * @return the value of the key as a Boolean
      */
     public static Boolean getBoolean(String key) {
-        LOGGER.info("Trying to cast '" + key + "' to Boolean");
+        LOGGER.debug("Trying to cast '" + key + "' to Boolean");
         Boolean b = null;
         String s = null;
 
         s = get(key);
         switch (s.toLowerCase()) {
             case "true":
-                LOGGER.info("Successfully cast '" + key + "' to Boolean");
+                LOGGER.debug("Successfully cast '" + key + "' to Boolean");
                 return(true);
             case "false":
-                LOGGER.info("Successfully cast '" + key + "' to Boolean");
+                LOGGER.debug("Successfully cast '" + key + "' to Boolean");
                 return(false);
             default:
                 LOGGER.fatal("Could not load setting '" + key + "' from settings as a boolean, invalid format.");
@@ -334,7 +334,7 @@ public class Settings {
      * @return the value of the key as a Color
      */
     public static Color getAsColor(String key) {
-        LOGGER.info("Casting '" + key + "' to Color");
+        LOGGER.debug("Casting '" + key + "' to Color");
         try {
             return new Color( Integer.parseInt((String) get(key+"R")) , Integer.parseInt((String) get(key+"G")), Integer.parseInt((String) get(key+"B")));
         }
@@ -357,13 +357,13 @@ public class Settings {
      * Prints all settings to STDOUT.
      */
     public static void printAll() {
-        LOGGER.info("Printing all " + cfg.size() + " settings");
+        LOGGER.debug("Printing all " + cfg.size() + " settings");
 
         for (Object key : cfg.keySet()) {
             LOGGER.info((String)key + "=" + cfg.get(key));
         }
 
-        LOGGER.info("Printing of all " + cfg.size() + " settings done.");
+        LOGGER.debug("Printing of all " + cfg.size() + " settings done.");
     }
 
 
@@ -371,13 +371,13 @@ public class Settings {
      * Prints all settings to STDOUT.
      */
     public static void defPrintAll() {
-        LOGGER.info("Printing all " + def.size() + " default settings.");
+        LOGGER.debug("Printing all " + def.size() + " default settings.");
 
         for (Object key : def.keySet()) {
             LOGGER.info((String)key + "=" + def.get(key));
         }
 
-        LOGGER.info("Printing of all " + def.size() + " default settings done.");
+        LOGGER.debug("Printing of all " + def.size() + " default settings done.");
     }
 
 
@@ -388,19 +388,19 @@ public class Settings {
      * @return the value of the specified key
      */
     public static String get(String key) {
-        LOGGER.info("Trying to return key '" + key + "' as String");
+        LOGGER.debug("Trying to return key '" + key + "' as String");
         if(cfg.containsKey(key)) {
-            LOGGER.info("Key '" + key + "' found, returning as String.");
+            LOGGER.debug("Key '" + key + "' found, returning as String.");
             return((String)cfg.getProperty(key));
         }
         else {
-            LOGGER.info("Setting '" + key + "' not defined in config file. Trying internal default.");
+            LOGGER.warn("Setting '" + key + "' not defined in config file. Trying internal default.");
 
             if(initSingleSettingFromDefault(key)) {
                 String s = defGet(key);
                 cfg.put(key, s);
                 writeToFile(configFile);
-                LOGGER.info("Using internal default value '" + s + "' for setting '" + key + "'. Edit config file to override.");
+                LOGGER.warn("Using internal default value '" + s + "' for setting '" + key + "'. Edit config file to override.");
                 return(s);
             } else {
                 LOGGER.fatal("No config file or default value for setting '" + key + "' exists, setting invalid.");
@@ -417,13 +417,13 @@ public class Settings {
      * @return the value of the specified key
      */
     public static String defGet(String key) {
-        LOGGER.info("Trying to return default value for key '" + key + "' as a String");
+        LOGGER.debug("Trying to return default value for key '" + key + "' as a String");
         if(def.containsKey(key)) {
-            LOGGER.info("Default value found, returning as a String");
+            LOGGER.debug("Default value found, returning as a String");
             return((String)def.getProperty(key));
         }
         else {
-            System.err.println("ERROR: Settings: Could not load default setting '" + key + "' from default settings, no such setting.");
+            LOGGER.error("Could not load default setting '" + key + "' from default settings, no such setting.");
             System.exit(1);
             return(null);        // never reached, for the IDE
         }

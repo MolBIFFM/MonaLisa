@@ -19,23 +19,29 @@ import monalisa.util.MonaLisaWindowListener;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.synchronisation.Synchronizer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Dialoge to create a new logical place
  * @author Jens Einloft
  */
 public class LogicalPlacesFrame extends javax.swing.JFrame {
-    private static final long serialVersionUID = 5930120755823294841L;  
-    
+    private static final long serialVersionUID = 5930120755823294841L;
+    private static final Logger LOGGER = LogManager.getLogger(LogicalPlacesFrame.class);
+
     public LogicalPlacesFrame(final NetViewer netViewer, Synchronizer synchronizer) {
         this.netViewer = netViewer;
         this.synchronizer = synchronizer;
+        LOGGER.info("Initializing LogicalPlacesFrame");
         initComponents();
         neighborsList.setCellRenderer(new LogicalPlacesListCellRenderer());
         // By selection of a transition in the list, the edges from the place to this transition are selected / marked
         neighborsList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                LOGGER.info("Transition selected from LogicalPlacesFrame");
+                LOGGER.info("Marking edges from logical place to selected transition");
                 NetViewerEdge edge;
                 NetViewerNode aim = (NetViewerNode)netViewer.vv.getRenderContext().getPickedVertexState().getPicked().toArray()[0];
                 netViewer.vv.getRenderContext().getPickedEdgeState().clear();
@@ -53,9 +59,11 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
                         }
                     }
                 }
+                LOGGER.info("Successfully marked edges from logical place to selected transition");
             }
         });
         addWindowListener(new MonaLisaWindowListener(this.netViewer));
+        LOGGER.info("Finished initializing LogicalPlacesFrame");
     }
 
     /** This method is called from within the constructor to
@@ -151,23 +159,27 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
+        LOGGER.info("Creating new logical place");
         this.synchronizer.addLogicalPlace((NetViewerNode) this.netViewer.vv.getPickedVertexState().getPicked().toArray()[0], neighborsList.getSelectedValuesList(), null);
         this.netViewer.nonModificationActionHappend();
         this.setVisible(false);
         this.netViewer.setEnabled(true);
+        LOGGER.info("Successfully created new logical place");
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void createAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAllButtonActionPerformed
+        LOGGER.info("Creating several new logical places");
         NetViewerNode sourceNode = (NetViewerNode) netViewer.vv.getPickedVertexState().getPicked().toArray()[0];
         List<NetViewerNode> selectedNodes;
         for(int i = 0; i < neighborsList.getModel().getSize()-1; i++) {
             selectedNodes = new ArrayList<>();
             selectedNodes.add(neighborsList.getModel().getElementAt(i));
-            synchronizer.addLogicalPlace(sourceNode, selectedNodes, null);                
+            synchronizer.addLogicalPlace(sourceNode, selectedNodes, null);
         }
         this.netViewer.nonModificationActionHappend();
         this.setVisible(false);
         this.netViewer.setEnabled(true);
+        LOGGER.info("Successfully created several new logical places");
     }//GEN-LAST:event_createAllButtonActionPerformed
 
 

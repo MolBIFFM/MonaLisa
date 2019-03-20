@@ -90,7 +90,7 @@ public class NumberOfShortestPaths {
      * @param size
      */
     public void initSplNumberMatrix(int size){
-        LOGGER.info("Initializing shortest-paths-number matrix");
+        LOGGER.debug("Initializing shortest-paths-number matrix");
         splNumberMatrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++){
@@ -102,7 +102,7 @@ public class NumberOfShortestPaths {
                 }
             }
         }
-        LOGGER.info("Successfully initialized shortest-paths-number matrix");
+        LOGGER.debug("Successfully initialized shortest-paths-number matrix");
     }
 
     /**
@@ -129,13 +129,13 @@ public class NumberOfShortestPaths {
      * @return sum of all shortest paths
      */
     public int getAllShortestPaths(){
-        LOGGER.info("Summing up number of shortest paths for all nodes");
+        LOGGER.debug("Summing up number of shortest paths for all nodes");
         int n = this.numberOfSplMap.size();
         int allShortestPaths = 0;
         for (int v = 0; v < n; v++){
             allShortestPaths += numberOfSplMap.get(v);
         }
-        LOGGER.info("Finished summing up number of shortest paths for all nodes");
+        LOGGER.debug("Finished summing up number of shortest paths for all nodes");
         return allShortestPaths;
     }
 }

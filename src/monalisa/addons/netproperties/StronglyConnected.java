@@ -45,7 +45,7 @@ public class StronglyConnected extends NetPropertyAlgorithm<Boolean>{
             placeArray.add(p);
         }
 
-        LOGGER.info("Starting depth first search");
+        LOGGER.debug("Starting depth first search");
         while(!placeArray.isEmpty()){
             Place a = placeArray.get(0);
             tSearch(a);

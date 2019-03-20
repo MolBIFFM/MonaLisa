@@ -47,7 +47,7 @@ public class Connected extends NetPropertyAlgorithm<Boolean> {
 
 
         while (!placeArray.isEmpty()) {
-            LOGGER.info("Starting depth first search");
+            LOGGER.debug("Starting depth first search");
             Place a = placeArray.get(0);
             tSearch(a);
             if (!placeArray.isEmpty()) {

@@ -48,16 +48,16 @@ public class AdjacencyMatrix {
 
         int counter = 0;
         if (whichOne.equals(PLACES)){
-            LOGGER.info("Adjacency matrix based on places");
+            LOGGER.debug("Adjacency matrix based on places");
             this.length = places.size();
             initMatrix(places.size());
-            LOGGER.info("Initializing translations maps");
+            LOGGER.debug("Initializing translations maps");
             for(Place p : places) {
                 translationMap.put(p.id(), counter);    // the nodes are numbered
                 reverseTranlationMap.put(counter, p.id());  // stores the ID of a node for each value
                 counter++;
             }
-            LOGGER.info("Filling matrix based on places");
+            LOGGER.debug("Filling matrix based on places");
             for (Transition t : transitions){
                 for (Place p1 : t.inputs()){
                     for (Place p2 : t.outputs()){
@@ -68,16 +68,16 @@ public class AdjacencyMatrix {
                 }
             }
         } else {
-            LOGGER.info("Adjacency matrix based on transitions");
+            LOGGER.debug("Adjacency matrix based on transitions");
             initMatrix(transitions.size());
             this.length = transitions.size();
-            LOGGER.info("Initializing translation maps");
+            LOGGER.debug("Initializing translation maps");
             for(Transition t : transitions) {
                 translationMap.put(t.id(), counter);
                 reverseTranlationMap.put(counter, t.id());
                 counter++;
             }
-            LOGGER.info("Filling matrix based on transitions");
+            LOGGER.debug("Filling matrix based on transitions");
             for (Place p : places){
                 for (Transition t1 : p.inputs()){
                     for (Transition t2 : p.outputs()){
@@ -114,7 +114,7 @@ public class AdjacencyMatrix {
      * @return adjMatrix
      */
     public int getEntry(Integer x, Integer y){
-        LOGGER.info("Getting entry for position " + x.toString() + "," + y.toString());
+        LOGGER.debug("Getting entry for position " + x.toString() + "," + y.toString());
         return adjMatrix[translationMap.get(x)][translationMap.get(y)];
     }
 
@@ -125,7 +125,7 @@ public class AdjacencyMatrix {
      * @param value
      */
     public void setEntry(Integer x, Integer y, int value) {
-        LOGGER.info("Setting entry for position " + x.toString() + "," + y.toString() + " to " + value);
+        LOGGER.debug("Setting entry for position " + x.toString() + "," + y.toString() + " to " + value);
         adjMatrix[translationMap.get(x)][translationMap.get(y)] = value;
     }
 

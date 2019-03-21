@@ -16,8 +16,6 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -29,6 +27,8 @@ import monalisa.resources.StringResources;
 import monalisa.results.TInvariantsConfiguration;
 import monalisa.synchronisation.Synchronizer;
 import monalisa.util.MonaLisaFileChooser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * SearchBar Tab in the ToolBar.
@@ -36,10 +36,12 @@ import monalisa.util.MonaLisaFileChooser;
  */
 public class SearchBar extends javax.swing.JFrame {
     private static final long serialVersionUID = 428469061686606820L;
+    private static final Logger LOGGER = LogManager.getLogger(SearchBar.class);
 
     /** Creates new form SearchBar */
     public SearchBar(final NetViewer netViewer, Synchronizer synchronizer) {
         this.netViewer = netViewer;
+        LOGGER.info("Initializing SearchBar");
         initComponents();
 
         allPlacesList.setName(NetViewer.PLACE);
@@ -49,6 +51,7 @@ public class SearchBar extends javax.swing.JFrame {
         allPlacesList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                LOGGER.debug("Selecting place in NetViewer as well");
                 netViewer.vv.getRenderContext().getPickedVertexState().clear();
                 for(Object obj : allPlacesList.getSelectedValuesList()) {
                     NetViewerNode nvNode = (NetViewerNode)obj;
@@ -65,12 +68,14 @@ public class SearchBar extends javax.swing.JFrame {
         allTransitionsList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
+                LOGGER.debug("Selecting Transition in NetViewer as well");
                 netViewer.vv.getRenderContext().getPickedVertexState().clear();
                 for(Object obj : allTransitionsList.getSelectedValuesList()) {
                     netViewer.vv.getRenderContext().getPickedVertexState().pick((NetViewerNode)obj, true);
                 }
             }
-        });       
+        });
+        LOGGER.info("Successfully initialized SearchBar");
     }
 
     /** This method is called from within the constructor to

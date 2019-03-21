@@ -39,3 +39,6 @@ Where - monalisa.addons.netviewer.NetViewer.hideColor
 What - java.lang.ClassCastException: class monalisa.addons.netviewer.transformer.VertexDrawPaintTransformer cannot be cast to class monalisa.addons.netviewer.transformer.VertexPaintTransformer
 
 Details - On selecting "Hide the color highlighting"
+
+--
+

@@ -11,15 +11,20 @@
 package monalisa.addons.netviewer;
 
 import java.util.Comparator;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
- * Sorts a List of NetViewerNodes by her LabelNames
+ * Sorts a List of NetViewerNodes by their LabelNames
  * @author Jens Einloft
  */
 public class NetViewerStringComparator implements Comparator {
 
+    private static final Logger LOGGER = LogManager.getLogger(NetViewerStringComparator.class);
+
     @Override
     public int compare(Object o1, Object o2) {
+        LOGGER.debug("Sorting list of NetViewerNodes by LabelNames");
         String s1 = ((NetViewerNode) o1).getName();
         String s2 = ((NetViewerNode)o2).getName();
         int n1 = s1.length();
@@ -42,6 +47,7 @@ public class NetViewerStringComparator implements Comparator {
                 }
             }
         }
+        LOGGER.debug("Successfully sorted list of NetViewerNodes by LabelNames");
         return n1 - n2;
     }
 }

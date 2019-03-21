@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import monalisa.data.PropertyList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A Edge in the Net Viewer
@@ -33,6 +35,7 @@ public class NetViewerEdge implements Serializable {
     private Color color;
 
     private final PropertyList properties;
+    private static final Logger LOGGER = LogManager.getLogger(NetViewerEdge.class);
 
     /**
      * Generate a new NetViewerEdge.
@@ -42,6 +45,7 @@ public class NetViewerEdge implements Serializable {
      * @param aim NetViewerNode
      */
     public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim) {
+        LOGGER.debug("Creating new NetViewerEdge");
         this.name = name;
         this.weight = weight;
         this.source = source;
@@ -53,6 +57,7 @@ public class NetViewerEdge implements Serializable {
         this.color = Color.BLACK;
 
         this.properties = new PropertyList();
+        LOGGER.debug("Successfully created new NetViewerEdge");
     }
 
      /**
@@ -64,6 +69,7 @@ public class NetViewerEdge implements Serializable {
      * @param color
      */
     public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim, Color color) {
+        LOGGER.debug("Creating new NetViewerEdge with custom color");
         this.name = name;
         this.weight = weight;
         this.source = source;
@@ -75,6 +81,7 @@ public class NetViewerEdge implements Serializable {
         this.color = color;
 
         this.properties = new PropertyList();
+        LOGGER.debug("Successfully created new NetViewerEdge with custom color");
     }
 
     /**
@@ -86,6 +93,7 @@ public class NetViewerEdge implements Serializable {
      * @param masterEdge
      */
     public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
+        LOGGER.debug("Creating new NetViewerEdge with bend");
         this.name = name;
         this.weight = weight;
         this.source = source;
@@ -98,6 +106,7 @@ public class NetViewerEdge implements Serializable {
         this.color = Color.BLACK;
 
         this.properties = new PropertyList();
+        LOGGER.debug("Successfully created new NetViewerEdge with bend");
     }
 
     /**
@@ -115,16 +124,18 @@ public class NetViewerEdge implements Serializable {
     public int getWeight() {
         return this.weight;
     }
-    
+
     /**
      * Sets a weight for all edges if egde is an edge with a bend
-     * @param weight 
+     * @param weight
      */
     public void setWeightForAllEdges(int weight) {
+        LOGGER.debug("Setting weight for all edges of edge with bend");
         this.weight = weight;
         for(NetViewerEdge e : this.masterEdge.bendEdges) {
             e.setWeight(weight);
         }
+        LOGGER.debug("Successfully set weight for all edges of edge with bend");
     }
 
     private void setWeight(int weight) {
@@ -141,7 +152,7 @@ public class NetViewerEdge implements Serializable {
 
     /**
      * Changes the source of an edge
-     * @param source 
+     * @param source
      */
     public void changeSource(NetViewerNode source) {
         this.source = source;
@@ -157,7 +168,7 @@ public class NetViewerEdge implements Serializable {
 
     /**
      * Changes the aim of an edge
-     * @param aim 
+     * @param aim
      */
     public void changeAim(NetViewerNode aim) {
         this.aim = aim;
@@ -231,10 +242,12 @@ public class NetViewerEdge implements Serializable {
      * @param color
      */
    public void setColorForAllEdges(Color color) {
+        LOGGER.debug("Setting color for all edges of edge with bend");
         this.color = color;
         for(NetViewerEdge e : this.masterEdge.bendEdges) {
             e.setColor(color);
         }
+        LOGGER.debug("Successfully set color for all edges of edge with bend");
     }
 
     /**
@@ -266,15 +279,15 @@ public class NetViewerEdge implements Serializable {
     }
 
     /**
-     * Removes a property from the properties list 
-     * @param key 
+     * Removes a property from the properties list
+     * @param key
      */
     public void removeProperty(String key) {
         if(properties.has(key)) {
             properties.remove(key);
         }
-    }    
-    
+    }
+
      /**
      * Test whether the entity has a given property.
      * @param key The key to look for.

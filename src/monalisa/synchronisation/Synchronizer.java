@@ -539,7 +539,7 @@ public class Synchronizer implements Serializable {
             removeEdgeFromGraph(nvEdge);
         }
 
-        nvNode.getMasterNode().removeLocicalNode(nvNode);
+        nvNode.getMasterNode().removeLogicalNode(nvNode);
 
         if(!nvNode.getMasterNode().getColor().equals(Color.WHITE)) {
             nvNode.getMasterNode().setColor(nvNode.getMasterNode().getColor());

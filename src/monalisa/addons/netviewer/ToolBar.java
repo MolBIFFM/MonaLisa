@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -33,6 +31,8 @@ import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.util.ColorCollection;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -45,41 +45,43 @@ public class ToolBar extends javax.swing.JPanel {
 
     private final NetViewer netViewer;
     private final NetViewerKeyListener nvkl;
-    
+
     private int lastValue;
     private boolean blockSpinner, blockMenuPaneChangeListener;
-    
+    private static final Logger LOGGER = LogManager.getLogger(ToolBar.class);
+
     /**
      * Creates new form ToolBar
      */
     public ToolBar(final NetViewer netViewer, NetViewerKeyListener nvkl) {
+        LOGGER.info("Initializing ToolBar");
         this.netViewer = netViewer;
         this.nvkl = nvkl;
-        
-        this.lastValue = 100;       
+
+        this.lastValue = 100;
         this.blockSpinner = false;
-        
+
         this.addKeyListener(nvkl);
-        
+
         blockMenuPaneChangeListener = true;
-        initComponents();                                    
-        
+        initComponents();
+
         this.showCompartmentsCb.addItemListener(new ItemListener() {
-            
+
         Boolean showMe;
 
-        @Override                                 
+        @Override
         public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.DESELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(false);
-                } 
+                }
                 else if(e.getStateChange() == ItemEvent.SELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(true);
-                }                     
+                }
                 netViewer.repaint();
             }
         });
-        
+
         this.compartmentCb.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
@@ -88,36 +90,37 @@ public class ToolBar extends javax.swing.JPanel {
                     deleteCompartmentButton.setEnabled(true);
                 }
             }
-        });            
-        
+        });
+
         if(!this.netViewer.getProject().getPetriNet().getCompartments().isEmpty()) {
             for(Compartment c : this.netViewer.getProject().getPetriNet().getCompartments()) {
                 this.compartmentCb.addItem(c);
             }
-        }   
-        
+        }
+
         if(this.netViewer.getProject().hasProperty("fontSize")) {
-            int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");        
+            int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");
             this.netViewer.setFontSize(fontSize);
             this.fontSizeSpinner.setValue(fontSize);
         }
-        
+
         if(this.netViewer.getProject().hasProperty("arrowSize")) {
-            double arrowSize = (double) this.netViewer.getProject().getProperty("arrowSize");  
+            double arrowSize = (double) this.netViewer.getProject().getProperty("arrowSize");
             this.arrowSizeSpinner.setValue(arrowSize);
         }
-        
+
         if(this.netViewer.getProject().hasProperty("edgeSize")) {
-            int edgeSize = (int) this.netViewer.getProject().getProperty("edgeSize");  
+            int edgeSize = (int) this.netViewer.getProject().getProperty("edgeSize");
             this.edgeSizeSpinner.setValue(edgeSize);
-        }        
-        
+        }
+
         if(this.netViewer.getProject().hasProperty("iconSize")) {
-            int iconSize = (int) this.netViewer.getProject().getProperty("iconSize");  
+            int iconSize = (int) this.netViewer.getProject().getProperty("iconSize");
             this.iconSizeSpinner.setValue(iconSize);
-        }  
-        
+        }
+
         blockMenuPaneChangeListener = false;
+        LOGGER.info("Successfully initialized ToolBar");
     }
 
     public void setZoomSpinnerValue(int value) {
@@ -125,17 +128,17 @@ public class ToolBar extends javax.swing.JPanel {
         zoomSpinner.setValue(value);
         lastValue = value;
         this.blockSpinner = false;
-    }    
-    
+    }
+
      /**
      * Add a new Tab to the Menu Bar of the NetViewer
      * @param name The name of the tab, shown in the header of the tab
      * @param tab The Component which is shown in the Tab. (Panel or ToolBar). Please use a TableLayout.
      */
-    public void addTabToMenuBar(String name, Component tab) {        
+    public void addTabToMenuBar(String name, Component tab) {
         this.menuPane.addTab(name, new JScrollPane(tab));
-    }    
-    
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1102,7 +1105,7 @@ public class ToolBar extends javax.swing.JPanel {
         try {
             this.netViewer.makePic();
         } catch (IOException ex) {
-            Logger.getLogger(ToolBar.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Issue while making picture: ", ex);
         }
     }//GEN-LAST:event_saveImageButtonActionPerformed
 
@@ -1218,15 +1221,15 @@ public class ToolBar extends javax.swing.JPanel {
     private void computePInvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computePInvsButtonActionPerformed
         netViewer.calcPInvs();
     }//GEN-LAST:event_computePInvsButtonActionPerformed
-    
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
-    
+
     public boolean manuellColorSelection() {
         return this.manuellColorSelection.isSelected();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton addBendButton;
     protected javax.swing.JPanel addBendPanel;

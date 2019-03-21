@@ -89,7 +89,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     // Constants declaration
     public final static String VVPANEL = "VVPANEL";
-    public static final String TRANSITION = "TANSITION";
+    public static final String TRANSITION = "TRANSITION";
     public static final String PLACE = "PLACE";
     public static final String BEND = "BEND";
     public static final Color DEFAULT_COLOR_PLACES = Color.WHITE;
@@ -547,8 +547,8 @@ public class NetViewer extends JFrame implements ActionListener {
      * Checks if the Petri net is changed and disable / enable regarding gui elemets
      */
     public void netChanged() {
-        LOGGER.debug("Checking whether Petri net has changed");
         if(netChanged) {
+            LOGGER.debug("Petri net has changed");
             if(project.hasResults(new TInvariantTool()) || project.hasResults(new PInvariantTool()) || project.hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
             }
@@ -1257,11 +1257,11 @@ public class NetViewer extends JFrame implements ActionListener {
         for(NetViewerNode nvNode : places) {
             allPlacesModel.addElement(nvNode);
             if(doublePlaceNames.contains(nvNode.getName())) {
-                nvNode.setSerachBarColor(Color.RED);
+                nvNode.setSearchBarColor(Color.RED);
                 doublePlaces = true;
             }
             else
-                nvNode.setSerachBarColor(Color.BLACK);
+                nvNode.setSearchBarColor(Color.BLACK);
         }
 
         if(doublePlaces) {
@@ -1275,11 +1275,11 @@ public class NetViewer extends JFrame implements ActionListener {
         for(NetViewerNode nvNode : transitions) {
             allTransitionsModel.addElement(nvNode);
             if(doubleTransitionNames.contains(nvNode.getName())) {
-                nvNode.setSerachBarColor(Color.RED);
+                nvNode.setSearchBarColor(Color.RED);
                 doubleTransitions = true;
             }
             else
-                nvNode.setSerachBarColor(Color.BLACK);
+                nvNode.setSearchBarColor(Color.BLACK);
         }
 
         if(doubleTransitions) {
@@ -1744,7 +1744,6 @@ public class NetViewer extends JFrame implements ActionListener {
         displayMessage(strings.get("NVInsertInVertexMessage"), Color.BLACK);
         gpmp.setMouseModeToInVertex();
         mouseMode = false;
-        LOGGER.info("Successfully added new inVertex");
     }
 
     /**
@@ -1758,7 +1757,6 @@ public class NetViewer extends JFrame implements ActionListener {
         displayMessage(strings.get("NVInsertOutVertexMessage"), Color.BLACK);
         gpmp.setMouseModeToOutVertex();
         mouseMode = false;
-        LOGGER.info("Successfully added new outVertex");
     }
 
     /**
@@ -1793,7 +1791,6 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.addPlacePanel);
         displayMessage(strings.get("NVPlaceMessage"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully added new place");
     }
 
    /**
@@ -1807,7 +1804,6 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.addTransitionPanel);
         displayMessage(strings.get("NVTransitionMessage"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully added new transition");
     }
 
     /**
@@ -1822,7 +1818,6 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.deletePanel);
         displayMessage(strings.get("NVDeleteMessage"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully deleted edge");
     }
 
     /**
@@ -1836,7 +1831,6 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.addBendPanel);
         displayMessage(strings.get("NVAddBendMessage"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully added bend to edge");
     }
 
     /**
@@ -1850,7 +1844,6 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.removeBendPanel);
         displayMessage(strings.get("NVDeleteBendMessage"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully removed bend from edge");
     }
 
     /**
@@ -1864,7 +1857,6 @@ public class NetViewer extends JFrame implements ActionListener {
         saveSelectedVertices();
         displayMessage(strings.get("NVAlignmentText"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Succesfully aligned vertices on X-axis");
     }
 
     /**
@@ -1878,7 +1870,6 @@ public class NetViewer extends JFrame implements ActionListener {
         saveSelectedVertices();
         displayMessage(strings.get("NVAlignmentText"), Color.BLACK);
         mouseMode = false;
-        LOGGER.info("Successfully aligned vertices on Y-axis");
     }
 
     /**
@@ -1936,7 +1927,6 @@ public class NetViewer extends JFrame implements ActionListener {
         OutputFileFilter selectedFileFilter = ((OutputFileFilter)petriNetFileChooser.getFileFilter());
         petriNetFile = selectedFileFilter.checkFileNameForExtension(petriNetFile);
         selectedFileFilter.getHandler().save(new FileOutputStream(petriNetFile), subNet);
-        LOGGER.info("Successfully exported sub-graph to file");
     }
 
     /**
@@ -1950,7 +1940,6 @@ public class NetViewer extends JFrame implements ActionListener {
         resetMessageLabel();
         netChanged();
         mouseMode = true;
-        LOGGER.info("Successfully canceled mouse action and set to picking mode");
     }
 
     /**

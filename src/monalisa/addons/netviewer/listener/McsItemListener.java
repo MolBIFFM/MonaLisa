@@ -18,6 +18,8 @@ import javax.swing.JComboBox;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.ToolBar;
 import monalisa.addons.netviewer.wrapper.McsWrapper;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Controls the selection of a MCT Set
@@ -27,6 +29,7 @@ public class McsItemListener implements ItemListener {
     private final JComboBox cb;
     private final NetViewer nv;
     private final ToolBar tb;
+    private static final Logger LOGGER = LogManager.getLogger(McsItemListener.class);
 
     public McsItemListener(NetViewer nv, ToolBar tb, JComboBox cb) {
         this.cb = cb;
@@ -37,6 +40,7 @@ public class McsItemListener implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent ie) {
         if(ie.getStateChange() == ItemEvent.SELECTED) {
+            LOGGER.debug("New MCS-Item selected, changing colouring");
             if(cb.getSelectedItem() == null)
                 return;
             if(cb.getSelectedIndex() == 0) {
@@ -48,22 +52,23 @@ public class McsItemListener implements ItemListener {
             }
 
             if(!tb.stackSelection()) {
-                nv.resetColor();                    
-            } 
+                nv.resetColor();
+            }
 
-            Color choosenColor;
+            Color chosenColor;
             if(tb.manuellColorSelection()) {
-                choosenColor = JColorChooser.showDialog(null, "Select color", null);
+                chosenColor = JColorChooser.showDialog(null, "Select color", null);
             } else {
-                choosenColor = NetViewer.MCS_COLOR;
-            }                 
+                chosenColor = NetViewer.MCS_COLOR;
+            }
 
             nv.resetMessageLabel();
 
             McsWrapper mcsWrapper = (McsWrapper)cb.getSelectedItem();
-            
-            nv.colorTransitions(NetViewer.MCSOBJECTIV_COLOR, mcsWrapper.getObjective());      
-            nv.colorTransitions(mcsWrapper.getMcs(), choosenColor);             
-        }   
-    }     
+
+            nv.colorTransitions(NetViewer.MCSOBJECTIV_COLOR, mcsWrapper.getObjective());
+            nv.colorTransitions(mcsWrapper.getMcs(), chosenColor);
+            LOGGER.debug("Successfully changed colouring on new MCS-Item selection");
+        }
+    }
 }

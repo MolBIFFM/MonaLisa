@@ -22,6 +22,8 @@ import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.ToolBar;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.Place;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -31,12 +33,13 @@ public class PinvItemListener implements ItemListener {
     private final JComboBox cb;
     private final NetViewer nv;
     private final ToolBar tb;
+    private static final Logger LOGGER = LogManager.getLogger(PinvItemListener.class);
 
     /**
      * Init a new Listener
      * @param nv
+     * @param tb
      * @param cb
-     * @param color         *
      */
     public PinvItemListener(NetViewer nv, ToolBar tb, JComboBox cb) {
         this.cb = cb;
@@ -47,6 +50,7 @@ public class PinvItemListener implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent ie) {
         if(ie.getStateChange() == ItemEvent.SELECTED) {
+            LOGGER.debug("New P-Invariant selected, changing colouring");
             if(cb.getSelectedItem() == null)
                 return;
             if(cb.getSelectedIndex() == 0) {
@@ -59,25 +63,26 @@ public class PinvItemListener implements ItemListener {
             nv.resetMessageLabel();
 
             if(!tb.stackSelection()) {
-                nv.resetColor();                    
-            } 
+                nv.resetColor();
+            }
 
-            Color choosenColor;
+            Color chosenColor;
             if(tb.manuellColorSelection()) {
-                choosenColor = JColorChooser.showDialog(null, "Select color", null);
+                chosenColor = JColorChooser.showDialog(null, "Select color", null);
             } else {
-                choosenColor = NetViewer.PINV_COLOR;
-            }                 
+                chosenColor = NetViewer.PINV_COLOR;
+            }
 
             PInvariant pinv = ((PinvWrapper)cb.getSelectedItem()).getPinv();
             Set<Place> places = pinv.places();
 
             Iterator<Place> it = places.iterator();
             while(it.hasNext()) {
-               nv.getNodeFromVertex(it.next()).getMasterNode().setColorForAllNodes(choosenColor);
+               nv.getNodeFromVertex(it.next()).getMasterNode().setColorForAllNodes(chosenColor);
             }
 
             nv.getVisualizationViewer().repaint();
-        }   
+            LOGGER.debug("Successfully changed colouring on new P-Invariant selection");
+        }
     }
 }

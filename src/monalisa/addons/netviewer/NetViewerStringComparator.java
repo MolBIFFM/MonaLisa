@@ -24,7 +24,6 @@ public class NetViewerStringComparator implements Comparator {
 
     @Override
     public int compare(Object o1, Object o2) {
-        LOGGER.debug("Sorting list of NetViewerNodes by LabelNames");
         String s1 = ((NetViewerNode) o1).getName();
         String s2 = ((NetViewerNode)o2).getName();
         int n1 = s1.length();
@@ -47,7 +46,6 @@ public class NetViewerStringComparator implements Comparator {
                 }
             }
         }
-        LOGGER.debug("Successfully sorted list of NetViewerNodes by LabelNames");
         return n1 - n2;
     }
 }

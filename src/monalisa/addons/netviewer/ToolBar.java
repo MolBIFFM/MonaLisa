@@ -124,10 +124,12 @@ public class ToolBar extends javax.swing.JPanel {
     }
 
     public void setZoomSpinnerValue(int value) {
+        LOGGER.debug("Setting ZoomSpinner value");
         this.blockSpinner = true;
         zoomSpinner.setValue(value);
         lastValue = value;
         this.blockSpinner = false;
+        LOGGER.debug("Succssfully set ZoomSpinner value");
     }
 
      /**
@@ -136,7 +138,9 @@ public class ToolBar extends javax.swing.JPanel {
      * @param tab The Component which is shown in the Tab. (Panel or ToolBar). Please use a TableLayout.
      */
     public void addTabToMenuBar(String name, Component tab) {
+        LOGGER.debug("Adding tab to MenuBar");
         this.menuPane.addTab(name, new JScrollPane(tab));
+        LOGGER.debug("Successfully added tab to MenuBar");
     }
 
     /**
@@ -1079,31 +1083,41 @@ public class ToolBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enableHighlightingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableHighlightingButtonActionPerformed
+        LOGGER.debug("Highlighting Button in ToolBar used");
         Boolean value = this.netViewer.hideColor();
 
         if(value) {
+            LOGGER.debug("Changing ToolBar button to ShowColor");
             enableHighlightingButton.setIcon(resources.getIcon("sw.png"));
             enableHighlightingButton.setToolTipText(strings.get("NVShowColor"));
         } else {
+            LOGGER.debug("Changing ToolBar button to HideColor");
             enableHighlightingButton.setIcon(resources.getIcon("color.png"));
             enableHighlightingButton.setToolTipText(strings.get("NVHideColor"));
         }
+        LOGGER.debug("Done handling use of highlighting button in ToolBar");
     }//GEN-LAST:event_enableHighlightingButtonActionPerformed
 
     private void enableLabelsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableLabelsButtonActionPerformed
+        LOGGER.debug("Label button in ToolBar used");
         Boolean value = this.netViewer.showLabels();
         if(value) {
+            LOGGER.debug("Changing ToolBar button to HideAllLabels");
             enableLabelsButton.setIcon(resources.getIcon("hide_labels.png"));
             enableLabelsButton.setToolTipText(strings.get("NVHideAllLabels"));
         } else {
+            LOGGER.debug("Changing ToolBar button to ShowAllLabels");
             enableLabelsButton.setIcon(resources.getIcon("show_labels.png"));
             enableLabelsButton.setToolTipText(strings.get("NVShowAllLabels"));
         }
+        LOGGER.debug("Done handling use of label button in ToolBar");
     }//GEN-LAST:event_enableLabelsButtonActionPerformed
 
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
         try {
+            LOGGER.debug("Image button in ToolBar used");
             this.netViewer.makePic();
+            LOGGER.debug("Done handling use of image button in ToolBar");
         } catch (IOException ex) {
             LOGGER.error("Issue while making picture: ", ex);
         }
@@ -1162,39 +1176,51 @@ public class ToolBar extends javax.swing.JPanel {
     }//GEN-LAST:event_saveProjectButtonActionPerformed
 
     private void newCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCompartmentButtonActionPerformed
+        LOGGER.debug("AddCompartment button used from ToolBar");
         CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer);
         csf.setVisible(true);
+        LOGGER.debug("Done handling use of AddCompartment button from ToolBar");
     }//GEN-LAST:event_newCompartmentButtonActionPerformed
 
     private void editCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCompartmentButtonActionPerformed
+        LOGGER.debug("EditCompartment button used from ToolBar");
         CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer, (Compartment) this.compartmentCb.getSelectedItem());
         csf.setVisible(true);
+        LOGGER.debug("Done handling use of EditCompartment button from ToolBar");
     }//GEN-LAST:event_editCompartmentButtonActionPerformed
 
     private void deleteCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCompartmentButtonActionPerformed
+        LOGGER.debug("DeleteCompartment button used from ToolBar");
         Compartment c = (Compartment) this.compartmentCb.getSelectedItem();
         this.compartmentCb.removeItem(c);
         this.netViewer.getProject().getPetriNet().removeCompartment(c);
 
         if(this.compartmentCb.getItemCount() == 0) {
+            LOGGER.debug("No Compartments left, disabling EditCompartment and DeleteCompartment button");
             this.editCompartmentButton.setEnabled(false);
             this.deleteCompartmentButton.setEnabled(false);
         }
 
         this.repaint();
+        LOGGER.debug("Done handling use of DeleteCompartment button from ToolBar");
     }//GEN-LAST:event_deleteCompartmentButtonActionPerformed
 
     private void heatmapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatmapButtonActionPerformed
+        LOGGER.debug("HeatMap button used from ToolBar");
         if(this.netViewer.heatMap()) {
+            LOGGER.debug("Changing ToolBar button to HeatMapOff");
             heatmapButton.setIcon(resources.getIcon("map_sw.png"));
             heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
         } else {
+            LOGGER.debug("Changing ToolBar button to HeatMapOn");
             heatmapButton.setIcon(resources.getIcon("map_color.png"));
             heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOn"));
         }
+        LOGGER.debug("Done handling use of HeatMap button from ToolBar");
     }//GEN-LAST:event_heatmapButtonActionPerformed
 
     private void allMctsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allMctsButtonActionPerformed
+        LOGGER.debug("AllMcts button used from ToolBar");
         int numberOfElements = mctsCb.getItemCount();
 
         if(numberOfElements > ColorCollection.colors.size()) {
@@ -1212,6 +1238,7 @@ public class ToolBar extends javax.swing.JPanel {
         }
 
         netViewer.vv.repaint();
+        LOGGER.debug("Done handling use of AllMcts button from ToolBar");
     }//GEN-LAST:event_allMctsButtonActionPerformed
 
     private void computeTinvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeTinvsButtonActionPerformed

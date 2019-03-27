@@ -22680,3 +22680,1491 @@
 2019-03-27 10:10:01 INFO  Successfully changed mouse mode to picking
 2019-03-27 10:10:03 INFO  Checking whether project has changed
 2019-03-27 10:10:03 INFO  projectChanged: false
+2019-03-27 10:23:31 INFO  Logging Start
+2019-03-27 10:23:31 INFO  Trying to load settings from file
+2019-03-27 10:23:31 INFO  Initializing settings
+2019-03-27 10:23:31 INFO  Setting properties to default values
+2019-03-27 10:23:31 INFO  Finished setting properties to default values
+2019-03-27 10:23:31 INFO  Loaded 62 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+2019-03-27 10:23:32 DEBUG Trying to return key 'recentlyProjects' as String
+2019-03-27 10:23:32 DEBUG Key 'recentlyProjects' found, returning as String.
+2019-03-27 10:27:57 DEBUG Trying to return key 'latestDirectory' as String
+2019-03-27 10:27:57 DEBUG Key 'latestDirectory' found, returning as String.
+2019-03-27 10:28:03 INFO  Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+2019-03-27 10:28:03 INFO  Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+2019-03-27 10:28:03 DEBUG Casting 'completeResult' to Color
+2019-03-27 10:28:03 DEBUG Trying to return key 'completeResultR' as String
+2019-03-27 10:28:03 DEBUG Key 'completeResultR' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'completeResultG' as String
+2019-03-27 10:28:03 DEBUG Key 'completeResultG' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'completeResultB' as String
+2019-03-27 10:28:03 DEBUG Key 'completeResultB' found, returning as String.
+2019-03-27 10:28:03 DEBUG Casting 'hasResults' to Color
+2019-03-27 10:28:03 DEBUG Trying to return key 'hasResultsR' as String
+2019-03-27 10:28:03 DEBUG Key 'hasResultsR' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'hasResultsG' as String
+2019-03-27 10:28:03 DEBUG Key 'hasResultsG' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'hasResultsB' as String
+2019-03-27 10:28:03 DEBUG Key 'hasResultsB' found, returning as String.
+2019-03-27 10:28:03 DEBUG Casting 'warning' to Color
+2019-03-27 10:28:03 DEBUG Trying to return key 'warningR' as String
+2019-03-27 10:28:03 DEBUG Key 'warningR' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'warningG' as String
+2019-03-27 10:28:03 DEBUG Key 'warningG' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'warningB' as String
+2019-03-27 10:28:03 DEBUG Key 'warningB' found, returning as String.
+2019-03-27 10:28:03 DEBUG Casting 'error' to Color
+2019-03-27 10:28:03 DEBUG Trying to return key 'errorR' as String
+2019-03-27 10:28:03 DEBUG Key 'errorR' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'errorG' as String
+2019-03-27 10:28:03 DEBUG Key 'errorG' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'errorB' as String
+2019-03-27 10:28:03 DEBUG Key 'errorB' found, returning as String.
+2019-03-27 10:28:03 DEBUG Casting 'notFinished' to Color
+2019-03-27 10:28:03 DEBUG Trying to return key 'notFinishedR' as String
+2019-03-27 10:28:03 DEBUG Key 'notFinishedR' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'notFinishedG' as String
+2019-03-27 10:28:03 DEBUG Key 'notFinishedG' found, returning as String.
+2019-03-27 10:28:03 DEBUG Trying to return key 'notFinishedB' as String
+2019-03-27 10:28:03 DEBUG Key 'notFinishedB' found, returning as String.
+2019-03-27 10:28:03 INFO  Creating new project from external file.
+2019-03-27 10:28:03 INFO  Initializing tools.
+2019-03-27 10:28:03 INFO  Initializing Layout
+2019-03-27 10:28:03 INFO  Finished initializing layout
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE A20
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE A20
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE A20t
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE A20t
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE CI
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE CI
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE cIAP
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE cIAP
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE TTTRT
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE TTTRT
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE TR
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE TR
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE TTTR_cIAP_h
+2019-03-27 10:28:03 DEBUG Successfully created NetViewerNode: PLACE TTTR_cIAP_h
+2019-03-27 10:28:03 DEBUG Creating new NetViewerNode: PLACE TRAF2
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TRAF2
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE RIP1
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE RIP1
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TRADD
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TRADD
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TTTR_u_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TTTR_u_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE Casp8
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE Casp8
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE cIAPt
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE cIAPt
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IKKa_IN_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IKKa_IN_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TTTR_CI_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TTTR_CI_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE CII
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE CII
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE Pcasp8
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE Pcasp8
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE CI_A20_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE CI_A20_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TRF
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TRF
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE FLIP
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE FLIP
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE FADD
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE FADD
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TR_A20_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TR_A20_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE CIIFLIP
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE CIIFLIP
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE CI_IKK_h
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE CI_IKK_h
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE FLIPt
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE FLIPt
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IN
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IN
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IkB
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IkB
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE NFkB
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE NFkB
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IKKa
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IKKa
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IkBt
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IkBt
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE IKK
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE IKK
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TTTR
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TTTR
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TNF
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TNF
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TNFR1
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TNFR1
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: PLACE TT
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: PLACE TT
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: TRANSITION deg_A20
+2019-03-27 10:28:04 DEBUG Successfully created NetViewerNode: TRANSITION deg_A20
+2019-03-27 10:28:04 DEBUG Creating new NetViewerNode: TRANSITION deg_A20t
+2019-03-27 10:28:05 DEBUG Successfully created NetViewerNode: TRANSITION deg_A20t
+2019-03-27 10:28:05 DEBUG Creating new NetViewerNode: TRANSITION dis_CI
+2019-03-27 10:28:05 DEBUG Successfully created NetViewerNode: TRANSITION dis_CI
+2019-03-27 10:28:05 DEBUG Creating new NetViewerNode: TRANSITION det_CI
+2019-03-27 10:28:05 DEBUG Successfully created NetViewerNode: TRANSITION det_CI
+2019-03-27 10:28:05 DEBUG Creating new NetViewerNode: TRANSITION dec_CI
+2019-03-27 10:28:05 DEBUG Successfully created NetViewerNode: TRANSITION dec_CI
+2019-03-27 10:28:05 DEBUG Creating new NetViewerNode: TRANSITION deg_cIAP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_cIAP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_Casp8
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_Casp8
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_CI
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_CI
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_cIAPt
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_cIAPt
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_CII
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_CII
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION act_Casp8
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION act_Casp8
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_CIIFLIP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_CIIFLIP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dec_CIIFLIP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dec_CIIFLIP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_CIIFLIP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_CIIFLIP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_FLIPt
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_FLIPt
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_TRF
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_TRF
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_FLIP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_FLIP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_IN
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_IN
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_IkBt
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_IkBt
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_IkB
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_IkB
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_IN
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_IN
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION act_NFkB
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION act_NFkB
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dea_IKK
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dea_IKK
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_TTTR
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_TTTR
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_CII
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_CII
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION deg_Pcasp8
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION deg_Pcasp8
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_TT
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_TT
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_TRF
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_TRF
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION ass_TTTRT
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION ass_TTTRT
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dec_TR
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dec_TR
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION syn_A20t
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION syn_A20t
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_TTTRT
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_TTTRT
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_TTTR
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_TTTR
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION dis_TT
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION dis_TT
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION syn_FLIP
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION syn_FLIP
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION syn_FLIPt
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION syn_FLIPt
+2019-03-27 10:28:06 DEBUG Creating new NetViewerNode: TRANSITION syn_IkBt
+2019-03-27 10:28:06 DEBUG Successfully created NetViewerNode: TRANSITION syn_IkBt
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_IkB
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_IkB
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_A20
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_A20
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_cIAP1
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_cIAP1
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_cIAP
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_cIAP
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_cIAPt
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_cIAPt
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION det_TTTR
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION det_TTTR
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION hin4_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION hin4_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION ubi_cIAP_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION ubi_cIAP_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_Pcasp8
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_Pcasp8
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_TNFR1
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_TNFR1
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION syn_TNF
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION syn_TNF
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION k1_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION k1_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION ubi_CI_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION ubi_CI_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION hin1_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION hin1_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION r_ck4_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION r_ck4_h
+2019-03-27 10:28:07 DEBUG Creating new NetViewerNode: TRANSITION r_ck3_h
+2019-03-27 10:28:07 DEBUG Successfully created NetViewerNode: TRANSITION r_ck3_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION hin3_h
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION hin3_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION k2_h
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION k2_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION r_ck2_h
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION r_ck2_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION hin2_h
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION hin2_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION r_ck1_h
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION r_ck1_h
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION act_IKK
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION act_IKK
+2019-03-27 10:28:08 DEBUG Creating new NetViewerNode: TRANSITION syn_NFkB
+2019-03-27 10:28:08 DEBUG Successfully created NetViewerNode: TRANSITION syn_NFkB
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:08 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:09 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:10 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:11 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Creating new NetViewerEdge
+2019-03-27 10:28:12 DEBUG Successfully created new NetViewerEdge
+2019-03-27 10:28:12 INFO  Finished creating new project from external file.
+2019-03-27 10:28:12 INFO  Creating UI for Analyze Frame.
+2019-03-27 10:28:12 INFO  Laying out tools.
+2019-03-27 10:28:12 INFO  Finished laying out tools.
+2019-03-27 10:28:12 INFO  Finished creating UI for Analyze Frame.
+2019-03-27 10:28:13 INFO  Initializing NetViewer
+2019-03-27 10:28:13 DEBUG Casting 'tinvColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'tinvColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'tinvColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'tinvColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'tinvColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'tinvColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'tinvColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'pinvColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'pinvColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'pinvColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'pinvColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'pinvColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'pinvColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'pinvColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'mctsColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'mctsColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'mctsColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mctsColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'mctsColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mctsColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'mctsColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'heatMapColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'heatMapColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'heatMapColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'heatMapColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'heatMapColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'heatMapColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'heatMapColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'knockedOutColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'knockedOutColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'knockedOutColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'knockedOutColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'knockedOutColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'knockedOutColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'knockedOutColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'alsoKnockedOutColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'alsoKnockedOutColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'alsoKnockedOutColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'alsoKnockedOutColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'alsoKnockedOutColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'alsoKnockedOutColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'alsoKnockedOutColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'notKnockedOutColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'notKnockedOutColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'notKnockedOutColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'notKnockedOutColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'notKnockedOutColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'notKnockedOutColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'notKnockedOutColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'backgroundColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'backgroundColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'backgroundColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'backgroundColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'backgroundColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'backgroundColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'backgroundColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'mcsObjectivColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsObjectivColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsObjectivColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsObjectivColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsObjectivColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsObjectivColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsObjectivColorB' found, returning as String.
+2019-03-27 10:28:13 DEBUG Casting 'mcsColor' to Color
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsColorR' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsColorR' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsColorG' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsColorG' found, returning as String.
+2019-03-27 10:28:13 DEBUG Trying to return key 'mcsColorB' as String
+2019-03-27 10:28:13 DEBUG Key 'mcsColorB' found, returning as String.
+2019-03-27 10:28:13 INFO  Initializing NetViewer frame
+2019-03-27 10:28:13 DEBUG Initializing VisualizationViewer
+2019-03-27 10:28:14 DEBUG Finished initializing VisualizationViewer
+2019-03-27 10:28:14 DEBUG Initializing NetViewer GUI
+2019-03-27 10:28:14 INFO  Initializing MenuBar
+2019-03-27 10:28:14 INFO  Successfully initialized MenuBar
+2019-03-27 10:28:14 INFO  Initializing ToolBar
+2019-03-27 10:28:14 INFO  Initializing ToolBar
+2019-03-27 10:28:15 INFO  Successfully initialized ToolBar
+2019-03-27 10:28:15 DEBUG Adding Invariants ComboBoxes
+2019-03-27 10:28:15 DEBUG Filling with T-Invariants, if available
+2019-03-27 10:28:15 DEBUG Filling with MCTS, if available
+2019-03-27 10:28:15 INFO  Adding MCTS to ComboBox
+2019-03-27 10:28:15 INFO  Successfully added MCTS to ComboBox
+2019-03-27 10:28:15 DEBUG Filling with MCS, if available
+2019-03-27 10:28:15 INFO  Adding MCS to ComboBox
+2019-03-27 10:28:15 INFO  Successfully added MCS to ComboBox
+2019-03-27 10:28:15 DEBUG Filling with P-Invariants, if available
+2019-03-27 10:28:15 DEBUG Adding MouseMode buttons to list
+2019-03-27 10:28:15 DEBUG Creating SearchBar
+2019-03-27 10:28:15 INFO  Initializing SearchBar
+2019-03-27 10:28:15 INFO  Successfully initialized SearchBar
+2019-03-27 10:28:15 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:15 DEBUG Trying to cast 'SearchBar' to Boolean
+2019-03-27 10:28:15 DEBUG Trying to return key 'SearchBar' as String
+2019-03-27 10:28:15 DEBUG Key 'SearchBar' found, returning as String.
+2019-03-27 10:28:15 DEBUG Successfully cast 'SearchBar' to Boolean
+2019-03-27 10:28:15 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:15 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:15 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:15 DEBUG Creating LogicalPlaceFrame
+2019-03-27 10:28:15 INFO  Initializing LogicalPlacesFrame
+2019-03-27 10:28:16 INFO  Finished initializing LogicalPlacesFrame
+2019-03-27 10:28:16 INFO  Successfully initialized ToolBar
+2019-03-27 10:28:16 INFO  Updating number of places, transitions and edges in InfoBar
+2019-03-27 10:28:16 INFO  Successfully updated number of places, tranitions and edges in InfoBar
+2019-03-27 10:28:16 INFO  Updating search bar
+2019-03-27 10:28:16 INFO  Finished updating search bar
+2019-03-27 10:28:16 DEBUG Marking button of current MouseMode
+2019-03-27 10:28:16 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:28:16 DEBUG Finished initializing GUI
+2019-03-27 10:28:16 INFO  Using imported layout information if available
+2019-03-27 10:28:16 INFO  Checking for Spped Import
+2019-03-27 10:28:16 INFO  Finished initializing NetViewer frame
+2019-03-27 10:28:16 INFO  Finished initializing NetViewer
+2019-03-27 10:28:16 INFO  Adding 'Simulator' to ToolBar
+2019-03-27 10:28:16 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:16 DEBUG Trying to cast 'Simulator' to Boolean
+2019-03-27 10:28:16 DEBUG Trying to return key 'Simulator' as String
+2019-03-27 10:28:16 DEBUG Key 'Simulator' found, returning as String.
+2019-03-27 10:28:16 DEBUG Successfully cast 'Simulator' to Boolean
+2019-03-27 10:28:16 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:16 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:16 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:17 INFO  Adding 'Centrality' to ToolBar
+2019-03-27 10:28:17 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:17 DEBUG Trying to cast 'Centrality' to Boolean
+2019-03-27 10:28:17 DEBUG Trying to return key 'Centrality' as String
+2019-03-27 10:28:17 DEBUG Key 'Centrality' found, returning as String.
+2019-03-27 10:28:17 DEBUG Successfully cast 'Centrality' to Boolean
+2019-03-27 10:28:17 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:17 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:17 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:17 INFO  Initializing CentralityPanel
+2019-03-27 10:28:17 INFO  Successfully initialized CentralityPanel
+2019-03-27 10:28:17 INFO  Adding 'Annotations' to ToolBar
+2019-03-27 10:28:17 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:17 DEBUG Trying to cast 'Annotations' to Boolean
+2019-03-27 10:28:17 DEBUG Trying to return key 'Annotations' as String
+2019-03-27 10:28:17 DEBUG Key 'Annotations' found, returning as String.
+2019-03-27 10:28:17 DEBUG Successfully cast 'Annotations' to Boolean
+2019-03-27 10:28:17 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:17 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:17 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:17 INFO  Initializing AnnotationsPanel
+2019-03-27 10:28:17 INFO  Initializing ModelInformationFrame
+2019-03-27 10:28:17 DEBUG Starting ModelInformations part
+2019-03-27 10:28:17 INFO  Finished ModelInformations part and initializing ModelInformationFrame
+2019-03-27 10:28:17 DEBUG Started MIRIAM part
+2019-03-27 10:28:17 INFO  Setting identifiers to 'false'
+2019-03-27 10:28:17 INFO  Finished setting identifiers to 'false'
+2019-03-27 10:28:17 DEBUG Finished MIRIAM part
+2019-03-27 10:28:17 DEBUG Started SBO part
+2019-03-27 10:28:17 DEBUG Reading from 'SBO_XML.xml'
+2019-03-27 10:28:18 DEBUG Adding SBO tooltips
+2019-03-27 10:28:18 DEBUG Finished SBO part
+2019-03-27 10:28:18 DEBUG Starting MIRIAM registry part
+2019-03-27 10:28:18 DEBUG Reading from miriam_registry.xml
+2019-03-27 10:28:18 DEBUG Adding MIRIAM URLs
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'ChEBI'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'Enzyme Nomenclature'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'UniProt Knowledgebase'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'Taxonomy'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'BioModels Database'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'MIRIAM Registry collection'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'ICD'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'IntAct'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'InterPro'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Pathway'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Compound'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Reaction'
+2019-03-27 10:28:18 DEBUG Creating new MiriamRegistryWrapper for 'PubMed'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'OMIM'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'PIRSF'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Reactome'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'DOI'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Protein Data Bank'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Gene Ontology'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'SGD'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Systems Biology Ontology'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Drug'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Glycan'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'WormBase'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Pfam'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Nucleotide Sequence Database'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'FlyBase'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Wormpep'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'PROSITE'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'PubChem-substance'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'PubChem-compound'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'arXiv'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'ArrayExpress'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Mouse Genome Database'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'SABIO-RK Reaction'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'RefSeq'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Transport Classification Database'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'UniParc'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'MINT'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Database of Interacting Proteins'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'Signaling Gateway'
+2019-03-27 10:28:19 DEBUG Creating new MiriamRegistryWrapper for 'RESID'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Rat Genome Database'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'TAIR Protein'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'TAIR Gene'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'TAIR Locus'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'HMDB'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'LIPID MAPS'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'PeptideAtlas'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'GEO'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Evidence Code Ontology'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Protein Modification Ontology'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Saccharomyces genome database pathways'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'BioGRID'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'MEROPS'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'PANTHER Family'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'SPRINT'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Ligand Expo'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Aclame'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'ISBN'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'PRIDE'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for '3DMET'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'FMA'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'MatrixDB'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'NCBI Gene'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Genes'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'BRENDA'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'PubChem-bioassay'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Pathway Commons'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'HOVERGEN'
+2019-03-27 10:28:20 DEBUG Creating new MiriamRegistryWrapper for 'Melanoma Molecular Map Project Biomaps'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'WikiPathways'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'MACiE'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'miRBase Sequence'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ZFIN Gene'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'HGNC'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Sequence Ontology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Rhea'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Unipathway'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ChEMBL compound'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ChEMBL target'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'SABIO-RK Kinetic Record'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Ligand-Gated Ion Channel database'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PharmGKB Pathways'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PharmGKB Disease'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PharmGKB Drug'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'TTD Drug'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'TTD Target'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'NeuronDB'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'NeuroMorpho'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ChemIDplus'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'BioSystems'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'CTD Chemical'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'CTD Disease'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'CTD Gene'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'BioNumbers'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'DrugBank'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'T3DB'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Small Molecule Pathway Database'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PhosphoSite Protein'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'GeneDB'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'TEDDY'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'KiSAO'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Molecular Interactions Ontology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Cell Type Ontology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Brenda Tissue Ontology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PATO'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Chemical Component Dictionary'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'GlycomeDB'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'LipidBank'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Orthology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ProDom'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'SMART'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Conserved Domain Database'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Relation Ontology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Molecular Modeling Database'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'IMEx'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'iRefWeb'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Microbial Protein Interaction Database'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'PhosphoSite Residue'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'NeuroLex'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Ontology for Biomedical Investigations'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'SABIO-RK EC Record'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'Ontology of Physics for Biology'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'JWS Online'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'ModelDB'
+2019-03-27 10:28:21 DEBUG Creating new MiriamRegistryWrapper for 'SubtiWiki'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'NCI Pathway Interaction Database: Pathway'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Model'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Pathway'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'Unit Ontology'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'ClinicalTrials.gov'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'ChemSpider'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'NCIt'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'BioCatalogue'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'Protein Ontology'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'OMIA'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'ChemBank'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'CSA'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'Candida Genome Database'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'AntWeb'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'PubMed Central'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'AmoebaDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'CryptoDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'PlasmoDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'GiardiaDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'MicrosporidiaDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'ToxoDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'TrichDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'TriTrypDB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'BDGP insertion DB'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'BeetleBase'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'BOLD Taxonomy'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'dbEST'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'dbProbe'
+2019-03-27 10:28:22 DEBUG Creating new MiriamRegistryWrapper for 'dbSNP'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'UniSTS'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'EcoGene'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GABI'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GreenGenes'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GRIN Plant Taxonomy'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'H-InvDb Locus'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'H-InvDb Transcript'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'H-InvDb Protein'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'HOMD Sequence Metainformation'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'HOMD Taxonomy'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'IRD Segment Sequence'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'ISFinder'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Japan Collection of Microorganisms'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Taxon'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Gene'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MaizeGDB Locus'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MycoBank'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'NITE Biological Research Center Catalogue'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Pseudomonas Genome Database'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Gramene protein'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Gramene genes'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Gramene Taxonomy'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Gramene QTL'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Sol Genomics Network'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Xenbase'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'BioPortal'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MIRIAM Registry resource'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'EDAM Ontology'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Protein Model Database'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'AGD'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'ArachnoServer'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'BioCyc'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'CAZy'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GOA'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'PaleoDB'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Compulyeast'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'DisProt'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'EchoBASE'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'eggNOG'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl Bacteria'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl Protists'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl Metazoa'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl Plants'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Ensembl Fungi'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'HCVDB'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'Genatlas'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'CATH superfamily'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'CATH domain'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GeneFarm'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GPCRDB'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'HOGENOM'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'GeneTree'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'HSSP'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MycoBrowser tuberculosis'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MycoBrowser leprae'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MycoBrowser marinum'
+2019-03-27 10:28:23 DEBUG Creating new MiriamRegistryWrapper for 'MycoBrowser smegmatis'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Orphanet'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'OrthoDB'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Peroxibase'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'PhylomeDB'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'SubstrateDB'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'CutDB'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'ProtClustDB'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'PMP'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'ProtoNet ProteinCard'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'ProtoNet Cluster'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'REBASE'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'SWISS-MODEL'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'VectorBase'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Human Disease Ontology'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Cell Cycle Ontology'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'miRBase mature sequence'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'nextProt'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'CAS'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Genome'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Metagenome'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'NARCIS'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Japan Chemical Substance Dictionary'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Pathway Ontology'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'Sequence Read Archive'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'ScerTF'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'PharmGKB Gene'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'miRNEST'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'NAPP'
+2019-03-27 10:28:24 DEBUG Creating new MiriamRegistryWrapper for 'NONCODE v3'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'VIRsiRNA'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ELM'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MimoDB'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'SitEx'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'BYKdb'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Conoserver'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'TopFind'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MIPModDB'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Cell Image Library'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'COMBINE specifications'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ZFIN Phenotype'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ZFIN Expression'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'CABRI'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'CYGD'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'HUGE'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'BindingDB'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'STRING'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'STITCH'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical Vetinary'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Phenol-Explorer'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'SNOMED CT'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MeSH 2012'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'KnapSack'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Canadian Drug Product Database'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MassBank'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Golm Metabolome Database'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'HomoloGene'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'UM-BBD Compound'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ABS'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'APD'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ChemDB'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'DPV'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'IUPHAR receptor'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Aceview Worm'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ASAP'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ATCC'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'BDGP EST'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Dictybase Gene'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'IMGT LIGM'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Worfdb'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'NEXTDB'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Plant Genome Network'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'SoyBase'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'HAMAP'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Rouge'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ArrayExpress Platform'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'CGSC Strain'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'DragonDB DNA'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'DragonDB Protein'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'DragonDB Locus'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'DragonDB Allele'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'ISSN'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MEROPS Family'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'MGED Ontology'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'NASC code'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'NIAEST'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Pazar Transcription Factor'
+2019-03-27 10:28:25 DEBUG Creating new MiriamRegistryWrapper for 'Plant Ontology'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'RNA Modification Database'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Independent Component'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Dependent Component'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Science Signaling Pathway'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'TreeBASE'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Tetrahymena Genome Database'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'CMR Gene'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'TIGRFAMS'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Animal TFDB Family'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'IUPHAR family'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'DBG2 Introns'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Spectral Database for Organic Compounds'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Vbase2'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'SPIKE Map'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'METLIN'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'GeneCards'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'MMRRC'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'UM-BBD Reaction'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'UM-BBD Enzyme'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'UM-BBD Pathway'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'UM-BBD Biotransformation Rule'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'mirEX'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Dictybase EST'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'IMGT HLA'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Flystock'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'OPM'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'Allergome'
+2019-03-27 10:28:27 DEBUG Creating new MiriamRegistryWrapper for 'PomBase'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'HPA'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'JAX Mice'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'uBio NameBank'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'YeTFasCo'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'TarBase'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'CharProt'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'OMA Protein'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'OMA Group'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'NCBI Protein'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'GenPept'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'UniGene'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BitterDB Receptor'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BitterDB Compound'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BioProject'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BioSample'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'PiroplasmaDB'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'Unite'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'NCIm'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'ProGlycProt'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'PolBase'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'NucleaRDB'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'SUPFAM'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'Rice Genome Annotation Project'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'PINA'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'Tissue List'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BacMap Biography'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'HGNC Symbol'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'PANTHER Pathway'
+2019-03-27 10:28:28 DEBUG Creating new MiriamRegistryWrapper for 'BioSharing'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'FungiDB'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'DARC'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'DRSC'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'OriDB Schizosaccharomyces'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'OriDB Saccharomyces'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'PSCDB'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'SCOP'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'ENA'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'DOMMINO'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'PANTHER Node'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'Consensus CDS'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'Locus Reference Genomic'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'HPRD'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'GXA Gene'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'GXA Expt'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'MetaboLights'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'National Bibliography Number'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'ORCID'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'InChI'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'Wikipedia (En)'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'PhosphoPoint Kinase'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'PhosphoPoint Phosphoprotein'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'InChIKey'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'UniProt Isoform'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Environ'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'CLDB'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'Experimental Factor Ontology'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'HGMD'
+2019-03-27 10:28:30 DEBUG Creating new MiriamRegistryWrapper for 'AphidBase Transcript'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Affymetrix Probeset'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'TreeFam'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'CAPS-DB'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Cube db'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'IDEAL'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'STAP'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Pocketome'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'GOLD genome'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'GOLD metadata'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'BugBase Protocol'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'BugBase Expt'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Tree of Life'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'VariO'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'ViPR Strain'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'EPD'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'RFAM'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Fungal Barcode'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'AFTOL'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'AspGD Locus'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'AspGD Protein'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'DrugBank Target'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'AutDB'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'BacMap Map'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Bgee family'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Bgee gene'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Bgee stage'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Bgee organ'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'BioCarta Pathway'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'PANTHER Pathway Component'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Profile'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Golm Metabolome Database GC-MS spectra'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Reference Substance'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Analyte'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'IntAct Molecule'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'DEPOD'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Pathways'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Antibody'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'National Drug Code'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Phytozome Locus'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'SubtiList'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'DailyMed'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'SIDER Drug'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'SIDER Side Effect'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'WikiGenes'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Broad Fungal Genome Initiative'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Coriell Cell Repositories'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'CORUM'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'EcoliWiki'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Genome Properties'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'JSTOR'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Mouse Adult Gross Anatomy'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'UBERON'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Unimod'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'VBRC'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'ViralZone'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Gene Ontology Reference'
+2019-03-27 10:28:31 DEBUG Creating new MiriamRegistryWrapper for 'Rat Genome Database qTL'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'Rat Genome Database strain'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'DOOR'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'Degradome Database'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'DBD'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'DATF'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'IUPHAR ligand'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'Molbase'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'YRC PDR'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'Yeast Intron Database'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'FuncBase Fly'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'FuncBase Human'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'FuncBase Mouse'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'FuncBase Yeast'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'YDPM'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'WormBase RNAi'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'FunCat'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'PASS2'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'ICEberg element'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'ICEberg family'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'VFDB Genus'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'VFDB Gene'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'MeSH 2013'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Module'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'KEGG Disease'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'MedlinePlus'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'LigandBox'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'GlycoEpitope'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'JCGGDB'
+2019-03-27 10:28:32 DEBUG Creating new MiriamRegistryWrapper for 'NONCODE v4 Gene'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'NONCODE v4 Transcript'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Oryzabase Gene'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Oryzabase Mutant'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Oryzabase Strain'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Oryzabase Stage'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Oryza Tag Line'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Gene Wiki'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'PaxDb Organism'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'PaxDb Protein'
+2019-03-27 10:28:33 DEBUG Creating new MiriamRegistryWrapper for 'Protein Data Bank Ligand'
+2019-03-27 10:28:33 DEBUG Finished MIRIAM registry part
+2019-03-27 10:28:33 INFO  Successfully initialized AnnotationsPanel
+2019-03-27 10:28:33 INFO  Adding 'Topology' to ToolBar
+2019-03-27 10:28:33 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:33 DEBUG Trying to cast 'Topology' to Boolean
+2019-03-27 10:28:33 DEBUG Trying to return key 'Topology' as String
+2019-03-27 10:28:33 DEBUG Key 'Topology' found, returning as String.
+2019-03-27 10:28:33 DEBUG Successfully cast 'Topology' to Boolean
+2019-03-27 10:28:33 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:33 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:33 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:33 INFO  Adding 'NetProperties' to ToolBar
+2019-03-27 10:28:33 INFO  Adding new tab to MenuBar of NetViewer
+2019-03-27 10:28:33 DEBUG Trying to cast 'NetProperties' to Boolean
+2019-03-27 10:28:33 DEBUG Trying to return key 'NetProperties' as String
+2019-03-27 10:28:33 DEBUG Key 'NetProperties' found, returning as String.
+2019-03-27 10:28:33 DEBUG Successfully cast 'NetProperties' to Boolean
+2019-03-27 10:28:33 DEBUG Adding tab to MenuBar
+2019-03-27 10:28:33 DEBUG Successfully added tab to MenuBar
+2019-03-27 10:28:33 INFO  Successfully added new tab to MenuBar of NetViewer
+2019-03-27 10:28:34 INFO  Initializing NetPropertiesPanel
+2019-03-27 10:28:34 INFO  Successfully initialized NetPropertiesPanel
+2019-03-27 10:28:34 INFO  Transfering stored data to addon panels
+2019-03-27 10:28:34 INFO  Writing current properties to file 'C:\Users\Szarash/.monalisaSettings'
+2019-03-27 10:29:34 INFO  Showing NetViewer
+2019-03-27 10:29:34 INFO  Changing mouse mode to picking
+2019-03-27 10:29:34 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:29:34 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:34 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:34 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:34 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:34 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:34 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:34 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:29:37 DEBUG Item state changed
+2019-03-27 10:29:37 DEBUG Item selected
+2019-03-27 10:29:37 INFO  Setting identifiers to 'true'
+2019-03-27 10:29:37 INFO  Finished setting identifiers to 'true'
+2019-03-27 10:29:37 DEBUG Dealt with item state change
+2019-03-27 10:29:37 DEBUG Handling clicked node in NetViewer
+2019-03-27 10:29:37 INFO  Opening properties menu for a vertex
+2019-03-27 10:29:37 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:29:38 INFO  Changing mouse mode to picking
+2019-03-27 10:29:38 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:29:38 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:38 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:38 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:38 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:38 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:38 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:38 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:29:39 INFO  Changing mouse mode to picking
+2019-03-27 10:29:39 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:29:39 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:39 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:39 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:39 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:39 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:40 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:40 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:29:40 DEBUG Item state changed
+2019-03-27 10:29:40 DEBUG Item deselected
+2019-03-27 10:29:40 INFO  Setting identifiers to 'false'
+2019-03-27 10:29:40 INFO  Finished setting identifiers to 'false'
+2019-03-27 10:29:40 DEBUG Dealt with item state change
+2019-03-27 10:29:43 DEBUG Handling clicked edge in NetViewer
+2019-03-27 10:29:43 INFO  Opening properties menu for an edge
+2019-03-27 10:29:43 INFO  Initializing new EdgeSetupFrame
+2019-03-27 10:29:43 DEBUG Loading properties of edge
+2019-03-27 10:29:43 DEBUG Successfully loaded properties of edge
+2019-03-27 10:29:43 INFO  Successfully initialized new EdgeSetupFrame
+2019-03-27 10:29:43 INFO  Successfully opened properties menu for an edge
+2019-03-27 10:29:44 INFO  Changing mouse mode to picking
+2019-03-27 10:29:44 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:29:44 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:44 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:44 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:44 DEBUG Marking button of current MouseMode
+2019-03-27 10:29:44 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:29:44 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:29:44 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:29:51 INFO  Saving edge properties
+2019-03-27 10:29:51 INFO  Edge edited, updating setup
+2019-03-27 10:29:51 DEBUG Setting weight for all edges of edge with bend
+2019-03-27 10:29:51 DEBUG Successfully set weight for all edges of edge with bend
+2019-03-27 10:29:51 DEBUG Setting color for all edges of edge with bend
+2019-03-27 10:29:51 DEBUG Successfully set color for all edges of edge with bend
+2019-03-27 10:29:51 INFO  Setting projectChanged to true
+2019-03-27 10:29:51 INFO  Successfully updated setup for edge
+2019-03-27 10:29:51 INFO  Successfully saved edge properties
+2019-03-27 10:30:24 INFO  Changing mouse mode to picking
+2019-03-27 10:30:24 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:30:24 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:24 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:24 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:24 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:24 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:24 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:24 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:30:26 DEBUG Item state changed
+2019-03-27 10:30:26 DEBUG Item selected
+2019-03-27 10:30:26 INFO  Setting identifiers to 'true'
+2019-03-27 10:30:26 INFO  Finished setting identifiers to 'true'
+2019-03-27 10:30:26 DEBUG Dealt with item state change
+2019-03-27 10:30:26 DEBUG Handling clicked node in NetViewer
+2019-03-27 10:30:26 INFO  Opening properties menu for a vertex
+2019-03-27 10:30:26 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:30:26 INFO  Opening properties menu for an edge
+2019-03-27 10:30:26 INFO  Initializing new EdgeSetupFrame
+2019-03-27 10:30:26 DEBUG Loading properties of edge
+2019-03-27 10:30:26 DEBUG Successfully loaded properties of edge
+2019-03-27 10:30:26 INFO  Successfully initialized new EdgeSetupFrame
+2019-03-27 10:30:26 INFO  Successfully opened properties menu for an edge
+2019-03-27 10:30:26 INFO  Changing mouse mode to picking
+2019-03-27 10:30:26 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:30:26 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:26 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:26 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:26 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:26 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:26 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:26 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:30:33 INFO  Changing mouse mode to picking
+2019-03-27 10:30:33 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:30:33 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:33 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:33 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:33 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:33 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:33 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:33 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:30:33 INFO  Changing mouse mode to picking
+2019-03-27 10:30:33 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:30:33 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:33 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:33 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:33 DEBUG Marking button of current MouseMode
+2019-03-27 10:30:33 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:30:33 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:30:33 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:36:50 INFO  Changing mouse mode to picking
+2019-03-27 10:36:50 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:36:50 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:50 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:50 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:50 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:50 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:50 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:50 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:36:51 DEBUG Handling clicked edge in NetViewer
+2019-03-27 10:36:51 DEBUG Handling clicked edge in NetViewer
+2019-03-27 10:36:51 INFO  Opening properties menu for a vertex
+2019-03-27 10:36:51 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:36:51 INFO  Opening properties menu for an edge
+2019-03-27 10:36:51 INFO  Initializing new EdgeSetupFrame
+2019-03-27 10:36:51 DEBUG Loading properties of edge
+2019-03-27 10:36:51 DEBUG Successfully loaded properties of edge
+2019-03-27 10:36:51 INFO  Successfully initialized new EdgeSetupFrame
+2019-03-27 10:36:51 INFO  Successfully opened properties menu for an edge
+2019-03-27 10:36:51 INFO  Changing mouse mode to picking
+2019-03-27 10:36:51 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:36:51 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:51 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:51 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:51 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:51 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:51 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:51 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:36:54 INFO  Changing mouse mode to picking
+2019-03-27 10:36:54 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:36:54 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:54 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:54 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:54 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:54 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:54 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:54 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:36:55 DEBUG Item state changed
+2019-03-27 10:36:55 DEBUG Item deselected
+2019-03-27 10:36:55 INFO  Setting identifiers to 'false'
+2019-03-27 10:36:55 INFO  Finished setting identifiers to 'false'
+2019-03-27 10:36:55 DEBUG Dealt with item state change
+2019-03-27 10:36:55 DEBUG Item state changed
+2019-03-27 10:36:55 DEBUG Item selected
+2019-03-27 10:36:55 INFO  Setting identifiers to 'true'
+2019-03-27 10:36:55 INFO  Finished setting identifiers to 'true'
+2019-03-27 10:36:55 DEBUG Dealt with item state change
+2019-03-27 10:36:55 DEBUG Handling clicked node in NetViewer
+2019-03-27 10:36:55 INFO  Opening properties menu for a vertex
+2019-03-27 10:36:55 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:36:55 INFO  Opening properties menu for an edge
+2019-03-27 10:36:55 INFO  Initializing new EdgeSetupFrame
+2019-03-27 10:36:55 DEBUG Loading properties of edge
+2019-03-27 10:36:55 DEBUG Successfully loaded properties of edge
+2019-03-27 10:36:55 INFO  Successfully initialized new EdgeSetupFrame
+2019-03-27 10:36:55 INFO  Successfully opened properties menu for an edge
+2019-03-27 10:36:55 INFO  Changing mouse mode to picking
+2019-03-27 10:36:55 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:36:55 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:55 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:55 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:55 DEBUG Marking button of current MouseMode
+2019-03-27 10:36:55 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:36:55 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:36:55 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:00 INFO  Changing mouse mode to picking
+2019-03-27 10:37:00 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:00 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:00 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:00 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:00 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:00 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:00 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:00 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:01 INFO  Opening properties menu for a vertex
+2019-03-27 10:37:01 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:37:01 INFO  Opening properties menu for an edge
+2019-03-27 10:37:01 INFO  Initializing new EdgeSetupFrame
+2019-03-27 10:37:01 DEBUG Loading properties of edge
+2019-03-27 10:37:01 DEBUG Successfully loaded properties of edge
+2019-03-27 10:37:01 INFO  Successfully initialized new EdgeSetupFrame
+2019-03-27 10:37:01 INFO  Successfully opened properties menu for an edge
+2019-03-27 10:37:01 INFO  Changing mouse mode to picking
+2019-03-27 10:37:01 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:01 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:01 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:01 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:01 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:01 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:01 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:01 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:34 INFO  Changing mouse mode to picking
+2019-03-27 10:37:34 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:34 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:34 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:34 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:34 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:34 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:34 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:34 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:37 DEBUG Handling right-click popup in NetViewer
+2019-03-27 10:37:39 DEBUG Item state changed
+2019-03-27 10:37:39 DEBUG Item deselected
+2019-03-27 10:37:39 INFO  Setting identifiers to 'false'
+2019-03-27 10:37:39 INFO  Finished setting identifiers to 'false'
+2019-03-27 10:37:39 DEBUG Dealt with item state change
+2019-03-27 10:37:41 DEBUG Item state changed
+2019-03-27 10:37:41 DEBUG Item selected
+2019-03-27 10:37:41 INFO  Setting identifiers to 'true'
+2019-03-27 10:37:41 INFO  Finished setting identifiers to 'true'
+2019-03-27 10:37:41 DEBUG Dealt with item state change
+2019-03-27 10:37:41 DEBUG Handling clicked node in NetViewer
+2019-03-27 10:37:42 DEBUG Handling right-click popup in NetViewer
+2019-03-27 10:37:42 DEBUG Only one vertex selected for popup
+2019-03-27 10:37:42 DEBUG Transition selected for popup
+2019-03-27 10:37:43 INFO  Entering vertex setup
+2019-03-27 10:37:43 INFO  Opening properties menu for a vertex
+2019-03-27 10:37:43 INFO  Successfully opened properties menu for a vertex
+2019-03-27 10:37:43 INFO  Leaving vertex setup
+2019-03-27 10:37:44 INFO  Changing mouse mode to picking
+2019-03-27 10:37:44 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:44 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:44 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:44 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:44 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:44 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:44 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:44 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:56 INFO  Changing mouse mode to picking
+2019-03-27 10:37:56 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:56 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:56 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:56 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:56 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:56 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:56 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:56 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:58 INFO  Closing all frames
+2019-03-27 10:37:58 INFO  Successfully closed all frames
+2019-03-27 10:37:58 INFO  Changing mouse mode to picking
+2019-03-27 10:37:58 INFO  Canceling mouse action and setting to picking mode
+2019-03-27 10:37:58 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:58 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:58 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:58 DEBUG Marking button of current MouseMode
+2019-03-27 10:37:58 DEBUG Successfully marked button of current MouseMode
+2019-03-27 10:37:58 DEBUG Finished checking whether Petri net changed
+2019-03-27 10:37:58 INFO  Successfully changed mouse mode to picking
+2019-03-27 10:37:59 INFO  Checking whether project has changed
+2019-03-27 10:37:59 INFO  projectChanged: true
+2019-03-27 10:52:36 INFO  monalisa.MonaLisa Logging Start
+2019-03-27 10:52:37 INFO  monalisa.Settings Trying to load settings from file
+2019-03-27 10:52:37 INFO  monalisa.Settings Initializing settings
+2019-03-27 10:52:37 INFO  monalisa.Settings Setting properties to default values
+2019-03-27 10:52:37 INFO  monalisa.Settings Finished setting properties to default values
+2019-03-27 10:52:37 INFO  monalisa.Settings Loaded 62 settings from properties file 'C:\Users\Szarash/.monalisaSettings'.
+2019-03-27 10:52:37 DEBUG monalisa.Settings Trying to return key 'recentlyProjects' as String
+2019-03-27 10:52:37 DEBUG monalisa.Settings Key 'recentlyProjects' found, returning as String.

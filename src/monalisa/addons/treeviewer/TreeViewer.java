@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
 import monalisa.Project;
@@ -49,6 +47,8 @@ import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -70,12 +70,15 @@ public final class TreeViewer extends MonaLisaFrame {
     private ClusterTreeImpl forest;
     private TreeLayout layout;
 
+    private static final Logger LOGGER = LogManager.getLogger(TreeViewer.class);
+
     /**
      * Creates new form TreeViewer
      * @param project
      */
     public TreeViewer(Project project) {
         super();
+        LOGGER.info("Initializing TreeViewer");
         this.project = project;
         this.clusterModel = new DefaultComboBoxModel<>();
 
@@ -88,7 +91,7 @@ public final class TreeViewer extends MonaLisaFrame {
             try {
                 clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getResult(new ClusterTool(), config)),  config));
             } catch (ClassCastException e) {
-
+                LOGGER.error("Issue while initializing TreeViewer: ", e);
             }
         }
 
@@ -97,6 +100,7 @@ public final class TreeViewer extends MonaLisaFrame {
         initComponents();
 
         //Transformer used for TreeViewer
+        LOGGER.debug("Setting transformers for TreeViewer");
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line<TreeViewerNode, TreeViewerEdge>());
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getRenderContext().setEdgeArrowTransformer(new TreeViewerEdgeArrowTransformer());
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getRenderContext().setVertexDrawPaintTransformer(new TreeViewerVertexDrawPaintTransformer());
@@ -106,11 +110,12 @@ public final class TreeViewer extends MonaLisaFrame {
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).setVertexToolTipTransformer(new TreeViewerToolTipTransformer());
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).setBackground(Color.white);
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getRenderer().getVertexLabelRenderer().setPosition(Position.S);
-        
+
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getRenderContext().getPickedVertexState().addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
+                    LOGGER.debug("Vertex selected in TreeViewer, gathering EMs");
                     List<TInvariant> tInvs = ((TreeViewerNode) e.getItem()).getTinvs();
                     StringBuilder strBuilder = new StringBuilder();
                     strBuilder.append("<html>");
@@ -128,14 +133,15 @@ public final class TreeViewer extends MonaLisaFrame {
                     }
                     strBuilder.append("</html>");
                     transitionLabel.setText(strBuilder.toString());
+                    LOGGER.debug("Successfully handled vertex selection in TreeViewer, displaying EMs");
                 }
             }
         });
 
         TreeViewerModalGraphMouse gm;
         gm = new TreeViewerModalGraphMouse();
-        gm.setMode(TreeViewerModalGraphMouse.Mode.PICKING);        
-        
+        gm.setMode(TreeViewerModalGraphMouse.Mode.PICKING);
+
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).setGraphMouse(gm);
 
         ccbl = new ClusterComboBoxItemListener(this, clusterCb);
@@ -144,10 +150,11 @@ public final class TreeViewer extends MonaLisaFrame {
         if (clusterModel.getSize() != 0) {
             showClustering(clusterModel.getElementAt(0));
         }
-
+        LOGGER.info("Successfully initialized TreeViewer");
     }
 
     public void updateClusterResults() {
+        LOGGER.info("Updating clustering results");
         if (this.project.hasResults(ClusterTool.class)) {
             ccbl.setDisabled(true);
             clusterModel.removeAllElements();
@@ -159,9 +166,11 @@ public final class TreeViewer extends MonaLisaFrame {
             ccbl.setDisabled(false);
             showClustering(clusterModel.getElementAt(0));
         }
+        LOGGER.info("Successfully updated clustering results");
     }
 
     protected void showClustering(ClusteringWrapper cw) {
+        LOGGER.debug("Preparing to show new clustering");
         ccbl.setDisabled(true);
         this.forest = new ClusterTreeImpl(cw.getClustering().getClusterTree(), cw.getTreshold());
         this.layout = new TreeLayout(this.forest);
@@ -170,9 +179,11 @@ public final class TreeViewer extends MonaLisaFrame {
         this.forest.redraw(this.layout);
         this.vv.repaint();
         ccbl.setDisabled(false);
+        LOGGER.debug("Successfully displaying clustering");
     }
 
     public void reset() {
+        LOGGER.debug("Resetting TreeViewer");
         this.ccbl.setDisabled(true);
         this.clusterCb.removeAllItems();
         this.ccbl.setDisabled(false);
@@ -302,6 +313,7 @@ public final class TreeViewer extends MonaLisaFrame {
 
     private void makePicButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePicButtonActionPerformed
         //save Picture
+        LOGGER.info("Exporting clustering as image");
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getPickedVertexState().clear();
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) vv).getPickedEdgeState().clear();
 
@@ -327,9 +339,11 @@ public final class TreeViewer extends MonaLisaFrame {
                 BufferedImage img = new BufferedImage(vv.getSize().width, vv.getSize().height, BufferedImage.TYPE_INT_RGB);
                 vv.paintAll(img.getGraphics());
                 try {
+                    LOGGER.info("Exporting clustering as .png file");
                     ImageIO.write(img, "png", imgFile);
+                    LOGGER.info("Successfully exported as .png file");
                 } catch (IOException ex) {
-                    Logger.getLogger(TreeViewer.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Issue while exporting clustering as .png file: ", ex);
                 }
             } else if (selectedFileFilter.getExtension().equalsIgnoreCase("svg")) {
                 // Get a DOMImplementation
@@ -340,9 +354,11 @@ public final class TreeViewer extends MonaLisaFrame {
                 SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
                 vv.paint(svgGenerator);
                 try {
+                    LOGGER.info("Exporting clustering as .svg file");
                     svgGenerator.stream(imgFile.getAbsolutePath());
+                    LOGGER.info("Successfully exported clustering as .svg file");
                 } catch (SVGGraphics2DIOException ex) {
-                    Logger.getLogger(TreeViewer.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Issue while exporting clustering as .svg file: ", ex);
                 }
             }
         }

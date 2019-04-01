@@ -11,6 +11,8 @@
 package monalisa.addons.treeviewer;
 
 import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -18,19 +20,21 @@ import java.util.Objects;
  */
 public class TreeViewerEdge {
     private static final long serialVersionUID = 8440480344225497981L;
-    
+
     private final int id;
     private final String edgeType;
-    
+    private static final Logger LOGGER = LogManager.getLogger(TreeViewerEdge.class);
+
     public TreeViewerEdge(int id, String edgeType) {
         this.id = id;
         this.edgeType = edgeType;
+        LOGGER.debug("Created new edge with id '" + String.valueOf(id) + "'");
     }
-    
+
     public String getEdgeType() {
         return this.edgeType;
     }
-    
+
     @Override
     public String toString() {
         return String.valueOf(id);
@@ -57,6 +61,6 @@ public class TreeViewerEdge {
         }
         return true;
     }
-    
-    
+
+
 }

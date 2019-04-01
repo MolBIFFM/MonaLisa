@@ -42,3 +42,14 @@ Details - On selecting "Hide the color highlighting" or clicking the toolbar but
 
 --
 
+Where - monalisa.results.clustering
+
+What - Export for clusterings does not work. Literally not implemented
+
+--
+
+Where - monalisa.addons.treeviewer
+
+What - Visualization is clipped off, no scrollbars to look at anything but the left side of the clustering tree, exported image is also suffering from this
+
+--

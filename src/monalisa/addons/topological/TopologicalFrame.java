@@ -12,6 +12,8 @@ package monalisa.addons.topological;
 
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -19,9 +21,13 @@ import monalisa.resources.StringResources;
  */
 public class TopologicalFrame extends javax.swing.JFrame {
 
+    private static final Logger LOGGER = LogManager.getLogger(TopologicalFrame.class);
+
     /** Creates new form TopologicalFrame */
     public TopologicalFrame() {
+        LOGGER.info("Initializing TopologicalFrame");
         initComponents();
+        LOGGER.info("Successfully initialized TopologicalFrame");
     }
 
     /** This method is called from within the constructor to

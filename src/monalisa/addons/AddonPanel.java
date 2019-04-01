@@ -86,7 +86,6 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
      */
     @Override
     public void netChanged() {
-        // Why does this not do anything?
     }
 
     /**

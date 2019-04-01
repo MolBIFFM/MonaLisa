@@ -607,9 +607,9 @@ public class CentralityPanel extends AddonPanel {
 
     @Override
     public void netChanged() {
-        LOGGER.info("Net changed");
+        LOGGER.debug("Handling net change for CentralityPanel");
         if(cc != null) {
-            LOGGER.warn("Resetting model because of net change");
+            LOGGER.debug("Resetting model because of net change");
             if(modelPlaces.getRowCount() > 0) {
                 for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                     modelPlaces.removeRow(i);
@@ -621,11 +621,11 @@ public class CentralityPanel extends AddonPanel {
                     modelTransitions.removeRow(i);
                 }
             }
-
+            LOGGER.debug("Finished resetting model because of net change");
             this.exportButton.setEnabled(false);
             this.centralityList.setEnabled(false);
             this.heatMap.setEnabled(false);
-            LOGGER.info("Finished resetting model because of net change");
         }
+        LOGGER.debug("Successfully handled net change for CentralityPanel");
     }
 }

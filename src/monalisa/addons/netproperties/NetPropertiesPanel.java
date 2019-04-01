@@ -757,9 +757,11 @@ public class NetPropertiesPanel extends AddonPanel {
 
     @Override
     public void netChanged() {
-        if(netPropertiesPanelLogic != null) {
+        LOGGER.debug("Handling net change for NetPropertiesPanel");
+        if (netPropertiesPanelLogic != null) {
             netPropertiesPanelLogic.checkAlgorithmsNot();
             netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected();
         }
+        LOGGER.debug("Successfully handled net change for NetPropertiesPanel");
     }
 }

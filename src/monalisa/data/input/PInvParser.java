@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PInvariantBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public final class PInvParser {
@@ -31,14 +33,15 @@ public final class PInvParser {
         Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
     private static final Pattern newInvariantPattern =
         Pattern.compile("^\\s*(\\d+).\\s*Invariant\\s*:");
+    private static final Logger LOGGER = LogManager.getLogger(PInvParser.class);
 
     private final List<PInvariant> invariants = new ArrayList<>();
 
     public PInvParser(PInvariantBuilder invariantBuilder, InputStream input, Map<Integer, Integer> mapping) throws IOException {
         BufferedReader reader =
             new BufferedReader(new InputStreamReader(input));
-        
-        System.out.println("DEBUG: Import Pinv ----- START");
+
+        LOGGER.info("Importing of P-Invariants");
 
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -72,10 +75,8 @@ public final class PInvParser {
 
         if (!invariantBuilder.isEmpty()) {
             invariants.add(invariantBuilder.build());
-            System.out.println("DEBUG: Import Tinv: Größe der Invariante: "+invariants.get(invariants.size()-1).size());
         }
-        
-        System.out.println("DEBUG: Import Pinv ----- END");               
+        LOGGER.info("Successfully imported P-Invariants");
     }
 
     public PInvParser(PInvariantBuilder invariantBuilder, InputStream input) throws IOException {
@@ -85,7 +86,7 @@ public final class PInvParser {
     public PInvParser(PInvariantBuilder invariantBuilder, File input) throws IOException {
         this(invariantBuilder, new FileInputStream(input));
     }
-    
+
     public PInvParser(PInvariantBuilder invariantBuilder, File input, Map<Integer, Integer> mapping) throws IOException {
         this(invariantBuilder, new FileInputStream(input), mapping);
     }

@@ -41,7 +41,7 @@ public final class PInvParser {
         BufferedReader reader =
             new BufferedReader(new InputStreamReader(input));
 
-        LOGGER.info("Importing of P-Invariants");
+        LOGGER.info("Importing P-Invariants");
 
         String line = null;
         while ((line = reader.readLine()) != null) {

@@ -25,20 +25,23 @@ import java.util.regex.Pattern;
 
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.TInvariantBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class TInvParser {
     private static final Pattern transitionPattern =
         Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
     private static final Pattern newInvariantPattern =
         Pattern.compile("^\\s*(\\d+).\\s*Invariant\\s*:");
+    private static final Logger LOGGER = LogManager.getLogger(TInvParser.class);
 
     private final List<TInvariant> invariants = new ArrayList<>();
 
     public TInvParser(TInvariantBuilder invariantBuilder, InputStream input,
             Map<Integer, Integer> mapping) throws IOException {
 
-        System.out.println("DEBUG: Import Tinv ----- START");
-        
+        LOGGER.info("Importing T-Invariants");
+
         BufferedReader reader =
             new BufferedReader(new InputStreamReader(input));
 
@@ -73,11 +76,10 @@ public final class TInvParser {
         }
 
         if (!invariantBuilder.isEmpty()) {
-            invariants.add(invariantBuilder.build()); 
-            System.out.println("DEBUG: Import Tinv: Größe der Invariante: "+invariants.get(invariants.size()-1).size());
+            invariants.add(invariantBuilder.build());
         }
-        
-        System.out.println("DEBUG: Import Tinv ----- END");        
+
+        LOGGER.info("Successfully imported T-Invariants");
     }
 
     public TInvParser(TInvariantBuilder invariantBuilder, InputStream input)
@@ -89,7 +91,7 @@ public final class TInvParser {
             throws IOException {
         this(invariantBuilder, new FileInputStream(input));
     }
-    
+
     public TInvParser(TInvariantBuilder invariantBuilder, File input,
             Map<Integer, Integer> mapping) throws IOException {
         this(invariantBuilder, new FileInputStream(input), mapping);

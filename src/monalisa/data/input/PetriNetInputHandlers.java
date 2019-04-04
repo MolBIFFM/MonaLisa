@@ -54,13 +54,13 @@ public final class PetriNetInputHandlers {
     }
 
     public static boolean isKnownFile(File file) throws IOException {
-        LOGGER.debug("Checking whether file '" + file.getName() + "' is known");
+        LOGGER.debug("Checking whether file '" + file.getName() + "' is in supported format");
         for (InputHandler handler : getHandlers())
             if (handler.isKnownFile(file)) {
-                LOGGER.debug("File '" + file.getName() + "' is known");
+                LOGGER.debug("File '" + file.getName() + "' is in supported format");
                 return true;
             }
-        LOGGER.debug("File '" + file.getName() + "' is not known");
+        LOGGER.debug("File '" + file.getName() + "' is not in supported format");
         return false;
     }
 

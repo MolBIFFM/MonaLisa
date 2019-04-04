@@ -30,50 +30,62 @@ import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.data.pn.UniquePetriNetEntity;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SppedInputHandler implements InputHandler {
     private final Map<Integer, Place> places = new HashMap<>();
     private final Map<Integer, Transition> transitions = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(SppedInputHandler.class);
 
     @Override
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in spped format");
         return "spped".equalsIgnoreCase(FileUtils.getExtension(file));
     }
 
     @Override
     public PetriNet load(InputStream in) throws IOException {
+        LOGGER.info("Loading Petri net from spped file");
         places.clear();
         transitions.clear();
-        
+
         SAXBuilder builder = new SAXBuilder();
         Document doc;
-        
+
         try {
             doc = builder.build(in);
         } catch (JDOMException e) {
+            LOGGER.error("Failed to parse the XML file", e);
             throw new IOException("Failed to parse the XML file.", e);
         }
-        
+
         Element root = doc.getRootElement();
-        
+
         final String expectedVersion = "2";
-        
+
         if (!"Snoopy".equals(root.getName()) ||
-                !expectedVersion.equals(root.getAttributeValue("version")))
-            throw new IOException("Spped file has wrong format/version.");
-        
+                !expectedVersion.equals(root.getAttributeValue("version"))) {
+            LOGGER.error("spped file has wrong format/version");
+            throw new IOException("spped file has wrong format/version.");
+        }
+
         try {
-            return parse(doc);
+            PetriNet petriNet = parse(doc);
+            LOGGER.info("Successfully loaded Petri net from spped file");
+            return petriNet;
         } catch (JDOMException e) {
+            LOGGER.error("Issue while parsing Petri net from spped file: ", e);
             throw new IOException(e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     private PetriNet parse(Document doc) throws JDOMException {
+        LOGGER.debug("Parsing Petri net from spped file");
         PetriNet petriNet = new PetriNet();
         petriNet.putProperty("importtype", "speed");
-        
+
         Map<Integer, UniquePetriNetEntity> entities = new HashMap<>();
         final String nodePath = "/Snoopy/nodeclasses/nodeclass[@name='%s']/node";
         final XPath placesPath = new JDOMXPath(String.format(nodePath, "Place"));
@@ -82,101 +94,101 @@ public class SppedInputHandler implements InputHandler {
         final XPath edgePath = new JDOMXPath("/Snoopy/edgeclasses/edgeclass[@name='Edge']/edge");
 
         petriNet.putProperty("name", doc.getRootElement().getChild("netclass").getAttributeValue("name"));
-        
+
         // Start: Places
         int countPlaces = 0, id, internalId;
         String name;
-        Place place;  
+        Place place;
         Long marking;
-        
+
         // Are there coarse places? If, than read them and store them
         boolean coarsePlaceExists = false;
         List<Element> coPlaces = (List<Element>) coarsePlacesPath.selectNodes(doc);
         Map<String, Place> coarsePlacesMap = new HashMap<>();
         if(coPlaces.size() > 0) {
-            coarsePlaceExists = true;            
-            for(Element coarsePlace : coPlaces) {                
-                internalId = Integer.parseInt(coarsePlace.getAttributeValue("id"));  
-                
+            coarsePlaceExists = true;
+            for(Element coarsePlace : coPlaces) {
+                internalId = Integer.parseInt(coarsePlace.getAttributeValue("id"));
+
                 name = getAttributeValue(coarsePlace, "Name");
-                
+
                 if(name == null || name.isEmpty())
-                    name = Integer.toString(internalId);                
-                       
-                place = new Place(countPlaces);           
-                place.putProperty("name", name);            
+                    name = Integer.toString(internalId);
+
+                place = new Place(countPlaces);
+                place.putProperty("name", name);
                 place.putProperty("internalId", internalId);
                 place.putProperty("net", new Integer(coarsePlace.getAttributeValue("net")));
                 place.putProperty("posX", new Double(((Element)coarsePlace.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("x")));
-                place.putProperty("posY", new Double(((Element)coarsePlace.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("y")));    
+                place.putProperty("posY", new Double(((Element)coarsePlace.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("y")));
 
-                coarsePlacesMap.put(coarsePlace.getAttributeValue("coarse"), place);                
-                entities.put(internalId, place);                
+                coarsePlacesMap.put(coarsePlace.getAttributeValue("coarse"), place);
+                entities.put(internalId, place);
                 countPlaces++;
-            }            
+            }
         }
-        
-        List<Element> placeNodes = (List<Element>) placesPath.selectNodes(doc);   
+
+        List<Element> placeNodes = (List<Element>) placesPath.selectNodes(doc);
         List<String> workedCoarsePlaces = new ArrayList<>();
         Boolean logical;
         for (Element placeNode : placeNodes) {
             id = Integer.parseInt(getAttributeValue(placeNode, "ID"));
-            internalId = Integer.parseInt(placeNode.getAttributeValue("id"));                       
-            
+            internalId = Integer.parseInt(placeNode.getAttributeValue("id"));
+
             name = getAttributeValue(placeNode, "Name");
-                       
+
             if(placeNode.getAttributeValue("logic") == null) {
                 logical = false;
             } else {
                 logical = true;
             }
-                        
+
             if(name == null || name.isEmpty())
                 name = Integer.toString(id);
-            
+
             String net = placeNode.getAttributeValue("net");
             // If there are coarse places, find the main place and add them
             if(coarsePlaceExists && !net.equalsIgnoreCase("1") && coarsePlacesMap.containsKey(net)) {
                 place = coarsePlacesMap.get(net);
                 // but only onbe times
-                if(!workedCoarsePlaces.contains(net)) {   
+                if(!workedCoarsePlaces.contains(net)) {
                     places.put(place.id(), place);
-                    petriNet.addPlace(place);                               
+                    petriNet.addPlace(place);
                     workedCoarsePlaces.add(net);
                 }
             } else {
                 // otherwise, handle it as standard place
-                place = findPlace(countPlaces, petriNet);  
-                place.putProperty("name", name);                         
+                place = findPlace(countPlaces, petriNet);
+                place.putProperty("name", name);
                 place.putProperty("posX", new Double(((Element)placeNode.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("x")));
-                place.putProperty("posY", new Double(((Element)placeNode.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("y")));                     
+                place.putProperty("posY", new Double(((Element)placeNode.getChild("graphics").getChildren().toArray()[0]).getAttributeValue("y")));
                 place.putProperty("internalId", internalId);
-                place.putProperty("net", new Integer(net));    
-            }            
-   
-            marking = Long.parseLong(getAttributeValue(placeNode, "Marking"));   
-            
-            if(!logical) {    
+                place.putProperty("net", new Integer(net));
+            }
+
+            marking = Long.parseLong(getAttributeValue(placeNode, "Marking"));
+
+            if(!logical) {
                 place.putProperty("logical", false);
             } else {
-                place.putProperty("logical", true); 
+                place.putProperty("logical", true);
             }
-            
+
             Object[] children = placeNode.getChild("graphics").getChildren().toArray();
             List<String> graphicalRepresentations = new ArrayList<>();
             Element e;
-            for(int i = 1; i < children.length; i++) {  
+            for(int i = 1; i < children.length; i++) {
                 e = (Element)children[i];
-                graphicalRepresentations.add(e.getAttributeValue("x") + "|" + e.getAttributeValue("y") + "|" + e.getAttributeValue("id") + "|" + e.getAttributeValue("net"));                  
-            }        
+                graphicalRepresentations.add(e.getAttributeValue("x") + "|" + e.getAttributeValue("y") + "|" + e.getAttributeValue("id") + "|" + e.getAttributeValue("net"));
+            }
             place.putProperty("graphicalRepresentations", graphicalRepresentations);
-            
-            petriNet.setTokens(place, marking);            
+
+            petriNet.setTokens(place, marking);
 
             entities.put(internalId, place);
             countPlaces++;
         }
-        
+
         // Start: Transitions
         List<Element> transitionNodes = (List<Element>) transitionPath.selectNodes(doc);
         Transition transition;
@@ -197,7 +209,7 @@ public class SppedInputHandler implements InputHandler {
             entities.put(internalId, transition);
             countTransitions++;
         }
-        
+
         // Start: Edges
         List<Element> edgeNodes = (List<Element>) edgePath.selectNodes(doc);
         List<Element> pointsElements;
@@ -207,21 +219,21 @@ public class SppedInputHandler implements InputHandler {
             int toId = Integer.parseInt(edgeNode.getAttributeValue("target"));
             int weight = Integer.parseInt(getAttributeValue(edgeNode, "Multiplicity"));
             Arc arc = new Arc(entities.get(fromId), entities.get(toId), weight);
-            
+
             arc.putProperty("source_internal", new Integer(fromId).toString());
             arc.putProperty("target_internal", new Integer(toId).toString());
-            
+
             Element arcElement = (Element)((Element)edgeNode.getChild("graphics")).getChildren().toArray()[0];
             arc.putProperty("source_graphic", arcElement.getAttributeValue("source"));
             arc.putProperty("target_source_graphic", arcElement.getAttributeValue("target"));
-            
+
             pointsElements = arcElement.getChild("points").getChildren();
             points = new ArrayList<>();
             for(Element e : pointsElements) {
                 points.add(e.getAttributeValue("x")+"|"+e.getAttributeValue("y"));
             }
             arc.putProperty("points", points);
-            
+
             UniquePetriNetEntity from = entities.get(fromId);
             if (from instanceof Place) {
                 Arc oldArc = petriNet.getArc((Place) from, (Transition) entities.get(toId));
@@ -239,10 +251,10 @@ public class SppedInputHandler implements InputHandler {
                 }
             }
         }
-
+        LOGGER.debug("Successfully parsed Petri net from spped file");
         return petriNet;
     }
-    
+
     private String getAttributeValue(Element node, String attribute) throws JDOMException {
         XPath selector = new JDOMXPath("attribute[@name='" + attribute + "']");
         return ((Element) selector.selectSingleNode(node)).getTextTrim();
@@ -252,9 +264,11 @@ public class SppedInputHandler implements InputHandler {
         Place place = places.get(placeId);
 
         if (place == null) {
+            LOGGER.debug("Creating new place with placeID '" + Integer.toString(placeId) + "'");
             place = new Place(placeId);
             places.put(placeId, place);
             petriNet.addPlace(place);
+            LOGGER.debug("Successfully created new place with placeID '" + Integer.toString(placeId) + "'");
         }
         return place;
     }
@@ -263,16 +277,18 @@ public class SppedInputHandler implements InputHandler {
         Transition transition = transitions.get(transitionId);
 
         if (transition == null) {
+            LOGGER.debug("Creating new transition with transitionID '" + Integer.toString(transitionId) + "'");
             transition = new Transition(transitionId);
             transitions.put(transitionId, transition);
             petriNet.addTransition(transition);
+            LOGGER.debug("Successfully created new transition with transitionID '" + Integer.toString(transitionId) + "'");
         }
         return transition;
     }
-    
+
     @Override
     public String getDescription() {
         return "Spped (Snoopy)";
-    }      
-    
+    }
+
 }

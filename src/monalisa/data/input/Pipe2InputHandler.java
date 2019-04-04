@@ -25,6 +25,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 // TODO Parse remaining information, in particular:
 // * transition orientation
@@ -38,15 +40,19 @@ import monalisa.util.FileUtils;
  */
 public class Pipe2InputHandler implements InputHandler {
 
+    private static final Logger LOGGER = LogManager.getLogger(Pipe2InputHandler.class);
+
     @Override
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in PIPE2 format");
         if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
             return false;
         SAXBuilder builder = new SAXBuilder();
         Document doc;
         try {
             doc = builder.build(file);
-        } catch (JDOMException e) {
+        } catch (JDOMException ex) {
+            LOGGER.error("Caught JDOMException while checking for PIPE2 format: ", ex);
             return false;
         }
         Element root = doc.getRootElement();
@@ -72,6 +78,7 @@ public class Pipe2InputHandler implements InputHandler {
     @SuppressWarnings("unchecked")
     @Override
     public PetriNet load(InputStream in) throws IOException {
+        LOGGER.info("Loading Petri net from PIPE2 file");
         PetriNet petriNet = new PetriNet();
         Map<Integer, Place> placeMap = new HashMap<>();
         Map<Integer, Transition> transitionMap = new HashMap<>();
@@ -82,6 +89,7 @@ public class Pipe2InputHandler implements InputHandler {
         try {
             doc = builder.build(in);
         } catch (JDOMException e) {
+            LOGGER.error("Failed to parse the XML file");
             throw new IOException("Failed to parse the XML file.", e);
         }
         Element root = doc.getRootElement();
@@ -174,14 +182,14 @@ public class Pipe2InputHandler implements InputHandler {
                 petriNet.addArc(petriNet.findTransition(source),
                     petriNet.findPlace(target), arc);
         }
-            
+        LOGGER.info("Successfully loaded Petri net from PIPE2 file");
         return petriNet;
     }
 
     private static int getId(Element node, String prefix) {
         return getId(node, "id", prefix);
     }
-    
+
     private static int getId(Element node, String attribute, String prefix) {
         return Integer.parseInt(node.getAttributeValue(attribute).replaceAll("^" + prefix, ""));
     }
@@ -200,7 +208,7 @@ public class Pipe2InputHandler implements InputHandler {
 
         return node.getChildText(path[path.length - 1]);
     }
-    
+
     private static String tryGetString(Element node, String... path) {
         if (path.length == 0)
             return node.getValue();
@@ -211,12 +219,12 @@ public class Pipe2InputHandler implements InputHandler {
             else
                 node = child;
         }
-        
+
         return node.getChildText(path[path.length - 1]);
     }
-    
+
     @Override
     public String getDescription() {
         return "Pipe2 (PNML)";
-    }      
+    }
 }

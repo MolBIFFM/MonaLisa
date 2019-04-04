@@ -22,11 +22,13 @@ import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public final class TinvCalcOutputHandler {
     private final Map<Integer, Integer> placeIds;
     private final Map<Integer, Integer> transitionIds;
-
+    private static final Logger LOGGER = LogManager.getLogger(TinvCalcOutputHandler.class);
     /**
      * For internal use only.
      */
@@ -37,7 +39,7 @@ public final class TinvCalcOutputHandler {
     }
 
     public void save(PetriNetFacade petriNet, OutputStream out) {
-
+        LOGGER.info("Exporting Petri net to calculate T-Invariants");
         PrintStream formatter = new PrintStream(out);
 
         formatter.printf("P   M   PRE,POST  NETZ %s",
@@ -121,6 +123,7 @@ public final class TinvCalcOutputHandler {
         }
 
         formatter.println("@");
+        LOGGER.info("Successfully exported Petri net to calculate P-Invariants");
     }
 
     private static String sanitize(String name) {
@@ -136,6 +139,7 @@ public final class TinvCalcOutputHandler {
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in pnt format");
         return "pnt".equalsIgnoreCase(FileUtils.getExtension(file));
     }
 

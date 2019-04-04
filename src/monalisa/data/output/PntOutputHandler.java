@@ -21,6 +21,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -30,8 +32,10 @@ public class PntOutputHandler implements OutputHandler {
 
     private Map<Integer, Integer> placeIds = new HashMap<>();
     private Map<Integer, Integer> transitionIds = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(PntOutputHandler.class);
 
     public void save(FileOutputStream fileOutputStream, PetriNet petriNet) {
+        LOGGER.info("Exporting Petri net to pnt format");
         int pid = 0;
         for (Place place : petriNet.places())
             this.placeIds.put(place.id(), pid++);
@@ -127,9 +131,11 @@ public class PntOutputHandler implements OutputHandler {
 
             formatter.println("@");
         }
+        LOGGER.info("Successfully exported Petri net to pnt format");
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in pnt format");
         return ("pnt".equalsIgnoreCase(FileUtils.getExtension(file)));
     }
 

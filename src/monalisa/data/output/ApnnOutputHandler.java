@@ -20,6 +20,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * http://ls4-www.cs.tu-dortmund.de/APNN-TOOLBOX/grammars/apnn.html
@@ -29,8 +31,10 @@ public class ApnnOutputHandler implements OutputHandler {
 
     private Map<Integer, Integer> placeIds = new HashMap<>();
     private Map<Integer, Integer> transitionIds = new HashMap<>();
-    
+    private static final Logger LOGGER = LogManager.getLogger(ApnnOutputHandler.class);
+
     public void save(FileOutputStream fileOutputStream, PetriNet petriNet) {
+        LOGGER.info("Exporting Petri net to APNN format");
         try (PrintStream formatter = new PrintStream(fileOutputStream)) {
             int pid = 0;
             for (Place place : petriNet.places())
@@ -39,11 +43,11 @@ public class ApnnOutputHandler implements OutputHandler {
             int tid = 0;
             for (Transition transition : petriNet.transitions())
                 this.transitionIds.put(transition.id(), tid++);
-            
+
             // header
             formatter.printf("\\beginnet{petrinet}\n");
             formatter.println();
-            
+
             // places
             String name;
             int capacity;
@@ -54,17 +58,17 @@ public class ApnnOutputHandler implements OutputHandler {
                 marking = petriNet.marking().get(place);
                 formatter.printf("\\place{P_%d}{\\name{%s}\\capacity{%d}\\init{%d}}\n", placeId(place), sanitize(name),capacity,marking);
             }
-            
+
             formatter.println();
-            
+
             // transitions
             for (Transition transition : petriNet.transitions()) {
                 name = transition.getValueOrDefault("name", "noname");
                 formatter.printf("\\transition{T_%d}{\\name{%s}}\n", transitionId(transition),sanitize(name));
             }
-            
+
             formatter.println();
-            
+
             // arcs
             int arcId = 0;
             for(Place p : petriNet.places()) {
@@ -79,18 +83,20 @@ public class ApnnOutputHandler implements OutputHandler {
                     arcId++;
                 }
             }
-            
+
             formatter.println();
-            
+
             formatter.printf("\\endnet");
+            LOGGER.info("Successfully exported Petri net to APNN format");
         }
     }
-    
+
     private static String sanitize(String name) {
         return String.format("%s", name.replaceAll("[^a-zA-Z0-9]", "_"));
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in apnn format");
         return ("apnn".equalsIgnoreCase(FileUtils.getExtension(file)));
     }
 
@@ -107,7 +113,7 @@ public class ApnnOutputHandler implements OutputHandler {
     public String getDescription() {
         return "Abstract Petri Net Notation";
     }
-    
+
     private int placeId(Place p) {
         return placeIds != null ? placeIds.get(p.id()) : p.id();
     }

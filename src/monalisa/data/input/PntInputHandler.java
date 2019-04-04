@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
 public final class PntInputHandler implements InputHandler {
     private final Map<Integer, Place> places = new HashMap<>();
     private final Map<Integer, Transition> transitions = new HashMap<>();
-    private static final Logger LOGGER = LogManager.getLogger(KeggInputHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(PntInputHandler.class);
 
     @Override
     public PetriNet load(InputStream in) throws IOException {

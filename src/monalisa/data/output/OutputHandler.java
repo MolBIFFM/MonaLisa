@@ -23,8 +23,8 @@ import monalisa.data.pn.PetriNet;
 public interface OutputHandler {
     /**
      * Save the specified {@code petriNet} into the {@code out}put stream.
-     * @param petriNet The Petri net.
-     * @param out The output stream.
+     * @param pn The Petri net.
+     * @param fileOutputStream The output stream.
      */
      void save(FileOutputStream fileOutputStream, PetriNet pn);
 

@@ -242,12 +242,10 @@ public class NetViewerEdge implements Serializable {
      * @param color
      */
    public void setColorForAllEdges(Color color) {
-        LOGGER.debug("Setting color for all edges of edge with bend");
         this.color = color;
         for(NetViewerEdge e : this.masterEdge.bendEdges) {
             e.setColor(color);
         }
-        LOGGER.debug("Successfully set color for all edges of edge with bend");
     }
 
     /**

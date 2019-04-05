@@ -1,4 +1,4 @@
 monalisa.addons.netviewer.transformer
-monalisa.addons.tokensimulator
 monalisa.addons.treeviwer.transformer
 monalisa.addons.data
+monalisa.gui.components

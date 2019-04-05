@@ -53,3 +53,15 @@ Where - monalisa.addons.treeviewer
 What - Visualization is clipped off, no scrollbars to look at anything but the left side of the clustering tree, exported image is also suffering from this
 
 --
+
+Where - monalisa.gui.ConverterDialog.getInputHandler
+
+What - GUI offers a selection of formats, among them KGML and PNT, these are however not implemented in getInputHandler
+
+--
+
+Where - monalisa.gui.ConverterDialog.getOutputHandler
+
+What - GUI offers a selection of formats, among them SBML L2V4 and Reaction List, these are however not implemented in getOutputHandler. Also, Pipe2 and Spped format are implemented but not offered in the GUI
+
+--

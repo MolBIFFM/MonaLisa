@@ -503,7 +503,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @throws IOException
      */
     public boolean save() throws IOException {
-        LOGGER.info("Saving project.");
+        LOGGER.info("Saving project");
         boolean ret = false;
 
         if(projectPath == null) {
@@ -522,9 +522,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             });
 
             projectLocationChooser.setDialogTitle(strings.get("SaveEmptyProjectLocation"));
-            if (projectLocationChooser.showDialog(null, strings.get("NVSave")) != JFileChooser.APPROVE_OPTION)
+            if (projectLocationChooser.showDialog(null, strings.get("NVSave")) != JFileChooser.APPROVE_OPTION) {
+                LOGGER.info("Aborted saving of project");
                 return false;
-
+            }
             projectFile = projectLocationChooser.getSelectedFile();
 
             if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(projectFile)))
@@ -558,7 +559,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         }
 
         save(projectPath);
-        LOGGER.info("Finished saving project.");
+        LOGGER.info("Successfully saving project");
         return ret;
     }
 

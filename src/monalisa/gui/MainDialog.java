@@ -20,8 +20,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import layout.TableLayout;
@@ -60,7 +58,8 @@ import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 @SuppressWarnings("serial")
 public final class MainDialog extends JFrame implements ActionListener, HierarchyBoundsListener, ToolStatusUpdateListener, NetChangedListener {
@@ -85,20 +84,22 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private static final Dimension DEFAULT_DIMENSION = new Dimension(400, 500);
 
     private static final ResourceManager resources = ResourceManager.instance();
-    private static final StringResources strings = resources.getDefaultStrings(); 
+    private static final StringResources strings = resources.getDefaultStrings();
+
+    private static final Logger LOGGER = LogManager.getLogger(MainDialog.class);
 
     // Addons
     private NetViewer netViewer;
     private TreeViewer treeViewer;
-    
+
     private JMenuBar menuBar;
     private JMenu mainMenu, projectMenu, helpMenu, menuFileOpenRecently;
     private JMenuItem menuFileNew, menuFileImport, menuFileOpen, menuFileSave, menuFileSaveAs,
                       menuTFileLoad, menuFileExportResults, menuFileExportPetriNet,
                       menuFileExit, menuProjectRun, menuHelpAbout, menuHelpHelp, menuConverter;
-    
+
     private JButton fileNewButton, fileOpenButton, fileSaveButton, fileExportResultsButton,
-                    fileExportPetriNetButton, projectRunButton, showNVButton, showTVButton, 
+                    fileExportPetriNetButton, projectRunButton, showNVButton, showTVButton,
                     loadProject, emptyProject, newProject;
 
     private Icon fileNewIcon, fileOpenIcon, fileSaveIcon, fileExportResultsIcon,
@@ -115,25 +116,27 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private Project project;
 
     public MainDialog() {
+        LOGGER.info("Initializing MainDialog");
 //        try {
 //            System.setErr(new PrintStream(new FileOutputStream(System.getProperty("user.home")+"/MonaLisaErrorLog.text")));
 //        } catch (FileNotFoundException ex) {
 //            ex.printStackTrace();
-//        }        
+//        }
         addWindowListener(new WindowAdapter (){
             @Override
             public void windowClosing(WindowEvent e) {
                 exitApplication();
             }
         });
-        
+
         initComponent();
+        LOGGER.info("Successfully initialized MainDialog");
     }
 
     private void initComponent() {
         setDocumentTitle(null);
         setIconImage(resources.getImage("icon-16.png"));
-        
+
         initIcons();
         initMenuBar();
         initToolBar();
@@ -155,7 +158,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                     try {
                         project.save();
                     } catch (IOException ex) {
-                        Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("Caught IOException while trying to save project on Ctrl + S: ", ex);
                     }
                 }
             }
@@ -202,22 +205,22 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         mainContainer.setLayout(new BoxLayout(mainContainer,  BoxLayout.PAGE_AXIS));
         mainContainer.add(Box.createRigidArea(new Dimension(0, 3)));
         mainContainer.add(splash);
-       
+
         statusBar = new StatusBar();
-        
+
         buttonContainer = new JPanel();
         buttonContainer.setLayout(new BorderLayout());
         buttonContainer.add(projectRunButton, BorderLayout.WEST);
         buttonContainer.add(fileExportResultsButton, BorderLayout.CENTER);
         buttonContainer.add(this.fileExportPetriNetButton, BorderLayout.EAST);
         buttonContainer.add(statusBar, BorderLayout.SOUTH);
-              
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         contentPane.add(toolBar, BorderLayout.NORTH);
         contentPane.add(mainContainer);
         contentPane.add(buttonContainer, BorderLayout.SOUTH);
-        
+
         pack();
         projectClosed();
 
@@ -225,7 +228,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    
+
     @Override
     public void ancestorResized(HierarchyEvent e) {
         if (e.getChanged() == scrollPane) {
@@ -236,7 +239,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             }
         }
     }
-    
+
     // Not needed.
     @Override
     public void ancestorMoved(HierarchyEvent e) { }
@@ -257,7 +260,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         menuFileNew = new JMenuItem(strings.get("FileNew"), fileNewIcon);
         menuFileNew.setActionCommand(EMPTY_PROJECT);
         menuFileNew.addActionListener(this);
-        
+
         menuFileImport = new JMenuItem(strings.get("CreateNewProject"), resources.getIcon("import.png"));
         menuFileImport.setActionCommand(MENU_FILE_NEW_ACTION);
         menuFileImport.addActionListener(this);
@@ -265,55 +268,55 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         menuFileOpen = new JMenuItem(strings.get("FileOpen"), fileOpenIcon);
         menuFileOpen.setActionCommand(MENU_FILE_OPEN_ACTION);
         menuFileOpen.addActionListener(this);
-        
+
         menuFileOpenRecently = new JMenu(strings.get("FileOpenRecently"));
-        menuFileOpenRecently.setIcon(fileOpenIcon); 
-        
+        menuFileOpenRecently.setIcon(fileOpenIcon);
+
         String recentlyProjects = Settings.get("recentlyProjects");
-        
+
         if(!recentlyProjects.isEmpty()) {
             String projects[] = recentlyProjects.split(",");
-            
+
             for(int i = projects.length-1; i >= 0; i--) {
                 JMenuItem item = new JMenuItem();
 
                 if(projects[i].length() > 40 ) {
-                    String subString = projects[i].substring(projects[i].lastIndexOf(System.getProperty("file.separator"))+1, projects[i].length());                
+                    String subString = projects[i].substring(projects[i].lastIndexOf(System.getProperty("file.separator"))+1, projects[i].length());
                      if(subString.length() <= 40) {
                         item.setText(".../"+subString);
                     } else {
-                        item.setText("..."+projects[i].substring(projects[i].length()-31, projects[i].length()));  
+                        item.setText("..."+projects[i].substring(projects[i].length()-31, projects[i].length()));
                     }
                 } else {
                    item.setText(projects[i]);
                 }
 
-                item.setToolTipText(projects[i]);                       
+                item.setToolTipText(projects[i]);
 
                 item.addActionListener(new ActionListener() {
                      @Override
                      public void actionPerformed(ActionEvent e) {
                         File file = new File(((JMenuItem)e.getSource()).getToolTipText());
-                        if(file.exists()) {                         
+                        if(file.exists()) {
                             try {
                                 openProject(file);
                             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
-                                Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                                LOGGER.error("Caught Exception while trying to open project from file: ", ex);
                             }
                         } else {
                             JOptionPane.showMessageDialog(((JMenuItem)e.getSource()).getRootPane(), "This project file is not existing");
                         }
-                     }                   
+                     }
                 });
 
                 menuFileOpenRecently.add(item);
             }
         }
-        
+
         menuConverter = new JMenuItem(strings.get("FileConverter"), resources.getIcon("open_project.png"));
         menuConverter.setActionCommand(MENU_FILE_CONVERTER_ACTION);
         menuConverter.addActionListener(this);
-        
+
         menuFileSave = new JMenuItem(strings.get("FileSave"), fileSaveIcon);
         menuFileSave.setActionCommand(MENU_FILE_SAVE_ACTION);
         menuFileSave.addActionListener(this);
@@ -333,7 +336,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         menuFileExportPetriNet = new JMenuItem(strings.get("ExportPetriNetTT"), fileExportPetriNetIcon);
         menuFileExportPetriNet.setActionCommand(MENU_FILE_EXPORT_PETRINET_ACTION);
         menuFileExportPetriNet.addActionListener(this);
-        
+
         menuFileExit = new JMenuItem(strings.get("FileExit"), resources.getIcon("delete.png"));
         menuFileExit.setActionCommand(MENU_FILE_EXIT_ACTION);
         menuFileExit.addActionListener(this);
@@ -370,12 +373,12 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
         helpMenu = new JMenu(strings.get("Help"));
         helpMenu.add(menuHelpHelp);
-        helpMenu.add(menuHelpAbout);        
-            
+        helpMenu.add(menuHelpAbout);
+
         menuBar = new JMenuBar();
         menuBar.add(mainMenu);
         menuBar.add(projectMenu);
-        menuBar.add(helpMenu);        
+        menuBar.add(helpMenu);
 
         setJMenuBar(menuBar);
     }
@@ -448,6 +451,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     @Override
     public void actionPerformed(ActionEvent e) {
         final String action = e.getActionCommand();
+        LOGGER.debug("Action registered in MainDialog: " + action);
         switch (action) {
             case MENU_FILE_EXIT_ACTION:
                 exitApplication();
@@ -456,29 +460,29 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 try {
                     createNewProject();
                 } catch (InterruptedException | ClassNotFoundException | IOException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught exception while trying to create new project from Petri net: ", ex);
                 }
                 break;
             case MENU_FILE_OPEN_ACTION:
                 try {
                     openProject();
                 } catch (InterruptedException | ClassNotFoundException | IOException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught exception while trying to open project from file: ", ex);
                 }
                 break;
             case MENU_FILE_SAVE_ACTION:
                 try {
                     saveProject();
                 } catch (ClassNotFoundException | IOException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught exception while trying to save project: ", ex);
                 }
                 break;
             case MENU_FILE_SAVE_AS_ACTION:
                 try {
                     createNewProject(project);
                 } catch (InterruptedException | IOException | ClassNotFoundException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
-                } 
+                    LOGGER.error("Caught exception while trying to save project as: ", ex);
+                }
                 break;
             case MENU_FILE_EXPORT_ACTION:
                 exportResults();
@@ -487,7 +491,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 try {
                     exportPetriNet();
                 } catch (IOException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught IOException while trying to export Petri net: ", ex);
                 }
                 break;
             case MENU_PROJECT_RUN:
@@ -502,18 +506,18 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             case MENU_SHOW_TV:
                 showTV();
                 break;
-            case EMPTY_PROJECT:      
+            case EMPTY_PROJECT:
                 try {
                     createEmptyProject();
                 } catch (ClassNotFoundException | IOException | InterruptedException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught exception while trying to create empty project: ", ex);
                 }
                 break;
             case MENU_TFILE_LOAD_ACTION:
                 try {
                     loadTFile();
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Caught InterruptedException while trying to load EM file");
                 }
                 break;
             case HELP_ACTION:
@@ -531,11 +535,13 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     }
 
     private void converter() {
+        LOGGER.info("Started ConverterDialog");
         ConverterDialog dialog = new ConverterDialog(MonaLisa.appMainWindow());
+        LOGGER.info("Ended ConverterDialog");
     }
-    
+
     private void runSelectedTools() {
-        if(!this.project.getPetriNet().places().isEmpty() && !this.project.getPetriNet().transitions().isEmpty()) {        
+        if(!this.project.getPetriNet().places().isEmpty() && !this.project.getPetriNet().transitions().isEmpty()) {
             setRunButtons(MENU_PROJECT_STOP, strings.get("StopRunningTools"), projectStopIcon);
             statusBar.setProgressValue(0);
             statusBar.setIndeterminateProgress(true);
@@ -544,17 +550,17 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             project.setProjectChanged(true);
         }
     }
-    
+
     private void stopRunningTools() {
         project.stopRunningTools();
         restoreRunButtons();
     }
-    
+
     private void restoreRunButtons() {
         setRunButtons(MENU_PROJECT_RUN, strings.get("ProjectRun"), projectRunIcon);
         statusBar.setProgressVisible(false);
     }
-    
+
     private void setRunButtons(String action, String text, Icon icon) {
         menuProjectRun.setIcon(icon);
         menuProjectRun.setText(text);
@@ -565,6 +571,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     }
 
     private void exitApplication() {
+        LOGGER.info("Starting shutdown process for MonaLisa");
         if(this.project != null) {
             if(this.project.isProjectChanged()) {
                 JOptionPane optionPane = new JOptionPane(strings.get("SaveQuestion"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION);
@@ -573,55 +580,60 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 Integer selectedValue = (Integer) optionPane.getValue();
 
                 if(selectedValue != null) {
-                    if(selectedValue == JOptionPane.YES_OPTION) {                        
+                    if(selectedValue == JOptionPane.YES_OPTION) {
                         try {
+                            LOGGER.info("Saving project on application exit");
                             if(project.getPath() != null)  {
                                 project.save(project.getPath());
                             } else {
                                 project.save();
                             }
+                            LOGGER.info("Successfully saved project on application exit");
                         } catch (IOException ex) {
-                            Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
-                        }               
+                            LOGGER.error("Caught IOException while trying to save project on application exit: ", ex);
+                        }
                     } else if(selectedValue == JOptionPane.CANCEL_OPTION) {
+                        LOGGER.info("Stopped shutdown process for MonaLisa");
                         return;
                     }
                 }
                 else {
+                    LOGGER.info("Stopped shutdown process for MonaLisa");
                     return;
                 }
-            } 
+            }
         }
-        
+        LOGGER.info("Shutdown process successful");
         System.exit(0);
     }
-    
+
     private boolean askForSavingTheProject() {
-        if(project != null) {     
+        if(project != null) {
             JOptionPane optionPane = new JOptionPane(strings.get("SaveQuestion"), JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION);
             JDialog dialog = optionPane.createDialog(this, "Wait a moment...");
             dialog.setVisible(true);
-            Integer selectedValue = (Integer) optionPane.getValue();                   
-           
+            Integer selectedValue = (Integer) optionPane.getValue();
+
             if (selectedValue == JOptionPane.YES_OPTION) {
                 return true;
             } else {
                 return false;
-            }         
+            }
         }
-        
         return false;
     }
-    
+
     /**
      * Create a new and empty project
      */
-    private void createEmptyProject() throws ClassNotFoundException, IOException, InterruptedException {        
-        askForSavingTheProject();        
+    private void createEmptyProject() throws ClassNotFoundException, IOException, InterruptedException {
+        LOGGER.info("Creating new empty project");
+        askForSavingTheProject();
         project = new Project();
         projectLoaded();
+        LOGGER.info("Successfully created new empty project");
     }
-    
+
     /***
      * Creates a new project from a chosen Petri net file
      * @throws IOException
@@ -629,14 +641,14 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      * @throws InterruptedException
      */
     private void createNewProject() throws IOException, ClassNotFoundException, InterruptedException {
-        
+        LOGGER.info("Creating new project from a chosen Petri net file");
         if(askForSavingTheProject()) {
             saveProject();
         }
 
-        // PN File       
+        // PN File
         MonaLisaFileChooser petriNetFileChooser = new MonaLisaFileChooser();
-                       
+
         for (final InputHandler handler : PetriNetInputHandlers.getHandlers()) {
             petriNetFileChooser.addChoosableFileFilter(new FileFilter() {
                 @Override
@@ -649,6 +661,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                     try {
                         return f.isDirectory() || handler.isKnownFile(f);
                     } catch (IOException e) {
+                        LOGGER.error("Caught IOException while checking whether file is acceptable: ", e);
                         return false;
                     }
                 }
@@ -666,6 +679,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 try {
                     return f.isDirectory() || PetriNetInputHandlers.isKnownFile(f);
                 } catch (IOException e) {
+                    LOGGER.error("Caught IOException while checking whether file is acceptable: ", e);
                     return false;
                 }
             }
@@ -676,21 +690,23 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             return;
 
         File petriNetFile = petriNetFileChooser.getSelectedFile();
-        
+
         project = Project.create(petriNetFile);
         project.getPetriNet().putProperty("new_imported", true);
 
         projectLoaded();
+        LOGGER.info("Successfully created new project from a chosen Petri net file");
     }
-    
+
     /**
      * "Save project as...". Creates a new project from the current project.
-     * @param oldProject 
+     * @param oldProject
      */
     public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException {
         File newProjectFile = null;
-        
+
         if(oldProject != null) {
+            LOGGER.info("Creating new project from current project to save project as");
             MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
                     projectLocationChooser.setFileFilter(new FileFilter() {
                         @Override
@@ -711,18 +727,20 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 return;
 
             newProjectFile = projectLocationChooser.getSelectedFile();
-            
+
             if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(newProjectFile)))
-                newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);        
-            
+                newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
+
             Project newProject = Project.create(oldProject, newProjectFile);
             this.project = newProject;
-            newProject.save(newProjectFile);              
+            newProject.save(newProjectFile);
             projectLoaded();
-        }        
+            LOGGER.info("Successfully created new project from current project to save project as");
+        }
     }
-    
+
     private void loadTFile() throws InterruptedException {
+        LOGGER.info("Loading T-Invariant file");
         MonaLisaFileChooser TfileLocationChooser = new MonaLisaFileChooser();
 
         for (final TInputHandler handler : TInputHandlers.getHandlers()) {
@@ -738,6 +756,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                     try {
                         return f.isDirectory() || handler.isKnownFile(f);
                     } catch (IOException e) {
+                        LOGGER.error("Caught IOException while checking whether file is acceptable: ", e);
                         return false;
                     }
                 }
@@ -753,22 +772,23 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         try {
             project.loadTFile(TFile);
         } catch (IOException ex) {
+            LOGGER.error("Caught IOException while trying to import T-Invariant file");
             JOptionPane.showMessageDialog(this, strings.get("ErrorReadingFileMessage", TFile), strings.get("ErrorReadingFileTitle"), JOptionPane.ERROR_MESSAGE);
         }
-        
+
         try {
             updateNetViewer();
         } catch (IOException ex) {
-            Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Caught IOException while trying to update NetViewer after importing T-Invariant file");
         }
     }
 
     private void openProject() throws IOException, ClassNotFoundException, InterruptedException {
-        
+        LOGGER.info("Gathering file to open project from");
         askForSavingTheProject();
-        
+
         MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
-      
+
         projectLocationChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
@@ -788,47 +808,51 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             return;
 
         File projectFile = projectLocationChooser.getSelectedFile();
+        LOGGER.info("Successfully gathered file to open project from");
         openProject(projectFile);
     }
 
     public void openProject(File projectFile) throws IOException, ClassNotFoundException, InterruptedException {
+        LOGGER.info("Opening project from file");
         try {
             project = Project.load(projectFile);
         } catch (IOException ex) {
+            LOGGER.error("Caught IOException while trying to open project from file");
             JOptionPane.showMessageDialog(this, strings.get("ErrorReadingFileMessage", projectFile), strings.get("ErrorReadingFileTitle"), JOptionPane.ERROR_MESSAGE);
             return;
         }
- 
+
         if(project.getPropertyList() == null) {
             project.setPropertyList(new PropertyList());
         }
-        
+
         String recentlyProjects = Settings.get("recentlyProjects");
-        
+
         // If project are in the list, set it to the last place
         if(recentlyProjects.contains(projectFile.getAbsolutePath())) {
-            recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath()+",", "");      
+            recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath()+",", "");
         }
-        else {       
+        else {
             // If not, check if the list is to large and delte the first element
             String projects[] = recentlyProjects.split(",");
-            if(projects.length == 10) {            
-                String tmp = "";             
+            if(projects.length == 10) {
+                String tmp = "";
                 for(int i = 1; i < 10; i++) {
                     tmp += projects[i] + ",";
                 }
                 recentlyProjects = tmp;
             }
-        }   
+        }
         // Add the new project at the last place
         recentlyProjects += projectFile.getAbsolutePath()+",";
-        
+
         Settings.set("recentlyProjects", recentlyProjects);
         Settings.writeToFile(Settings.getConfigFile());
 
         projectLoaded();
 
         project.setResults(project.getAllResults());
+        LOGGER.info("Successfully opened project from file");
     }
 
     private void saveProject() throws ClassNotFoundException, IOException {
@@ -845,8 +869,9 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     }
 
     public void exportPetriNet() throws IOException {
+        LOGGER.info("Exporting Petri net");
         JFileChooser petriNetFileChooser = new MonaLisaFileChooser();
- 
+
         petriNetFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         petriNetFileChooser.setDialogTitle(strings.get("ChooseAPetriNetFileName"));
         petriNetFileChooser.setAcceptAllFileFilterUsed(false);
@@ -863,9 +888,11 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         petriNetFile = selectedFileFilter.checkFileNameForExtension(petriNetFile);
 
         selectedFileFilter.getHandler().save(new FileOutputStream(petriNetFile), project.getPetriNet());
+        LOGGER.info("Succesfully exported Petri net");
     }
 
     private void exportResults() {
+        LOGGER.info("Exporting tool results");
         ExportDialog exportDialog = new ExportDialog(this, project);
 
         if(exportDialog.isCancelled())
@@ -874,12 +901,12 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         Map<Pair<Class<? extends Tool>,Configuration>,String> exports = exportDialog.exportPaths();
         boolean retainAll = false;
         boolean deleteAll = false;
-        
+
         for (Pair<Class<? extends Tool>, Configuration> export : exports.keySet()) {
             // Determine output file name.
             Result result = project.getResult(export.first(), export.second());
             File outputFile = new File(exportDialog.exportPaths().get(export));
-            
+
             // See whether file already exists.
             if (outputFile.exists()) {
                 if (retainAll)
@@ -904,19 +931,22 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                     }
                 }
             }
-            
+
             try {
                 result.export(outputFile, export.second(), project);
+                LOGGER.info("Successfully exported tool results to '" + outputFile.getName() + "'");
             } catch (IOException ex) {
                 // TODO Proper error handling.
+                LOGGER.error("Caught IOException while trying to write tool results to output file '" + outputFile.getName() + "'");
                 System.out.printf("Unable to write output file %s\n", outputFile);
             }
         }
     }
-    
+
     public void projectLoaded() throws ClassNotFoundException, IOException, InterruptedException {
         // Unload previous project, if any.
         projectClosed();
+        LOGGER.info("Loading new project");
         mainContainer.removeAll();
         mainContainer.add(scrollPane);
         project.addToolStatusUpdateListener(this);
@@ -925,40 +955,40 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         project.createUI(contentPanel, strings);
         recursivelyDoLayout(mainContainer);
         menuTFileLoad.setEnabled(true);
-        
+
         if(project.getPath() == null)
             menuFileSaveAs.setEnabled(false);
         else
             menuFileSaveAs.setEnabled(true);
-        
-        // --- START NetViewer ToolBar Plugins ---        
-        
+
+        // --- START NetViewer ToolBar Plugins ---
+
         if(netViewer != null) {
             netViewer.closeAllFrames();
             netViewer.dispose();
         }
 
-        netViewer = new NetViewer(this, project);   
+        netViewer = new NetViewer(this, project);
         netViewer.addNetChangedListener(this);
-        
-        PetriNetFacade pnFacade = this.project.getPNFacade();        
+
+        PetriNetFacade pnFacade = this.project.getPNFacade();
         List<AddonPanel> addonPanels = new ArrayList<>();
         // Load all AddonPanels
         for(Class<? extends AddonPanel> c : Addons.addons) {
             try {
-                addonPanels.add(c.getConstructor(NetViewer.class, PetriNetFacade.class).newInstance(netViewer, pnFacade));   
-            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException 
+                addonPanels.add(c.getConstructor(NetViewer.class, PetriNetFacade.class).newInstance(netViewer, pnFacade));
+            } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
-                Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Caught exception while trying to load all AddonPanels: ", ex);
             }
-        }         
+        }
         project.registerAddOns(addonPanels);
         project.transferStorageToAddOns(addonPanels);
-        
+
         Settings.writeToFile(System.getProperty("user.home")+"/.monalisaSettings");
-         
+
         // --- STOP NetViewer ToolBar Plugins ---
-        
+
         // Load TreeViewer
         if(treeViewer != null)
             treeViewer.dispose();
@@ -967,15 +997,18 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             enableTVButton(true);
         else
             enableTVButton(false);
+        LOGGER.info("Successfully loaded new project");
     }
 
     private void projectClosed() {
+        LOGGER.info("Unloading any existing previous projects");
         setDocumentTitle(null);
         setProjectRelatedEnabled(false);
         contentPanel.removeAll();
         contentPanel.doLayout();
+        LOGGER.info("Successfully unloaded any existing previous projects");
     }
-    
+
     private void setProjectRelatedEnabled(boolean enabled) {
         menuFileSave.setEnabled(enabled);
         menuFileSaveAs.setEnabled(enabled);
@@ -987,7 +1020,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         fileExportPetriNetButton.setEnabled(enabled);
         projectMenu.setEnabled(enabled);
         projectRunButton.setEnabled(enabled);
-        showNVButton.setEnabled(enabled);        
+        showNVButton.setEnabled(enabled);
     }
 
     private void recursivelyDoLayout(JPanel panel) {
@@ -1002,7 +1035,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     public void updated(final ToolStatusUpdateEvent e) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
-            public void run() {                
+            public void run() {
                 switch (e.getStatus()) {
                     case STARTED:
                         statusBar.setStatusText(e.getToolName() + " started");
@@ -1018,7 +1051,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                         try {
                             updateNetViewer();
                         } catch (IOException | InterruptedException ex) {
-                            Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.error("Caught exception while trying to update NetViewer on tool status update");
                         }
 
                         updateTreeViewer();
@@ -1073,7 +1106,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             netViewer.addMctsToComboBox();
         }
         if(project.hasResults(McsTool.class)) {
-            netViewer.addMcsToComboBox();      
+            netViewer.addMcsToComboBox();
         }
 
         netViewer.setNetChanged(false);

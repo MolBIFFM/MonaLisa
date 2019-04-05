@@ -30,7 +30,7 @@ public class PlainOutputHandler implements OutputHandler {
     private static final Logger LOGGER = LogManager.getLogger(PlainOutputHandler.class);
 
     public void save(FileOutputStream fos, PetriNet pn) {
-        LOGGER.info("Export Petri net in plain format");
+        LOGGER.info("Exporting Petri net in plain format");
         try (PrintStream ps = new PrintStream(fos)) {
             int i, weight, nbr;
             String name;

@@ -846,7 +846,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param tool The tool to be marked
      */
     private void setHasResults(Tool tool) {
-        LOGGER.info("Setting tool results for" + strings.get(Tools.name(tool)));
+        LOGGER.info("Setting tool results for " + strings.get(Tools.name(tool)));
         CollapsiblePanel panel = toolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolHasResults"));
         panel.setTitleShade(HAS_RESULT_COLOR);

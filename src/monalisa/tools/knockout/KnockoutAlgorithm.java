@@ -27,20 +27,24 @@ import java.util.Map;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public abstract class KnockoutAlgorithm {
-    
+
     private final PetriNetFacade pn;
     private final Map<List<String>, List<String>> results;
-    
+    private static final Logger LOGGER = LogManager.getLogger(KnockoutAlgorithm.class);
+
     KnockoutAlgorithm(PetriNetFacade pn) {
         this.results = new HashMap<>();
         this.pn = pn;
     }
-    
+
     public void run(ProgressListener callback, ErrorLog log) throws InterruptedException, TInvariantCalculationFailedException {
+        LOGGER.info("Running selected Knockout algorithm");
         TInvariantCalculator calculator = null;
-        
+
         int instance = 0;
         List<String> originalTransitions = new ArrayList<>();
         Map<String, Integer> tmpMap;
@@ -71,25 +75,26 @@ public abstract class KnockoutAlgorithm {
                     alsoKnockedOut.add(name);
             }
             results.put(knockedOut, alsoKnockedOut);
-            
+
             int percent = (int) ((double) ++instance / getTotalKnockouts() * 100);
-            callback.progressUpdated(new ProgressEvent(this, percent));            
+            callback.progressUpdated(new ProgressEvent(this, percent));
         }
+        LOGGER.info("Successfully ran selected Knockout algorithm");
     }
-    
+
     public Map<List<String>, List<String>> getResults() {
         return Collections.unmodifiableMap(results);
     }
-    
+
     protected PetriNetFacade getPetriNetFacade() {
         return pn;
     }
-    
+
     protected abstract int getTotalKnockouts();
-    
+
     protected abstract PetriNetFacade getNextKnockOutNetwork();
-    
+
     protected abstract boolean hasNextKnockOutNetwork();
-    
+
     protected abstract List<UniquePetriNetEntity> getKnockoutEntities();
 }

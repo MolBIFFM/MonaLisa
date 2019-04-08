@@ -17,9 +17,11 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.UniquePetriNetEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Knockes out a set of places
+ * Knocks out a set of places
  * @author Jens Einloft
  */
 public class MultiPlaceKnockout extends KnockoutAlgorithm {
@@ -27,15 +29,19 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
     private List<UniquePetriNetEntity> currentKnockouts;
     private final List<Place> toKnockout;
     private int knockOutCounter = 0;
-    
+    private static final Logger LOGGER = LogManager.getLogger(MultiPlaceKnockout.class);
+
     public MultiPlaceKnockout(PetriNetFacade pn, List<Place> places){
         super(pn);
+        LOGGER.info("Initializing MultiPlaceKnockout algorithm");
         toKnockout = places;
+        LOGGER.info("Successfully initialized MultiPlaceKnockout algorithm");
     }
 
-    
+
     @Override
     protected PetriNetFacade getNextKnockOutNetwork() {
+        LOGGER.debug("Getting next KnockoutNetwork for MultiPlaceKnockout algorithm");
         PetriNet copy = getPetriNetFacade().getPNCopy();
 
         currentKnockouts = new ArrayList<>();
@@ -43,7 +49,7 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
             copy.removePlace(p);
             currentKnockouts.add(p);
         }
-
+        LOGGER.debug("Successfully got next KnockoutNetwork for MultiPlaceKnockout algorithm");
         return new PetriNetFacade(copy);
     }
 
@@ -55,7 +61,7 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
         else
             return false;
     }
-    
+
     @Override
     protected List<UniquePetriNetEntity> getKnockoutEntities() {
         return currentKnockouts;

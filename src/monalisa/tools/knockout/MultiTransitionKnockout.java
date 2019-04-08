@@ -17,6 +17,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
 import monalisa.data.pn.UniquePetriNetEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Knock-outs a set of transition
@@ -27,14 +29,18 @@ public class MultiTransitionKnockout extends KnockoutAlgorithm {
     private List<UniquePetriNetEntity> currentKnockouts;
     private final List<Transition> toKnockout;
     private int knockOutCounter = 0;
-        
+    private static final Logger LOGGER = LogManager.getLogger(MultiTransitionKnockout.class);
+
     MultiTransitionKnockout(PetriNetFacade pn, List<Transition> transitions) {
         super(pn);
+        LOGGER.info("Initializing MultiTransitionKnockout algorithm");
         toKnockout = transitions;
+        LOGGER.info("Successfully initialized MultiTransitionKnockout algorithm");
     }
 
     @Override
     protected PetriNetFacade getNextKnockOutNetwork() {
+        LOGGER.debug("Getting next KnockoutNetwork for MultiTransitionKnockout algorithm");
         PetriNet copy = getPetriNetFacade().getPNCopy();
 
         currentKnockouts = new ArrayList<>();
@@ -42,7 +48,7 @@ public class MultiTransitionKnockout extends KnockoutAlgorithm {
             copy.removeTransition(t);
             currentKnockouts.add(t);
         }
-
+        LOGGER.debug("Successfully got next KnockoutNetwork for MultiTransitionKnockout algorithm");
         return new PetriNetFacade(copy);
     }
 
@@ -53,7 +59,7 @@ public class MultiTransitionKnockout extends KnockoutAlgorithm {
             return true;
         else
             return false;
-    }   
+    }
 
     @Override
     protected int getTotalKnockouts() {

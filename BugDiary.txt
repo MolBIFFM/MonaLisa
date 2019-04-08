@@ -18,7 +18,7 @@ Where - monalisa.addons.netviewer
 
 What - Inserting bends and then removing them sometimes causes edges to become !visually! disconnected in the NetViewer
 
-Details - Seems like bending the edge causes it to "split" into two edges, of which one is then deleted without reconnecting the remaining "edge" to the corresponding vertex
+Details - Seems like bending the edge causes it to "split" into two edges, of which one is then deleted without reconnecting the remaining "edge" to the corresponding vertex. Bug can most likely be found in monalisa.synchronisation.Synchronizer
 
 --
 

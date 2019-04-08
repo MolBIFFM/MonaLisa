@@ -2,3 +2,4 @@ monalisa.addons.netviewer.transformer
 monalisa.addons.treeviwer.transformer
 monalisa.addons.data
 monalisa.gui.components
+monalisa.resources

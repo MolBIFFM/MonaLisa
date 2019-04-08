@@ -24,23 +24,27 @@ import java.util.Map;
 import monalisa.Project;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class TInvariants implements Result, Collection<TInvariant> {
     private static final long serialVersionUID = 8293263678484610772L;
     private final List<TInvariant> tinvariants;
-    
+    private static final Logger LOGGER = LogManager.getLogger(TInvariants.class);
+
     public TInvariants(List<TInvariant> tinvariants) {
         this.tinvariants = Collections.unmodifiableList(tinvariants);
     }
-    
+
     @Override
     public void export(File path, Configuration config, Project project) throws IOException {
         try (PrintWriter printer = new PrintWriter(path)) {
+            LOGGER.info("Exporting T-Invariant results");
             Map<Transition, Integer> transitionMap = new HashMap<>();
-            StringBuilder sb = new StringBuilder();          
-            
+            StringBuilder sb = new StringBuilder();
+
             sb.append("# reaction_id:name\n");
-            
+
             int i = 1;
             for(Transition t : project.getPetriNet().transitions()) {
                 transitionMap.put(t, i);
@@ -49,25 +53,26 @@ public final class TInvariants implements Result, Collection<TInvariant> {
                 sb.append(t.<String>getProperty("name"));
                 sb.append("\n");
             }
-                    
-            sb.append("\n# em_id:factor*reaction_id; ...\n");            
+
+            sb.append("\n# em_id:factor*reaction_id; ...\n");
 
             for(TInvariant tinv : tinvariants) {
                 sb.append(tinv.id()+1);
-                sb.append(":");                
-                
+                sb.append(":");
+
                 for(Transition t : tinv.transitions()) {
                     sb.append(tinv.factor(t));
                     sb.append("*");
                     sb.append(transitionMap.get(t));
                     sb.append(";");
                 }
-                sb.setLength(sb.length() - 1); 
+                sb.setLength(sb.length() - 1);
                 sb.append("\n");
             }
-            
+
             printer.print(sb.toString());
             printer.close();
+            LOGGER.info("Successfully exported T-Invariant results");
         }
     }
 
@@ -75,11 +80,11 @@ public final class TInvariants implements Result, Collection<TInvariant> {
     public String toString() {
         return tinvariants.toString();
     }
-    
+
     private static String transitionsToString(TInvariant tinvariant, Boolean printId) {
         StringBuilder ret = new StringBuilder();
         boolean first = true;
-        
+
         for (Transition transition : tinvariant) {
             if (first)
                 first = false;
@@ -88,20 +93,20 @@ public final class TInvariants implements Result, Collection<TInvariant> {
             if (tinvariant.factor(transition) != 1)
                 ret.append(String.format("%d*", tinvariant.factor(transition)));
 
-            if(printId)                
+            if(printId)
                 ret.append(transition.id()+1);
             else
                 ret.append(((String) transition.getProperty("name")).replace(" ", "_"));
         }
-        
+
         return ret.toString();
     }
-    
+
     private static List<String> paragraphize(String text, String hangingIndent, int lineLength) {
         List<String> ret = new ArrayList<>();
         int startPos = 0;
         String indent = "";
-        
+
         while (text.length() - startPos > lineLength) {
             // Go forward to the theoretical end of the line and walk backwards
             // to the beginning of the current word.
@@ -112,19 +117,19 @@ public final class TInvariants implements Result, Collection<TInvariant> {
             // Failsafe if the line has no spaces:
             if (startPos == prev)
                 startPos += lineLength; // Don't care: cut the word.
-            
+
             ret.add(indent + text.substring(prev, startPos));
             startPos++; // Skip whitespace.
-            
+
             // Adjust line length by hanging indent.
             lineLength -= hangingIndent.length();
             indent = hangingIndent;
         }
-        
+
         // Add the dangling line.
         if (startPos < text.length())
             ret.add(indent + text.substring(startPos));
-        
+
         return ret;
     }
 
@@ -132,7 +137,7 @@ public final class TInvariants implements Result, Collection<TInvariant> {
     public String filenameExtension() {
         return "inv";
     }
-    
+
     public Collection<TInvariant> nonTrivialTInvariants() {
         List<TInvariant> nonTrivial = new ArrayList<>();
         for(TInvariant tinvariant : this) {

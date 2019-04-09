@@ -27,6 +27,8 @@ import monalisa.results.MauritiusMap;
 import monalisa.results.TInvariants;
 import monalisa.tools.ErrorLog;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class TInvariantCalculator {
     @SuppressWarnings("serial")
@@ -49,19 +51,22 @@ public final class TInvariantCalculator {
     private MauritiusMap postScriptSource = null;
     private boolean hasPostScriptSource = false;
     private Map<Integer, Integer> transitionIds;
+    private static final Logger LOGGER = LogManager.getLogger(TInvariantCalculator.class);
 
     public TInvariantCalculator(PetriNetFacade petriNet) {
        this.petriNet = petriNet;
     }
 
     public TInvariantCalculator(PetriNetFacade petriNet, ErrorLog log) throws InterruptedException, TInvariantCalculationFailedException {
+        LOGGER.info("Initializing TInvariantCalculator");
         this.petriNet = petriNet;
         File tempDir = FileUtils.getTempDir();
         try {
+            LOGGER.debug("Creating temporary .pnt to export Petri net to");
             pntFile = File.createTempFile("monalisa", ".pnt", tempDir);
         } catch (IOException ex) {
             log.log(ex.getLocalizedMessage(), ErrorLog.Severity.ERROR);
-            ex.printStackTrace();
+            LOGGER.error("Caught IOException while trying to create temporary .pnt to export Petri net to: ", ex);
             throw new TInvariantCalculationFailedException(ex);
         }
         pntFile.deleteOnExit();
@@ -83,37 +88,40 @@ public final class TInvariantCalculator {
 
         TinvCalcOutputHandler outHandler = new TinvCalcOutputHandler(placeIds, transitionIds);
         try {
+            LOGGER.debug("Trying to export Petri net to temporary .pnt file for T-Invariant calculation");
             outHandler.save(petriNet, new FileOutputStream(pntFile));
         } catch (FileNotFoundException ex) {
             log.log(ex.getLocalizedMessage(), ErrorLog.Severity.ERROR);
-            ex.printStackTrace();
+            LOGGER.error("Caught FileNotFoundException while trying to export Petri net to temporary .pnt file for T-Invariant calculation: ", ex);
             throw new TInvariantCalculationFailedException(ex);
         }
 
         try {
+            LOGGER.debug("Computing T-Invariants based on temporary .pnt file");
             computeTinvariants(pntFile, tempDir);
         } catch (ExtractResourceException ex) {
             log.log("#TInvariantExtractResourceFailed", ErrorLog.Severity.ERROR);
-            ex.printStackTrace();
+            LOGGER.error("Caught ExtractResourceException while trying to find external tool location");
             throw new TInvariantCalculationFailedException(ex);
         } catch (InvokeProcessException ex) {
             log.log("#TInvariantInvokeProcessFailed", ErrorLog.Severity.ERROR);
-            ex.printStackTrace();
+            LOGGER.error("Caught InvokeProcessException while trying to start process for T-Invariant computation");
             throw new TInvariantCalculationFailedException(ex);
         }
     }
 
     public TInvariants tinvariants(ErrorLog log) throws TInvariantCalculationFailedException {
         if (tinvariants == null) {
+            LOGGER.debug("Importing T-Invariants calculated by external tool");
             File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".inv"));
             TInvariantBuilder invariantBuilder = new TInvariantBuilder(petriNet);
             TInvParser invParser;
             try {
                 invParser = new TInvParser(invariantBuilder, invFile, invertMap(transitionIds));
+                LOGGER.debug("Successfully imported T-Invariants calculated by external tool");
             } catch (IOException ex) {
                 log.log("#InvParserFailed", ErrorLog.Severity.ERROR);
-                System.err.println("InvParser failed");
-                ex.printStackTrace();
+                LOGGER.error("Caught IOException while tring to parse T-Invariants calculated by external tool");
                 throw new TInvariantCalculationFailedException(ex);
             }
 
@@ -125,18 +133,20 @@ public final class TInvariantCalculator {
 
     public MauritiusMap postScriptSource(ErrorLog log) {
         if (!hasPostScriptSource) {
+            LOGGER.debug("Getting postScriptSource for MauritiusMap");
             File psFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".ps"));
             String psCode = null;
             try {
                 psCode = FileUtils.read(psFile);
             } catch (FileNotFoundException e) {
                 log.log("#TInvariantPostScriptFileNotReadable", ErrorLog.Severity.WARNING);
-                e.printStackTrace();
+                LOGGER.error("Caught FileNotFoundException while trying to get postScriptSoure for MauritiusMap");
             }
 
             if (psCode != null)
                 postScriptSource = new MauritiusMap(psCode);
             hasPostScriptSource = true;
+            LOGGER.debug("Successfully got postScriptSource for MauritiusMap");
         }
 
         return postScriptSource;
@@ -147,16 +157,19 @@ public final class TInvariantCalculator {
         try {
             String os = System.getProperty("os.name").toLowerCase();
             if(os.contains("nix") || os.contains("nux")) {
+                LOGGER.debug("OS determined to be Unix");
                 toolFile = FileUtils.extractResource("tinv_unix", "monalisa", "bin");
             }
             else if(os.contains("win")) {
+                LOGGER.debug("OS determined to be Windows");
                 toolFile = FileUtils.extractResource("tinv_win.exe", "monalisa", "bin");
             }
             else if(os.contains("mac")) {
+                LOGGER.debug("OS determined to be MAC");
                 toolFile = FileUtils.extractResource("tinv_macos.exe", "monalisa", "bin");
             }
             else{
-                System.out.println("No valid operating system found. Starting linux version!");
+                LOGGER.warn("No valid operating system found. Starting linux version!");
                 toolFile = FileUtils.extractResource("tinv_unix", "monalisa", "bin");
             }
         } catch (IOException e) {
@@ -169,12 +182,15 @@ public final class TInvariantCalculator {
         pb.directory(output);
 
         try {
+            LOGGER.debug("Starting actual process to compute T-Invariants");
             Process p = pb.start();
             p.waitFor();
+            LOGGER.debug("Successfully computed T-Invariants");
         } catch (IOException e) {
             throw new InvokeProcessException(e);
         }
         finally {
+            LOGGER.debug("Marking output files for deletion");
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
             String[] extensions = { ".inv" };
@@ -184,6 +200,7 @@ public final class TInvariantCalculator {
                 if (file.exists())
                     file.deleteOnExit();
             }
+            LOGGER.debug("Successfully marked output files for deletion");
         }
     }
 

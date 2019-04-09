@@ -378,7 +378,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      * @param result The result.
      */
     public void putResult(Class<? extends Tool> tool, Configuration config, Result result) {
-        LOGGER.info("Putting result.");
+        LOGGER.debug("Putting result.");
         if(results.containsKey(tool))
             results.get(tool).put(config, result);
         else {
@@ -386,7 +386,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             map.put(config, result);
             results.put(tool, map);
         }
-        LOGGER.info("Finished putting result");
+        LOGGER.debug("Finished putting result");
     }
 
     /**

@@ -159,7 +159,6 @@ public final class ClusterTool extends AbstractTool implements ActionListener {
 
     @Override
     public JPanel getUI(Project project, StringResources strings) {
-        LOGGER.debug("Getting UI for ClusterTool");
         this.project = project;
         if (panel == null) {
             distanceFctLabel = new JLabel(strings.get("DistanceFunction"));
@@ -237,7 +236,6 @@ public final class ClusterTool extends AbstractTool implements ActionListener {
                 .addComponent(calculateButton));
             layout.linkSize(SwingConstants.VERTICAL, thresholdLabel, spinner);
         }
-        LOGGER.debug("Successfully got UI for ClusterTool");
         return panel;
     }
 

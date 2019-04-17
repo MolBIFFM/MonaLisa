@@ -102,7 +102,7 @@ public class PntOutputHandler implements OutputHandler {
                     formatter.printf(" %d", capacity);
 
                 if (place.hasProperty("time"))
-                    formatter.printf(" %d", place.getProperty("time"));
+                    formatter.printf(" %d", place.getValueOrDefault("time", 0));
                 else
                     formatter.print(" 0");
                 formatter.println();
@@ -119,11 +119,11 @@ public class PntOutputHandler implements OutputHandler {
                 formatter.printf("       %d: %s", transitionId(transition),
                     sanitize(name));
                 if (transition.hasProperty("priority"))
-                    formatter.printf(" %d", transition.getProperty("priority"));
+                    formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
                 else
                     formatter.print(" 0");
                 if (transition.hasProperty("time"))
-                    formatter.printf(" %d", transition.getProperty("time"));
+                    formatter.printf(" %d", transition.getValueOrDefault("time", 0));
                 else
                     formatter.print(" 0");
                 formatter.println();

@@ -6275,3 +6275,1560 @@
 11:53:48.990 [AWT-EventQueue-0] INFO  monalisa.Project - Checking whether project has changed
 11:53:48.990 [AWT-EventQueue-0] INFO  monalisa.Project - projectChanged: true
 11:53:50.254 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Shutdown process successful
+12:00:27.036 [main] INFO  monalisa.MonaLisa - Logging Start
+12:00:27.156 [main] INFO  monalisa.Settings - Trying to load settings from file
+12:00:27.157 [main] INFO  monalisa.Settings - Initializing settings
+12:00:27.157 [main] INFO  monalisa.Settings - Setting properties to default values
+12:00:27.157 [main] INFO  monalisa.Settings - Finished setting properties to default values
+12:00:27.164 [main] INFO  monalisa.Settings - Loaded 62 settings from properties file '/home/daniel/.monalisaSettings'.
+12:00:27.195 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Initializing MainDialog
+12:00:27.235 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'recentlyProjects' as String
+12:00:27.236 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'recentlyProjects' found, returning as String.
+12:00:32.383 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Unloading any existing previous projects
+12:00:32.386 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Successfully unloaded any existing previous projects
+12:00:32.389 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Successfully initialized MainDialog
+12:00:40.057 [AWT-EventQueue-0] DEBUG monalisa.gui.MainDialog - Action registered in MainDialog: MENU_FILE_NEW_ACTION
+12:00:40.057 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Creating new project from a chosen Petri net file
+12:00:40.106 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'latestDirectory' as String
+12:00:40.106 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'latestDirectory' found, returning as String.
+12:00:40.117 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - Checking whether file 'potato.pnt' is in supported format
+12:00:40.117 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.SbmlInputHandler - Checking whether file is in SBML format
+12:00:40.119 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PntInputHandler - Checking whether file is in PNT format
+12:00:40.120 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - File 'potato.pnt' is in supported format
+12:00:40.120 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - Checking whether file 'potato_new.pnt' is in supported format
+12:00:40.120 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.SbmlInputHandler - Checking whether file is in SBML format
+12:00:40.120 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PntInputHandler - Checking whether file is in PNT format
+12:00:40.121 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - File 'potato_new.pnt' is in supported format
+12:00:40.132 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - Checking whether file 'potato.pnt' is in supported format
+12:00:40.132 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.SbmlInputHandler - Checking whether file is in SBML format
+12:00:40.132 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PntInputHandler - Checking whether file is in PNT format
+12:00:40.132 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - File 'potato.pnt' is in supported format
+12:00:40.133 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - Checking whether file 'potato_new.pnt' is in supported format
+12:00:40.133 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.SbmlInputHandler - Checking whether file is in SBML format
+12:00:40.133 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PntInputHandler - Checking whether file is in PNT format
+12:00:40.133 [Basic L&F File Loading Thread] DEBUG monalisa.data.input.PetriNetInputHandlers - File 'potato_new.pnt' is in supported format
+12:00:41.289 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file '/home/daniel/.monalisaSettings'
+12:00:42.511 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file '/home/daniel/.monalisaSettings'
+12:00:42.515 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'completeResult' to Color
+12:00:42.515 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'completeResultR' as String
+12:00:42.515 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'completeResultR' found, returning as String.
+12:00:42.515 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'completeResultG' as String
+12:00:42.515 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'completeResultG' found, returning as String.
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'completeResultB' as String
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'completeResultB' found, returning as String.
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'hasResults' to Color
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'hasResultsR' as String
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'hasResultsR' found, returning as String.
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'hasResultsG' as String
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'hasResultsG' found, returning as String.
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'hasResultsB' as String
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'hasResultsB' found, returning as String.
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'warning' to Color
+12:00:42.516 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'warningR' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'warningR' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'warningG' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'warningG' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'warningB' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'warningB' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'error' to Color
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'errorR' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'errorR' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'errorG' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'errorG' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'errorB' as String
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'errorB' found, returning as String.
+12:00:42.517 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'notFinished' to Color
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notFinishedR' as String
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notFinishedR' found, returning as String.
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notFinishedG' as String
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notFinishedG' found, returning as String.
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notFinishedB' as String
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notFinishedB' found, returning as String.
+12:00:42.518 [AWT-EventQueue-0] INFO  monalisa.Project - Creating new project from external file.
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.data.input.PetriNetInputHandlers - Detecting handler for file 'potato.pnt'
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.data.input.SbmlInputHandler - Checking whether file is in SBML format
+12:00:42.518 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Checking whether file is in PNT format
+12:00:42.519 [AWT-EventQueue-0] DEBUG monalisa.data.input.PetriNetInputHandlers - Successfully detected handler for file 'potato.pnt'
+12:00:42.519 [AWT-EventQueue-0] INFO  monalisa.data.input.PntInputHandler - Loading Petri net from .pnt file
+12:00:42.526 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '0'
+12:00:42.527 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.527 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.527 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '0'
+12:00:42.527 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '0'
+12:00:42.528 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.528 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.528 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '0'
+12:00:42.528 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.528 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '4'
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '4'
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '12'
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '12'
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.529 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '1'
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '1'
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '11'
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '11'
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.530 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.531 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '1'
+12:00:42.531 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.531 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.531 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '1'
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '10'
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '10'
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.532 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '2'
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '2'
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.533 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '2'
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '2'
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.534 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '3'
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '3'
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.535 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '3'
+12:00:42.536 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.536 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.536 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '3'
+12:00:42.536 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.536 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '4'
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '4'
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '14'
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '14'
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.537 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '21'
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '21'
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '13'
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '13'
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.538 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '22'
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '22'
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.539 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '5'
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '5'
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '16'
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '16'
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.540 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '18'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '18'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '15'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '15'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '5'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '5'
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.541 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '17'
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '17'
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.542 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '6'
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '6'
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '6'
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '6'
+12:00:42.543 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.544 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.544 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.544 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.544 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.544 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '7'
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '7'
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.545 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '8'
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '8'
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.546 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '20'
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '20'
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '19'
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '19'
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.547 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.548 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '9'
+12:00:42.548 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.548 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.548 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '9'
+12:00:42.548 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.549 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '10'
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '10'
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '24'
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '24'
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.550 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '23'
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '23'
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '7'
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.551 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '7'
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '11'
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.552 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '11'
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.553 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.554 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.554 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.554 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.554 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.554 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '12'
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '12'
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.555 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '13'
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '13'
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '8'
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '8'
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.556 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '14'
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '14'
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.557 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '15'
+12:00:42.558 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '15'
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new transition with transitionID '9'
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding transition to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added new transition to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new transition with transitionID '9'
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.559 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Creating new place with placeID '16'
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding place to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added place to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.input.PntInputHandler - Successfully created new place with placeID '16'
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (T->P) to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (T->P) to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Adding arc (P->T) to Petri net
+12:00:42.560 [AWT-EventQueue-0] DEBUG monalisa.data.pn.PetriNet - Successfully added arc (P->T) to Petri net
+12:00:42.579 [AWT-EventQueue-0] INFO  monalisa.data.input.PntInputHandler - Successfully loaded Petri net from .pnt file
+12:00:42.579 [AWT-EventQueue-0] INFO  monalisa.Project - Initializing tools.
+12:00:42.598 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.MonaLisaLayout - Initializing Layout
+12:00:42.599 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.MonaLisaLayout - Finished initializing layout
+12:00:42.599 [AWT-EventQueue-0] INFO  monalisa.synchronisation.Synchronizer - Translating Petri net to graph for NetViewer
+12:00:42.603 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE Suc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE Suc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE eSuc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE eSuc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE Glc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE Glc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE Frc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE Frc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE UDPglc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE UDPglc
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE G6P
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE G6P
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE F6P
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE F6P
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE G1P
+12:00:42.604 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE G1P
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE UDP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE UDP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE UTP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE UTP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE ATP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE ATP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE ADP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE ADP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE S6P
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE S6P
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE Pi
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE Pi
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE PP
+12:00:42.605 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE PP
+12:00:42.612 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE starch
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE starch
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: PLACE AMP
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: PLACE AMP
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SucTrans
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SucTrans
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION Inv
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION Inv
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION HK
+12:00:42.613 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION HK
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION FK
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION FK
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SPP
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SPP
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION StaSy_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION StaSy_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION Glyc_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION Glyc_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION ATPcons_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION ATPcons_b_
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION PPase
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION PPase
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION rstarch
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION rstarch
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION geSuc
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION geSuc
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SuSy
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SuSy
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SuSy_rev
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SuSy_rev
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SPS
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SPS
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION SPS_rev
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION SPS_rev
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION PGI
+12:00:42.614 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION PGI
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION PGI_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION PGI_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION PGM
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION PGM
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION PGM_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION PGM_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION NDPkin
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION NDPkin
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION NDPkin_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION NDPkin_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION UGPase_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION UGPase_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION UGPase
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION UGPase
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION AdK
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION AdK
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Creating new NetViewerNode: TRANSITION AdK_rev
+12:00:42.615 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerNode - Successfully created NetViewerNode: TRANSITION AdK_rev
+12:00:42.618 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.618 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.619 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.619 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.619 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.619 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.620 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.621 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.622 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.623 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.624 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.625 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Creating new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewerEdge - Successfully created new NetViewerEdge
+12:00:42.626 [AWT-EventQueue-0] INFO  monalisa.synchronisation.Synchronizer - Successfully translated Petri net to graph for NetViewer
+12:00:42.626 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating new project from external file.
+12:00:42.626 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Unloading any existing previous projects
+12:00:42.627 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Successfully unloaded any existing previous projects
+12:00:42.627 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Loading new project
+12:00:42.628 [AWT-EventQueue-0] INFO  monalisa.Project - Creating UI for Analyze Frame.
+12:00:42.628 [AWT-EventQueue-0] INFO  monalisa.Project - Laying out tools.
+12:00:42.631 [AWT-EventQueue-0] INFO  monalisa.tools.tinv.TInvariantTool - Checking whether Petri net is CTI
+12:00:42.632 [AWT-EventQueue-0] WARN  monalisa.tools.tinv.TInvariantTool - T-Invariants could not be found
+12:00:42.633 [AWT-EventQueue-0] INFO  monalisa.tools.pinv.PInvariantTool - Checking whether Petri net is CPI
+12:00:42.634 [AWT-EventQueue-0] WARN  monalisa.tools.pinv.PInvariantTool - P-Invariants could not be found
+12:00:42.690 [AWT-EventQueue-0] INFO  monalisa.Project - Finished laying out tools.
+12:00:42.690 [AWT-EventQueue-0] INFO  monalisa.Project - Finished creating UI for Analyze Frame.
+12:00:42.707 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Initializing NetViewer
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'tinvColor' to Color
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'tinvColorR' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'tinvColorR' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'tinvColorG' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'tinvColorG' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'tinvColorB' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'tinvColorB' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'pinvColor' to Color
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'pinvColorR' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'pinvColorR' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'pinvColorG' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'pinvColorG' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'pinvColorB' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'pinvColorB' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'mctsColor' to Color
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mctsColorR' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mctsColorR' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mctsColorG' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mctsColorG' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mctsColorB' as String
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mctsColorB' found, returning as String.
+12:00:42.708 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'heatMapColor' to Color
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'heatMapColorR' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'heatMapColorR' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'heatMapColorG' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'heatMapColorG' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'heatMapColorB' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'heatMapColorB' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'knockedOutColor' to Color
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'knockedOutColorR' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'knockedOutColorR' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'knockedOutColorG' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'knockedOutColorG' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'knockedOutColorB' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'knockedOutColorB' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'alsoKnockedOutColor' to Color
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'alsoKnockedOutColorR' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'alsoKnockedOutColorR' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'alsoKnockedOutColorG' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'alsoKnockedOutColorG' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'alsoKnockedOutColorB' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'alsoKnockedOutColorB' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'notKnockedOutColor' to Color
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notKnockedOutColorR' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notKnockedOutColorR' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notKnockedOutColorG' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notKnockedOutColorG' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'notKnockedOutColorB' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'notKnockedOutColorB' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'backgroundColor' to Color
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'backgroundColorR' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'backgroundColorR' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'backgroundColorG' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'backgroundColorG' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'backgroundColorB' as String
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'backgroundColorB' found, returning as String.
+12:00:42.709 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'mcsObjectivColor' to Color
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsObjectivColorR' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsObjectivColorR' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsObjectivColorG' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsObjectivColorG' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsObjectivColorB' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsObjectivColorB' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Casting 'mcsColor' to Color
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsColorR' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsColorR' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsColorG' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsColorG' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'mcsColorB' as String
+12:00:42.710 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'mcsColorB' found, returning as String.
+12:00:42.710 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Initializing NetViewer frame
+12:00:42.818 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Initializing VisualizationViewer
+12:00:42.914 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Finished initializing VisualizationViewer
+12:00:42.914 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Initializing NetViewer GUI
+12:00:42.914 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Initializing MenuBar
+12:00:42.918 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully initialized MenuBar
+12:00:42.918 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Initializing ToolBar
+12:00:42.920 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.ToolBar - Initializing ToolBar
+12:00:42.986 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.ToolBar - Successfully initialized ToolBar
+12:00:42.986 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Adding Invariants ComboBoxes
+12:00:42.986 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Filling with T-Invariants, if available
+12:00:42.987 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Filling with MCTS, if available
+12:00:42.987 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding MCTS to ComboBox
+12:00:42.987 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added MCTS to ComboBox
+12:00:42.987 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Filling with MCS, if available
+12:00:42.987 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding MCS to ComboBox
+12:00:42.987 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added MCS to ComboBox
+12:00:42.987 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Filling with P-Invariants, if available
+12:00:42.987 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Adding MouseMode buttons to list
+12:00:42.987 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Creating SearchBar
+12:00:42.988 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.SearchBar - Initializing SearchBar
+12:00:42.998 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.SearchBar - Successfully initialized SearchBar
+12:00:42.998 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:42.998 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'SearchBar' to Boolean
+12:00:42.998 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'SearchBar' as String
+12:00:42.998 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'SearchBar' found, returning as String.
+12:00:42.998 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'SearchBar' to Boolean
+12:00:42.998 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:43.000 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:43.002 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:43.002 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Creating LogicalPlaceFrame
+12:00:43.003 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.LogicalPlacesFrame - Initializing LogicalPlacesFrame
+12:00:43.547 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.LogicalPlacesFrame - Finished initializing LogicalPlacesFrame
+12:00:43.547 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully initialized ToolBar
+12:00:43.567 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Updating number of places, transitions and edges in InfoBar
+12:00:43.572 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully updated number of places, tranitions and edges in InfoBar
+12:00:43.573 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Updating search bar
+12:00:43.574 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Finished updating search bar
+12:00:43.574 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Marking button of current MouseMode
+12:00:43.574 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Successfully marked button of current MouseMode
+12:00:43.575 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Finished initializing GUI
+12:00:43.575 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Using imported layout information if available
+12:00:43.575 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Checking for Spped Import
+12:00:43.575 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Finished initializing NetViewer frame
+12:00:43.575 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Finished initializing NetViewer
+12:00:43.579 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Simulator' to ToolBar
+12:00:43.580 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:43.580 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'Simulator' to Boolean
+12:00:43.580 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'Simulator' as String
+12:00:43.580 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'Simulator' found, returning as String.
+12:00:43.580 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'Simulator' to Boolean
+12:00:43.580 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:43.581 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:43.581 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:43.581 [AWT-EventQueue-0] INFO  monalisa.addons.tokensimulator.TokenSimPanel - Initiating TokenSimPanel
+12:00:43.642 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Centrality' to ToolBar
+12:00:43.642 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:43.642 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'Centrality' to Boolean
+12:00:43.642 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'Centrality' as String
+12:00:43.642 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'Centrality' found, returning as String.
+12:00:43.643 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'Centrality' to Boolean
+12:00:43.643 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:43.643 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:43.644 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:43.644 [AWT-EventQueue-0] INFO  monalisa.addons.centrality.CentralityPanel - Initializing CentralityPanel
+12:00:43.658 [AWT-EventQueue-0] INFO  monalisa.addons.centrality.CentralityPanel - Successfully initialized CentralityPanel
+12:00:43.660 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Annotations' to ToolBar
+12:00:43.660 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:43.660 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'Annotations' to Boolean
+12:00:43.660 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'Annotations' as String
+12:00:43.660 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'Annotations' found, returning as String.
+12:00:43.660 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'Annotations' to Boolean
+12:00:43.660 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:43.661 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:43.661 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:43.661 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Initializing AnnotationsPanel
+12:00:43.695 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Initializing ModelInformationFrame
+12:00:43.703 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.ModelInformationFrame - Starting ModelInformations part
+12:00:43.703 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.ModelInformationFrame - Finished ModelInformations part and initializing ModelInformationFrame
+12:00:43.703 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Started MIRIAM part
+12:00:43.704 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Setting identifiers to 'false'
+12:00:43.704 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Finished setting identifiers to 'false'
+12:00:43.704 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM part
+12:00:43.704 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Started SBO part
+12:00:43.708 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Reading from 'SBO_XML.xml'
+12:00:43.884 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Adding SBO tooltips
+12:00:43.893 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Finished SBO part
+12:00:43.893 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Starting MIRIAM registry part
+12:00:43.894 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Reading from miriam_registry.xml
+12:00:44.010 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Adding MIRIAM URLs
+12:00:44.011 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEBI'
+12:00:44.012 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Enzyme Nomenclature'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Knowledgebase'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Taxonomy'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioModels Database'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry collection'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICD'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InterPro'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Pathway'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Compound'
+12:00:44.013 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Reaction'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIM'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PIRSF'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Reactome'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOI'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SGD'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Systems Biology Ontology'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Drug'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Glycan'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pfam'
+12:00:44.014 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Nucleotide Sequence Database'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FlyBase'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wormpep'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PROSITE'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-substance'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-compound'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'arXiv'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Genome Database'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Reaction'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RefSeq'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Transport Classification Database'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniParc'
+12:00:44.015 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MINT'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Interacting Proteins'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Signaling Gateway'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RESID'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Protein'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Gene'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TAIR Locus'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HMDB'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LIPID MAPS'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PeptideAtlas'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GEO'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Evidence Code Ontology'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Modification Ontology'
+12:00:44.016 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Saccharomyces genome database pathways'
+12:00:44.017 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioGRID'
+12:00:44.017 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS'
+12:00:44.017 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Family'
+12:00:44.017 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPRINT'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand Expo'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aclame'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISBN'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PRIDE'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for '3DMET'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FMA'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MatrixDB'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Gene'
+12:00:44.018 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genes'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BRENDA'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubChem-bioassay'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Commons'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOVERGEN'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Melanoma Molecular Map Project Biomaps'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiPathways'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MACiE'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase Sequence'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Gene'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Ontology'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rhea'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unipathway'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL compound'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChEMBL target'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK Kinetic Record'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ligand-Gated Ion Channel database'
+12:00:44.019 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Pathways'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Disease'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Drug'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Drug'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TTD Target'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuronDB'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroMorpho'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemIDplus'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSystems'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Chemical'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Disease'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CTD Gene'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioNumbers'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'T3DB'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Small Molecule Pathway Database'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Protein'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneDB'
+12:00:44.020 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TEDDY'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KiSAO'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Interactions Ontology'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Type Ontology'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Brenda Tissue Ontology'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PATO'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Chemical Component Dictionary'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycomeDB'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LipidBank'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Orthology'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProDom'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SMART'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conserved Domain Database'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Relation Ontology'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molecular Modeling Database'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMEx'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'iRefWeb'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Microbial Protein Interaction Database'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoSite Residue'
+12:00:44.021 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NeuroLex'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology for Biomedical Investigations'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SABIO-RK EC Record'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ontology of Physics for Biology'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JWS Online'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ModelDB'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiWiki'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCI Pathway Interaction Database: Pathway'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Model'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Database of Quantitative Cellular Signaling: Pathway'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unit Ontology'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ClinicalTrials.gov'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemSpider'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIt'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCatalogue'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Ontology'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMIA'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemBank'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CSA'
+12:00:44.022 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Candida Genome Database'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AntWeb'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PubMed Central'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AmoebaDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CryptoDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PlasmoDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GiardiaDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MicrosporidiaDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ToxoDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TrichDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TriTrypDB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP insertion DB'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BeetleBase'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BOLD Taxonomy'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbEST'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbProbe'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'dbSNP'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniSTS'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoGene'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GABI'
+12:00:44.023 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GreenGenes'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GRIN Plant Taxonomy'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Locus'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Transcript'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'H-InvDb Protein'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Sequence Metainformation'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOMD Taxonomy'
+12:00:44.024 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IRD Segment Sequence'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISFinder'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Collection of Microorganisms'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Taxon'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Integrated Microbial Genomes Gene'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MaizeGDB Locus'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBank'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NITE Biological Research Center Catalogue'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pseudomonas Genome Database'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene protein'
+12:00:44.025 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene genes'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene Taxonomy'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gramene QTL'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sol Genomics Network'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Xenbase'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioPortal'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIRIAM Registry resource'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EDAM Ontology'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Model Database'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AGD'
+12:00:44.026 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArachnoServer'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCyc'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAZy'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOA'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaleoDB'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Compulyeast'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DisProt'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EchoBASE'
+12:00:44.027 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'eggNOG'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Bacteria'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Protists'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Metazoa'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Plants'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Ensembl Fungi'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HCVDB'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genatlas'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH superfamily'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CATH domain'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneFarm'
+12:00:44.028 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GPCRDB'
+12:00:44.029 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HOGENOM'
+12:00:44.029 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneTree'
+12:00:44.029 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HSSP'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser tuberculosis'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser leprae'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser marinum'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MycoBrowser smegmatis'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Orphanet'
+12:00:44.202 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OrthoDB'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Peroxibase'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhylomeDB'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubstrateDB'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CutDB'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtClustDB'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PMP'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet ProteinCard'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProtoNet Cluster'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'REBASE'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SWISS-MODEL'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VectorBase'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Human Disease Ontology'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Cycle Ontology'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRBase mature sequence'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'nextProt'
+12:00:44.203 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAS'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Genome'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Metagenome'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NARCIS'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Japan Chemical Substance Dictionary'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pathway Ontology'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Sequence Read Archive'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ScerTF'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PharmGKB Gene'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'miRNEST'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NAPP'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v3'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VIRsiRNA'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ELM'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MimoDB'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SitEx'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BYKdb'
+12:00:44.204 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Conoserver'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TopFind'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MIPModDB'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Image Library'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'COMBINE specifications'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Phenotype'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ZFIN Expression'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CABRI'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CYGD'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HUGE'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BindingDB'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STRING'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STITCH'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Anatomical Therapeutic Chemical Vetinary'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phenol-Explorer'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SNOMED CT'
+12:00:44.205 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2012'
+12:00:44.206 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KnapSack'
+12:00:44.463 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Canadian Drug Product Database'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MassBank'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HomoloGene'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Compound'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ABS'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'APD'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ChemDB'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DPV'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR receptor'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Aceview Worm'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ASAP'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ATCC'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BDGP EST'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase Gene'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT LIGM'
+12:00:44.464 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Worfdb'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NEXTDB'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Genome Network'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SoyBase'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HAMAP'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rouge'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ArrayExpress Platform'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CGSC Strain'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB DNA'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Protein'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Locus'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DragonDB Allele'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ISSN'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MEROPS Family'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MGED Ontology'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NASC code'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NIAEST'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pazar Transcription Factor'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Plant Ontology'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RNA Modification Database'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Independent Component'
+12:00:44.465 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway-Dependent Component'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Science Signaling Pathway'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeBASE'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tetrahymena Genome Database'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CMR Gene'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TIGRFAMS'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Animal TFDB Family'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR family'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBG2 Introns'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Spectral Database for Organic Compounds'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Vbase2'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SPIKE Map'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'METLIN'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GeneCards'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MMRRC'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Reaction'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Enzyme'
+12:00:44.466 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Pathway'
+12:00:44.714 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UM-BBD Biotransformation Rule'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'mirEX'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Dictybase EST'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IMGT HLA'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Flystock'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OPM'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Allergome'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PomBase'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPA'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JAX Mice'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'uBio NameBank'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YeTFasCo'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TarBase'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CharProt'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Protein'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OMA Group'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCBI Protein'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GenPept'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniGene'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Receptor'
+12:00:44.715 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BitterDB Compound'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioProject'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSample'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PiroplasmaDB'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unite'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NCIm'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ProGlycProt'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PolBase'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NucleaRDB'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SUPFAM'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rice Genome Annotation Project'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PINA'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tissue List'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Biography'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGNC Symbol'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioSharing'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FungiDB'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DARC'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DRSC'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Schizosaccharomyces'
+12:00:44.716 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'OriDB Saccharomyces'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PSCDB'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SCOP'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ENA'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOMMINO'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Node'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Consensus CDS'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Locus Reference Genomic'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HPRD'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Gene'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GXA Expt'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MetaboLights'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Bibliography Number'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ORCID'
+12:00:44.717 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChI'
+12:00:44.867 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Wikipedia (En)'
+12:00:44.867 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Kinase'
+12:00:44.867 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PhosphoPoint Phosphoprotein'
+12:00:44.867 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'InChIKey'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UniProt Isoform'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Environ'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CLDB'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Experimental Factor Ontology'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'HGMD'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AphidBase Transcript'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Affymetrix Probeset'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'TreeFam'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CAPS-DB'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cube db'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IDEAL'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'STAP'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Pocketome'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD genome'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GOLD metadata'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Protocol'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BugBase Expt'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Tree of Life'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VariO'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViPR Strain'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EPD'
+12:00:44.868 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'RFAM'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Fungal Barcode'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AFTOL'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Locus'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AspGD Protein'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DrugBank Target'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'AutDB'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BacMap Map'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee family'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee gene'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee stage'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Bgee organ'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'BioCarta Pathway'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PANTHER Pathway Component'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Profile'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database GC-MS spectra'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Reference Substance'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Golm Metabolome Database Analyte'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IntAct Molecule'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DEPOD'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Pathways'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Cell Signaling Technology Antibody'
+12:00:44.869 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'National Drug Code'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Phytozome Locus'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SubtiList'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DailyMed'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Drug'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'SIDER Side Effect'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WikiGenes'
+12:00:44.870 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Broad Fungal Genome Initiative'
+12:00:45.077 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Coriell Cell Repositories'
+12:00:45.077 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'CORUM'
+12:00:45.077 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'EcoliWiki'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Genome Properties'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JSTOR'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Mouse Adult Gross Anatomy'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'UBERON'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Unimod'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VBRC'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ViralZone'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Ontology Reference'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database qTL'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Rat Genome Database strain'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DOOR'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Degradome Database'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DBD'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'DATF'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'IUPHAR ligand'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Molbase'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YRC PDR'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Yeast Intron Database'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Fly'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Human'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Mouse'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FuncBase Yeast'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'YDPM'
+12:00:45.078 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'WormBase RNAi'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'FunCat'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PASS2'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg element'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'ICEberg family'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Genus'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'VFDB Gene'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MeSH 2013'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Module'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'KEGG Disease'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'MedlinePlus'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'LigandBox'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'GlycoEpitope'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'JCGGDB'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Gene'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'NONCODE v4 Transcript'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Gene'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Mutant'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Strain'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryzabase Stage'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Oryza Tag Line'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Gene Wiki'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Organism'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'PaxDb Protein'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.MiriamRegistryWrapper - Creating new MiriamRegistryWrapper for 'Protein Data Bank Ligand'
+12:00:45.079 [AWT-EventQueue-0] DEBUG monalisa.addons.annotations.AnnotationsPanel - Finished MIRIAM registry part
+12:00:45.079 [AWT-EventQueue-0] INFO  monalisa.addons.annotations.AnnotationsPanel - Successfully initialized AnnotationsPanel
+12:00:45.082 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'Topology' to ToolBar
+12:00:45.082 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:45.082 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'Topology' to Boolean
+12:00:45.082 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'Topology' as String
+12:00:45.409 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'Topology' found, returning as String.
+12:00:45.409 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'Topology' to Boolean
+12:00:45.409 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:45.410 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:45.410 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:45.410 [AWT-EventQueue-0] INFO  monalisa.addons.topological.TopologyPanel - Initializing TopologyPanel
+12:00:45.415 [AWT-EventQueue-0] INFO  monalisa.addons.topological.TopologyPanel - Successfully initialized TopologyPanel
+12:00:45.417 [AWT-EventQueue-0] INFO  monalisa.addons.AddonPanel - Adding 'NetProperties' to ToolBar
+12:00:45.417 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding new tab to MenuBar of NetViewer
+12:00:45.417 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to cast 'NetProperties' to Boolean
+12:00:45.417 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'NetProperties' as String
+12:00:45.417 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'NetProperties' found, returning as String.
+12:00:45.417 [AWT-EventQueue-0] DEBUG monalisa.Settings - Successfully cast 'NetProperties' to Boolean
+12:00:45.417 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Adding tab to MenuBar
+12:00:45.418 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.ToolBar - Successfully added tab to MenuBar
+12:00:45.418 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added new tab to MenuBar of NetViewer
+12:00:45.425 [AWT-EventQueue-0] INFO  monalisa.addons.netproperties.NetPropertiesPanel - Initializing NetPropertiesPanel
+12:00:45.433 [AWT-EventQueue-0] INFO  monalisa.addons.netproperties.NetPropertiesPanel - Successfully initialized NetPropertiesPanel
+12:00:45.433 [AWT-EventQueue-0] INFO  monalisa.Project - Transfering stored data to addon panels
+12:00:45.433 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file '/home/daniel/.monalisaSettings'
+12:00:45.438 [AWT-EventQueue-0] INFO  monalisa.addons.treeviewer.TreeViewer - Initializing TreeViewer
+12:00:45.441 [AWT-EventQueue-0] INFO  monalisa.addons.treeviewer.ClusterTreeImpl - Creating empty ClusterTreeImpl with standard values
+12:00:45.443 [AWT-EventQueue-0] INFO  monalisa.addons.treeviewer.ClusterTreeImpl - Successfully created empty ClusterTreeImpl with standard values
+12:00:45.452 [AWT-EventQueue-0] DEBUG monalisa.addons.treeviewer.TreeViewer - Setting transformers for TreeViewer
+12:00:45.456 [AWT-EventQueue-0] INFO  monalisa.addons.treeviewer.TreeViewer - Successfully initialized TreeViewer
+12:00:45.456 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Successfully loaded new project
+12:00:45.456 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Successfully created new project from a chosen Petri net file
+12:00:48.281 [AWT-EventQueue-0] INFO  monalisa.Project - Change in requirements for 'Elementary modes (EM) or transition invariants'
+12:00:48.281 [AWT-EventQueue-0] INFO  monalisa.Project - Selecting requirements for tool configuration of 'Elementary modes (EM) or transition invariants' that are not yet calculated
+12:00:49.272 [AWT-EventQueue-0] INFO  monalisa.Project - Change in requirements for 'Place invariants'
+12:00:49.273 [AWT-EventQueue-0] INFO  monalisa.Project - Selecting requirements for tool configuration of 'Place invariants' that are not yet calculated
+12:00:50.257 [AWT-EventQueue-0] DEBUG monalisa.gui.MainDialog - Action registered in MainDialog: MENU_PROJECT_RUN
+12:00:50.257 [AWT-EventQueue-0] INFO  monalisa.Project - Running selected tools.
+12:00:50.258 [AWT-EventQueue-0] INFO  monalisa.Project - Setting projectChanged to true
+12:00:50.258 [Thread-1] INFO  monalisa.Project - Checking requirements for tool Elementary modes (EM) or transition invariants
+12:00:50.258 [Thread-1] INFO  monalisa.Project - Requirements for tool Elementary modes (EM) or transition invariants met
+12:00:50.262 [Thread-1] INFO  monalisa.Project - TInvariantTool started
+12:00:50.265 [Thread-2] INFO  monalisa.tools.tinv.TInvariantTool - Running TInvariantTool
+12:00:50.266 [Thread-2] INFO  monalisa.tools.tinv.TInvariantCalculator - Initializing TInvariantCalculator
+12:00:50.267 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Creating temporary .pnt to export Petri net to
+12:00:50.273 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Trying to export Petri net to temporary .pnt file for T-Invariant calculation
+12:00:50.273 [Thread-2] INFO  monalisa.data.output.TinvCalcOutputHandler - Exporting Petri net to calculate T-Invariants
+12:00:50.285 [Thread-2] INFO  monalisa.data.output.TinvCalcOutputHandler - Successfully exported Petri net to calculate P-Invariants
+12:00:50.285 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Computing T-Invariants based on temporary .pnt file
+12:00:50.285 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - OS determined to be Unix
+12:00:50.285 [Thread-2] DEBUG monalisa.util.FileUtils - Extracting resource 'tinv_unix'
+12:00:50.286 [Thread-2] DEBUG monalisa.util.FileUtils - Successfully extracted resource 'tinv_unix'
+12:00:50.286 [Thread-2] DEBUG monalisa.util.FileUtils - Extracting resource 'file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/resources/tinv_unix'
+12:00:50.286 [Thread-2] DEBUG monalisa.util.FileUtils - Successfully extracted resource 'file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/resources/tinv_unix'
+12:00:50.287 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Starting actual process to compute T-Invariants
+12:00:50.327 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Successfully computed T-Invariants
+12:00:50.327 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Marking output files for deletion
+12:00:50.328 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Successfully marked output files for deletion
+12:00:50.328 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Importing T-Invariants calculated by external tool
+12:00:50.329 [Thread-2] INFO  monalisa.data.input.TInvParser - Importing T-Invariants
+12:00:50.330 [Thread-2] INFO  monalisa.data.input.TInvParser - Successfully imported T-Invariants
+12:00:50.330 [Thread-2] DEBUG monalisa.tools.tinv.TInvariantCalculator - Successfully imported T-Invariants calculated by external tool
+12:00:50.331 [Thread-2] INFO  monalisa.tools.tinv.TInvariantTool - Successfully ran TInvariantTool
+12:00:50.331 [Thread-2] INFO  monalisa.tools.tinv.TInvariantTool - Checking whether Petri net is CTI
+12:00:50.331 [Thread-2] INFO  monalisa.tools.tinv.TInvariantTool - Petri net is CTI
+12:00:50.332 [Thread-1] DEBUG monalisa.Project - Putting result.
+12:00:50.332 [Thread-1] DEBUG monalisa.Project - Finished putting result
+12:00:50.332 [Thread-1] INFO  monalisa.Project - Setting tool results for Elementary modes (EM) or transition invariants
+12:00:50.333 [Thread-1] INFO  monalisa.Project - TInvariantTool finished
+12:00:50.333 [Thread-1] INFO  monalisa.Project - Checking requirements for tool Place invariants
+12:00:50.333 [Thread-1] INFO  monalisa.Project - Requirements for tool Place invariants met
+12:00:50.333 [Thread-1] INFO  monalisa.Project - PInvariantTool started
+12:00:50.333 [Thread-3] INFO  monalisa.tools.pinv.PInvariantTool - Running PInvariantTool
+12:00:50.334 [Thread-3] INFO  monalisa.tools.pinv.PInvariantCalculator - Initializing PInvariantCalculator
+12:00:50.334 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Creating temporary .pnt to export Petri net to
+12:00:50.334 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Trying to export Petri net to temporary .pnt file for P-Invariant calculation
+12:00:50.334 [Thread-3] INFO  monalisa.data.output.PinvCalcOutputHandler - Exporting Petri net to calculate P-Invariants
+12:00:50.343 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding T-Invariants to ComboBox
+12:00:50.343 [Thread-3] INFO  monalisa.data.output.PinvCalcOutputHandler - Successfully exported Petri net to calculate P-Invariants
+12:00:50.343 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Computing P-Invariants based on temporary .pnt file
+12:00:50.343 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Getting external tool location based on OS
+12:00:50.343 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - OS determined to be Unix
+12:00:50.343 [Thread-3] DEBUG monalisa.util.FileUtils - Extracting resource 'tinv_unix'
+12:00:50.344 [Thread-3] DEBUG monalisa.util.FileUtils - Successfully extracted resource 'tinv_unix'
+12:00:50.344 [Thread-3] DEBUG monalisa.util.FileUtils - Extracting resource 'file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/resources/tinv_unix'
+12:00:50.344 [Thread-3] DEBUG monalisa.util.FileUtils - Successfully extracted resource 'file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/resources/tinv_unix'
+12:00:50.344 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Starting actual process to compute P-Invariants
+12:00:50.349 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 1 (10)
+12:00:50.350 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 1 (10)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 2 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 2 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 3 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 3 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 4 (14)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 4 (14)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 5 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 5 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 6 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 6 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 7 (13)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 7 (13)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 8 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 8 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 9 (10)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 9 (10)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 10 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 10 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 11 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 11 (2)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 12 (13)
+12:00:50.351 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 12 (13)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 13 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 13 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 14 (8)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 14 (8)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 15 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 15 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 16 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 16 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 17 (11)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 17 (11)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 18 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 18 (12)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 19 (10)
+12:00:50.352 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 19 (10)
+12:00:50.352 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Generating combination of all T-Invariants for a ComboBox
+12:00:50.353 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (25)
+12:00:50.354 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (14)
+12:00:50.355 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (21)
+12:00:50.355 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (16)
+12:00:50.358 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Enabling Listeners for T-Invariants
+12:00:50.358 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added T-Invariants to ComboBox
+12:00:50.358 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Finished checking whether Petri net changed
+12:00:50.392 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Successfully computed P-Invariants
+12:00:50.392 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Marking output files for deletion
+12:00:50.392 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Successfully marked output files for deletion
+12:00:50.392 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Importing P-Invariants calculated by external tool
+12:00:50.393 [Thread-3] INFO  monalisa.data.input.PInvParser - Importing P-Invariants
+12:00:50.394 [Thread-3] INFO  monalisa.data.input.PInvParser - Successfully imported P-Invariants
+12:00:50.394 [Thread-3] DEBUG monalisa.tools.pinv.PInvariantCalculator - Successfully imported P-Invariants calculated by external tool
+12:00:50.394 [Thread-3] INFO  monalisa.tools.pinv.PInvariantTool - Successfully ran PInvariantTool
+12:00:50.394 [Thread-1] DEBUG monalisa.Project - Putting result.
+12:00:50.394 [Thread-1] DEBUG monalisa.Project - Finished putting result
+12:00:50.394 [Thread-1] INFO  monalisa.Project - Setting tool results for Place invariants
+12:00:50.395 [Thread-1] INFO  monalisa.Project - PInvariantTool finished
+12:00:50.397 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding T-Invariants to ComboBox
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 1 (10)
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.398 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.398 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 1 (10)
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.398 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.398 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 2 (2)
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 2 (2)
+12:00:50.398 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.399 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.399 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 3 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 3 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 4 (14)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 4 (14)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 5 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 5 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 6 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 6 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 7 (13)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 7 (13)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 8 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 8 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 9 (10)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 9 (10)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 10 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 10 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 11 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 11 (2)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 12 (13)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 12 (13)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.399 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.399 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 13 (12)
+12:00:50.399 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 13 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 14 (8)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 14 (8)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 15 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 15 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 16 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 16 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 17 (11)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 17 (11)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 18 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 18 (12)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 19 (10)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 19 (10)
+12:00:50.400 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Generating combination of all T-Invariants for a ComboBox
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (25)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (14)
+12:00:50.400 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (21)
+12:00:50.401 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.TinvWrapper - Created new TinvWrapper 0 (16)
+12:00:50.402 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.402 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.402 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.402 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.TinvItemListener - New T-Invariant selected, changing colouring
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Enabling Listeners for T-Invariants
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added T-Invariants to ComboBox
+12:00:50.403 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Adding P-Invariants to ComboBox
+12:00:50.404 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.PinvWrapper - Created new PinvWrapper 0 (3)
+12:00:50.404 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.PinvItemListener - New P-Invariant selected, changing colouring
+12:00:50.404 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.404 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.404 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.PinvWrapper - Created new PinvWrapper 1 (9)
+12:00:50.404 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.PinvWrapper - Created new PinvWrapper 2 (3)
+12:00:50.404 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Generating combination of all P-Invariants
+12:00:50.405 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.wrapper.PinvWrapper - Created new PinvWrapper -1 (12)
+12:00:50.405 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.listener.PinvItemListener - New P-Invariant selected, changing colouring
+12:00:50.405 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Resetting color of all vertices to default
+12:00:50.405 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully set color of all vertices to default
+12:00:50.405 [AWT-EventQueue-0] INFO  monalisa.addons.netviewer.NetViewer - Successfully added P-Invariants to ComboBox
+12:00:50.405 [AWT-EventQueue-0] DEBUG monalisa.addons.netviewer.NetViewer - Finished checking whether Petri net changed
+12:00:58.169 [AWT-EventQueue-0] DEBUG monalisa.gui.MainDialog - Action registered in MainDialog: MENU_FILE_EXPORT_PETRINET_ACTION
+12:00:58.170 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Exporting Petri net
+12:00:58.175 [AWT-EventQueue-0] DEBUG monalisa.Settings - Trying to return key 'latestDirectory' as String
+12:00:58.175 [AWT-EventQueue-0] DEBUG monalisa.Settings - Key 'latestDirectory' found, returning as String.
+12:00:58.182 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.SbmlOutputHandler - Checking whether file is in SBML format
+12:00:58.182 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.SbmlOutputHandler - Checking whether file is in SBML format
+12:00:58.186 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.SbmlOutputHandler - Checking whether file is in SBML format
+12:00:58.186 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.SbmlOutputHandler - Checking whether file is in SBML format
+12:01:00.585 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.PntOutputHandler - Checking whether file is in pnt format
+12:01:00.586 [Basic L&F File Loading Thread] DEBUG monalisa.data.output.PntOutputHandler - Checking whether file is in pnt format
+12:01:04.576 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file '/home/daniel/.monalisaSettings'
+12:01:04.581 [AWT-EventQueue-0] INFO  monalisa.Settings - Writing current properties to file '/home/daniel/.monalisaSettings'
+12:01:04.582 [AWT-EventQueue-0] INFO  monalisa.data.output.PntOutputHandler - Exporting Petri net to pnt format
+12:01:04.591 [AWT-EventQueue-0] INFO  monalisa.data.output.PntOutputHandler - Successfully exported Petri net to pnt format
+12:01:04.591 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Succesfully exported Petri net
+12:01:07.640 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Starting shutdown process for MonaLisa
+12:01:07.641 [AWT-EventQueue-0] INFO  monalisa.Project - Checking whether project has changed
+12:01:07.641 [AWT-EventQueue-0] INFO  monalisa.Project - projectChanged: true
+12:01:10.169 [AWT-EventQueue-0] INFO  monalisa.gui.MainDialog - Shutdown process successful

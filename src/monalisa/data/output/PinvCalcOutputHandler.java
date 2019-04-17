@@ -98,7 +98,7 @@ public final class PinvCalcOutputHandler {
                 formatter.printf(" %d", capacity);
 
             if (transition.hasProperty("time"))
-                formatter.printf(" %d", transition.getProperty("time"));
+                formatter.printf(" %d", transition.getValueOrDefault("time", 0));
             else
                 formatter.print(" 0");
             formatter.println();
@@ -114,11 +114,11 @@ public final class PinvCalcOutputHandler {
             formatter.printf("       %d: %s", placeId(place),
                 sanitize(place.<String>getValueOrDefault("name", "")));
             if (place.hasProperty("priority"))
-                formatter.printf(" %d", place.getProperty("priority"));
+                formatter.printf(" %d", place.getValueOrDefault("priority", 0));
             else
                 formatter.print(" 0");
             if (place.hasProperty("time"))
-                formatter.printf(" %d", place.getProperty("time"));
+                formatter.printf(" %d", place.getValueOrDefault("time", 0));
             else
                 formatter.print(" 0");
             formatter.println();

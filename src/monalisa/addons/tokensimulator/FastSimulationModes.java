@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import monalisa.gui.MonaLisaFrame;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,6 +39,7 @@ public class FastSimulationModes extends MonaLisaFrame {
     
     private GillespieTokenSim ts;
     private final ArrayList<StochasticSimulator> fastSimModes;
+    private static final Logger LOGGER = LogManager.getLogger(FastSimulationModes.class);
 
     /**
      * Creates new form FastSimulationModes2
@@ -141,6 +144,7 @@ public class FastSimulationModes extends MonaLisaFrame {
         this.simulationPane.setTabComponentAt(simulationPane.getTabCount() - 2, new FastSimulationTabComponent(simulationPane, sim));
         this.simulationPane.setSelectedIndex(simulationPane.getTabCount() - 2);
         this.toFront();
+        LOGGER.info("New instance of StochasticSimulator has been initiated");
     }
 
     /**
@@ -159,6 +163,7 @@ public class FastSimulationModes extends MonaLisaFrame {
         if (this.fastSimModes.isEmpty()) {
             this.setVisible(false);
         }
+        LOGGER.info("Instance of StochasticSimulator has finished and stopped");
     }
 
     /**

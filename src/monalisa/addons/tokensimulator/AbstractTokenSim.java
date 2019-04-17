@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -41,6 +39,8 @@ import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.HighQualityRandom;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * The implementation of this class defines the rules and performs the simulation.
@@ -64,6 +64,8 @@ public abstract class AbstractTokenSim implements ChangeListener{
      * Number of steps simulated so far.
      */
     protected int stepsSimulated = 0;
+    private static final Logger LOGGER = LogManager.getLogger(AbstractTokenSim.class);
+
     //END VARIABLES DECLARATION
 
     //BEGIN INNER CLASSES
@@ -98,9 +100,10 @@ public abstract class AbstractTokenSim implements ChangeListener{
                                         tokenSim.setTokens(place.id(), tokens);
                                 }
                                 catch(NumberFormatException E){
+                                    LOGGER.error("NumberFormatException while checking input" + E);
                                     JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
                                 } catch (TokenSimulator.PlaceConstantException ex) {
-                                    Logger.getLogger(AbstractTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.error("ConstantPlaceException while checking for mouseaction " + ex);
                                 }
                             }
                         });
@@ -253,6 +256,7 @@ public abstract class AbstractTokenSim implements ChangeListener{
         /*
          * Iterate through all transitions that should be checked.
          */
+        LOGGER.info("Checking for all transitions if they are fireable");
         for(Transition transition : this.transitionsToCheck){
             /*
              * Assume that the transition is active.
@@ -280,6 +284,8 @@ public abstract class AbstractTokenSim implements ChangeListener{
                 this.tokenSim.activeTransitions.remove(transition);
             }
         }
+        LOGGER.info("Found all active Transitions");
+        LOGGER.debug("Checking for constant places in preposition to transition, to make sure these transitions are checked for in every step");
         /*
         After active transitions were computed, clear the transitionsToCheck-list. However, post-transitions of constant
         places must be retained as they should be checked every step.
@@ -311,7 +317,7 @@ public abstract class AbstractTokenSim implements ChangeListener{
                 */
                 this.tokenSim.setMathExpression((int) ((MathExpFrame) source).getInformation(this), exp);
             } catch (TokenSimulator.PlaceNonConstantException ex) {
-                Logger.getLogger(AbstractTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("NonConstant Place Exception while experiencing a change of state" + ex);
             }
             
             ((MathExpFrame) source).dispose();

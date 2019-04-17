@@ -23,6 +23,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -32,6 +34,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
     private final StochasticSimulator.ExactSSA sim;
     private final Map<Integer, JCheckBox> nonConstantPlacesToPlot = new HashMap<>();
     private final Map<Integer, JCheckBox> constantPlacesToPlot = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(StochasticSimulatorRunPanel.class);
     /**
      * Creates new form StochasticSimulatorRunPanel
      */
@@ -41,11 +44,12 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
     }
     
     public StochasticSimulatorRunPanel(StochasticSimulator.ExactSSA simN, String[] nonConstantPlacesNames, String[] constantPlacesNames){
+        LOGGER.info("Creating a new Panel for the stochastic simulator");
         initComponents();
         this.sim = simN;
         this.textScrollPane.setViewportView(sim.outTextArea);
         textScrollPane.setPreferredSize(new Dimension(400, 300));
-        
+        LOGGER.debug("Filling the stochastic simulator panel with data");
         for (int idx = 0; idx < nonConstantPlacesNames.length; idx++){
             String name = nonConstantPlacesNames[idx];
             JCheckBox cb = new JCheckBox(name, true);

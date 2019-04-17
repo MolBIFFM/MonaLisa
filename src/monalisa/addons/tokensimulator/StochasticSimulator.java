@@ -38,7 +38,6 @@ import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -54,6 +53,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * This class allows a simulation of a chemical system using the Gillespie-algorithm for stochastic simulations of mass-action-kinetic driven
@@ -210,6 +211,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * Object which processes the output files, e.g. crates a new file with the averages of all simulation runs.
      */
 //    private final OutputProcessor outputProcessor = new OutputProcessor();
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(TokenSimulator.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -314,7 +316,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 try {
                     this.constantPlacesExpRun[i] = new MathematicalExpression(constantPlacesExp[i]);
                 } catch (UnknownFunctionException | UnparsableExpressionException ex) {
-                    Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Unknown function or unparsable expression while trying to initiate a runnable and trying to express a constantplace property" + ex);
                 }
             }
             this.reactionRateConstantsRun = new MathematicalExpression[reactionRateConstants.length];
@@ -322,12 +324,13 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 try {
                     this.reactionRateConstantsRun[i] = new MathematicalExpression(reactionRateConstants[i]);
                 } catch (UnknownFunctionException | UnparsableExpressionException ex) {
-                    Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Unknown function or unparsable expression while trying to initiate a runnable and trying to express a reaction rate property" + ex);
                 }
             }
             /*
             Copy initial marking of non-constant places and calculate corresponding concentrations.
             */
+            LOGGER.debug("Copying initial marking of constant places and calculating the corrsesponding concentrations");
             this.concentrations = new HashMap<>();
             this.nonConstantMarkingRun = new long[nonConstantInitialMarking.length];
             for (int i = 0; i < nonConstantMarkingRun.length; i++){
@@ -347,6 +350,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
             Compute initial reaction rates.
             */
+            LOGGER.debug("Computing initial reaction rates");
             this.reactionRatesRun = new HashMap<>();
             this.sumOfRates = 0;
             for (int reactionIdx = 0; reactionIdx < reactionIDs.length; reactionIdx++){
@@ -363,12 +367,13 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
              * Add a tab with a text area which shows the information about this run.
              */
+            LOGGER.debug("Initializing tab with text area for information about this run");
             this.outTextArea.setEditable(false);
             outPanel = new StochasticSimulatorRunPanel(this, nonConstantPlaceNames, constantPlaceNames);
             
             this.outTextArea.setText(TokenSimulator.strings.get("SimStartedAt").concat(dateFormat.format(Calendar.getInstance().getTime())));
             simRunsTabbedPane.addTab("Simulation run "+ runNr, outPanel);
-            
+            LOGGER.debug("Start creation of output file");
             /*
              * Create the header of output file.
              */
@@ -405,7 +410,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 outputWriter.write(outSB.toString());                
                 outputWriter.close();                
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IO Exception while trying to write the String into a buffered Writer and in the according output File " + ex);
             }
         }
         
@@ -415,7 +420,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             try {
                 outputWriter = new BufferedWriter(new FileWriter(outputFileRun, true));
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while creating a new buffered writer for the outputfile");
             }
             this.isRunning = true;
             try {
@@ -464,6 +469,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                      * Check whether the sum of rates is empty, which indicates that no reaction can occur. If so, abort simulation.
                      */
                     if(sumOfRates <= 0){
+                        LOGGER.debug("SumOfRates is zero, therefore stop the stochastic simulation");
                         break;
                     }
                     /*
@@ -485,6 +491,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     //check if the simulation should go on or the maximal time is reached.
                     if (maxSimTime > 0 && (timePassed + nextFiringTime) > maxSimTime){
                         this.requestStop();
+                        LOGGER.debug("Maximum Time has been reached, therefore stopping the stochastic simulation");
                         break;
                     }
 
@@ -495,6 +502,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                      * Choose the reaction so the sum of reactions which are previous plus the rate of chosen one is greater than or equal to 
                      * the sum of all reaction rates multiplied by r2.
                      */
+                    LOGGER.debug("Calculating the reaction which will occur next");
                     int reaction = 0;
                     double ratesSum = 0;
                     for (Entry<Integer, Double> entr : reactionRatesRun.entrySet()){
@@ -513,6 +521,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     this.timePassed += nextFiringTime;
 
                     if(this.timePassed >= this.lastUpdate + updateInterval) {
+                        LOGGER.debug("Time passed is bigger than time since LastUpdate and current interval, therefore writing the output");
                         writeOutput(reaction);
                     }                    
                     
@@ -521,6 +530,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     the non-constant conpounds of the reaction and substract the stoichiometric factor from the number of molecules
                     of this compound.
                      */
+                    LOGGER.debug("Calculating new marking for all educts");
                     for (int eductIdx : reactionsNonConstantEducts[reaction]){
                         /*
                         Get the number of molecules of the educt and substract the stoichiometric factor from it.
@@ -539,6 +549,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                         */
                         reactionsToUpdate.addAll(compoundsInfluence[eductIdx]);
                     }
+                    LOGGER.debug("Calculating new marking for all products");
                     for (int productIdx : reactionsNonConstantProducts[reaction]){
                         /*
                         Get the number of molecules of the educt and add the stoichiometric factor from it.
@@ -560,6 +571,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     /*
                     Update marking and concentration for constant places
                     */
+                    LOGGER.debug("Updating marking and concentration for all constant places");
                     for (int i = 0; i < this.constantMarkingRun.length; i++){
                         MathematicalExpression exp = this.constantPlacesExpRun[i];
                         double val = exp.evaluate(concentrations, this.timePassed);
@@ -569,13 +581,15 @@ public class StochasticSimulator extends javax.swing.JFrame {
 
                     //Write updated molecule numbers into output file.
                     if (updateInterval == 0 || timePassed - lastUpdate >= updateInterval){
+                        LOGGER.debug("New Update Intervall is zero or left time is not enough, therefore writing the output");
                         writeOutput(reaction);
                     }
                 }
+                LOGGER.info("Simulation has stopped running, therefore finishing the Simulator");
                 //close writers
                 outputWriter.close();
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while trying to fill the output writer with data", ex);
             }
             this.outTextArea.append(("\n").concat(TokenSimulator.strings.get("SimFinished")).concat(dateFormat.format(Calendar.getInstance().getTime())));
             this.updateOutput();
@@ -614,6 +628,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
          * Also update the time counter of TokenSimulator.
          */
         public void exportMarking(){
+            LOGGER.info("Exporting the current state of the stochastic simulation to the Petri net and updating the visual output");
             lock.lock();
             try {
                 /*
@@ -624,7 +639,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 }
                 ((GillespieTokenSim) ts).setSimulatedTime(timePassed);
             } catch (TokenSimulator.PlaceConstantException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Constant place found at unexpected place while exporting the Marking in the Stochastic Simulator", ex);
             } finally {
                 lock.unlock();
             }
@@ -644,6 +659,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 public void run() {
                     //CHECK FOR THE SIZE OF THE OUTPUT FILE AND SHOW A WARNING
                     //IF IT IS TOO BIG (> 5 MB)
+                    LOGGER.info("Creating a plot out of the current stochastic simulation data");
                     int proceed = JOptionPane.OK_OPTION;
                     if (outputFileRun.length() > 1024*1024*5){
                         proceed = JOptionPane.showConfirmDialog(null, "The number of timepoints is too large. This could result in long plotting time and even make the program unresponsive." +
@@ -652,6 +668,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     try {
                         if (proceed == JOptionPane.OK_OPTION){
                             //Create an array of XYSeries for places.
+                            LOGGER.debug("Putting the information in usable XYSeries datatype while trying to create a plot out of the current stochastic simulation data");
                             XYSeries[] nonConstantPlotSeries = new XYSeries[nonConstantPlaceNames.length];
                             for (int i = 0; i < nonConstantPlaceNames.length; i++){
                                 String name  = nonConstantPlaceNames[i];
@@ -665,6 +682,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                             BufferedReader in = new BufferedReader(new FileReader(outputFileRun));
                             String line;
                             in.readLine();
+                            LOGGER.debug("Trying to parse the data out of the XYSeries datatypes into readers for chart creation");
                             while((line = in.readLine()) != null){
                                 String[] entr = line.split("\t");
                                 try{
@@ -677,7 +695,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                                     }
                                 }
                                 catch(Exception ex){
-                                    Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                                    LOGGER.error("General exception while trying to create a plot of the stochastic simulation", ex);
                                 }
                             }
 
@@ -692,6 +710,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                             /*
                             Generate graph.
                             */
+                            LOGGER.debug("Generating the graph for the stochastic simulation data");
                             final JFreeChart chart = ChartFactory.createScatterPlot("Simulation results",
                                     "Passed time [sec]", "Nr. of molecules", chartDataset,
                                     PlotOrientation.VERTICAL, true, false, false);
@@ -704,7 +723,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                         }
                         
                     } catch (IOException ex) {
-                        Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("IOException while trying to create a graph out of the stochastic simulation data", ex);
                     }
 
                 }
@@ -720,6 +739,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 /*
                 * Evaluate deterministic reaction rate constant
                 */
+                LOGGER.debug("Computing the reaction rate of the reaction with the ID: " + Integer.toString(idx));
                 double detReactionRateConst = reactionRateConstantsRun[idx].evaluate(concentrations, timePassed);
                 /*
                 * Convert deterministic reaction rate constant to stochastic one. Get the order and the multiplier of the reaction.
@@ -776,10 +796,13 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     //update the number of distinct combinations.
                     h *= Utilities.binomialCoefficient(tokens, weight);
                 }
+                LOGGER.debug("Done with computing the reaction rate for the reaction with the ID: " + Integer.toString(idx) + " with the reacton rate: " + Double.toString(h * stochReactionRateConst));
                 return h * stochReactionRateConst;
         }
         
         protected void writeOutput(Integer... reactions){
+            LOGGER.info("Starting to write the output for the stochastic simulation");
+            LOGGER.debug("Writing general data into the StringBuilder");
             lastUpdate += updateInterval;
             double timeForLog;
             if(updateInterval == 0.0) {
@@ -797,21 +820,25 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
              * Write molecule numbers for non-constant places.
              */
+            LOGGER.debug("Filling the molecule numbers for non-constant places into the output");
             for (long nrOfMolecules : nonConstantMarkingRun){
                 outSB.append("\t").append(nrOfMolecules);
             }
             /*
              * Write molecule numbers for constant places.
              */
+            LOGGER.debug("Filling the molecule numbers for constant places into the output");
             for (long nrOfMolecules : constantMarkingRun){
                 outSB.append("\t").append(nrOfMolecules);
             }
             outSB.append("\n");
+            LOGGER.debug("Trying to write the finished data into the output");
             try {
                 outputWriter.write(outSB.toString());
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while trying to write the data out of the stringbuilder into the outputWriter", ex);
             }
+            LOGGER.info("Finished writing the data into the output Writer");
         }
     };
     
@@ -833,6 +860,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
             Check which reactions are critical at the beginning of the simulation.
             */
+            LOGGER.debug("Checking for critical reactions in the stochastic simulation");
             for (int reactionIdx : reactionRatesRun.keySet()){
                 /*
                 minL is the number of times this reaction can occur before one of its reactants depletes.
@@ -877,9 +905,10 @@ public class StochasticSimulator extends javax.swing.JFrame {
             try {
                 outputWriter = new BufferedWriter(new FileWriter(outputFileRun, true));
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while trying to create a new buffered file writer for the output in the stochastic simulation", ex);
             }
             this.isRunning = true;
+            LOGGER.info("Starting the stochastic simulation");
             try {
                 /*
                  * As long as at least one reaction can take place, execute simulation. A single simulation step consists of calculating reaction rates (which
@@ -891,6 +920,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                      * Check whether the sum of rates is empty, which indicates that no reaction can occur. If so, abort simulation.
                      */
                     if(sumOfRates <= 0){
+                        LOGGER.info("Sum of rates is less or equal to zero, therefore no more reaction can occur and the simulation is stopped");
                         break;
                     }
                     firedReactions.clear();
@@ -898,6 +928,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     /*
                     Get a set of all non-critical reaction indeces.
                     */
+                    LOGGER.debug("Go through non-critical reactions and compute their next firing time");
                     Set<Integer> nonCriticalReactions = new HashSet<>();
                     for (int reactionIdx : this.reactionRatesRun.keySet()){
                         if (!this.criticalReactions.contains(reactionIdx)){
@@ -949,6 +980,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                         }
                         continue;
                     }
+                    LOGGER.debug("Computing the sum of critical reaction rates and calculating the time at which the next critical reaction will occur");
                     /*
                     Compute the sum of critical reaction rates
                     */
@@ -967,11 +999,14 @@ public class StochasticSimulator extends javax.swing.JFrame {
 
                     //only non-critical reactions will occur
                     if (nextFiringTimeNonCritical < nextFiringTimeCritical){
+                        LOGGER.debug("Next firing time is from a non critical reaction, therefore trying to fire it");
                         //check if the simulation should go on or the maximal time is reached.
                         if (maxSimTime > 0 && (timePassed + nextFiringTimeNonCritical) > maxSimTime){
+                            LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation before firing it");
                             this.requestStop();
                             break;
                         }
+                        LOGGER.debug("Firing the next non critical Reaction");
                         for (int reactionIdx : nonCriticalReactions){
                             int nrOccu = randomRun.nextPoisson(reactionRatesRun.get(reactionIdx) * nextFiringTimeNonCritical);
                             for (int i = 0; i < nrOccu; i++){
@@ -986,8 +1021,10 @@ public class StochasticSimulator extends javax.swing.JFrame {
                         this.timePassed += nextFiringTimeNonCritical;
                     }
                     else{
+                        LOGGER.debug("Next firing reaction is critical");
                         //check if the simulation should go on or the maximal time is reached.
                         if (maxSimTime > 0 && (timePassed + nextFiringTimeCritical) > maxSimTime){
+                            LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation before firing it");
                             this.requestStop();
                             break;
                         }
@@ -998,6 +1035,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                         * Choose the reaction so the sum of reactions which are previous plus the rate of chosen one is greater than or equal to 
                         * the sum of all reaction rates multiplied by r2.
                         */
+                        LOGGER.debug("Firing the next critical reaction");
                         int reaction = 0;
                         double ratesSum = 0;
                         for (int reactionIdx : criticalReactions){
@@ -1026,13 +1064,14 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     }
                     //Write updated molecule numbers into output file.
                     if (updateInterval == 0 || timePassed - lastUpdate >= updateInterval){
+                        LOGGER.debug("Writing the new molecule numbers into the output file");
                         writeOutput(firedReactions.toArray(new Integer[firedReactions.size()]));
                     }
                 }
                 //close writers
                 outputWriter.close();
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while trying to calculate the next firing step or writing its results in the output", ex);
             }
             this.outTextArea.append(("\n").concat(TokenSimulator.strings.get("SimFinished")).concat(dateFormat.format(Calendar.getInstance().getTime())));
             this.updateOutput();
@@ -1041,6 +1080,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         }
         
         private void updateReactions(){
+            LOGGER.info("Updating the reactions with the new reaction rates");
             for (int reactionIdx : reactionsToUpdate){
                 double reactionRate = computeReactionRate(reactionIdx);
                 /*
@@ -1111,11 +1151,13 @@ public class StochasticSimulator extends javax.swing.JFrame {
          * @return index of occurred reaction.
          */
         private int exactStep(){
+            LOGGER.info("Performing one step of the stochastic simulation");
             updateReactions();
             /*
              * Check whether the sum of rates is empty, which indicates that no reaction can occur. If so, abort simulation.
              */
             if(sumOfRates <= 0){
+                LOGGER.debug("Sum of rates is less than or equal to zero, therefore stopping the simulation");
                 return -1;
             }
             /*
@@ -1129,6 +1171,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             double nextFiringTime = (Math.log(1 / randomRun.nextDouble()) / sumOfRates);
             //check if the simulation should go on or the maximal time is reached.
             if (maxSimTime > 0 && (timePassed + nextFiringTime) > maxSimTime){
+                LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation");
                 this.requestStop();
                 return -1;
             }
@@ -1140,6 +1183,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             * Choose the reaction so the sum of reactions which are previous plus the rate of chosen one is greater than or equal to
             * the sum of all reaction rates multiplied by r2.
             */
+            LOGGER.debug("Calculating the reaction to occur next");
             int reaction = 0;
             double ratesSum = 0;
             for (int reactionIdx : reactionRatesRun.keySet()){
@@ -1162,9 +1206,11 @@ public class StochasticSimulator extends javax.swing.JFrame {
             }
                         
             //fire selected reaction
+            LOGGER.debug("Firing the reaction that has been determined to occur next");
             fireReaction(reaction);
 
             if (updateInterval == 0 || timePassed - lastUpdate >= updateInterval){
+                LOGGER.debug("Writing the resulting output after firing the reaction");
                 writeOutput(reaction);
             }
             return reaction;
@@ -1176,6 +1222,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
             the non-constant conpounds of the reaction and substract the stoichiometric factor from the number of molecules
             of this compound.
             */
+            LOGGER.debug("Firing the reaction with the ID: " + Integer.toString(reactionIdx));
+            LOGGER.debug("Calculating the new values for all educts");
             for (int eductIdx : reactionsNonConstantEducts[reactionIdx]){
                 /*
                 Get the number of molecules of the educt and remove the stoichiometric factor from it.
@@ -1199,6 +1247,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 */
                 reactionsToUpdate.addAll(compoundsInfluence[eductIdx]);
             }
+            LOGGER.debug("Calculating the new values for all products");
             for (int productIdx : reactionsNonConstantProducts[reactionIdx]){
                 /*
                 Get the number of molecules of the educt and add the stoichiometric factor from it.
@@ -1220,6 +1269,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
             Update marking and concentration for constant places
             */
+            LOGGER.debug("Updating the marking and concentration for all constant places");
             for (int i = 0; i < this.constantMarkingRun.length; i++){
                 MathematicalExpression exp = this.constantPlacesExpRun[i];
                 double val = exp.evaluate(concentrations, this.timePassed);
@@ -1334,7 +1384,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     }                    
                 }
             } catch (IOException ex) {
-                Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("IOException while trying to coordinate the multiple threads while performing a stochastic simulation");
             } finally {
                 updaterLock.unlock();
             }
@@ -1546,6 +1596,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
      */
     public StochasticSimulator(GillespieTokenSim tsN, Map<Integer, MathematicalExpression> detReactionConstants, Map<Integer, Long> nonConstantPlaces,
             double vol, HighQualityRandom ran) {
+        LOGGER.info("Instantiating a stochastic simulator");
         this.volume = vol;
         this.volMol = this.volume * 6E23;
         /*
@@ -1560,6 +1611,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         Iterate through places of the net and create entries of compounds.
         */
         //Keys are IDs, values are indeces.
+        LOGGER.debug("Filling the simulator with data out of the current petri net");
         Map<Integer, Integer> constantPlacesIDsMap = new HashMap<>();
         ArrayList<String> constantPlacesNamesList = new ArrayList<>();
         ArrayList<MathematicalExpression> constantPlacesMathExpList = new ArrayList<>();
@@ -1617,6 +1669,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         /*
         Iterate through transitions and create entries of reactions.
         */
+        LOGGER.debug("Create entries of reactions out of the transitions of the petri net");
         int reactionIdx = -1;
         this.reactionIDs = new int[petriNet.transitions().size()];
         this.reactionNames = new String[petriNet.transitions().size()];
@@ -1661,7 +1714,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     try {
                         multiplier *= Utilities.factorial(20L);             
                     } catch(Utilities.FactorialTooBigException ex2) { 
-                        System.out.println("This should never ever happen");
+                        LOGGER.error("Factorial after multiple changes still too big, should not happen", ex2);
                     }                    
                 }
                 order += weight;
@@ -1672,6 +1725,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             /*
             Iterate through pre- and post-places and fill the stoichiometric map.
             */
+            LOGGER.debug("Fill the stoichiometric map with data out of the pre- and postplaces");
             for (Place p : transition.inputs()){
                 int pId = p.id();
                 int weight = petriNet.getArc(p, transition).weight();
@@ -2045,7 +2099,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             this.timeSpanField.commitEdit();
             this.updateIntervalField.commitEdit();
         } catch (ParseException ex) {
-            Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Exception while trying to parse the time span and the update interval", ex);
         }
         String[] timeInput = this.timeSpanField.getValue().toString().split(":");
         try{
@@ -2054,7 +2108,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             this.maxSimTime = timeSpanD;
         }
         catch(NumberFormatException e){
-            
+            LOGGER.error("NumberFormatException while trying to parse the timeinput", e);
         }
         timeInput = this.updateIntervalField.getValue().toString().split(":");
         try{
@@ -2063,7 +2117,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             this.updateInterval = interval;
         }
         catch(NumberFormatException e){
-            
+            LOGGER.error("NumberFormatException while trying to pase the update interval", e);
         }
         
         /*
@@ -2160,6 +2214,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     }
                 }
                 catch (IOException ex) {
+                    LOGGER.error("IOException while trying to create files for coordinating threads in the stochastic simulation");
                     JOptionPane.showMessageDialog(this, TokenSimulator.strings.get("CannotCreateFiles"),
                             TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
                     this.outPathField.setEnabled(true);
@@ -2191,6 +2246,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * by creating threads with the runnables.
      */
     public void stopSimulation(){
+        LOGGER.info("Stopping all simulations");
         running = false;
         for (ExactSSA runnable : this.runningThreads.values()){
             runnable.requestStop();

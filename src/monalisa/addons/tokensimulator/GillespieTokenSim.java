@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -55,6 +53,8 @@ import monalisa.data.pn.Transition;
 import monalisa.util.MonaLisaFileChooser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * A stochastic simulator of Petri nets based on Gillespie's algorithm for
@@ -133,6 +133,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     protected FastSimulationModes fastSimFrame;
     
+    private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSim.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES    
@@ -179,6 +180,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                      */
                     if (activeTransitions.isEmpty() || this.isCancelled()) {
                         this.isRunning = false;
+                        LOGGER.debug("Gillespie Simulation stopped since no more transitions are active");
                         break;
                     }
                     /*
@@ -191,6 +193,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                             //If updateInterval is positive, check whether visual output must be updated in current step.
                             if (updateInterval > 0) {
                                 if (tokenSim.getSimulatedSteps() % updateInterval == 0) {
+                                    LOGGER.debug("Visual output in gillespie simulation updated since updateinterval is positive");
                                     tokenSim.updateVisualOutput();
                                 }
                             }
@@ -206,12 +209,13 @@ public class GillespieTokenSim extends AbstractTokenSim {
                          * Abort simulation if no more steps are left.
                          */
                         if (stepsLeft <= 0) {
+                            LOGGER.debug("Gillespie simulation stopped, since there are no more steps left to do");
                             this.isRunning = false;
                         }
                     }
                     Thread.sleep(timeDelay);
                 } catch (InterruptedException | InvocationTargetException ex) {
-                    Logger.getLogger(GillespieTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Simulation that should have been stopped couldnt be found", ex);
                 }
             }
             return null;
@@ -222,6 +226,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             /*
              * Reset the progress bar.
              */
+            LOGGER.info("Gillespie simulation is done, setting everything back and unlocking GUI");
             tsPanel.progressBar.setMaximum(0);
             tsPanel.progressBar.setValue(0);
 
@@ -244,6 +249,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * Signal to stop simulation.
          */
         public void stopSequence() {
+            LOGGER.info("Gillespie simulation has been stopped");
             this.isRunning = false;
             //update visual output
             tokenSim.updateVisualOutput();
@@ -262,6 +268,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         /*
          * Initialize deterministic reaction rate constants with 1.
          */
+        LOGGER.info("Gillespie Token Sim initiated");
         this.deterministicReactionConstants = new HashMap<>();
         for (Transition t : this.tokenSim.getPetriNet().transitions()) {
             /*
@@ -272,6 +279,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             /*
              * Determine which order the reaction has.
              */
+            LOGGER.debug("Determining the order of the reaction and order the reactions accordingly");
             long order = 0;
             int weight;
             for (Place p : this.petriNet.getInputPlacesFor(t)) {
@@ -279,10 +287,11 @@ public class GillespieTokenSim extends AbstractTokenSim {
                 try {
                     multiplier *= Utilities.factorial((long) weight);                                        
                 } catch (Utilities.FactorialTooBigException ex) {
+                    LOGGER.error("Factorial too big while trying to determine the order of the reaction in the gillespie simulation", ex);
                     try {
                         multiplier *= Utilities.factorial(20L);             
                     } catch(Utilities.FactorialTooBigException ex2) { 
-                        System.out.println("This should never ever happen");
+                        LOGGER.error("Factorial too big while trying to determine the order of the reaction in the gillespie simulation, even after trying to fix it internally", ex2);
                     }
                 }
                 order += weight;
@@ -292,7 +301,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             try {
                 this.deterministicReactionConstants.put(t.id(), new MathematicalExpression("0.0"));
             } catch (UnknownFunctionException | UnparsableExpressionException ex) {
-                Logger.getLogger(GillespieTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Unknown function or unparsable Expression found while trying to put the current transition into the deterministic reaction constans in the gillespie simulation");
             }
             this.firingRates.put(t.id(), 0.0);
         }
@@ -313,6 +322,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      * @return Stochastic reaction rate constant for the transition t
      */
     protected double convertKToC(Transition t, double k) {
+        LOGGER.debug("Converting the deterministic rate constant k into the stochastic reaction rate constanc c for transtition " + Integer.toString(t.id()));
         long order = this.reactionOrder.get(t.id())[0];
         long multiplier = this.reactionOrder.get(t.id())[1];
         /*
@@ -353,6 +363,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      * @return Deterministic rate constant for the transition t
      */    
     protected double convertCToK(Transition t, double c) {
+        LOGGER.debug("Converting the stochastic rate constant c into the deterministic reaction rate constanc k for transtition " + Integer.toString(t.id()));
         long order = this.reactionOrder.get(t.id())[0];
         long multiplier = this.reactionOrder.get(t.id())[1];
 
@@ -396,6 +407,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     private long calculateH(Transition t) {
         //h is the number of combinations
+        LOGGER.debug("Calculating the number of distinct molecular reactant combinations in the current state of the chemical reaction represented by the transition " + Integer.toString(t.id()));
         long h = 1;
         /*
          * For every species involved in the reaction, calculate the number of combinations for molecules of identical species.
@@ -428,6 +440,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         /*
          * create new GUI-Panel
          */
+        LOGGER.info("GUI-Panel for Gillespie Simulation initiated");
         this.tsPanel = new GillespieTokenSimPanel(this);
         this.prefPanel = new GillespieTokenSimPrefPanel(this);
         /*
@@ -460,9 +473,11 @@ public class GillespieTokenSim extends AbstractTokenSim {
 
     @Override
     protected void updatePreferences() {
+        LOGGER.info("Updating the Preferences in the gillespie simulation");
         /*
          * Update time delay.
          */
+        LOGGER.debug("Updating the time delay preferences in the gillespie simulation");
         try{
             int timeDelay = Integer.parseInt(this.prefPanel.timeDelayJFormattedTextField.getText());
             if (timeDelay >= 0) {
@@ -470,11 +485,12 @@ public class GillespieTokenSim extends AbstractTokenSim {
             }
         }
         catch(NumberFormatException ex){
-            Logger.getLogger(GillespieTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("NumberFormatException while updating the time delay in the preferences in the gillespie simulation", ex);
         }
         /*
          * Update update interval
          */
+        LOGGER.debug("Updating the update interval preferences in the gillespie simulation");
         try{
             int updateInterval = Integer.parseInt(this.prefPanel.updateIntervalFormattedTextField.getText());
             if (updateInterval >= 0) {
@@ -482,19 +498,23 @@ public class GillespieTokenSim extends AbstractTokenSim {
             }
         }
         catch(NumberFormatException ex){
+            LOGGER.error("NumberFormatException while updating the update interval in the preferences in the gillespie simulation", ex);
         }
         /*
         Update the limit of parallel simulation threads.
         */
+        LOGGER.debug("Updating the preference for the limit of parallel simulation threads in the gillespie simulation");
         this.tokenSim.preferences.put("LimitMaxThreads", this.prefPanel.limitThreadsCB.isSelected());
         int nrOfThreads = (int) this.tokenSim.preferences.get("MaxThreadsNr");
         try{
             nrOfThreads = Integer.parseInt(this.prefPanel.nrOfMaxThreadsField.getText());
         }
         catch(NumberFormatException ex){
+            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation");
             JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
         if (nrOfThreads < 1){
+            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation, defaulted back to 1");
             JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
             nrOfThreads = 1;
         }
@@ -508,6 +528,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.prefPanel.limitThreadsCB.setSelected((boolean) this.tokenSim.preferences.get("LimitMaxThreads"));
         this.prefPanel.nrOfMaxThreadsField.setEnabled((boolean) this.tokenSim.preferences.get("LimitMaxThreads"));
         this.prefPanel.nrOfMaxThreadsField.setText(this.tokenSim.preferences.get("MaxThreadsNr").toString());
+        LOGGER.info("Preferences loaded");
     }
 
     @Override
@@ -517,6 +538,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.tsPanel.fireTransitionsButton.setEnabled(true);
         this.tsPanel.bgModeB.setEnabled(true);
         this.tsPanel.inputDataButton.setEnabled(true);
+        LOGGER.info("Gillespie simulation started");
         this.computeActiveTransitions();
         
     }
@@ -538,6 +560,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.tsPanel.inputDataButton.setEnabled(false);
         this.tokenSim.tokenSimPanel.saveSetupButton.setEnabled(false);
         this.tokenSim.tokenSimPanel.loadSetupButton.setEnabled(false);
+        LOGGER.info("Gillespie simulation stopped");
         tokenSim.lockGUI(true);
     }
 
@@ -552,6 +575,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     @Override
     protected Transition getTransitionToFire() {
+        LOGGER.debug("Calculate the Transition that should fire next in the gillespie Simulation");
         /*
          * Calculate marking dependent rate for each transition in updateMarkingRates
          * For this, first transform the numbers of molecules of non-constant places to concentrations.
@@ -566,7 +590,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         for (Entry<Integer, MathematicalExpression> entr : this.tokenSim.getConstantPlaces().entrySet()) {
             concentrations.put(entr.getKey(), entr.getValue().evaluate(concentrations, this.time));
         }
-
+        LOGGER.debug("Calculated the marking dependent rate for each transition and the concentrations for all constant places");
         /*
          * Sum of marking rates. It is used for calculating the probability the time point at which
          * next reaction will occur.
@@ -575,6 +599,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         int tID;
         double detReactionRateConst;
         double stochReactionRateConst;
+        LOGGER.debug("Search through all active Transitions and find the sum of marking dependent firing rate");
         for (Transition t : this.tokenSim.getActiveTransitions()) {
             //ID of the transition.
             tID = t.id();
@@ -597,6 +622,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         }
         //if the sum of marking dependent firing rate is zero, no reaction can occur and the simulation should stop.
         if (markingRatesSum == 0) {
+            LOGGER.debug("Stopping the gillespie simulation because the markingRatesSum is equal to zero and no further reaction can occur");
             this.stopFiring();
             return null;
         }
@@ -608,6 +634,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         /*
          * calculate the time at which next firing will occur.
          */
+        LOGGER.debug("Calculating the time at which the next firing will occur");
         double nextFiringTime = -(Math.log(1 - r1) / markingRatesSum);
         /*
          * calculate which transition will fire next
@@ -630,6 +657,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
          */
         this.time += nextFiringTime;
         this.stepsSimulated++;
+        LOGGER.debug("Finished calculating the next Transition to fire, it will be " + Integer.toString(transitionToFire.id()));
         return (transitionToFire);
     }
 
@@ -640,6 +668,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                LOGGER.debug("Setting the firing rates for all transitions for the gillespie simulation");
                 final String[] columnNames = {TokenSimulator.strings.get("StochTSFiringRatesTableTransition"),
                     TokenSimulator.strings.get("StochTSFiringRatesTableRate")};   //names of columns of the firingRatesTable
 
@@ -737,6 +766,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                LOGGER.debug("Setting the input data in the gillespie simulation");
                 JFrame inputDataFrame = new GillespieInputDataFrame(GillespieTokenSim.this);
                 tokenSim.netViewer.displayMenu(inputDataFrame.getContentPane(), TokenSimulator.strings.get("GilTSInputDataFrameTitle"));
             }
@@ -748,6 +778,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     protected void startFiring() {
         //lock GUI, so the user cannot interrupt the firing sequence by alterating the settings.
+        LOGGER.info("Firing in the gillespie simulation started");
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.continuousModeCheckBox.setEnabled(false);
         this.tsPanel.inputDataButton.setEnabled(false);
@@ -756,6 +787,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.tokenSim.lockGUI(true);
 
         //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
+        LOGGER.debug("Parsing the number of steps to perfrom out of the textfield");
         try {
             //number of steps that will be performed
             int steps = Integer.parseInt(tsPanel.stepField.getText());
@@ -773,8 +805,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
             simSwingWorker = new SimulationSwingWorker(steps);
             simSwingWorker.execute();
         } catch (NumberFormatException nfe) {
+            LOGGER.error("NumberFormatException while trying to parse an integer out of the texfield for the amount of steps that should be calculated, therefore stopping the firing", nfe);
             stopFiring();
-            JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
     }
 
@@ -792,6 +824,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         /*
          * Ask user where he wants to have the setup file and how to name it.
          */
+        LOGGER.info("Exporting the setup of the gillespie simulation");
         File outFile;
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -800,6 +833,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             return;
         }
         outFile = fc.getSelectedFile();
+        LOGGER.debug("After getting the chosen directory, trying to create a .XML-File for the setup of the gillespie simulation");
         try {
             /*
              * Create an XML-document
@@ -817,7 +851,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             //Create element for places and append it to the root.
             Element placesEl = doc.createElement("places");
             root.appendChild(placesEl);
-
+            LOGGER.debug("Default tree-structure and builders created, filling the data for places in next");
             //Iterate through all places and create an element for each one.
             for (Place place : this.petriNet.places()) {
                 //Create place element and append it to places element
@@ -854,6 +888,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                     }
                 }
             }
+            LOGGER.debug("Places-Data has been successfully added in the tree-structure");
 
             //Create an element for transitions and append it to the root.
             Element transitionsEl = doc.createElement("transitions");
@@ -864,6 +899,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             MathematicalExpression detConstMathExp;
             String detExpText;
             Map<String, Integer> variables = null;
+            LOGGER.debug("Created the root transition element and filling in the data for the other transitions next");
             for (Transition transition : this.petriNet.transitions()) {
                 //Create a transition element.
                 transitionEl = doc.createElement("transition");
@@ -901,12 +937,13 @@ public class GillespieTokenSim extends AbstractTokenSim {
             StreamResult result = new StreamResult(outFile);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException ex) {
-            Logger.getLogger(GillespieTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Error while trying to write an .XML-File for the setupoutput, either wrong parser configuration or a defect transformer", ex);
         }
     }
 
     @Override
     protected void importSetup() {
+        LOGGER.info("Importing the setup of the gillespie simulation");
         try {
             /*
              * Get the setup file.
@@ -921,7 +958,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             //Create a SAX-parser.
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inFile));
-
+            LOGGER.debug("File for input setup has been found and the proper factory and parser is initiated");
             int id = 0;
             String name = "";
             boolean placeConstant = false;
@@ -929,7 +966,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             MathematicalExpression mathExp = null;
             Map<String, Integer> variables = new HashMap<>();
             StringBuilder sb = new StringBuilder();
-
+            LOGGER.debug("Parsing the .XML");
             while (parser.hasNext()) {
                 switch (parser.getEventType()) {
                     case XMLStreamConstants.START_DOCUMENT:
@@ -1064,9 +1101,9 @@ public class GillespieTokenSim extends AbstractTokenSim {
         } catch (FileNotFoundException | XMLStreamException ex) {
             JOptionPane.showMessageDialog(null, "Invalid XML file!",
                     TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Error while Parsing, either the file was not found or it was an invalid .XML", ex);
         } catch (Exception ex) {
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("General error while parsing the input setup for the gillespie simulator", ex);
         }
     }
     
@@ -1079,6 +1116,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         /*
         Update distinct molecular reactant combinations for transitions which pre-places marking has changed.
         */
+        LOGGER.info("Calculating the active transitions according to their distinct molecular reactant combinations ");
         for (Transition t : this.transitionsToCheck){
             this.distinctCombinations.put(t.id(), this.calculateH(t));
         }

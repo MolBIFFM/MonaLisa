@@ -31,6 +31,8 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import monalisa.data.pn.Place;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Creates and shows a frame for input of a mathematical expression. Places of the Petri net can be used as variables.
@@ -54,6 +56,8 @@ public class MathExpFrame extends javax.swing.JFrame {
      * Maps the name of the place to its ID in the Petri net.
      */
     private final Map<String, Integer> variables = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(MathExpFrame.class);
+    
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -86,6 +90,7 @@ public class MathExpFrame extends javax.swing.JFrame {
      * @param exp Mathematical expression which will be edited. If no old math exp exists, create new one with a "0" string.
      */
     public MathExpFrame(Collection<Place> places, MathematicalExpression exp) {
+        LOGGER.info("Creating a new frame to edit a mathematical expression");
         setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
         //set the name of this window
         this.mathExp = exp;
@@ -359,6 +364,7 @@ public class MathExpFrame extends javax.swing.JFrame {
                 l.stateChanged(new ChangeEvent(this));
             }
         } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+            LOGGER.error("Unknown function or unparsable expression found while trying to build a mathematical expression out of the input in the frame");
             JOptionPane.showMessageDialog(rootPane, TokenSimulator.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed

@@ -273,6 +273,7 @@ public class TokenSimulator {
      */
     private void init(){
         //By default, logging is disabled
+        LOGGER.info("Initializing the token simulator");
         this.preferences.put("LogEnabled", false);
         this.preferences.put("LogPath", System.getProperty("user.home") + File.separator + "MonaLisa_Simulation_log");
         this.preferences.put("SaveSnapshots", true);
@@ -297,6 +298,7 @@ public class TokenSimulator {
         this.totalStepNr = 0;
 
         //create initial marking. For constant places, create an entry in the constantPlaces-map.
+        LOGGER.info("Create initial marking");
         this.marking = new HashMap<>();
         for (Place place : this.petriNet.places()){
             placesToPlot.put(place, true);
@@ -331,6 +333,7 @@ public class TokenSimulator {
 
         //if no markings were saved, create a new, initial marking with no tokens on all places.
         if(this.customMarkingsMap.isEmpty()){
+            LOGGER.debug("No custom marking was found, therefore create an empty marking");
             //name of current marking
             String markingName = "Empty marking";
             Map<Integer, Long> tmpMarking = new HashMap<>(petriNet.places().size());
@@ -339,11 +342,13 @@ public class TokenSimulator {
             }
             this.customMarkingsMap.put(markingName, tmpMarking);
         } else {
+            LOGGER.debug("Custom marking was found, so it is used in the simulator");
             this.tokenSimPanel.customMarkingsJComboBox.removeAllItems();
             for(String markingName : this.customMarkingsMap.keySet()) {
                 this.tokenSimPanel.customMarkingsJComboBox.addItem(markingName);
             }
         }
+        LOGGER.info("Initial marking was created based on custom/default marking");
         //Preferences frame
         this.preferencesJFrame = new TokenSimPreferencesJFrame(this);
 
@@ -356,6 +361,7 @@ public class TokenSimulator {
         /*
         Map for plotting functionality.
         */
+        LOGGER.debug("Map for plotting places is created");
         this.seriesMap = new HashMap<>();
         for (Place place : this.petriNet.places()){
             if (placesToPlot.get(place)){
@@ -364,6 +370,7 @@ public class TokenSimulator {
                 this.seriesMap.put(place, series);
             }
         }
+        LOGGER.debug("Map for plotting places has been created");
     }
 
     /**
@@ -516,6 +523,7 @@ public class TokenSimulator {
         if (this.totalStepNr == 0 && (boolean) this.preferences.get("EnablePlotting")){
             this.updatePlot();
         }
+        LOGGER.info("Fire transitions that are supposed to fire");
         for(Transition transition: transitions){
             //tells the currStatistic that transition was fired
             this.currStatistic.transitionFired(transition);
@@ -539,6 +547,7 @@ public class TokenSimulator {
             //Saves the token number for the place before firing a transition.
             long newToken;
             //Substract tokens from all input places. If a place is constant, skip this step.
+            LOGGER.debug("Subtract tokens from the input places to the currently processed transition");
             for (Place place : this.petriNet.getInputPlacesFor(transition)){
                 if (!place.isConstant()){
                     //copmute tokens for preplace
@@ -549,6 +558,7 @@ public class TokenSimulator {
                 }
             }
             //add tokens to all output places
+            LOGGER.debug("Add tokens to the output places from the currently processed transition");
             for (Place place : this.petriNet.getPlacesFor(transition)){
                 //compute tokens for preplace. If a place is constant, skip this step.
                 if (!place.isConstant()){
@@ -562,6 +572,7 @@ public class TokenSimulator {
         }
 
         //compute active transitions after firing complete step
+        LOGGER.debug("Compute active transitions after firing the transitions");
         this.tokenSim.computeActiveTransitions();
 
         if(history){
@@ -575,13 +586,15 @@ public class TokenSimulator {
             int k = MAX_HISTORY;
             this.snapshotsInterval = (0 > k) ? 0 : k;
         }
-        catch (NumberFormatException E){}
+        catch (NumberFormatException E){
+            LOGGER.error(E);
+        }
         if (this.snapshotsInterval > 0){
             if((boolean) this.preferences.get("SaveSnapshots") && this.totalStepNr % this.snapshotsInterval == 0){
                 this.saveSnapshot();
             }
         }
-
+        LOGGER.info("After all transitions fired writing the results into the 'log'file");
         /*
         Actualize the log file if loggin is enabled.
         */
@@ -602,12 +615,15 @@ public class TokenSimulator {
      * @param transitions
      */
     public void reverseFireTransitions(Transition... transitions){
+        LOGGER.info("Reverse Firing of Transitions for backtracking of Simulations");
         this.totalStepNr--;
         this.currStatistic.stepsFired--;
         for(Transition transition : transitions){
+            LOGGER.debug("Changing the current mode of Simulation to reverse");
             this.currStatistic.transitionReverseFired(transition);              //tells the currStatistic object that transition-firing was canceled
             long newToken;
             //add tokens to all input places
+            LOGGER.debug("Add tokens on the output places to the currently processed transition");
             for (Place place : this.petriNet.getInputPlacesFor(transition)){
                 if (!place.isConstant()){
                     newToken = this.marking.get(place.id()) + this.petriNet.getArc(place, transition).weight();
@@ -617,6 +633,7 @@ public class TokenSimulator {
                 }
             }
             //remove tokens from all output places
+            LOGGER.debug("Subtract tokens from the input places to the currently processed transition");
             for (Place place : this.petriNet.getPlacesFor(transition)){
                 if (!place.isConstant()){
                     newToken = this.marking.get(place.id()) - this.petriNet.getArc(transition, place).weight();
@@ -626,6 +643,7 @@ public class TokenSimulator {
                 }
             }
             //compute active transitions after firing complete step
+            LOGGER.debug("Compute active transitions after firing one");
             this.tokenSim.computeActiveTransitions();
         }
     }
@@ -635,6 +653,7 @@ public class TokenSimulator {
      * @param transitions
      */
     private void addHistoryEntry(Transition... transitions){
+        LOGGER.info("Adding a new entry into the history of the simulationt");
         /*
          * If the new step is not a part of the history, and the last fired step is not
          * the last in the historyArrayList, so perform the step and delete all history entries after.
@@ -679,6 +698,7 @@ public class TokenSimulator {
         /*
          * Remove all snapshots that are older than current step
          */
+        LOGGER.debug("Saving a snapshot of the current state of the simulation");
         while (!this.snapshots.isEmpty() && this.snapshots.get(this.snapshots.size()-1).getStepNr() >= this.totalStepNr){
             this.snapshots.remove(this.snapshots.size()-1);
             this.snapshotsListModel.remove(this.snapshotsListModel.size()-1);
@@ -696,6 +716,7 @@ public class TokenSimulator {
      * @param snapshot
      */
     public void loadSnapshot(Snapshot snapshot){
+        LOGGER.debug("Loading an older snapshot of the simulation");
         this.totalStepNr = snapshot.getStepNr();
 
         //deep copy of historyListModel
@@ -964,6 +985,7 @@ public class TokenSimulator {
     }
 
     private void updatePlot(){
+        LOGGER.debug("Updating the plot for all places to plot");
         Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) this.preferences.get("PlacesToPlot");
         /*
         Add current number of tokens to the chart series.
@@ -982,6 +1004,7 @@ public class TokenSimulator {
      * Opens a window with simulation results plotted with JFreeChart.
      */
     protected void showPlot(){
+        LOGGER.info("Plotting the simulation results and putting them into a window for the user to see");
         if(chartFrame != null){
             chartFrame.dispose();
         }
@@ -999,6 +1022,7 @@ public class TokenSimulator {
         /*
         Generate graph.
         */
+        LOGGER.debug("Generating the graph for the output visualization");
         JFreeChart chart = ChartFactory.createXYLineChart("Simulation results",
                 "Passed time [sec]", "Nr. of tokens", chartDataset,
                 PlotOrientation.VERTICAL, true, false, false);
@@ -1039,6 +1063,7 @@ public class TokenSimulator {
      * Write the simulation step to the log file.
      */
     private void writeLog(Transition... transitions){
+        LOGGER.info("Writing current simulation step into the log file");
         StringBuilder logSB = new StringBuilder();
         /*
         If the method is called for the first time, create new log writer.
@@ -1069,7 +1094,7 @@ public class TokenSimulator {
                 logSB.append("\n----------------\nStep\tTime\tFired transition(s)");
             }
             catch(IOException ex){
-                LOGGER.error("Issue while writing log header: ", ex);
+                LOGGER.error("IOException while writing log header", ex);
             }
         }
         logSB.append("\n").append(this.totalStepNr).append("\t").append(this.tokenSim.getSimulatedTime()).append("\t");
@@ -1098,6 +1123,7 @@ public class TokenSimulator {
      * Switches from NetViewer-mode to Simulator-mode
      */
     protected void startSimulator(){
+        LOGGER.info("Starting a token simulator");
         this.init();
         //create an instance of choosen token simulator
         this.newTokenSim();
@@ -1118,7 +1144,7 @@ public class TokenSimulator {
                     this.setTokens(p.id(), this.petriNet.getTokens(p));
                 }
             } catch (PlaceConstantException ex) {
-                LOGGER.error("Issue while loading current tokens from Petri net: ", ex);
+                LOGGER.error("PlaceConstantException while loading current tokens from Petri net", ex);
             }
         }
 
@@ -1179,6 +1205,7 @@ public class TokenSimulator {
      * Switches from Simulator-mode to NetViewer-mode
      */
     public void endSimulator(){
+        LOGGER.info("Ending the current token simulator");
         if(this.tokenSim == null)
             return;
         this.tokenSim.endSim();
@@ -1224,6 +1251,7 @@ public class TokenSimulator {
             this.logWriter.close();
         }
         catch(Exception ex){
+            LOGGER.error("General Exception while trying to close the logWriter", ex);
         }
         this.logWriter = null;
         //clear plot

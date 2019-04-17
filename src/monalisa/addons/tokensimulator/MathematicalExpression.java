@@ -21,9 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 /**
  * A mathematical expression (equation) which can be solved. An expression is parsed from a string.
  * It can contain several case differentiations, separated by ";". Each case can be either a direct instruction, such as "A + B / C",
@@ -58,6 +57,7 @@ public final class MathematicalExpression {
      * Keys are names of variables, values are IDs of places.
      */
     private Map<String, Integer> variables = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(MathematicalExpression.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -172,9 +172,9 @@ public final class MathematicalExpression {
                     try {
                         leftPart = new ExpressionBuilder("0").build();
                     } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex1);
+                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the first part of a mathematical expression", ex1);
                     }
-                    Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Invalid custom function found while trying to parse the first part of a mathematical expression", ex);
                 }
 
                 try {
@@ -188,9 +188,9 @@ public final class MathematicalExpression {
                     try {
                         rightPart = new ExpressionBuilder("0").build();
                     } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex1);
+                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the second part of a mathematical expression", ex1);
                     }
-                    Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Invalid custom function found while trying to parse the second part of a mathematical expression", ex);
                 }
             }
 
@@ -259,7 +259,7 @@ public final class MathematicalExpression {
             try {
                 expB.withCustomFunction(new IntegerDivisionFunction());
             } catch (InvalidCustomFunctionException ex) {
-                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error("Invalid custom function found while trying to build an exception message", ex);
             }
             /*
              * Try to build a calculable.

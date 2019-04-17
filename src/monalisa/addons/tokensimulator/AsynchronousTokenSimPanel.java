@@ -10,7 +10,8 @@
 package monalisa.addons.tokensimulator;
 
 import java.awt.event.KeyEvent;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 /**
  *
  * @author Pavel Balazki.
@@ -18,6 +19,7 @@ import java.awt.event.KeyEvent;
 public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
     //BEGIN VARIABLES DECLARATION
     private AsynchronousTokenSim ts;
+    private static final Logger LOGGER = LogManager.getLogger(AsynchronousTokenSimPanel.class);
     //END VARIABLES DECLARATION
     
     //BEGIN CONSTRUCTORS
@@ -129,6 +131,7 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
     private void fireTransitionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fireTransitionsButtonActionPerformed
         //if no firing takes place, start new sequence of firing
         if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))){
+            LOGGER.info("Firing of transition in the asynchronous token simulator has started");
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
@@ -138,6 +141,7 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         }
         //if a firing sequence is being executed, stop it
         else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))){
+            LOGGER.info("Firing of transition in the asynchronous token simulator has ended");
             this.ts.stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed
@@ -152,6 +156,7 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            LOGGER.debug("User has pressed Enter while in the asynchronous token simulator panel, which starts the simulation");
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"

@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -35,6 +33,9 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 /**
  * A frame which is used to enter biologically relevant data such as molecule concentrations, volume of the solution
@@ -86,6 +87,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
      * Volume multiplied with the Avogadro constant.
      */
     private double volMol = volume * 6E23;    
+    private static final Logger LOGGER = LogManager.getLogger(GillespieInputDataFrame.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -109,7 +111,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         concentrations.put(concentrations.keySet().toArray(new Place[0])[row], conecentration);
                     }
                     catch (NumberFormatException ex){
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("NumberFormatException while creating the reactant table", ex);
                     }
                 }
                 //constant places.
@@ -119,7 +121,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         constantPlaces.put(constantPlaces.keySet().toArray(new Place[0])[index], (MathematicalExpression) value);
                     }
                     catch(Exception ex){
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("General exception while mapping constant places in the reactant table", ex);
                     }
                 }
             }            
@@ -192,7 +194,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         }
                         reactionRates.put(t, exp);
                     } catch (UnknownFunctionException | UnparsableExpressionException ex) {
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("Unknown function or unparsable Expression has been encountered while creating the reaction table model", ex);
                     }
                 }
             }       
@@ -267,6 +269,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         /*
          * Put every place of the petri net in the concentrations-HashMap
          */
+        LOGGER.info("Creating the concentrations-HashMap and filling it with data");
         for (Place p : this.tokenSim.petriNet.places()){
             if (!p.isConstant()){
                 /*
@@ -286,6 +289,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
          * Put every transition of the petri net in the reactionRates-HashMap and initialize with the reaction rate which is stored in
          * simulator.
          */
+        LOGGER.info("Filling the reactionRates-HashMap with data");
         for (Transition t : this.tokenSim.petriNet.transitions()){
             this.reactionRates.put(t, this.tokenSim.deterministicReactionConstants.get(t.id()));
         }
@@ -303,6 +307,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
+                    LOGGER.info("Mode has been changed to concentration");
                     inputModePlaces = CONCENTRATION;        
                     reactantTable.repaint();
                     reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Concentration [M]");
@@ -316,6 +321,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
+                    LOGGER.info("Mode has been changed to token");
                     inputModePlaces = TOKENS;                                                        
                     reactantTable.repaint();
                     reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Number of Tokens");
@@ -328,6 +334,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
+                    LOGGER.info("Mode has been changed to deterministic");
                     inputModeTransitions = DETERMINISTIC;                                                        
                     reactionTable.repaint();
                     reactionTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Reaction rate constant [M][s]");
@@ -341,6 +348,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
+                    LOGGER.info("Mode has been changed to stochastic");
                     inputModeTransitions = STOCHASTIC;                                                        
                     reactionTable.repaint();
                     reactionTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Stocastic rate constant 1/[s]");
@@ -364,7 +372,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         }
                     }
                     catch(Exception ex){
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("General exception while trying to format the concentration value of the table", ex);
                     }
                 }
                 return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -377,7 +385,8 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         this.reactionTable.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                //get the selected column   
+                //get the selected column
+                LOGGER.info("New position in the reaction-table has been chosen via mouse click");
                 int col = reactionTable.getSelectedColumn();               
                 //Process double-clicks                
                 if (e.getClickCount() == 2){                                     
@@ -415,7 +424,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             }
         });
         reactionRowSorter.setSortKeys(reactionSortKeys);
-        
+        LOGGER.info("Rows in the reaction table have been sorted according to their sting-values");
         /*
          * Assign a mouse listener to the reactantTable. When a cell is double clicked, a window is opened where user can input
          * the concentration (also as a mathematical expression) for the selected reaction.
@@ -424,6 +433,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             @Override
             public void mouseClicked(MouseEvent e){
                 //get the selected row
+                LOGGER.info("New position in the reactant-table has been chosen via mouse click");
                 int row = reactantTable.getSelectedRow();
                 int rowModel = reactantTable.convertRowIndexToModel(row);
                 //proceed only for constant places.
@@ -463,7 +473,8 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                 return (t.toString().compareTo(t1.toString()));
             }
         });
-        reactantRowSorter.setSortKeys(reactantSortKeys);   
+        reactantRowSorter.setSortKeys(reactantSortKeys); 
+        LOGGER.info("Rows in the reactant table have been sorted according to their string value");
     }
     //END CONSTRUCTORS
     
@@ -670,7 +681,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     try {
                         this.tokenSim.tokenSim.setTokens(p.id(), tokens);
                     } catch (TokenSimulator.PlaceConstantException ex) {
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("Problem while trying to set a token value to a constant place, which should not have been constant in the first place", ex);
                     }
                 }
                 /*
@@ -681,7 +692,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     try {
                         this.tokenSim.tokenSim.setMathExpression(p.id(), exp);
                     } catch (TokenSimulator.PlaceNonConstantException ex) {
-                        Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        LOGGER.error("Problem while trying to get a token value from a non constant place, which should have been constant in the first place", ex);
                     }
                 }
             }
@@ -695,6 +706,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             tokenSim.tokenSim.netViewer.hideMenu();
         }
         catch(NumberFormatException E){
+            LOGGER.error("NumberFormatException while trying to parse the textfield for gillespie input", E);
             JOptionPane.showMessageDialog(null, "Invalid volume! Allowed are real numbers, separated by a '.'");
         }
         // TODO add your handling code here:

@@ -1097,7 +1097,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     private void updateNetViewer() throws InterruptedException, IOException {
         if(project.hasResults(TInvariantTool.class)) {
-            netViewer.addTinvsToComboBox();
+            netViewer.addTinvsToListDisplay();
         }
         if(project.hasResults(PInvariantTool.class)) {
             netViewer.addPinvsToComboBox();

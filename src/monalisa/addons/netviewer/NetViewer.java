@@ -11,7 +11,7 @@
 package monalisa.addons.netviewer;
 
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
-import monalisa.addons.netviewer.listener.TinvItemListener;
+import monalisa.addons.netviewer.listener.TinvSelectionListener;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
 import monalisa.addons.netviewer.wrapper.PinvWrapper;
@@ -162,7 +162,8 @@ public class NetViewer extends JFrame implements ActionListener {
     private LogicalPlacesFrame lpf;
 
     private final List<JPanel> mouseModePanels = new ArrayList<>();
-    private final List<JComboBox> tinvCbList = new ArrayList<>();
+
+    private final List<DefaultListModel> tinvModelList = new ArrayList<>();
     private final List<JFrame> framesList = new ArrayList<>();
     private final Map<String, JScrollPane> spMap = new HashMap<>();
 
@@ -561,8 +562,19 @@ public class NetViewer extends JFrame implements ActionListener {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
 
                 tinvs = null;
-                for(JComboBox cb : tinvCbList)
-                    cb.removeAllItems();
+                
+                // clear all Display Lists and reset the Tab Titles
+                for(DefaultListModel dl : tinvModelList)
+                    dl.clear();
+                
+                tb.TInvTabbedPane.setTitleAt(0, "All");
+                tb.TInvTabbedPane.setTitleAt(1, "Trivial");
+                tb.TInvTabbedPane.setTitleAt(2, "I/O");
+                tb.TInvTabbedPane.setTitleAt(3, "Input");
+                tb.TInvTabbedPane.setTitleAt(4, "Output");
+                tb.TInvTabbedPane.setTitleAt(5, "Cyclic");
+                tb.TInvTabbedPane.setTitleAt(6, "Manatee");
+                
                 pinvs = null;
                 tb.pinvCb.removeAllItems();
                 mctsResults = null;
@@ -579,10 +591,7 @@ public class NetViewer extends JFrame implements ActionListener {
             lastChanged = netChanged;
 
             resetMessageLabel();
-            if(hasTinvs()) {
-                for(JComboBox cb : tinvCbList)
-                    cb.setEnabled(true);
-            }
+
             if(hasMcts()) {
                 tb.mctsCb.setEnabled(true);
                 tb.allMctsButton.setEnabled(true);
@@ -953,29 +962,28 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Add the T-Invariants to the combo box, if T-Invariants are there.
+     * Add the T-Invariants to the list display, if T-Invariants are there.
      */
-    public void addTinvsToComboBox() {
+    public void addTinvsToListDisplay() {
         if(tinvs == null)
             tinvs = getTInvs();
         if(tinvs == null)
             return;
-        addTinvsToComboBox(tinvs);
+        addTinvsToListDisplay(tinvs);
     }
 
     /**
-     * Add the T-Invariants to the combo box
+     * Add the T-Invariants to the list display
      * @param tinvs
      */
-    protected void addTinvsToComboBox(TInvariants tinvs) {
+    protected void addTinvsToListDisplay(TInvariants tinvs) {
         if(tinvs == null)
             return;
         if(!tinvs.isEmpty()) {
-            LOGGER.info("Adding T-Invariants to ComboBox");
-            for(JComboBox cb : tinvCbList) {
-                cb.setEnabled(true);
-                cb.removeAllItems();
-            }
+            LOGGER.info("Adding T-Invariants to List Display");
+
+            for(DefaultListModel dl : tinvModelList)
+                dl.clear();
 
             Boolean input, output;
             int i, tinvSize;
@@ -984,11 +992,10 @@ public class NetViewer extends JFrame implements ActionListener {
             Transition t1;
 
             for(TInvariant tinv : tinvs) {
-                tb.allInvCb.addItem(new TinvWrapper(tinv));
-
+                tb.allInvList.addElement(new TinvWrapper(tinv));
                 tinvSize = tinv.size();
                 if(tinvSize == 2) {
-                    tb.trivialInvCb.addItem(new TinvWrapper(tinv));
+                    tb.trivialInvList.addElement(new TinvWrapper(tinv));
                     continue;
                 }
 
@@ -1011,25 +1018,26 @@ public class NetViewer extends JFrame implements ActionListener {
                 }
 
                 if(!output && !input)
-                    tb.cyclicInvCb.addItem(new TinvWrapper(tinv));
+                    tb.cyclicInvList.addElement(new TinvWrapper(tinv));
                 else if(output && input)
-                    tb.ioInvCb.addItem(new TinvWrapper(tinv));
+                    tb.ioInvList.addElement(new TinvWrapper(tinv));
                 else if(output && !input)
-                    tb.outputInvCb.addItem(new TinvWrapper(tinv));
+                    tb.outputInvList.addElement(new TinvWrapper(tinv));
                 else if(input && !output)
-                    tb.inputInvCb.addItem(new TinvWrapper(tinv));
+                    tb.inputInvList.addElement(new TinvWrapper(tinv));
             }
-            LOGGER.info("Generating combination of all T-Invariants for a ComboBox");
-            // Create a T-invariant out of all t-invariantzs of a single combobox
+            
+            LOGGER.info("Generating combination of all T-Invariants for a List Display");
+            // Create a T-invariant out of all t-invariantzs of a single list
             int itemCount, oldValue;
             TInvariant tinvariant;
             Map<Transition, Integer> transitions;
-            for(JComboBox cb : tinvCbList) {
-                itemCount = cb.getItemCount();
+            for(DefaultListModel dl : tinvModelList) {
+                itemCount = dl.size();
                 if(itemCount > 0) {
                     transitions = new HashMap<>();
                     for(i = 0; i < itemCount; i++) {
-                        tinvariant = ((TinvWrapper)cb.getItemAt(i)).getTinv();
+                        tinvariant = ((TinvWrapper)dl.getElementAt(i)).getTinv();
                         for(Transition transition : tinvariant) {
                             if(tinvariant.factor(transition) > 0) {
                                 if(!transitions.containsKey(transition))
@@ -1039,17 +1047,18 @@ public class NetViewer extends JFrame implements ActionListener {
                             }
                         }
                     }
-                    cb.insertItemAt(new TinvWrapper(new TInvariant(-1, transitions)), 0);
+                    dl.insertElementAt(new TinvWrapper(new TInvariant(-1, transitions)), 0);
+                    dl.insertElementAt("Clear", 0);
                 }
             }
-
-            tb.allInvCb.insertItemAt(strings.get("NVAllT", (tb.allInvCb.getItemCount() == 0) ? 0 : tb.allInvCb.getItemCount()-1), 0);
-            tb.ioInvCb.insertItemAt(strings.get("NVIOT", (tb.ioInvCb.getItemCount() == 0) ? 0 : tb.ioInvCb.getItemCount()-1), 0);
-            tb.trivialInvCb.insertItemAt(strings.get("NVTrivialT", (tb.trivialInvCb.getItemCount() == 0) ? 0 : tb.trivialInvCb.getItemCount()-1), 0);
-            tb.outputInvCb.insertItemAt(strings.get("NVOOT", (tb.outputInvCb.getItemCount() == 0) ? 0 : tb.outputInvCb.getItemCount()-1), 0);
-            tb.inputInvCb.insertItemAt(strings.get("NVOIT", (tb.inputInvCb.getItemCount() == 0) ? 0 : tb.inputInvCb.getItemCount()-1), 0);
-            tb.cyclicInvCb.insertItemAt(strings.get("NVCyclicT", (tb.cyclicInvCb.getItemCount() == 0) ? 0 : tb.cyclicInvCb.getItemCount()-1), 0);
-
+            
+            tb.TInvTabbedPane.setTitleAt(0, strings.get("NVAllT", (tb.allInvList.size() == 0) ? 0 : tb.allInvList.size()-2));
+            tb.TInvTabbedPane.setTitleAt(1, strings.get("NVTrivialT", (tb.trivialInvList.size() == 0) ? 0 : tb.trivialInvList.size()-2));
+            tb.TInvTabbedPane.setTitleAt(2, strings.get("NVIOT", (tb.ioInvList.size() == 0) ? 0 : tb.ioInvList.size()-2));
+            tb.TInvTabbedPane.setTitleAt(3, strings.get("NVOIT", (tb.inputInvList.size() == 0) ? 0 : tb.inputInvList.size()-2));
+            tb.TInvTabbedPane.setTitleAt(4, strings.get("NVOOT", (tb.outputInvList.size() == 0) ? 0 : tb.outputInvList.size()-2));
+            tb.TInvTabbedPane.setTitleAt(5, strings.get("NVCyclicT", (tb.cyclicInvList.size() == 0) ? 0 : tb.cyclicInvList.size()-2));
+            /*
             for(JComboBox cb : tinvCbList)
                 cb.setSelectedIndex(0);
             LOGGER.info("Enabling Listeners for T-Invariants");
@@ -1061,6 +1070,8 @@ public class NetViewer extends JFrame implements ActionListener {
             ((TinvItemListener)tb.ioInvCb.getItemListeners()[0]).enableItemListener();
             ((TinvItemListener)tb.allInvCb.getItemListeners()[0]).enableItemListener();
             LOGGER.info("Successfully added T-Invariants to ComboBox");
+            */
+            LOGGER.info("Successfully added T-Invariants to List Display");
         }
     }
 
@@ -1318,7 +1329,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return
      */
     public boolean hasTinvs() {
-        return tb.allInvCb.getItemCount() != 0;
+        return tb.allInvList.size() != 0;
     }
 
     /**
@@ -2454,24 +2465,23 @@ public class NetViewer extends JFrame implements ActionListener {
         // Create ToolBar
         LOGGER.info("Initializing ToolBar");
         tb = new ToolBar(this, nvkl);
-        LOGGER.debug("Adding Invariants ComboBoxes");
-        // Invariants ComboBoxes
-        tinvCbList.add(tb.allInvCb);
-        tinvCbList.add(tb.trivialInvCb);
-        tinvCbList.add(tb.ioInvCb);
-        tinvCbList.add(tb.inputInvCb);
-        tinvCbList.add(tb.outputInvCb);
-        tinvCbList.add(tb.cyclicInvCb);
+        LOGGER.debug("Adding Invariants List Display");
+        // Invariants Lists
+        tinvModelList.add(tb.allInvList);
+        tinvModelList.add(tb.trivialInvList);
+        tinvModelList.add(tb.ioInvList);
+        tinvModelList.add(tb.inputInvList);
+        tinvModelList.add(tb.outputInvList);
+        tinvModelList.add(tb.cyclicInvList);
 
         // Fill the Boxes
-        // Are T-invariants available? If so, add these to the ComboBoxes
+        // Are T-invariants available? If so, add these to the Lists
         LOGGER.debug("Filling with T-Invariants, if available");
         tinvs = getTInvs();
         if(tinvs == null) {
-            for(JComboBox cb : tinvCbList)
-                cb.setEnabled(false);
+
         } else {
-            addTinvsToComboBox();
+            addTinvsToListDisplay();
         }
 
         // Are MCTS available? If so, add these to the ComboBox

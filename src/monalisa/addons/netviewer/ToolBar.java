@@ -7,7 +7,7 @@ package monalisa.addons.netviewer;
 
 import monalisa.addons.netviewer.listener.PinvItemListener;
 import monalisa.addons.netviewer.listener.MctsItemListener;
-import monalisa.addons.netviewer.listener.TinvItemListener;
+import monalisa.addons.netviewer.listener.TinvSelectionListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
@@ -23,6 +23,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.DefaultListModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.data.pn.Compartment;
@@ -45,6 +46,13 @@ public class ToolBar extends javax.swing.JPanel {
 
     private final NetViewer netViewer;
     private final NetViewerKeyListener nvkl;
+    //d//
+    protected DefaultListModel allInvList;
+    protected DefaultListModel trivialInvList;
+    protected DefaultListModel cyclicInvList;
+    protected DefaultListModel ioInvList;
+    protected DefaultListModel inputInvList;
+    protected DefaultListModel outputInvList;
 
     private int lastValue;
     private boolean blockSpinner, blockMenuPaneChangeListener;
@@ -62,7 +70,14 @@ public class ToolBar extends javax.swing.JPanel {
         this.blockSpinner = false;
 
         this.addKeyListener(nvkl);
-
+        //d//
+        allInvList = new DefaultListModel();
+        trivialInvList= new DefaultListModel();
+        cyclicInvList = new DefaultListModel();
+        ioInvList = new DefaultListModel();
+        inputInvList = new DefaultListModel();
+        outputInvList = new DefaultListModel();
+        
         blockMenuPaneChangeListener = true;
         initComponents();
 
@@ -206,20 +221,23 @@ public class ToolBar extends javax.swing.JPanel {
         analysisPane = new javax.swing.JPanel();
         tinvPanel = new javax.swing.JPanel();
         emLabel = new javax.swing.JLabel();
-        allEM = new javax.swing.JLabel();
-        allInvCb = new javax.swing.JComboBox();
-        trivialInvCb = new javax.swing.JComboBox();
-        trivialEM = new javax.swing.JLabel();
-        ioEM = new javax.swing.JLabel();
-        ioInvCb = new javax.swing.JComboBox();
-        inputInvCb = new javax.swing.JComboBox();
-        inputEM = new javax.swing.JLabel();
-        outputEM = new javax.swing.JLabel();
-        cylicEM = new javax.swing.JLabel();
-        cyclicInvCb = new javax.swing.JComboBox();
         heatmapButton = new javax.swing.JButton();
-        outputInvCb = new javax.swing.JComboBox();
         computeTinvsButton = new javax.swing.JButton();
+        TInvTabbedPane = new javax.swing.JTabbedPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        all_list = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        trivial_list = new javax.swing.JList<>();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        io_list = new javax.swing.JList<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        input_list = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        output_list = new javax.swing.JList<>();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        cyclic_list = new javax.swing.JList<>();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        manatee_list = new javax.swing.JList<>();
         pinvPanel = new javax.swing.JPanel();
         pinvLabel = new javax.swing.JLabel();
         computePInvsButton = new javax.swing.JButton();
@@ -789,112 +807,13 @@ public class ToolBar extends javax.swing.JPanel {
         tinvPanel.setLayout(new java.awt.GridBagLayout());
 
         emLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        emLabel.setText("Elementary Modes");
+        emLabel.setText("Transition Invariants");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
         tinvPanel.add(emLabel, gridBagConstraints);
-
-        allEM.setText("all:");
-        allEM.setToolTipText("A list of all elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(allEM, gridBagConstraints);
-
-        allInvCb.addItemListener(new TinvItemListener(this.netViewer, this, allInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(allInvCb, gridBagConstraints);
-
-        trivialInvCb.addItemListener(new TinvItemListener(this.netViewer, this, trivialInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(trivialInvCb, gridBagConstraints);
-
-        trivialEM.setText("trivial:");
-        trivialEM.setToolTipText("A list of all trivial elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(trivialEM, gridBagConstraints);
-
-        ioEM.setText("I / O:");
-        ioEM.setToolTipText("A list of all elementary modes connection at least one input reaction with at least one output reaction");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(ioEM, gridBagConstraints);
-
-        ioInvCb.addItemListener(new TinvItemListener(this.netViewer, this, ioInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(ioInvCb, gridBagConstraints);
-
-        inputInvCb.addItemListener(new TinvItemListener(this.netViewer, this, inputInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(inputInvCb, gridBagConstraints);
-
-        inputEM.setText("Input");
-        inputEM.setToolTipText("A list of all elementary modes containing a input reaction but no output reaction ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(inputEM, gridBagConstraints);
-
-        outputEM.setText("Output:");
-        outputEM.setToolTipText("A list of all elementary modes containing a output reaction but no input reaction ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(outputEM, gridBagConstraints);
-
-        cylicEM.setText("cyclic:");
-        cylicEM.setToolTipText("A list of all cyclic elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(cylicEM, gridBagConstraints);
-
-        cyclicInvCb.addItemListener(new TinvItemListener(this.netViewer, this, cyclicInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(cyclicInvCb, gridBagConstraints);
 
         heatmapButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/map_color.png"))); // NOI18N
         heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
@@ -905,22 +824,12 @@ public class ToolBar extends javax.swing.JPanel {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         tinvPanel.add(heatmapButton, gridBagConstraints);
 
-        outputInvCb.addItemListener(new TinvItemListener(this.netViewer, this, outputInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(outputInvCb, gridBagConstraints);
-
-        computeTinvsButton.setText("Compute Elementary Modes");
+        computeTinvsButton.setText("Compute Transition Invariants");
         computeTinvsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 computeTinvsButtonActionPerformed(evt);
@@ -929,9 +838,63 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         tinvPanel.add(computeTinvsButton, gridBagConstraints);
+
+        TInvTabbedPane.setMinimumSize(new java.awt.Dimension(300, 227));
+        TInvTabbedPane.setPreferredSize(new java.awt.Dimension(400, 314));
+
+        all_list.setModel(allInvList);
+        all_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, all_list, true));
+        jScrollPane3.setViewportView(all_list);
+
+        TInvTabbedPane.addTab("All", jScrollPane3);
+
+        trivial_list.setModel(trivialInvList);
+        trivial_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, trivial_list, true));
+        jScrollPane4.setViewportView(trivial_list);
+
+        TInvTabbedPane.addTab("Trivial", jScrollPane4);
+
+        io_list.setModel(ioInvList);
+        io_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, io_list, true));
+        jScrollPane5.setViewportView(io_list);
+
+        TInvTabbedPane.addTab("I/O", jScrollPane5);
+
+        input_list.setModel(inputInvList);
+        input_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, input_list, true));
+        jScrollPane1.setViewportView(input_list);
+
+        TInvTabbedPane.addTab("Input", jScrollPane1);
+
+        output_list.setModel(outputInvList);
+        output_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, output_list, true));
+        jScrollPane2.setViewportView(output_list);
+
+        TInvTabbedPane.addTab("Output", jScrollPane2);
+
+        cyclic_list.setModel(cyclicInvList);
+        cyclic_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, cyclic_list, true));
+        jScrollPane6.setViewportView(cyclic_list);
+
+        TInvTabbedPane.addTab("Cyclic", jScrollPane6);
+
+        manatee_list.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane7.setViewportView(manatee_list);
+
+        TInvTabbedPane.addTab("Manatee", jScrollPane7);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        tinvPanel.add(TInvTabbedPane, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1258,6 +1221,7 @@ public class ToolBar extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JTabbedPane TInvTabbedPane;
     protected javax.swing.JButton addBendButton;
     protected javax.swing.JPanel addBendPanel;
     protected javax.swing.JButton addEdgeButton;
@@ -1266,9 +1230,8 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JPanel addPlacePanel;
     protected javax.swing.JButton addTransitionButton;
     protected javax.swing.JPanel addTransitionPanel;
-    private javax.swing.JLabel allEM;
-    protected javax.swing.JComboBox allInvCb;
     protected javax.swing.JButton allMctsButton;
+    private javax.swing.JList<String> all_list;
     protected javax.swing.JButton allignXButton;
     protected javax.swing.JPanel allignXPanel;
     protected javax.swing.JButton allignYButton;
@@ -1282,8 +1245,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JButton computeTinvsButton;
     private javax.swing.JPanel controlButtonPanel;
     private javax.swing.JPanel controlPane;
-    protected javax.swing.JComboBox cyclicInvCb;
-    private javax.swing.JLabel cylicEM;
+    private javax.swing.JList<String> cyclic_list;
     protected javax.swing.JButton deleteButton;
     private javax.swing.JButton deleteCompartmentButton;
     protected javax.swing.JPanel deletePanel;
@@ -1300,11 +1262,17 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JSpinner iconSizeSpinner;
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
-    private javax.swing.JLabel inputEM;
-    protected javax.swing.JComboBox inputInvCb;
-    private javax.swing.JLabel ioEM;
-    protected javax.swing.JComboBox ioInvCb;
+    private javax.swing.JList<String> input_list;
+    private javax.swing.JList<String> io_list;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JList<String> manatee_list;
     protected javax.swing.JCheckBox manuellColorSelection;
     protected javax.swing.JComboBox mcsCb;
     private javax.swing.JLabel mcsLabel;
@@ -1321,8 +1289,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
-    private javax.swing.JLabel outputEM;
-    protected javax.swing.JComboBox outputInvCb;
+    private javax.swing.JList<String> output_list;
     protected javax.swing.JComboBox pinvCb;
     private javax.swing.JLabel pinvLabel;
     private javax.swing.JPanel pinvPanel;
@@ -1335,8 +1302,7 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JCheckBox stackSelection;
     private javax.swing.JPanel styleButtonPanel;
     private javax.swing.JPanel tinvPanel;
-    private javax.swing.JLabel trivialEM;
-    protected javax.swing.JComboBox trivialInvCb;
+    private javax.swing.JList<String> trivial_list;
     protected javax.swing.JLabel zoomLabel;
     protected javax.swing.JSpinner zoomSpinner;
     // End of variables declaration//GEN-END:variables

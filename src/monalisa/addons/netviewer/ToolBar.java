@@ -1210,9 +1210,13 @@ public class ToolBar extends javax.swing.JPanel {
     }
     if(PinvCheckBox.isSelected())
         toolslist.add(PInvariantTool.class.getName());
-        //netViewer.calcPInvs();
-    
+      
     netViewer.calcTools(toolslist);
+    
+    // check if the net is CTI
+    //    TInvariantTool TTool  = new TInvariantTool();
+        
+    //    CTILabel.setText(TTool.cti.getText());
     
     }//GEN-LAST:event_computeInvsButtonActionPerformed
 

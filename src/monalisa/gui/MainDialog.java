@@ -1098,6 +1098,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private void updateNetViewer() throws InterruptedException, IOException {
         if(project.hasResults(TInvariantTool.class)) {
             netViewer.addTinvsToListDisplay();
+            netViewer.ctiCheck();
         }
         if(project.hasResults(PInvariantTool.class)) {
             netViewer.addPinvsToListDisplay();

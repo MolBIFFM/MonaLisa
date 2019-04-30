@@ -103,7 +103,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     private void setCTILabelText() {
-        int status = isCTI(project);
+        int status = isCTI();
         if(status == 1) {
             LOGGER.info("Petri net is CTI");
             cti.setText(strings.get("CTI"));
@@ -120,7 +120,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     private void setCTILabelText(TInvariants tinv) {
-        int status = isCTI(tinv);
+        int status = isCTI(tinv, project);
         if(status == 1) {
             LOGGER.info("Petri net is CTI");
             cti.setText(strings.get("CTI"));
@@ -136,7 +136,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
         }
     }
 
-    public int isCTI(Project project) {
+    private int isCTI() {
         LOGGER.info("Checking whether Petri net is CTI");
         TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
         if(tinv == null) {
@@ -170,7 +170,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
         }
     }
 
-    private int isCTI(TInvariants tinv) {
+    public int isCTI(TInvariants tinv, Project project) {
         LOGGER.info("Checking whether Petri net is CTI");
         if(tinv == null) {
             LOGGER.warn("T-Invariants could not be found");

@@ -569,6 +569,8 @@ public class NetViewer extends JFrame implements ActionListener {
                 
                 tb.allInvList.clear();
                 
+                tb.CTILabel.setText("");
+                
                 pinvs = null;
                 tb.PinvList.clear();
                 mctsResults = null;
@@ -814,27 +816,34 @@ public class NetViewer extends JFrame implements ActionListener {
     }
     
     /**
-     * Calculates all the tools selected from the ToolBar
+     * Runs all the given tools from the netviewer
      * @param tools
      */
     public void calcTools(ArrayList<String> tools){
+        
         project.runGivenTools(tools);
-
-        // check if the net is CTI
-        int cti  = new TInvariantTool().isCTI(project);
-        
-        if(cti == 1){
-            tb.CTILabel.setText(strings.get("CTI"));
-            tb.CTILabel.setForeground(new java.awt.Color(35, 132, 71));
-        }
-        else{
-            tb.CTILabel.setText(strings.get("NotCTI"));
-            tb.CTILabel.setForeground(new java.awt.Color(215, 69, 19));
-        }
-        
 
     }
     
+    /**
+     * Checks if the net is CTI and changes the Label in Toolbar correspondingly
+     */
+    public void ctiCheck(){
+        tinvs = getTInvs();
+        int status  = new TInvariantTool().isCTI(tinvs, project);
+        
+        if(status == 1){
+            tb.CTILabel.setText(strings.get("CTI"));
+            tb.CTILabel.setForeground(new java.awt.Color(35, 132, 71));
+        }
+        else if(status == 0){
+            tb.CTILabel.setText(strings.get("NotCTI"));
+            tb.CTILabel.setForeground(new java.awt.Color(215, 69, 19));
+        }
+        else if(status == -1){
+            tb.CTILabel.setText("");
+        }
+    }
     /**
      * Returns all t-invariants form loaded Petri net
      * @return
@@ -1061,30 +1070,35 @@ public class NetViewer extends JFrame implements ActionListener {
             }
             if(!tb.ioInvList.isEmpty()){
                 tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter ++;
                 for(Object tw : tb.ioInvList.toArray())
                     tb.allInvList.addElement(tw);
             }
             
             if(!tb.inputInvList.isEmpty()){
                 tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter ++;
                 for(Object tw : tb.inputInvList.toArray())
                     tb.allInvList.addElement(tw);
             }
             
             if(!tb.outputInvList.isEmpty()){
                 tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter ++;
                 for(Object tw : tb.outputInvList.toArray())
                     tb.allInvList.addElement(tw);
             }
             
             if(!tb.cyclicInvList.isEmpty()){
                 tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter ++;
                 for(Object tw : tb.cyclicInvList.toArray())
                     tb.allInvList.addElement(tw);
             }
             
             if(!tb.trivialInvList.isEmpty()){
                 tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter ++;
                 for(Object tw : tb.trivialInvList.toArray())
                     tb.allInvList.addElement(tw);
             }
@@ -2508,7 +2522,6 @@ public class NetViewer extends JFrame implements ActionListener {
         tb = new ToolBar(this, nvkl);
         LOGGER.debug("Adding Invariants List Display");
         // Invariants Lists
-        //tinvModelMap.put(tb.allInvList, "NVAllT");
         tinvModelMap.put(tb.ioInvList, "NVIOT");
         tinvModelMap.put(tb.trivialInvList, "NVTrivialT");
         tinvModelMap.put(tb.cyclicInvList, "NVCyclicT");
@@ -2521,7 +2534,8 @@ public class NetViewer extends JFrame implements ActionListener {
         tinvs = getTInvs();
         if(tinvs == null) 
             addTinvsToListDisplay();
-
+        
+        
         // Are MCTS available? If so, add these to the ComboBox
         LOGGER.debug("Filling with MCTS, if available");
         mctsResults = getMctsResults();

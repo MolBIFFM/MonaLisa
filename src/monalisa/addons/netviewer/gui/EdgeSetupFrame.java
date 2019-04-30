@@ -186,6 +186,9 @@ public class EdgeSetupFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         LOGGER.info("Saving edge properties");
+        if((Integer)weightSpinner.getValue() != nvEdge.getWeight())
+            netViewer.modificationActionHappend();
+        
         this.netViewer.writeEdgeSetup(nvEdge, (Integer)weightSpinner.getValue(), showColorLabelEdge.getForeground(), edgeNoteTextArea.getText());
         this.dispose();
         LOGGER.info("Successfully saved edge properties");

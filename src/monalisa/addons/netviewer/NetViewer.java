@@ -134,7 +134,7 @@ public class NetViewer extends JFrame implements ActionListener {
     protected VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
     private NetViewerModalGraphMouse gm;
     private Boolean mouseMode;                                                  // true = picking ; false = transforming
-    private Boolean heatMap;                                                    // true = show , false = dont show
+    protected Boolean heatMap;                                                    // true = show , false = dont show
     private Boolean netChanged = false, lastChanged = false;
     private final List<NetViewerNode> alignmentList;                            // List to save selected nodes for a layout alignment
 
@@ -163,12 +163,12 @@ public class NetViewer extends JFrame implements ActionListener {
 
     private final List<JPanel> mouseModePanels = new ArrayList<>();
 
-    private final List<DefaultListModel> tinvModelList = new ArrayList<>();
+    private final Map<DefaultListModel, String> tinvModelMap = new HashMap<>();
     private final List<JFrame> framesList = new ArrayList<>();
     private final Map<String, JScrollPane> spMap = new HashMap<>();
 
     private final List<NetChangedListener> netChangedListener;
-
+    
     private final Synchronizer synchronizer;
     private static final Logger LOGGER = LogManager.getLogger(NetViewer.class);
 
@@ -488,7 +488,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * Clears all calculated results and shows a message regarding that.
      *
      */
-    protected void modificationActionHappend() {
+    public void modificationActionHappend() {
         LOGGER.info("Handling modification action");
         netChanged = true;
         netChanged();
@@ -564,25 +564,22 @@ public class NetViewer extends JFrame implements ActionListener {
                 tinvs = null;
                 
                 // clear all Display Lists and reset the Tab Titles
-                for(DefaultListModel dl : tinvModelList)
+                for(DefaultListModel dl : tinvModelMap.keySet())
                     dl.clear();
                 
-                tb.TInvTabbedPane.setTitleAt(0, "All");
-                tb.TInvTabbedPane.setTitleAt(1, "Trivial");
-                tb.TInvTabbedPane.setTitleAt(2, "I/O");
-                tb.TInvTabbedPane.setTitleAt(3, "Input");
-                tb.TInvTabbedPane.setTitleAt(4, "Output");
-                tb.TInvTabbedPane.setTitleAt(5, "Cyclic");
-                tb.TInvTabbedPane.setTitleAt(6, "Manatee");
+                tb.allInvList.clear();
                 
                 pinvs = null;
-                tb.pinvCb.removeAllItems();
+                tb.PinvList.clear();
                 mctsResults = null;
                 tb.mctsCb.removeAllItems();
                 mcsResults = null;
                 tb.mcsCb.removeAllItems();
                 project.resetTools();
                 mainDialog.updateUI();
+                
+                tb.InvTabbedPane.setTitleAt(0, "T - Invariants");
+                tb.InvTabbedPane.setTitleAt(2, "P - Invariants");
             }
             fireNetChangedEvent();
         }
@@ -815,21 +812,29 @@ public class NetViewer extends JFrame implements ActionListener {
     public Project getProject() {
         return this.project;
     }
-
+    
     /**
-     * Calculates the T-Invariants from the ToolBar
+     * Calculates all the tools selected from the ToolBar
+     * @param tools
      */
-    public void calcTInvs() {
-        project.runGivenTools(Arrays.asList(TInvariantTool.class.getName()));
-    }
+    public void calcTools(ArrayList<String> tools){
+        project.runGivenTools(tools);
 
-    /**
-     * Calculates the P-Invariants from the ToolBar
-     */
-    public void calcPInvs() {
-        project.runGivenTools(Arrays.asList(PInvariantTool.class.getName()));
-    }
+        // check if the net is CTI
+        int cti  = new TInvariantTool().isCTI(project);
+        
+        if(cti == 1){
+            tb.CTILabel.setText(strings.get("CTI"));
+            tb.CTILabel.setForeground(new java.awt.Color(35, 132, 71));
+        }
+        else{
+            tb.CTILabel.setText(strings.get("NotCTI"));
+            tb.CTILabel.setForeground(new java.awt.Color(215, 69, 19));
+        }
+        
 
+    }
+    
     /**
      * Returns all t-invariants form loaded Petri net
      * @return
@@ -982,8 +987,10 @@ public class NetViewer extends JFrame implements ActionListener {
         if(!tinvs.isEmpty()) {
             LOGGER.info("Adding T-Invariants to List Display");
 
-            for(DefaultListModel dl : tinvModelList)
+            for(DefaultListModel dl : tinvModelMap.keySet())
                 dl.clear();
+            
+            tb.allInvList.clear();
 
             Boolean input, output;
             int i, tinvSize;
@@ -992,7 +999,6 @@ public class NetViewer extends JFrame implements ActionListener {
             Transition t1;
 
             for(TInvariant tinv : tinvs) {
-                tb.allInvList.addElement(new TinvWrapper(tinv));
                 tinvSize = tinv.size();
                 if(tinvSize == 2) {
                     tb.trivialInvList.addElement(new TinvWrapper(tinv));
@@ -1029,10 +1035,11 @@ public class NetViewer extends JFrame implements ActionListener {
             
             LOGGER.info("Generating combination of all T-Invariants for a List Display");
             // Create a T-invariant out of all t-invariantzs of a single list
-            int itemCount, oldValue;
+            int itemCount, oldValue, counter;
+            counter = 0;
             TInvariant tinvariant;
             Map<Transition, Integer> transitions;
-            for(DefaultListModel dl : tinvModelList) {
+            for(DefaultListModel dl : tinvModelMap.keySet()) {
                 itemCount = dl.size();
                 if(itemCount > 0) {
                     transitions = new HashMap<>();
@@ -1047,30 +1054,66 @@ public class NetViewer extends JFrame implements ActionListener {
                             }
                         }
                     }
-                    dl.insertElementAt(new TinvWrapper(new TInvariant(-1, transitions)), 0);
-                    dl.insertElementAt("Clear", 0);
+                    String name = strings.get(tinvModelMap.get(dl), (dl.size() == 0) ? 0 : dl.size());
+                    dl.insertElementAt(new TinvWrapper(new TInvariant(-1, transitions), name), 0);
+                    counter++;
                 }
             }
+            if(!tb.ioInvList.isEmpty()){
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                for(Object tw : tb.ioInvList.toArray())
+                    tb.allInvList.addElement(tw);
+            }
             
-            tb.TInvTabbedPane.setTitleAt(0, strings.get("NVAllT", (tb.allInvList.size() == 0) ? 0 : tb.allInvList.size()-2));
-            tb.TInvTabbedPane.setTitleAt(1, strings.get("NVTrivialT", (tb.trivialInvList.size() == 0) ? 0 : tb.trivialInvList.size()-2));
-            tb.TInvTabbedPane.setTitleAt(2, strings.get("NVIOT", (tb.ioInvList.size() == 0) ? 0 : tb.ioInvList.size()-2));
-            tb.TInvTabbedPane.setTitleAt(3, strings.get("NVOIT", (tb.inputInvList.size() == 0) ? 0 : tb.inputInvList.size()-2));
-            tb.TInvTabbedPane.setTitleAt(4, strings.get("NVOOT", (tb.outputInvList.size() == 0) ? 0 : tb.outputInvList.size()-2));
-            tb.TInvTabbedPane.setTitleAt(5, strings.get("NVCyclicT", (tb.cyclicInvList.size() == 0) ? 0 : tb.cyclicInvList.size()-2));
-            /*
-            for(JComboBox cb : tinvCbList)
-                cb.setSelectedIndex(0);
-            LOGGER.info("Enabling Listeners for T-Invariants");
-            ((TinvItemListener)tb.cyclicInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.inputInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.outputInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.trivialInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.trivialInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.ioInvCb.getItemListeners()[0]).enableItemListener();
-            ((TinvItemListener)tb.allInvCb.getItemListeners()[0]).enableItemListener();
-            LOGGER.info("Successfully added T-Invariants to ComboBox");
-            */
+            if(!tb.inputInvList.isEmpty()){
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                for(Object tw : tb.inputInvList.toArray())
+                    tb.allInvList.addElement(tw);
+            }
+            
+            if(!tb.outputInvList.isEmpty()){
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                for(Object tw : tb.outputInvList.toArray())
+                    tb.allInvList.addElement(tw);
+            }
+            
+            if(!tb.cyclicInvList.isEmpty()){
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                for(Object tw : tb.cyclicInvList.toArray())
+                    tb.allInvList.addElement(tw);
+            }
+            
+            if(!tb.trivialInvList.isEmpty()){
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                for(Object tw : tb.trivialInvList.toArray())
+                    tb.allInvList.addElement(tw);
+            }
+            
+            
+            itemCount = tb.allInvList.size();
+                if(itemCount > 0) {
+                    transitions = new HashMap<>();
+                    for(i = 0; i < itemCount; i++) {
+                        if(tb.allInvList.getElementAt(i).getClass().equals(TinvWrapper.class)){
+                            tinvariant = ((TinvWrapper)tb.allInvList.getElementAt(i)).getTinv();
+                            for(Transition transition : tinvariant) {
+                               if(tinvariant.factor(transition) > 0) {
+                                   if(!transitions.containsKey(transition))
+                                       transitions.put(transition, 0);
+                                   oldValue = transitions.get(transition);
+                                   transitions.put(transition, tinvariant.factor(transition)+oldValue);
+                                }
+                            }
+                        }    
+                    }
+                    String allTinv = strings.get("NVAllT", (tb.allInvList.size() == 0) ? 0 : tb.allInvList.size()-counter);
+                    tb.InvTabbedPane.setTitleAt(0, allTinv);
+
+                    TInvariant combined = new TInvariant(-1, transitions);
+                    String name = strings.get("NVCombinedT", (combined.isEmpty()) ? 0 : combined.size());
+                    tb.allInvList.insertElementAt(new TinvWrapper(combined, name), 0);
+                }
+
             LOGGER.info("Successfully added T-Invariants to List Display");
         }
     }
@@ -1078,29 +1121,28 @@ public class NetViewer extends JFrame implements ActionListener {
     /**
      * Add the P-Invariants to the combobox.
      */
-    public void addPinvsToComboBox() {
-        LOGGER.info("Adding P-Invariants to ComboBox");
+    public void addPinvsToListDisplay() {
+        LOGGER.info("Adding P-Invariants to List Display");
         if(pinvs == null)
             pinvs = getPInvs();
         if(pinvs == null)
             return;
         if(!pinvs.isEmpty()) {
-            tb.pinvCb.setEnabled(true);
-            tb.pinvCb.removeAllItems();
+            tb.PinvList.clear();
 
             for(PInvariant pinv : pinvs)
-                tb.pinvCb.addItem(new PinvWrapper(pinv));
+                tb.PinvList.addElement(new PinvWrapper(pinv));
 
             // Create a P-invariant out of all p-invariants
             LOGGER.info("Generating combination of all P-Invariants");
             int itemCount, oldValue;
             PInvariant pinvariant;
             Map<Place, Integer> places;
-            itemCount = tb.pinvCb.getItemCount();
+            itemCount = tb.PinvList.size();
             if(itemCount > 0) {
                 places = new HashMap<>();
                 for(int i = 0; i < itemCount; i++) {
-                    pinvariant = ((PinvWrapper)tb.pinvCb.getItemAt(i)).getPinv();
+                    pinvariant = ((PinvWrapper)tb.PinvList.getElementAt(i)).getPinv();
                     for(Place place : pinvariant) {
                         if(pinvariant.factor(place) > 0) {
                             if(!places.containsKey(place))
@@ -1110,13 +1152,12 @@ public class NetViewer extends JFrame implements ActionListener {
                         }
                     }
                 }
-                tb.pinvCb.insertItemAt(new PinvWrapper(new PInvariant(-1, places)), 0);
+                tb.PinvList.insertElementAt(new PinvWrapper(new PInvariant(-1, places)), 0);
             }
 
-            tb.pinvCb.insertItemAt(strings.get("NVAllP", tb.pinvCb.getItemCount()-1), 0);
-            tb.pinvCb.setSelectedIndex(0);
+            tb.InvTabbedPane.setTitleAt(2, strings.get("NVAllP", tb.PinvList.getSize()-1));
         }
-        LOGGER.info("Successfully added P-Invariants to ComboBox");
+        LOGGER.info("Successfully added P-Invariants to List Display");
     }
 
     /**
@@ -2467,22 +2508,19 @@ public class NetViewer extends JFrame implements ActionListener {
         tb = new ToolBar(this, nvkl);
         LOGGER.debug("Adding Invariants List Display");
         // Invariants Lists
-        tinvModelList.add(tb.allInvList);
-        tinvModelList.add(tb.trivialInvList);
-        tinvModelList.add(tb.ioInvList);
-        tinvModelList.add(tb.inputInvList);
-        tinvModelList.add(tb.outputInvList);
-        tinvModelList.add(tb.cyclicInvList);
+        //tinvModelMap.put(tb.allInvList, "NVAllT");
+        tinvModelMap.put(tb.ioInvList, "NVIOT");
+        tinvModelMap.put(tb.trivialInvList, "NVTrivialT");
+        tinvModelMap.put(tb.cyclicInvList, "NVCyclicT");
+        tinvModelMap.put(tb.outputInvList, "NVOOT");
+        tinvModelMap.put(tb.inputInvList, "NVOIT");
 
         // Fill the Boxes
         // Are T-invariants available? If so, add these to the Lists
         LOGGER.debug("Filling with T-Invariants, if available");
         tinvs = getTInvs();
-        if(tinvs == null) {
-
-        } else {
+        if(tinvs == null) 
             addTinvsToListDisplay();
-        }
 
         // Are MCTS available? If so, add these to the ComboBox
         LOGGER.debug("Filling with MCTS, if available");
@@ -2503,14 +2541,11 @@ public class NetViewer extends JFrame implements ActionListener {
             addMcsToComboBox();
         }
 
-        // Are P-invariants available? If so, add these to the ComboBox
+        // Are P-invariants available? If so, add these to the List
         LOGGER.debug("Filling with P-Invariants, if available");
         pinvs = getPInvs();
-        if(pinvs == null) {
-            tb.pinvCb.setEnabled(false);
-        } else {
-            addPinvsToComboBox();
-        }
+        if(pinvs != null)
+            addPinvsToListDisplay();
 
         // Add all MouseMode Buttons to a list
         LOGGER.debug("Adding MouseMode buttons to list");

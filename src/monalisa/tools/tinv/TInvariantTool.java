@@ -40,10 +40,13 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     private static final StringResources strings = resources.getDefaultStrings();
     private JPanel panel;
     private JCheckBox calculate;
-    private JLabel cti;
+    public JLabel cti;
     private Project project;
     private static final Logger LOGGER = LogManager.getLogger(TInvariantTool.class);
 
+    //public TInvariantTool(Project project){
+    //    this.project = project;
+    //}
     @Override
     public void run(PetriNetFacade pnf, ErrorLog log) throws InterruptedException {
         TInvariantCalculator calculator = null;
@@ -100,7 +103,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     private void setCTILabelText() {
-        int status = isCTI();
+        int status = isCTI(project);
         if(status == 1) {
             LOGGER.info("Petri net is CTI");
             cti.setText(strings.get("CTI"));
@@ -133,7 +136,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
         }
     }
 
-    private int isCTI() {
+    public int isCTI(Project project) {
         LOGGER.info("Checking whether Petri net is CTI");
         TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
         if(tinv == null) {

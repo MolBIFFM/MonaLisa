@@ -14,13 +14,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Wrapper Class for Tinv Combobox Items
+ * Wrapper Class for Tinv List Items
  * @author Jens Einloft
  */
 public class TinvWrapper {
     private final TInvariant tinv;
+    private String name;
     private static final Logger LOGGER = LogManager.getLogger(TinvWrapper.class);
 
+    
+    public TinvWrapper(TInvariant input, String TinvType) {
+        this.tinv = input;
+        this.name = TinvType;
+        LOGGER.debug("Created new TinvWrapper " + (this.tinv.id()+1)+" ("+this.tinv.size()+")");
+    }
+    
     public TinvWrapper(TInvariant input) {
         this.tinv = input;
         LOGGER.debug("Created new TinvWrapper " + (this.tinv.id()+1)+" ("+this.tinv.size()+")");
@@ -35,6 +43,6 @@ public class TinvWrapper {
         if(this.tinv.id() >= 0)
             return "Elementary mode "+(this.tinv.id()+1)+" ("+this.tinv.size()+")";
         else
-            return "Combined elementary modes "+" ("+this.tinv.size()+")";
+            return name;
     }
 }

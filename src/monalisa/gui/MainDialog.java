@@ -1100,7 +1100,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             netViewer.addTinvsToListDisplay();
         }
         if(project.hasResults(PInvariantTool.class)) {
-            netViewer.addPinvsToComboBox();
+            netViewer.addPinvsToListDisplay();
         }
         if(project.hasResults(MctsTool.class)) {
             netViewer.addMctsToComboBox();

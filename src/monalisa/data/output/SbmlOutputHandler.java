@@ -42,6 +42,8 @@ import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
+//import org.sbml.jsbml.ext.layout.*;
+
 
 /**
  *
@@ -81,7 +83,13 @@ public class SbmlOutputHandler implements OutputHandler {
         if(pn.hasProperty(AnnotationsPanel.HISTORY)) {
             model.setHistory((History) pn.getProperty(AnnotationsPanel.HISTORY));
         }
-
+        /*LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
+        model.addExtension(LayoutConstants.getNamespaceURI(level, version),mplugin);
+                //(LayoutModelPlugin) model.getPlugin(LayoutConstants.shortLabel);
+        //Layout layout = new Layout();
+        //mplugin.add(layout);
+        Layout layout = mplugin.createLayout();*/
+        
         Compartment defaultCompartment = null;
         Map<monalisa.data.pn.Compartment, org.sbml.jsbml.Compartment> compartmentMap = new HashMap<>();
         if(this.level > 2) {
@@ -93,7 +101,11 @@ public class SbmlOutputHandler implements OutputHandler {
                     Integer i = 1;
                     for(monalisa.data.pn.Compartment c : pn.getCompartments()) {
                         Compartment compartment = model.createCompartment("C"+i.toString());
-
+                        
+                        /*CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG"+ c.toString());                        
+                        cglyph.setCompartment(compartment.getId());
+                        cglyph.createBoundingBox(c.getProperty("spatialDimensions"));*/
+                        
                         if(c == null)
                             continue;
 
@@ -141,15 +153,22 @@ public class SbmlOutputHandler implements OutputHandler {
         }
 
         Species species = null;
+        //SpeciesGlyph sglyph = null;
         for(Place p : pn.places()) {
             species = model.createSpecies("P"+p.id());
 
             if(this.level > 2) {
                 if(p.getCompartment() != null) {
                     species.setCompartment(compartmentMap.get(p.getCompartment()));
+                    
                 } else {
-                    species.setCompartment(defaultCompartment);
+                    species.setCompartment(defaultCompartment);                   
                 }
+                
+                /*sglyph = layout.createSpeciesGlyph("SG"+species.getId());
+                sglyph.setSpecies(species.getId());
+                BoundingBox bb = sglyph.createBoundingBox();
+                bb.createPosition(p.getProperty("posX"),p.getProperty("posY"),0);*/
             }
 
             species.setName((String) p.getProperty("name"));

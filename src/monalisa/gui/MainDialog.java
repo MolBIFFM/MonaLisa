@@ -56,6 +56,7 @@ import monalisa.tools.mcs.McsTool;
 import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
 import org.apache.logging.log4j.Logger;
@@ -1098,7 +1099,10 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private void updateNetViewer() throws InterruptedException, IOException {
         if(project.hasResults(TInvariantTool.class)) {
             netViewer.addTinvsToListDisplay();
-            netViewer.ctiCheck();
+            netViewer.checkCTI();
+        }
+        if(project.hasResults(MInvariantTool.class)) {
+            netViewer.addMinvsToListDisplay();
         }
         if(project.hasResults(PInvariantTool.class)) {
             netViewer.addPinvsToListDisplay();

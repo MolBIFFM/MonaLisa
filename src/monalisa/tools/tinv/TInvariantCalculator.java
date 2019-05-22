@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import monalisa.data.input.TInvParser;
-import monalisa.data.output.TinvCalcOutputHandler;
+import monalisa.data.input.InvParser;
+import monalisa.data.output.InvCalcOutputHandler;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
-import monalisa.data.pn.TInvariantBuilder;
+import monalisa.data.pn.InvariantBuilder;
 import monalisa.data.pn.Transition;
 import monalisa.results.MauritiusMap;
 import monalisa.results.TInvariants;
@@ -86,7 +86,7 @@ public final class TInvariantCalculator {
         for (Transition transition : petriNet.transitions())
             transitionIds.put(transition.id(), tid++);
 
-        TinvCalcOutputHandler outHandler = new TinvCalcOutputHandler(placeIds, transitionIds);
+        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "TI");
         try {
             LOGGER.debug("Trying to export Petri net to temporary .pnt file for T-Invariant calculation");
             outHandler.save(petriNet, new FileOutputStream(pntFile));
@@ -114,10 +114,10 @@ public final class TInvariantCalculator {
         if (tinvariants == null) {
             LOGGER.debug("Importing T-Invariants calculated by external tool");
             File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".inv"));
-            TInvariantBuilder invariantBuilder = new TInvariantBuilder(petriNet);
-            TInvParser invParser;
+            InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet, "TI");
+            InvParser invParser;
             try {
-                invParser = new TInvParser(invariantBuilder, invFile, invertMap(transitionIds));
+                invParser = new InvParser(invariantBuilder, invFile, invertMap(transitionIds), "TI");
                 LOGGER.debug("Successfully imported T-Invariants calculated by external tool");
             } catch (IOException ex) {
                 log.log("#InvParserFailed", ErrorLog.Severity.ERROR);
@@ -158,11 +158,11 @@ public final class TInvariantCalculator {
             String os = System.getProperty("os.name").toLowerCase();
             if(os.contains("nix") || os.contains("nux")) {
                 LOGGER.debug("OS determined to be Unix");
-                toolFile = FileUtils.extractResource("tinv_unix", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
             }
             else if(os.contains("win")) {
                 LOGGER.debug("OS determined to be Windows");
-                toolFile = FileUtils.extractResource("tinv_win.exe", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             }
             else if(os.contains("mac")) {
                 LOGGER.debug("OS determined to be MAC");
@@ -170,15 +170,21 @@ public final class TInvariantCalculator {
             }
             else{
                 LOGGER.warn("No valid operating system found. Starting linux version!");
-                toolFile = FileUtils.extractResource("tinv_unix", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
             }
         } catch (IOException e) {
             throw new ExtractResourceException(e);
         }
         toolFile.deleteOnExit();
         toolFile.setExecutable(true);
-
-        ProcessBuilder pb = new ProcessBuilder(toolFile.getAbsolutePath(), input.getAbsolutePath()).inheritIO();
+        
+        String[] input_commands = new String[3];
+        
+        input_commands[0] = toolFile.getAbsolutePath();
+        input_commands[1] = input.getAbsolutePath();
+        input_commands[2] = ("TI");
+        
+        ProcessBuilder pb = new ProcessBuilder(input_commands).inheritIO();
         pb.directory(output);
 
         try {

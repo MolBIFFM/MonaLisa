@@ -34,6 +34,7 @@ import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 import monalisa.util.ColorCollection;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -56,6 +57,8 @@ public class ToolBar extends javax.swing.JPanel {
     protected DefaultListModel ioInvList;
     protected DefaultListModel inputInvList;
     protected DefaultListModel outputInvList;
+    
+    protected DefaultListModel MinvList;
     
     protected DefaultListModel PinvList;
 
@@ -82,6 +85,8 @@ public class ToolBar extends javax.swing.JPanel {
         ioInvList = new DefaultListModel();
         inputInvList = new DefaultListModel();
         outputInvList = new DefaultListModel();
+        
+        MinvList = new DefaultListModel();
         
         PinvList = new DefaultListModel();
         
@@ -238,7 +243,7 @@ public class ToolBar extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         Tinv_list = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
+        Minv_list = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         Pinv_list = new javax.swing.JList<>();
         CTILabel = new javax.swing.JLabel();
@@ -869,11 +874,12 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         InvPanel.add(jLabel2, gridBagConstraints);
 
-        InvTabbedPane.setMinimumSize(new java.awt.Dimension(340, 300));
-        InvTabbedPane.setPreferredSize(new java.awt.Dimension(340, 300));
+        InvTabbedPane.setMinimumSize(new java.awt.Dimension(370, 300));
+        InvTabbedPane.setPreferredSize(new java.awt.Dimension(370, 300));
 
         Tinv_list.setModel(allInvList);
         Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));
@@ -881,14 +887,11 @@ public class ToolBar extends javax.swing.JPanel {
 
         InvTabbedPane.addTab("T - Invariants", jScrollPane1);
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList2);
+        Minv_list.setModel(MinvList);
+        Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));
+        jScrollPane2.setViewportView(Minv_list);
 
-        InvTabbedPane.addTab("Manatee", jScrollPane2);
+        InvTabbedPane.addTab("M - Invariants", jScrollPane2);
 
         Pinv_list.setModel(PinvList);
         Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));
@@ -1207,6 +1210,7 @@ public class ToolBar extends javax.swing.JPanel {
     if(TinvCheckBox.isSelected())
         toolslist.add(TInvariantTool.class.getName());
     if(MinvCheckBox.isSelected()){
+        toolslist.add(MInvariantTool.class.getName());
     }
     if(PinvCheckBox.isSelected())
         toolslist.add(PInvariantTool.class.getName());
@@ -1239,6 +1243,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel InvPanel;
     protected javax.swing.JTabbedPane InvTabbedPane;
     private javax.swing.JCheckBox MinvCheckBox;
+    private javax.swing.JList<String> Minv_list;
     private javax.swing.JCheckBox PinvCheckBox;
     private javax.swing.JList<String> Pinv_list;
     private javax.swing.JCheckBox TinvCheckBox;
@@ -1283,7 +1288,6 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JPanel inEdgePanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList<String> jList2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;

@@ -18,6 +18,7 @@ import monalisa.addons.netviewer.wrapper.PinvWrapper;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.addons.netviewer.wrapper.SISWrapper;
 import monalisa.addons.netviewer.wrapper.TinvWrapper;
+import monalisa.addons.netviewer.wrapper.MinvWrapper;
 import monalisa.addons.netviewer.gui.EdgeSetupFrame;
 import monalisa.addons.netviewer.gui.VertexSetupFrame;
 import edu.uci.ics.jung.graph.Graph;
@@ -69,6 +70,7 @@ import monalisa.tools.mcs.McsTool;
 import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 import monalisa.util.MonaLisaFileChooser;
 import monalisa.util.MonaLisaFileFilter;
 import monalisa.util.OutputFileFilter;
@@ -127,6 +129,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private final MainDialog mainDialog;
     private TInvariants tinvs;
     private PInvariants pinvs;
+    private MInvariants minvs;
     private Map<Configuration, Result> mctsResults;
     private Map<Configuration, Result> mcsResults;
     public Graph<NetViewerNode, NetViewerEdge> g;
@@ -571,6 +574,9 @@ public class NetViewer extends JFrame implements ActionListener {
                 
                 tb.CTILabel.setText("");
                 
+                minvs = null;
+                tb.MinvList.clear();
+                
                 pinvs = null;
                 tb.PinvList.clear();
                 mctsResults = null;
@@ -581,6 +587,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 mainDialog.updateUI();
                 
                 tb.InvTabbedPane.setTitleAt(0, "T - Invariants");
+                tb.InvTabbedPane.setTitleAt(1, "M - Invariants");
                 tb.InvTabbedPane.setTitleAt(2, "P - Invariants");
             }
             fireNetChangedEvent();
@@ -593,7 +600,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
             if(hasMcts()) {
                 tb.mctsCb.setEnabled(true);
-                tb.allMctsButton.setEnabled(true);
+                tb.allMctsButton.setEnabled(true); 
             }
             importantTransitonsMenu.setEnabled(true);
         }
@@ -828,7 +835,7 @@ public class NetViewer extends JFrame implements ActionListener {
     /**
      * Checks if the net is CTI and changes the Label in Toolbar correspondingly
      */
-    public void ctiCheck(){
+    public void checkCTI(){
         tinvs = getTInvs();
         int status  = new TInvariantTool().isCTI(tinvs, project);
         
@@ -851,7 +858,10 @@ public class NetViewer extends JFrame implements ActionListener {
     private TInvariants getTInvs() {
         return project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
     }
-
+    
+    private MInvariants getMInvs() {
+        return project.getResult(MInvariantTool.class, new MInvariantsConfiguration());
+    }
     /**
      * Returns all p-invariants form loaded Petri net
      * @return
@@ -998,6 +1008,9 @@ public class NetViewer extends JFrame implements ActionListener {
 
             for(DefaultListModel dl : tinvModelMap.keySet())
                 dl.clear();
+            minvs = getMInvs();
+            System.out.println(minvs);
+            System.out.println(tinvs);
             
             tb.allInvList.clear();
 
@@ -1131,7 +1144,46 @@ public class NetViewer extends JFrame implements ActionListener {
             LOGGER.info("Successfully added T-Invariants to List Display");
         }
     }
+    
+    public void addMinvsToListDisplay() {
+    LOGGER.info("Adding M-Invariants to List Display");
+        if(minvs == null)
+            minvs = getMInvs();
+        if(minvs == null)
+            return;
+        if(!minvs.isEmpty()) {
+            tb.MinvList.clear();
 
+            for(MInvariant minv : minvs)
+                tb.MinvList.addElement(new MinvWrapper(minv));
+            /*
+            // Create a M-invariant out of all m-invariants
+            LOGGER.info("Generating combination of all M-Invariants");
+            int itemCount, oldValue;
+            PInvariant pinvariant;
+            Map<Place, Integer> places;
+            itemCount = tb.PinvList.size();
+            if(itemCount > 0) {
+                places = new HashMap<>();
+                for(int i = 0; i < itemCount; i++) {
+                    pinvariant = ((PinvWrapper)tb.PinvList.getElementAt(i)).getPinv();
+                    for(Place place : pinvariant) {
+                        if(pinvariant.factor(place) > 0) {
+                            if(!places.containsKey(place))
+                                places.put(place, 0);
+                            oldValue = places.get(place);
+                            places.put(place, pinvariant.factor(place)+oldValue);
+                        }
+                    }
+                }
+                tb.PinvList.insertElementAt(new PinvWrapper(new PInvariant(-1, places)), 0);
+            }*/
+
+            tb.InvTabbedPane.setTitleAt(1, strings.get("NVAllM", tb.MinvList.getSize()));
+        }
+        LOGGER.info("Successfully added M-Invariants to List Display");
+    }
+    
     /**
      * Add the P-Invariants to the combobox.
      */
@@ -1173,6 +1225,7 @@ public class NetViewer extends JFrame implements ActionListener {
         }
         LOGGER.info("Successfully added P-Invariants to List Display");
     }
+
 
     /**
      * Adds the MC-Sets to the combobox.
@@ -2534,6 +2587,12 @@ public class NetViewer extends JFrame implements ActionListener {
         tinvs = getTInvs();
         if(tinvs == null) 
             addTinvsToListDisplay();
+        
+        // Are M-invariants available? If so, add these to the List
+        LOGGER.debug("Filling with M-Invariants, if available");
+        minvs = getMInvs();
+        if(minvs != null)
+            addMinvsToListDisplay(); 
         
         
         // Are MCTS available? If so, add these to the ComboBox

@@ -65,7 +65,7 @@ public class TinvSelectionListener implements ListSelectionListener {
             if(js.getSelectedValue() == null)
                 return;
 
-            List<TinvWrapper> selectionValues = new ArrayList<TinvWrapper>();
+            List<TinvWrapper> selectionValues;
             selectionValues = js.getSelectedValuesList();
             
             for(Object sv : selectionValues){

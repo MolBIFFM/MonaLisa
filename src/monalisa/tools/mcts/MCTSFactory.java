@@ -14,7 +14,7 @@ package monalisa.tools.mcts;
 import java.util.*;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.TInvariant;
-import monalisa.data.pn.TInvariantBuilder;
+import monalisa.data.pn.InvariantBuilder;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,7 +57,7 @@ public class MCTSFactory {
             alreadyDone.add(i);
             Transition transition = transitions.get(i);
 
-            TInvariantBuilder builder = new TInvariantBuilder(pnf);
+            InvariantBuilder builder = new InvariantBuilder(pnf, "TI");
             builder.setId(mctsId++);
             builder.add(transition, 1);
 
@@ -111,7 +111,7 @@ public class MCTSFactory {
                     continue;
 
                 alreadyDone.add(transT.id());
-                TInvariantBuilder builder = new TInvariantBuilder(pnf);
+                InvariantBuilder builder = new InvariantBuilder(pnf,"TI");
                 builder.setId(mctsId++);
                 int transNum = 0;
                 builder.add(transT, 1);

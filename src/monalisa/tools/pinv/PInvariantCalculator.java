@@ -16,9 +16,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import monalisa.data.input.PInvParser;
-import monalisa.data.output.PinvCalcOutputHandler;
-import monalisa.data.pn.PInvariantBuilder;
+import monalisa.data.input.InvParser;
+import monalisa.data.output.InvCalcOutputHandler;
+import monalisa.data.pn.InvariantBuilder;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -78,7 +78,7 @@ public final class PInvariantCalculator {
         for (Transition transition : petriNet.transitions())
             transitionIds.put(transition.id(), tid++);
 
-        PinvCalcOutputHandler outHandler = new PinvCalcOutputHandler(placeIds, transitionIds);
+        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "PI");
         try {
             LOGGER.debug("Trying to export Petri net to temporary .pnt file for P-Invariant calculation");
             outHandler.save(petriNet, new FileOutputStream(pntFile));
@@ -105,11 +105,11 @@ public final class PInvariantCalculator {
     public PInvariants pinvariants(ErrorLog log) throws PInvariantCalculationFailedException {
         if (pinvariants == null) {
             LOGGER.debug("Importing P-Invariants calculated by external tool");
-            File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".inv"));
-            PInvariantBuilder invariantBuilder = new PInvariantBuilder(petriNet);
-            PInvParser invParser;
+            File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".pi"));
+            InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet,"PI");
+            InvParser invParser;
             try {
-                invParser = new PInvParser(invariantBuilder, invFile, invertMap(placeIds));
+                invParser = new InvParser(invariantBuilder, invFile, invertMap(placeIds),"PI");
                 LOGGER.debug("Successfully imported P-Invariants calculated by external tool");
             } catch (IOException ex) {
                 log.log("#InvParserFailed", ErrorLog.Severity.ERROR);
@@ -133,11 +133,11 @@ public final class PInvariantCalculator {
             if( System.getProperty("os.name").toLowerCase().indexOf("nix") >= 0
              || System.getProperty("os.name").toLowerCase().indexOf("nux") >= 0 ) {
                 LOGGER.debug("OS determined to be Unix");
-                toolFile = FileUtils.extractResource("tinv_unix", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
             }
             else if(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
                 LOGGER.debug("OS determined to be Windows");
-                toolFile = FileUtils.extractResource("tinv_win.exe", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             }
             else if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
                 LOGGER.debug("OS determined to be MAC");
@@ -148,8 +148,14 @@ public final class PInvariantCalculator {
         }
         toolFile.deleteOnExit();
         toolFile.setExecutable(true);
-
-        ProcessBuilder pb = new ProcessBuilder(toolFile.getAbsolutePath(), input.getAbsolutePath()).inheritIO();
+        
+        String[] input_commands = new String[3];
+        
+        input_commands[0] = toolFile.getAbsolutePath();
+        input_commands[1] = input.getAbsolutePath();
+        input_commands[2] = ("PI");
+        
+        ProcessBuilder pb = new ProcessBuilder(input_commands).inheritIO();
         pb.directory(output);
 
         try {
@@ -164,7 +170,7 @@ public final class PInvariantCalculator {
             LOGGER.debug("Marking output files for deletion");
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
-            String[] extensions = { ".inv" };
+            String[] extensions = { ".pi" };
 
             for (String ext : extensions) {
                 File file = new File(baseName + ext);

@@ -19,7 +19,7 @@ import java.util.List;
 
 import monalisa.util.FileUtils;
 import monalisa.data.pn.TInvariant;
-import monalisa.data.pn.TInvariantBuilder;
+import monalisa.data.pn.InvariantBuilder;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
@@ -48,7 +48,7 @@ public final class ResTInputHandler implements TInputHandler {
     public Result load(InputStream in, PetriNet petriNet) throws IOException {
         LOGGER.info("Loading T-Invariants from .res file");
         List<TInvariant> invariants = new ArrayList<>();
-        TInvariantBuilder invBuilder = new TInvariantBuilder(new PetriNetFacade(petriNet));
+        InvariantBuilder invBuilder = new InvariantBuilder(new PetriNetFacade(petriNet), "TI");
         List<String> badTransitions = new ArrayList<>();
         Transition transition;
         String[] line_parts, name_parts;

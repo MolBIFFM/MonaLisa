@@ -20,12 +20,14 @@ import monalisa.tools.mcs.McsTool;
 import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 
 @SuppressWarnings("unchecked")
 public final class Tools {
     private static final List<Class<? extends Tool>> toolTypes =
         Arrays.<Class<? extends Tool>>asList(
             TInvariantTool.class,
+            MInvariantTool.class,
             PInvariantTool.class,
             MctsTool.class,
             ClusterTool.class,

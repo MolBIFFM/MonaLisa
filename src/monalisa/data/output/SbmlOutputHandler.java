@@ -42,7 +42,7 @@ import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
-//import org.sbml.jsbml.ext.layout.*;
+import org.sbml.jsbml.ext.layout.*;
 
 
 /**
@@ -83,12 +83,12 @@ public class SbmlOutputHandler implements OutputHandler {
         if(pn.hasProperty(AnnotationsPanel.HISTORY)) {
             model.setHistory((History) pn.getProperty(AnnotationsPanel.HISTORY));
         }
-        /*LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
+        LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
         model.addExtension(LayoutConstants.getNamespaceURI(level, version),mplugin);
-                //(LayoutModelPlugin) model.getPlugin(LayoutConstants.shortLabel);
+        //(LayoutModelPlugin) model.getPlugin(LayoutConstants.shortLabel);
         //Layout layout = new Layout();
         //mplugin.add(layout);
-        Layout layout = mplugin.createLayout();*/
+        Layout layout = mplugin.createLayout();
         
         Compartment defaultCompartment = null;
         Map<monalisa.data.pn.Compartment, org.sbml.jsbml.Compartment> compartmentMap = new HashMap<>();
@@ -102,9 +102,9 @@ public class SbmlOutputHandler implements OutputHandler {
                     for(monalisa.data.pn.Compartment c : pn.getCompartments()) {
                         Compartment compartment = model.createCompartment("C"+i.toString());
                         
-                        /*CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG"+ c.toString());                        
+                        CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG"+ c.toString());                        
                         cglyph.setCompartment(compartment.getId());
-                        cglyph.createBoundingBox(c.getProperty("spatialDimensions"));*/
+                        cglyph.createBoundingBox(c.getProperty("spatialDimensions"));
                         
                         if(c == null)
                             continue;
@@ -153,7 +153,7 @@ public class SbmlOutputHandler implements OutputHandler {
         }
 
         Species species = null;
-        //SpeciesGlyph sglyph = null;
+        SpeciesGlyph sglyph = null;
         for(Place p : pn.places()) {
             species = model.createSpecies("P"+p.id());
 
@@ -165,10 +165,10 @@ public class SbmlOutputHandler implements OutputHandler {
                     species.setCompartment(defaultCompartment);                   
                 }
                 
-                /*sglyph = layout.createSpeciesGlyph("SG"+species.getId());
+                sglyph = layout.createSpeciesGlyph("SG"+species.getId());
                 sglyph.setSpecies(species.getId());
                 BoundingBox bb = sglyph.createBoundingBox();
-                bb.createPosition(p.getProperty("posX"),p.getProperty("posY"),0);*/
+                bb.createPosition(p.getProperty("posX"),p.getProperty("posY"),0);
             }
 
             species.setName((String) p.getProperty("name"));
@@ -207,6 +207,7 @@ public class SbmlOutputHandler implements OutputHandler {
         }
 
         Reaction reaction = null;
+        ReactionGlyph rglyph = null;
         for(Transition t : pn.transitions()) {
             reaction = model.createReaction();
 
@@ -221,6 +222,11 @@ public class SbmlOutputHandler implements OutputHandler {
                 } else {
                     reaction.setCompartment(defaultCompartment);
                 }
+           
+                rglyph = layout.createReactionGlyph("RG"+reaction.getId());
+                rglyph.setReaction(reaction.getId());
+                BoundingBox bb = rglyph.createBoundingBox();
+                bb.createPosition(t.getProperty("posX"),t.getProperty("posY"),0);
             }
 
             if(t.hasProperty("toolTip")) {

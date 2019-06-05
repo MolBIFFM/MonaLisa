@@ -38,7 +38,7 @@ public final class MInvariants implements Result, Collection<MInvariant> {
     @Override
     public void export(File path, Configuration config, Project project) throws IOException {
         try (PrintWriter printer = new PrintWriter(path)) {
-            LOGGER.info("Exporting T-Invariant results");
+            LOGGER.info("Exporting M-Invariant results");
             Map<Transition, Integer> transitionMap = new HashMap<>();
             StringBuilder sb = new StringBuilder();
 
@@ -71,7 +71,7 @@ public final class MInvariants implements Result, Collection<MInvariant> {
 
             printer.print(sb.toString());
             printer.close();
-            LOGGER.info("Successfully exported T-Invariant results");
+            LOGGER.info("Successfully exported M-Invariant results");
         }
     }
 

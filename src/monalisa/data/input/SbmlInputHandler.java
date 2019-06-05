@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
@@ -44,6 +45,8 @@ import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.util.filters.Filter;
+import org.sbml.jsbml.ext.layout.*;
+import org.sbml.jsbml.ext.SBasePlugin;
 
 
 /**
@@ -112,18 +115,35 @@ public final class SbmlInputHandler implements InputHandler {
 
         doc.removeAllTreeNodeChangeListeners(true);
         Model model = doc.getModel();
+        SBasePlugin mplugin = null;
+        Layout layout = null;
+        Boolean hasLayout = false;
+
+        if(model.isSetPlugin(LayoutConstants.getNamespaceURI(3, 1))){
+            mplugin = model.getExtension(LayoutConstants.getNamespaceURI(3, 1));          
+            LayoutModelPlugin layplugin = (LayoutModelPlugin)mplugin;
+            layout = layplugin.getLayout(0);
+            
+            //check if the layout is not empty  
+            if(layout.getReactionGlyphCount()!= 0 && layout.getSpeciesGlyphCount() != 0){
+                hasLayout = true;
+            }
+        }
+        
         model.removeAllTreeNodeChangeListeners(true);
 
         model.getListOfTreeNodeChangeListeners().clear();
 
         History history = model.getHistory();
-        List<Creator> creators = history.getListOfCreators();
+      
+        /*History history = model.getHistory();
+        /*List<Creator> creators = history.getListOfCreators();
         for(int i = 0; i < history.getCreatorCount(); i++) {
             history.removeCreator(i);
         }
         for(Creator c : creators) {;
             history.addCreator(c);
-        }
+        }*/
 
         petriNet.putProperty(AnnotationsPanel.HISTORY, history);
         petriNet.putProperty(AnnotationsPanel.MODEL_NAME, model.getName());
@@ -152,6 +172,7 @@ public final class SbmlInputHandler implements InputHandler {
         int countPlaces = 0, countTransitions = 0;
         Long tokens;
         String name, id, reactantName, productName, compartmentId;
+        double posX = 0, posY = 0;
         Boolean reversible;
         Place place;
         Transition transition, transition_rev = null;
@@ -159,12 +180,22 @@ public final class SbmlInputHandler implements InputHandler {
         for(Species s : model.getListOfSpecies()) {
             name = s.getName();
             id = s.getId();
+            
+            if(hasLayout){
+                posX = layout.getSpeciesGlyph("SG"+id).getBoundingBox().getPosition().getX();
+                posY = layout.getSpeciesGlyph("SG"+id).getBoundingBox().getPosition().getY();
+            }
+            
             if(name.equals("")) {
                 name = id;
             }
             tokens = new Double(s.getInitialAmount()).longValue();
             place = findPlace(countPlaces, petriNet);
             place.putProperty("name", name);
+            if(hasLayout){
+                place.putProperty("posX", posX);
+                place.putProperty("posY", posY);
+            }
 
             if(!s.getSBOTermID().isEmpty()) {
                 place.putProperty(AnnotationsPanel.SBO_TERM, s.getSBOTermID());
@@ -213,6 +244,12 @@ public final class SbmlInputHandler implements InputHandler {
         for (Reaction r : model.getListOfReactions()) {
             name = r.getName();
             id = r.getId();
+            
+            if(hasLayout){
+                posX = layout.getReactionGlyph("RG"+id).getBoundingBox().getPosition().getX();
+                posY = layout.getReactionGlyph("RG"+id).getBoundingBox().getPosition().getY();
+            }
+            
             if(name.equals("")) {
                 name = id;
             }
@@ -222,6 +259,11 @@ public final class SbmlInputHandler implements InputHandler {
 
             transition = findTransition(countTransitions, petriNet);
             transition.putProperty("name", name);
+            
+            if(hasLayout){
+                transition.putProperty("posX", posX);
+                transition.putProperty("posY", posY);
+            }
 
             if(r.getCompartmentInstance() != null) {
                 petriNet.setCompartment(transition, compartmentMap.get(r.getCompartmentInstance()));

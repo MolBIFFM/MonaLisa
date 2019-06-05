@@ -143,7 +143,7 @@ public final class MInvariantCalculator {
             String os = System.getProperty("os.name").toLowerCase();
             if(os.contains("nix") || os.contains("nux")) {
                 LOGGER.debug("OS determined to be Unix");
-                toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee_2", "monalisa", "bin");
             }
             else if(os.contains("win")) {
                 LOGGER.debug("OS determined to be Windows");

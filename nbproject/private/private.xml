@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="3"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/data/output/InvCalcOutputHandler.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/data/pn/InvariantBuilder.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/tools/minv/MInvariantCalculator.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/addons/netviewer/NetViewer.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/tools/tinv/TInvariantCalculator.java</file>
             <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/data/output/SbmlOutputHandler.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/data/input/InvParser.java</file>
-            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/tools/pinv/PInvariantCalculator.java</file>
+            <file>file:/home/daniel/NetBeansProjects/monalisa3/src/monalisa/data/input/SbmlInputHandler.java</file>
         </group>
     </open-files>
 </project-private>

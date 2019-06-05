@@ -9,8 +9,6 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -313,7 +311,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             for (int i = 0; i < constantPlacesExp.length; i++){
                 try {
                     this.constantPlacesExpRun[i] = new MathematicalExpression(constantPlacesExp[i]);
-                } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                } catch (RuntimeException ex) {
                     Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -321,7 +319,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             for (int i = 0;  i< reactionRateConstants.length; i++){
                 try {
                     this.reactionRateConstantsRun[i] = new MathematicalExpression(reactionRateConstants[i]);
-                } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                } catch (RuntimeException ex) {
                     Logger.getLogger(StochasticSimulator.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -340,7 +338,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             this.constantMarkingRun = new long[this.constantPlacesExpRun.length];
             for (int i = 0; i < this.constantMarkingRun.length; i++){
                 MathematicalExpression exp = this.constantPlacesExpRun[i];
-                double val = exp.evaluate(concentrations, this.timePassed);
+                double val = exp.evaluateML(concentrations, this.timePassed);
                 this.constantMarkingRun[i] = Math.round(val * volMol);
                 this.concentrations.put(constantPlaceIDs[i], val);
             }
@@ -562,7 +560,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     */
                     for (int i = 0; i < this.constantMarkingRun.length; i++){
                         MathematicalExpression exp = this.constantPlacesExpRun[i];
-                        double val = exp.evaluate(concentrations, this.timePassed);
+                        double val = exp.evaluateML(concentrations, this.timePassed);
                         this.constantMarkingRun[i] = Math.round(val * volMol);
                         this.concentrations.put(this.constantPlaceIDsRun[i], val);
                     }
@@ -720,7 +718,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 /*
                 * Evaluate deterministic reaction rate constant
                 */
-                double detReactionRateConst = reactionRateConstantsRun[idx].evaluate(concentrations, timePassed);
+                double detReactionRateConst = reactionRateConstantsRun[idx].evaluateML(concentrations, timePassed);
                 /*
                 * Convert deterministic reaction rate constant to stochastic one. Get the order and the multiplier of the reaction.
                 */
@@ -1222,7 +1220,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             */
             for (int i = 0; i < this.constantMarkingRun.length; i++){
                 MathematicalExpression exp = this.constantPlacesExpRun[i];
-                double val = exp.evaluate(concentrations, this.timePassed);
+                double val = exp.evaluateML(concentrations, this.timePassed);
                 this.constantMarkingRun[i] = Math.round(val * volMol);
                 this.concentrations.put(this.constantPlaceIDsRun[i], val);
             }

@@ -334,7 +334,7 @@ public abstract class AbstractTokenSim implements ChangeListener{
                 markingDouble.put(entr.getKey(), entr.getValue().doubleValue());
             }
             MathematicalExpression mathExp = tokenSim.getMathematicalExpression(id);
-            return Math.round(mathExp.evaluate(markingDouble, this.getSimulatedTime()));
+            return Math.round(mathExp.evaluateML(markingDouble, this.getSimulatedTime()));
         }
     }
 }

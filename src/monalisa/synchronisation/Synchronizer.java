@@ -826,11 +826,14 @@ public class Synchronizer implements Serializable {
     }
 
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
+        System.out.println(map);
         objectInput.defaultReadObject();
 
+        System.out.println(map);
         this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
         this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
         // Happens, if the user try to load an older project format
+        
         if(map != null) {
             this.layout.restore(map);
         }

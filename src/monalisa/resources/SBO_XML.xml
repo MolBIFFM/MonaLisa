@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sbo xmlns="http://www.biomodels.net/sbo"
-    date="2013-07-11T07:01:24.029+01:00" data-version="2013-05-15T15:39:30.000+01:00">
+    date="2019-06-03T07:00:47.798+01:00" data-version="2018-07-13T10:45:50.000+01:00">
     <Term>
         <id>SBO:0000000</id>
         <name>systems biology representation</name>
@@ -76,7 +76,7 @@ modified to include conceptual entity [SF req #3509733]. </comment>
         <name>obsolete participant type</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
-            <defstr>The 'kind' of entity involved in some process, action or reaction in the system. This may be enzyme, simple chemical, etc.</defstr>
+            <defstr>The 'kind' of entity involved in some process, action or reaction in the system. This may be enzyme, simple chemical, etc..</defstr>
         </def>
         <is_obsolete>1</is_obsolete>
         <is_a>SBO:0000235</is_a>
@@ -4158,28 +4158,6 @@ reaction involving three reactants. This parameter encompasses all the contribut
         <is_a>SBO:0000041</is_a>
     </Term>
     <Term>
-        <id>SBO:0000231</id>
-        <name>occurring entity representation</name>
-        <namespace>Systems Biology Ontology</namespace>
-        <def>
-            <defstr>Representation of an entity that manifests, unfolds or develops through time, such as a discrete event, or a mutual or reciprocal action or influence that happens between participating physical entities, and/or other occurring entities. </defstr>
-        </def>
-        <comment>modified as part of ontology 'refactoring' process [SF bug #3172586]&#xd;
-Name changed to "interaction" on November 18 2008 by Nicolas Le Novere.&#xd;
-Definition changed to mention interaction with other interactions, in order to cover "process" and "relationship".</comment>
-        <is_a>SBO:0000000</is_a>
-    </Term>
-    <Term>
-        <id>SBO:0000232</id>
-        <name>obsolete event</name>
-        <namespace>Systems Biology Ontology</namespace>
-        <def>
-            <defstr>A phenomenon that takes place and which may be observable, or may be determined to have occurred as the result of an action or process.</defstr>
-        </def>
-        <is_obsolete>1</is_obsolete>
-        <is_a>SBO:0000231</is_a>
-    </Term>
-    <Term>
         <id>SBO:0000167</id>
         <name>biochemical or transport reaction</name>
         <namespace>Systems Biology Ontology</namespace>
@@ -4376,7 +4354,7 @@ Definition modified on 09 August 2006 by Nicolas Le Novere</comment>
     </Term>
     <Term>
         <id>SBO:0000185</id>
-        <name>transport reaction</name>
+        <name>translocation reaction</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
             <defstr>Movement of a physical entity without modification of the structure of the entity.</defstr>
@@ -4760,7 +4738,7 @@ Definition modified on 09 August 2006 by Nicolas Le Novere</comment>
     </Term>
     <Term>
         <id>SBO:0000204</id>
-        <name>dna replication</name>
+        <name>DNA replication</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
             <defstr>Process in which a DNA duplex is transformed into two identical DNA duplexes.</defstr>
@@ -5035,6 +5013,28 @@ Modified 04 July 2008 by Nick Juty - changed from replication to dna replication
         <is_a>SBO:0000227</is_a>
     </Term>
     <Term>
+        <id>SBO:0000231</id>
+        <name>occurring entity representation</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Representation of an entity that manifests, unfolds or develops through time, such as a discrete event, or a mutual or reciprocal action or influence that happens between participating physical entities, and/or other occurring entities. </defstr>
+        </def>
+        <comment>modified as part of ontology 'refactoring' process [SF bug #3172586]&#xd;
+Name changed to "interaction" on November 18 2008 by Nicolas Le Novere.&#xd;
+Definition changed to mention interaction with other interactions, in order to cover "process" and "relationship".</comment>
+        <is_a>SBO:0000000</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000232</id>
+        <name>obsolete event</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A phenomenon that takes place and which may be observable, or may be determined to have occurred as the result of an action or process.</defstr>
+        </def>
+        <is_obsolete>1</is_obsolete>
+        <is_a>SBO:0000231</is_a>
+    </Term>
+    <Term>
         <id>SBO:0000233</id>
         <name>hydroxylation</name>
         <namespace>Systems Biology Ontology</namespace>
@@ -5151,6 +5151,7 @@ Name changed from "conceptual" to "functional" on November 18 2008 by Nicolas Le
 Sequence Ontology SO:0000704</defstr>
         </def>
         <comment>Created on November 10 2006 by Nicolas Le Novere.</comment>
+        <is_a>SBO:0000240</is_a>
         <is_a>SBO:0000404</is_a>
     </Term>
     <Term>
@@ -7223,7 +7224,7 @@ Sequence Ontology SO:0000655</defstr>
             <defstr>Portion of DNA or RNA that is transcribed into another RNA, such as a messenger RNA or a non-coding RNA (for instance a transfert RNA or a ribosomal RNA).</defstr>
         </def>
         <comment>Created on January 03 2008 by Nicolas Le Novere</comment>
-        <is_a>SBO:0000404</is_a>
+        <is_a>SBO:0000354</is_a>
     </Term>
     <Term>
         <id>SBO:0000336</id>
@@ -7707,7 +7708,7 @@ enzyme) of which it activates the function.</defstr>
             <defstr>Region of a gene that is involved in the modulation of the expression of the gene. </defstr>
         </def>
         <comment>Created for SBGN purposes.</comment>
-        <is_a>SBO:0000404</is_a>
+        <is_a>SBO:0000354</is_a>
     </Term>
     <Term>
         <id>SBO:0000370</id>
@@ -7778,7 +7779,7 @@ name and definition modified 18/Nov/2008 - Nicolas Le Novere</comment>
             <defstr>Decomposition of a compound by reaction with water, where the hydroxyl and H groups are incorporated into different products</defstr>
         </def>
         <comment>Created 30/9/08 - NJ</comment>
-        <is_a>SBO:0000176</is_a>
+        <is_a>SBO:0000178</is_a>
     </Term>
     <Term>
         <id>SBO:0000377</id>
@@ -13728,39 +13729,31 @@ symbol: G</defstr>
         <def>
             <defstr>The increase or decrease of the Gibbs free energy of a system. During a&#xd;
 reaction, this is equal to the change in enthalpy of the system minus the&#xd;
-change in the product of the temperature times the entropy of the system: &#xd;
-DeltaG = DeltaH - T DeltaS&#xd;
-A negative value indicates that the reaction will be favoured and will&#xd;
+change in the product of the temperature times the entropy of the system: ΔG = ΔH - T ΔS. A negative value indicates that the reaction will be favoured and will&#xd;
 release energy. The magnitude of the value indicates how far the reaction&#xd;
 is from equilibrium, where there will be no free energy change. The&#xd;
-standard unit of measure is kJ/mol.&#xd;
-symbol: DeltaG</defstr>
+standard unit of measure is kJ/mol. Symbol: ΔG.</defstr>
         </def>
         <comment>created in response to [SF req #3286595];</comment>
         <is_a>SBO:0000580</is_a>
     </Term>
     <Term>
         <id>SBO:0000582</id>
-        <name>standard Gibbs energy of formation</name>
+        <name>standard Gibbs free energy of formation</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
-            <defstr>The change in Gibbs free energy associated with the formation of 1 mole of&#xd;
-substance from elements in their standard states under standard conditions&#xd;
-(1 bar). The standard unit of measure is kJ/mol.&#xd;
-symbol: DeltafG(degree)</defstr>
+            <defstr>The change in Gibbs free energy associated with the formation of 1 mole of substance from elements in their standard states under standard conditions (1 bar). For aqueous solutions, each solute must be present in 1M concentration. The standard unit of measure is kJ/mol. Symbol: ΔGf°.</defstr>
         </def>
         <comment>created in response to [SF req #3286595];</comment>
         <is_a>SBO:0000581</is_a>
     </Term>
     <Term>
         <id>SBO:0000583</id>
-        <name>standard Gibbs energy of reaction</name>
+        <name>standard Gibbs free energy of reaction</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
             <defstr>The Gibbs free energy change observed in a thermodynamic system when one&#xd;
-mole of substance reacts completely, under standard conditions (1 bar).&#xd;
-The standard unit of measure is kJ/mol.&#xd;
-symbol: ΔG˚</defstr>
+mole of substance reacts completely, under standard conditions (1 bar). For aqueous solutions, each solute must be present in 1M concentration. The standard unit of measure is kJ/mol. Symbol: ΔG°.</defstr>
         </def>
         <comment>created in response to [SF req #3286595];</comment>
         <is_a>SBO:0000581</is_a>
@@ -13825,13 +13818,13 @@ symbol: ΔG˚</defstr>
     </Term>
     <Term>
         <id>SBO:0000590</id>
-        <name>promoter binding region</name>
+        <name>promoter</name>
         <namespace>Systems Biology Ontology</namespace>
         <def>
             <defstr>A stretch of DNA upstream of a transcription start site, to which a promoter and other transcription factors may bind to initiate or regulate expression.</defstr>
         </def>
         <comment>created in response to [SF req #3503791]</comment>
-        <is_a>SBO:0000354</is_a>
+        <is_a>SBO:0000369</is_a>
     </Term>
     <Term>
         <id>SBO:0000591</id>
@@ -13912,8 +13905,8 @@ process depending on the context in which it occurs. For example, the observed e
         <def>
             <defstr>A region of DNA to which various transcription factors and RNA polymerase must bind in order to initiate transcription for a gene.</defstr>
         </def>
-        <comment>created in response to SourceForge term request [SF req #3503716] </comment>
-        <is_a>SBO:0000003</is_a>
+        <is_obsolete>1</is_obsolete>
+        <comment>created in response to SourceForge term request [SF req #3503716]</comment>
     </Term>
     <Term>
         <id>SBO:0000599</id>
@@ -13974,5 +13967,659 @@ process depending on the context in which it occurs. For example, the observed e
         </def>
         <comment>created in response to [SF req #3604202].</comment>
         <is_a>SBO:0000015</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000605</id>
+        <name>high affinity receptor</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A receptor where binding occurs through strong intermolecular forces such as Van der Waals, hydrogen bonds or ionic bonds.</defstr>
+        </def>
+        <comment>created in response to SF#100</comment>
+        <is_a>SBO:0000244</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000606</id>
+        <name>low affinity receptor</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A receptor where binding occurs through weak intermolecular forces.</defstr>
+        </def>
+        <comment>created in response to SF#100</comment>
+        <is_a>SBO:0000244</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000607</id>
+        <name>dimer</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A macromolecular complex composed of two monomeric units, which may or may not be identical. Monomers are usually non-covalently bound.</defstr>
+        </def>
+        <comment>created in response to SF req #101</comment>
+        <is_a>SBO:0000296</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000608</id>
+        <name>homodimer</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A macromolecular complex composed of precisely two identical monomeric units, which are usually non-covalently bound.</defstr>
+        </def>
+        <comment>created in response to SF req #101</comment>
+        <is_a>SBO:0000607</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000609</id>
+        <name>heterodimer</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A macromolecular complex composed of precisely two non-identical monomeric units, which are usually non-covalently bound.</defstr>
+        </def>
+        <comment>created in response to SF req #101</comment>
+        <is_a>SBO:0000607</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000610</id>
+        <name>growth rate</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A measure of the rate of growth of an organism, usually in culture. This can be expressed as increase in cell number or, more usually as an increase in dry weight of cells (grams), measured over a unit time period. Usually expressed as hour -1.</defstr>
+        </def>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000611</id>
+        <name>effective catalytic rate</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Under nutrient limited conditions, it may be assumed that enzymes are operating below their maximal capacity (Kcat). Keff represents the lumped turnover rate of a reaction, expressed in units per time.</defstr>
+        </def>
+        <comment>created in response to [SF req #104]</comment>
+        <is_a>SBO:0000009</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000612</id>
+        <name>rate of reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The velocity at which a reaction occurs. This may be calculated through the accumulation of a product or consumption of a reactant, and expressed using entity concentrations or amounts per time interval. The rate of reaction may be influenced by temperature, pressure and other factors. Rate of reaction is often referred to as reaction rate or metabolic flux.</defstr>
+        </def>
+        <comment>Created in response to [SF req #105].</comment>
+        <is_a>SBO:0000613</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000613</id>
+        <name>reaction parameter</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Parameters that pertain to chemical reactions.</defstr>
+        </def>
+        <comment>Created in response to [SF req #105].</comment>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000614</id>
+        <name>rate of reaction (concentration)</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Rate of reaction expressed as a change in concentration over time.</defstr>
+        </def>
+        <comment>Created in response to [SF req #105].</comment>
+        <is_a>SBO:0000612</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000615</id>
+        <name>rate of reaction (amount)</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Rate of reaction expressed as a change in enumerated quantity over time.</defstr>
+        </def>
+        <comment>Created in response to [SF req #105].</comment>
+        <is_a>SBO:0000612</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000616</id>
+        <name>extent of reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The extent of a reaction is a measure of how far a reaction has proceeded towards equilibrium. It is denoted by the Greek letter Î¾ and is expressed in moles.</defstr>
+        </def>
+        <comment>Created in response to [SF req #105].</comment>
+        <is_a>SBO:0000613</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000617</id>
+        <name>Gibbs free energy of reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The Gibbs free energy change observed in a thermodynamic system when a substance undergoes a reaction under non standard conditions. The unit of measure is kJ/mol. Symbol: ΔG.</defstr>
+        </def>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000581</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000618</id>
+        <name>reaction affinity</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The negative partial derivative of Gibbs free energy G with respect to extent of reaction at constant pressure and temperature. Affinity is positive for spontaneous reactions in the forward direction. Symbol: ξ.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>thermodynamic driving force</synonym_text>
+        </synonym>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000581</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000619</id>
+        <name>transformed Gibbs free energy change</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A Gibbs free energy that is calculated from the standard Gibbs value (at 298K), and extrapolated to a desired pH and ionic strength, and may be determined at a different temperature. Symbol: ΔG´.</defstr>
+        </def>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000580</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000620</id>
+        <name>transformed standard Gibbs free energy of reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A Gibbs free energy of reaction that is calculated from the standard Gibbs value (at 298K), and extrapolated to a desired pH and ionic strength, and may be determined at a different temperature. Symbol ΔG´.</defstr>
+        </def>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000619</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000621</id>
+        <name>transformed standard Gibbs free energy of formation</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A Gibbs free energy of formation that is calculated from the standard Gibbs value (at 298K), and extrapolated to a desired pH and ionic strength, and may be determined at a different temperature. Symbol ΔGf´.</defstr>
+        </def>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000619</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000622</id>
+        <name>transformed Gibbs free energy of reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The Gibbs free energy change observed in a thermodynamic system when a substance undergoes a reaction under non standard conditions, which is extrapolated to a desired pH and ionic strength, and may be determined at a different temperature. Symbol: ΔG´.</defstr>
+        </def>
+        <comment>created in response to [SF req #106]</comment>
+        <is_a>SBO:0000619</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000623</id>
+        <name>ionic strength</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A combined (weighted) measure of the concentration of all electrolytes present in a solution. It is calculated as a half of the sum over all the ions in the solution multiplied by the square of individual ionic valencies. Monovalent electrolytes have a concentration equal to their ionic strength while multivalent electrolytes have greater ionic strength, directly proportional to ionic valency. Symbol: I</defstr>
+        </def>
+        <comment>created in response to [SF req #107]</comment>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000624</id>
+        <name>flux balance framework</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Modelling approach, typically used for metabolic models, where the flow of metabolites (flux) through a network can be calculated. This approach will generally produce a set of solutions (solution space), which may be reduced using objective functions and constraints on individual fluxes.</defstr>
+        </def>
+        <comment>created in response to [SF req #108]</comment>
+        <is_a>SBO:0000004</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000625</id>
+        <name>flux bound</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A parameter that limits the upper or lower value that a flux may assume. This parameter may be determined experimentally, or may be the result of theoretical investigation.</defstr>
+        </def>
+        <comment>Created in response to [SF req #109].</comment>
+        <is_a>SBO:0000613</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000626</id>
+        <name>default flux bound</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A value used for flux bound in cases where a precise value, supported experimentally or theoretically, is not available.</defstr>
+        </def>
+        <comment>Created in response to [SF req #109].</comment>
+        <is_a>SBO:0000625</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000627</id>
+        <name>exchange reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A modeling process to provide matter influx or efflux to a model, for example to replenish a metabolic network with raw materials (eg carbon / energy sources). Such reactions are conceptual, created solely for modeling purposes, and do not have a physical correspondence. Exchange reactions, often represented as 'R_EX_', can operate in the negative (uptake) direction or positive (secretion) direction. By convention, a negative flux through an exchange reaction represents uptake of the corresponding metabolite, and a positive flux represent discharge.</defstr>
+        </def>
+        <comment>Created in response to [SF req #110]</comment>
+        <is_a>SBO:0000631</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000628</id>
+        <name>demand reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A modeling process analogous to exchange reaction, but which operates upon "internal" metabolites. Metabolites that are consumed by these reactions are assumed to be used in intra-cellular processes that are not part of the model. Demand reactions, often represented 'R_DM_', can also deliver metabolites (from intra-cellular processes that are not considered in the model).</defstr>
+        </def>
+        <comment>Created in response to [SF req #110].</comment>
+        <is_a>SBO:0000631</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000629</id>
+        <name>biomass production</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Biomass production, often represented 'R_BIOMASS_', is usually the optimization target reaction of constraint-based models, and can consume multiple reactants to produce multiple products. It is also assumed that parts of the reactants are also consumed in unrepresented processes and hence products do not have to reflect all the atom composition of the reactants. Formulation of a biomass production process entails definition of the macromolecular content (eg. cellular protein fraction), metabolic constitution of each fraction (eg. amino acids), and subsequently the atomic composition (eg. nitrogen atoms). More complex biomass functions can additionally incorporate details of essential vitamins and cofactors required for growth.</defstr>
+        </def>
+        <comment>Created in response to [SF req #110].</comment>
+        <is_a>SBO:0000395</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000630</id>
+        <name>ATP maintenance</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A modeling representation of the energetics of an organism that are attributed to energy costs not directly related to those for growth.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>maintenance energy</synonym_text>
+        </synonym>
+        <comment>Created in response to [SF req #110].</comment>
+        <is_a>SBO:0000395</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000631</id>
+        <name>pseudoreaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A conceptual process used for modeling purposes, often created solely to complete model structure, with respect to providing inflow or outflow of matter or material. Unlike other reactions, pseudoreactions are not usually subjected to mass balance considerations.</defstr>
+        </def>
+        <comment>Created in response to [SF req #111]</comment>
+        <is_a>SBO:0000375</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000632</id>
+        <name>sink reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A modeling process to provide matter influx or efflux to a model, for example to replenish a metabolic network with raw materials (eg carbon / energy sources). Such reactions are conceptual, created solely for modeling purposes, and do not have a physical correspondence. Unlike the analogous demand (SBO:....) reactions, which are usually designated as irreversible, sink reactions always represent a reversible uptake/secretion processes, and act as a metabolite source with no cost to the cell. Sink reactions, also referred to as R_SINK_, are generally used for compounds that are metabolized by the cell but are produced by non-metabolic, un-modeled cellular processes.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>source/sink</synonym_text>
+        </synonym>
+        <comment>Created in response to [SF req #111]</comment>
+        <is_a>SBO:0000631</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000633</id>
+        <name>subsystem</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Term used to indicate the grouping of model components, largely reactions, by some criterion, often processual. This can be used to indicate, for example, the subsystem of a model that is concerned with 'transport'. A designated subsystem includes reactions annotated with the term, as well as reactions participants such as enzymes, modifiers and genes encoding these subsystem components.</defstr>
+        </def>
+        <comment>created in response to SF req #113</comment>
+        <is_a>SBO:0000473</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000634</id>
+        <name>DNA segment</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Fragment or region of a DNA macromolecule.</defstr>
+        </def>
+        <comment>created in response to  [SF req #115]</comment>
+        <is_a>SBO:0000354</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000635</id>
+        <name>RNA segment</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Fragment or region of an RNA macromolecule.</defstr>
+        </def>
+        <comment>created in response to  [SF req #115]</comment>
+        <is_a>SBO:0000354</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000636</id>
+        <name>allosteric activator</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Describes an activator (ligand) which binds at a site other than the active site, resulting in a conformational change, enhancing the activity of the enzyme.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>positive allosteric modulation</synonym_text>
+        </synonym>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX), see also [SF req #115]</comment>
+        <is_a>SBO:0000021</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000637</id>
+        <name>non-allosteric activator</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Describes an activator (ligand) which binds to the enzyme, which does not result in a conformational change, but which enhances the enzyme's activity.</defstr>
+        </def>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX), see also [SF req #115]</comment>
+        <is_a>SBO:0000021</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000638</id>
+        <name>irreversible inhibitor</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>An inhibitor which binds irreversibly with the enzyme such that it cannot be removed, and abolishes enzymatic function.</defstr>
+        </def>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX), see also [SF req #115]</comment>
+        <is_a>SBO:0000020</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000639</id>
+        <name>allosteric inhibitor</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>An inhibitor whose binding to an enzyme results in a conformational change, resulting in a loss of enzymatic activity. This activity can be restored upon removal of the inhibitor.</defstr>
+        </def>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX), see also [SF req #115]</comment>
+        <is_a>SBO:0000020</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000640</id>
+        <name>uncompetitive inhibitor</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>An inhibitor which binds only to the complex formed between the enzyme and substrate (E-S complex).</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>anti-competitive inhibitor</synonym_text>
+        </synonym>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX), see also [SF req #115]</comment>
+        <is_a>SBO:0000020</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000641</id>
+        <name>pMg</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>An enumeration of the concentration of magnesium (Mg) in solution (pMg = -log10[Mg2+]).</defstr>
+        </def>
+        <comment>created to facilitate format interconversion (SBML&lt;-&gt;BioPAX) and in response to [SF req #117], see also [SF req #117]</comment>
+        <is_a>SBO:0000303</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000642</id>
+        <name>inhibited</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Conceptual or material entity that is the object of an inhibition process, and is acted upon by an inhibitor.</defstr>
+        </def>
+        <comment>Created in response to [SF req #116]</comment>
+        <is_a>SBO:0000644</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000643</id>
+        <name>stimulated</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Conceptual or material entity that is the object of a stimulation process, and is acted upon by a stimulator.</defstr>
+        </def>
+        <comment>Created in response to [SF req #116]</comment>
+        <is_a>SBO:0000644</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000644</id>
+        <name>modified</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Conceptual or material entity that is the object of a modification process, and is acted upon by a modifier.</defstr>
+        </def>
+        <comment>Created in response to [SF req #116]</comment>
+        <is_a>SBO:0000003</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000645</id>
+        <name>template</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>An entity that acts as the starting material for genetic production (http://identifiers.org/biomodels.sbo/SBO:0000589).</defstr>
+        </def>
+        <comment>Created in response to [SF req #116]</comment>
+        <is_a>SBO:0000003</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000646</id>
+        <name>mass action rate law for reversible reactions, continuous schema</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Reaction scheme where the products are created from the reactants and the change of a product quantity is proportional to the product of reactant activities. The reaction scheme includes a reverse process that creates the reactants from the products. It is to be used in a reaction modelled using a continuous framework.</defstr>
+        </def>
+        <comment>This term was added on to the tree in response to the term request [SF req #118]</comment>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <semantics definitionURL="http://biomodels.net/SBO/#SBO:0000062"> <lambda> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:000035">k1</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000157">n1</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000158">mu1</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000509">R</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000039">k2</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000490">n2</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000158">mu2</ci>
+                    </bvar> <bvar>
+                        <ci definitionURL="http://biomodels.net/SBO/#SBO:0000512">P</ci>
+                    </bvar> <apply> <minus/> <apply> <times/> <ci>k1</ci> <apply> <product/> <bvar>
+                                    <ci> i </ci>
+                                </bvar> <lowlimit>
+                                    <cn type="integer"> 0 </cn>
+                                </lowlimit> <uplimit>
+                                    <ci> n1 </ci>
+
+                                </uplimit> <apply> <power/> <apply> <selector/> <ci
+                                    type="vector">R</ci> <ci> i </ci> </apply> <apply> <selector/> <ci type="vector">mu1</ci> <ci> i </ci> </apply> </apply> </apply> </apply> <apply> <times/> <ci>k2</ci> <apply> <product/> <bvar>
+                                    <ci> i </ci>
+                                </bvar> <lowlimit>
+                                    <cn type="integer"> 0 </cn>
+                                </lowlimit> <uplimit>
+                                    <ci> n2 </ci>
+
+                                </uplimit> <apply> <power/> <apply> <selector/> <ci
+                                    type="vector">P</ci> <ci> i </ci> </apply> <apply> <selector/> <ci type="vector">mu2</ci> <ci> i </ci> </apply> </apply> </apply> </apply> </apply> </lambda> </semantics>
+        </math>
+        <is_a>SBO:0000042</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000647</id>
+        <name>molecular mass</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A measure of the mass of a molecule derived as a sum of weights of its constituent elements multiplied by the number of atoms of each of the element described by its molecular formula. It is commonly represented using units of daltons.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>molecular weight</synonym_text>
+        </synonym>
+        <comment>This term was created by Varun Kothamachu in response to  [SF req #119]</comment>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000648</id>
+        <name>protein molecular mass</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A measure of the total mass of a protein described as a sum total of the weight of all its atoms. It is commonly represented using units of daltons.</defstr>
+        </def>
+        <synonym scope="exact">
+            <synonym_text>protein molecular weight</synonym_text>
+        </synonym>
+        <comment>This term was created by Varun Kothamachu in response to [SF req #119]</comment>
+        <is_a>SBO:0000647</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000649</id>
+        <name>biomass</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A composite representation of material entities required for organismal growth. It includes macromolecular content (eg. cellular protein fraction), metabolic constitution of each fraction (eg. amino acids), and atomic composition (eg. nitrogen atoms).</defstr>
+        </def>
+        <comment>Created in response to [SF req #120]</comment>
+        <is_a>SBO:0000241</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000650</id>
+        <name>reversible process</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A sequential series of actions, motions, or occurrences, such as chemical reactions, where a reversal of states that bring the system back to its original state in a characteristic manner occurs.</defstr>
+        </def>
+        <comment>Created by Varun Kothamachu In response to [SF req #96]</comment>
+        <is_a>SBO:0000375</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000651</id>
+        <name>irreversible process</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A sequential series of actions, motions, or occurrences, such as chemical reactions, where a reversal of states that bring the system back to its original state in a characteristic manner does not occur.</defstr>
+        </def>
+        <comment>Created by Varun Kothamachu in response to [SF request #96]</comment>
+        <is_a>SBO:0000375</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000652</id>
+        <name>polymerization</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A chemical reaction in which one or more monomer molecules combine to form a larger polymer molecule with repeated structural units.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000182</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000653</id>
+        <name>depolymerization</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A chemical reaction in which a large polymer breaks into its constituent monomers (or mixture of monomers).</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000182</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000654</id>
+        <name>co-transport reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A biochemical process involving the simultaneous transport of two or more substances across a membrane via a protein or protein complex.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000655</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000655</id>
+        <name>transport reaction</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>The movement of an entity/entities across a biological membrane mediated by a transporter protein.</defstr>
+        </def>
+        <comment>Created in response to [SF req#121]</comment>
+        <is_a>SBO:0000167</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000656</id>
+        <name>activation</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A conformational change in a protein resulting in its activation.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000182</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000657</id>
+        <name>active transport</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Protein assisted movement of molecules across a membrane from a region of low concentration to high concentration involving the consumption of cellular energy (ATP molecules).</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000655</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000658</id>
+        <name>passive transport</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Movement of molecules without the need for external energy, and usually from a region of high concentration to low concentration.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000655</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000659</id>
+        <name>symporter-mediated transport</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A membrane protein mediated transport of two ore more molecules in the same relative direction across a membrane.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000654</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000660</id>
+        <name>antiporter-mediated transport</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>A membrane protein mediated transport of two or more molecules in opposite directions across a membrane.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #121]</comment>
+        <is_a>SBO:0000654</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000661</id>
+        <name>capacity</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Total amount that can be contained or produced by a specific entity. This can refer to diverse items, such as the carrying capacity of a membrane with respect to proteins, the capacity of high-energy phosphate bonds, or the maximal count of bacteria in the gut, etc.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #123]</comment>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000662</id>
+        <name>occupancy</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Occopancy is a quantitative systemic property that indicates which number of available places is occupied. This can refer to diverse things, such as the number of occupied high-energy phosphate bonds in ATP, the number of bacteria in the gut, or the number of electrons loaded onto redox carriers, etc.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #124]</comment>
+        <is_a>SBO:0000002</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000663</id>
+        <name>fractional occupancy</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>Fractional occupancy is a quantitative dynamic property of a system that can be calculated as the fraction of occupancy over capacity.</defstr>
+        </def>
+        <comment>Term created in response to [SF req #125]</comment>
+        <is_a>SBO:0000545</is_a>
+    </Term>
+    <Term>
+        <id>SBO:0000664</id>
+        <name>contained entity</name>
+        <namespace>Systems Biology Ontology</namespace>
+        <def>
+            <defstr>an entity which physical constituents are partially or totally contained in a defined compartment.</defstr>
+        </def>
+        <is_a>SBO:0000003</is_a>
     </Term>
 </sbo>

@@ -9,8 +9,7 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
+
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -191,7 +190,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                             exp = new MathematicalExpression(Double.toString(tokenSim.convertCToK(t, Double.valueOf((String) value))));
                         }
                         reactionRates.put(t, exp);
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                    } catch (RuntimeException ex) {
                         Logger.getLogger(GillespieInputDataFrame.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -516,7 +515,6 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         setTitle(TokenSimulator.strings.get("GilTSInputDataFrameTitle"));
         setAutoRequestFocus(false);
         setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
-        setPreferredSize(new java.awt.Dimension(400, 650));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setLayout(new java.awt.GridBagLayout());

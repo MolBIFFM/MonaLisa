@@ -9,12 +9,9 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.Calculable;
-import de.congrace.exp4j.CustomFunction;
-import de.congrace.exp4j.ExpressionBuilder;
-import de.congrace.exp4j.InvalidCustomFunctionException;
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.function.Function;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +30,7 @@ import java.util.logging.Logger;
 public final class MathematicalExpression {
     //BEGIN VARIABLES DECLARATION
     /**
-     * Constant name for variabe Pi.
+     * Constant name for variable Pi.
     */
     private static final String PI = "pi";
     /**
@@ -53,7 +50,7 @@ public final class MathematicalExpression {
      * Expression with all sub-expressions (cases)
      */
     private String wholeExp = "";
-    private final ArrayList<Expression> expressions = new ArrayList<>();
+    private final ArrayList<ExpressionML> expressions = new ArrayList<>();
     /**
      * Keys are names of variables, values are IDs of places.
      */
@@ -64,24 +61,22 @@ public final class MathematicalExpression {
     /**
      * Function of integer division.
      */
-    private class IntegerDivisionFunction extends CustomFunction{
-        public IntegerDivisionFunction() throws InvalidCustomFunctionException{
-            super("div", 2);
-        }
+    
+    private Function int_div = new Function("int_div", 2) {
         @Override
-        public double applyFunction(double... arg0) {
+        public double apply(double... arg0) {
             long a1 = Math.round(arg0[0]);
             long a2 = Math.round(arg0[1]);
             return a1 / a2;
         }
-    }
+    };
     
-    private class Expression{
+    private class ExpressionML{
         /**
-         * ExpressionBuidler is used to create and parse an expression.
+         * ExpressionBuilder is used to create and parse an expression.
          */
         ExpressionBuilder expB;
-        Calculable calcExp;
+        Expression calcExp;
         /**
          * String representation of expression.
          */
@@ -129,7 +124,7 @@ public final class MathematicalExpression {
              */
             final static short OP_GREAT_EQ = 4;
 
-            private Calculable leftPart = null, rightPart = null;
+            private Expression leftPart = null, rightPart = null;
 
             final private short operator;        
             public Condition(String condition){
@@ -162,43 +157,53 @@ public final class MathematicalExpression {
                     operator = -1;
                 }
                 try {
-                    ExpressionBuilder expBLeft = new ExpressionBuilder(condition.split(opString)[0]).withVariable(MathematicalExpression.PI, Math.PI).
-                            withCustomFunction(new IntegerDivisionFunction()).withVariable(TIME_VAR, 0);
-                    for (String variable : variables.keySet()){
-                        expBLeft.withVariable(variable, 0);
+                  ExpressionBuilder expBLeft = new ExpressionBuilder(condition.split(opString)[0])
+                          .variable(MathematicalExpression.PI)
+                          .function(int_div).variable(TIME_VAR);
+
+                    for (String v : variables.keySet()){
+                        expBLeft.variable(v);
                     }                    
-                    leftPart = expBLeft.build();
-                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
-                    try {
-                        leftPart = new ExpressionBuilder("0").build();
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex1);
+                    
+                    Expression leftPart = expBLeft.build();
+                    leftPart.setVariable(MathematicalExpression.PI, Math.PI);
+                    leftPart.setVariable(TIME_VAR, 0);
+                    
+                    for (String v : variables.keySet()){
+                        leftPart.setVariable(v, 0);
                     }
-                    Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
+   
+                } catch (RuntimeException exLeft) {
+                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, exLeft);
+                }
+                try {
+                  ExpressionBuilder expBRight = new ExpressionBuilder(condition.split(opString)[0])
+                          .variable(MathematicalExpression.PI)
+                          .function(int_div).variable(TIME_VAR);
+
+                    for (String v : variables.keySet()){
+                        expBRight.variable(v);
+                    }                    
+                    
+                    Expression rightPart = expBRight.build();
+                    rightPart.setVariable(MathematicalExpression.PI, Math.PI);
+                    rightPart.setVariable(TIME_VAR, 0);
+                    
+                    for (String v : variables.keySet()){
+                        rightPart.setVariable(v, 0);
+                    }
+   
+                } catch (RuntimeException exRight) {
+                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, exRight);
                 }
 
-                try {
-                    ExpressionBuilder expBRight = new ExpressionBuilder(condition.split(opString)[1]).withVariable(MathematicalExpression.PI, Math.PI).
-                            withCustomFunction(new IntegerDivisionFunction()).withVariable(TIME_VAR, 0);
-                    for (String variable : variables.keySet()){
-                        expBRight.withVariable(variable, 0);
-                    }                    
-                    rightPart = expBRight.build();
-                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
-                    try {
-                        rightPart = new ExpressionBuilder("0").build();
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex1);
-                    }
-                    Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
 
             /**
              * Get the calculable of the part left to the operator.
              * @return 
              */
-            public Calculable getLeftCalculable(){
+            public Expression getLeftCalculable(){
                 return this.leftPart;
             }
 
@@ -206,7 +211,7 @@ public final class MathematicalExpression {
              * Get the calculable of the part right to the operator.
              * @return 
              */
-            public Calculable getRightCalculable(){
+            public Expression getRightCalculable(){
                 return this.rightPart;
             }
 
@@ -215,7 +220,7 @@ public final class MathematicalExpression {
             }
         }
         
-        Expression(String exp) throws UnknownFunctionException, UnparsableExpressionException{
+        ExpressionML(String exp) throws RuntimeException{
             expression = exp;
             /*
              * Check whether the expression is a direct instruction or a "if then" condition.
@@ -252,23 +257,25 @@ public final class MathematicalExpression {
              * Assign values for all variables.
              */
             for (String variable : variables.keySet()){
-                expB.withVariable(variable, 0);
+                expB.variable(variable).build().setVariable(variable, 0);
             }
-            expB.withVariable(TIME_VAR, 0);
-            expB.withVariable(MathematicalExpression.PI, Math.PI);
+            expB.variable(TIME_VAR);
+            expB.variable(MathematicalExpression.PI);
             try {
-                expB.withCustomFunction(new IntegerDivisionFunction());
-            } catch (InvalidCustomFunctionException ex) {
+                expB.function(int_div);
+            } catch (RuntimeException ex) {
                 Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
             }
             /*
              * Try to build a calculable.
              */
             calcExp = expB.build();
+            calcExp.setVariable(TIME_VAR, 0);
+            calcExp.setVariable(MathematicalExpression.PI, Math.PI);
         }
         
-        public Expression copy() throws UnknownFunctionException, UnparsableExpressionException{
-            return new Expression(expression);
+        public ExpressionML copy() throws RuntimeException {
+            return new ExpressionML(expression);
         }
         
         /**
@@ -279,7 +286,7 @@ public final class MathematicalExpression {
          * @throws UnknownFunctionException
          * @throws UnparsableExpressionException 
          */
-        public boolean conditionHolds(Map<Integer, Double> concentrations, double time) throws UnknownFunctionException, UnparsableExpressionException{
+        public boolean conditionHolds(Map<Integer, Double> concentrations, double time) throws RuntimeException {
             /*
             If the expression has no condition, it holds automatically.
             */
@@ -296,7 +303,7 @@ public final class MathematicalExpression {
                 /*
                 Calculate the value of the left part.
                 */
-                Calculable calc = condition.getLeftCalculable();
+                Expression calc = condition.getLeftCalculable();
                 /*
                 * Assign values for all variables.
                 */
@@ -308,7 +315,7 @@ public final class MathematicalExpression {
                 * Add the value of variable "time".
                 */
                 calc.setVariable(TIME_VAR, time);
-                leftPartDouble = calc.calculate();
+                leftPartDouble = calc.evaluate();
                 
                 /*
                 Calculate the value of the right part.
@@ -325,7 +332,7 @@ public final class MathematicalExpression {
                 * Add the value of variable "time".
                 */
                 calc.setVariable(TIME_VAR, time);
-                rightPartDouble = calc.calculate();
+                rightPartDouble = calc.evaluate();
                 
                 /*
                 * Compare resulsts according to the operator.
@@ -366,10 +373,17 @@ public final class MathematicalExpression {
          * @param concentrations Concentrations of variables, should be in M and not in molecule numbers!
          * @return 
          */
-        public double evaluate(Map<Integer, Double> concentrations, double time) throws UnknownFunctionException, UnparsableExpressionException{
+        public double evaluateML(Map<Integer, Double> concentrations, double time) throws RuntimeException {
             /*
             * Assign values for all variables.
             */
+            for (Entry<String, Integer> entr : variables.entrySet()){
+                expB.variable(entr.getKey());
+            }
+            expB.variable(TIME_VAR);
+
+            Expression calcExp = expB.build();
+           
             for (Entry<String, Integer> entr : variables.entrySet()){
                 Double tmp = concentrations.get(entr.getValue());
                 double value = tmp == null ? 0 : (double) tmp;
@@ -379,7 +393,8 @@ public final class MathematicalExpression {
             * Assign value for "time" variable
             */
             calcExp.setVariable(TIME_VAR, time);
-            double val = calcExp.calculate();
+        
+            double val = calcExp.evaluate();
             return val;
         }
         
@@ -394,33 +409,33 @@ public final class MathematicalExpression {
     private MathematicalExpression(){
     }
     
-    public MathematicalExpression(String exp, Map<String, Integer> variables) throws UnknownFunctionException, UnparsableExpressionException{
+    public MathematicalExpression(String exp, Map<String, Integer> variables) throws RuntimeException {
         this.wholeExp = exp;
         this.variables = new HashMap<>(variables);
         /*
          * Expression cases are separated by a ';'. Iterate through all cases and create for each an expression object.
          */
         for (String expression : exp.split(";")){
-            expressions.add(new Expression(expression.trim()));
+            expressions.add(new ExpressionML(expression.trim()));
         }
         /*
         If the variables-map is empty and the expression does not depend on time, its value can be pre-evaluated.
         */
         if (variables.isEmpty() && !exp.contains(TIME_VAR)){
-            this.constantValue = this.evaluate(new HashMap<Integer, Double>(), 0);
+            this.constantValue = this.evaluateML(new HashMap<Integer, Double>(), 0);
             this.isConstant = true;
         }
     }
     
-    public MathematicalExpression(String exp) throws UnknownFunctionException, UnparsableExpressionException{
+    public MathematicalExpression(String exp) throws RuntimeException {
          this(exp.trim(), new HashMap<String, Integer>());
     }
     
-    public MathematicalExpression(MathematicalExpression exp) throws UnknownFunctionException, UnparsableExpressionException{
+    public MathematicalExpression(MathematicalExpression exp) throws RuntimeException {
         this.wholeExp = exp.wholeExp;
         this.variables = new HashMap<>(exp.variables);
         
-        for (Expression expr : exp.expressions){
+        for (ExpressionML expr : exp.expressions){
             expressions.add(expr.copy());
         }
         if (exp.isConstant()){
@@ -435,22 +450,22 @@ public final class MathematicalExpression {
      * @param time Simulation time.
      * @return Normally returns concentration value in M.
      */
-    public double evaluate(Map<Integer, Double> concentrations, double time){
+    public double evaluateML(Map<Integer, Double> concentrations, double time){
         /*
         If the expression does not depend on variables, return its pre-calculated value.
         */
         if (this.isConstant){
             return this.constantValue;
         }
-        for (Expression exp : this.expressions){
+        for (ExpressionML exp : this.expressions){
             try {
                 /*
                  * If expressions condition holds, evaluate the expression and return its value.
                  */
                 if (exp.conditionHolds(concentrations, time)){
-                    return exp.evaluate(concentrations, time);
+                    return exp.evaluateML(concentrations, time);
                 }
-            } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+            } catch (RuntimeException ex) {
                 return 0;
             }
         }
@@ -477,7 +492,7 @@ public final class MathematicalExpression {
             If the variables-map is empty and the expression does not depend on time, its value can be pre-evaluated.
             */
             if (vars.isEmpty() && !this.wholeExp.contains(TIME_VAR)){
-                this.constantValue = this.evaluate(new HashMap<Integer, Double>(), 0);
+                this.constantValue = this.evaluateML(new HashMap<Integer, Double>(), 0);
                 this.isConstant = true;
             }
             if (!vars.isEmpty()){

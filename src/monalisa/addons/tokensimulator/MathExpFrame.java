@@ -9,8 +9,6 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -358,7 +356,7 @@ public class MathExpFrame extends javax.swing.JFrame {
             for (ChangeListener l : this.listeners.keySet()){
                 l.stateChanged(new ChangeEvent(this));
             }
-        } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+        } catch (RuntimeException ex) {
             JOptionPane.showMessageDialog(rootPane, TokenSimulator.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveBtnActionPerformed

@@ -9,8 +9,7 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
+import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -291,7 +290,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             this.reactionOrder.put(t.id(), inf);
             try {
                 this.deterministicReactionConstants.put(t.id(), new MathematicalExpression("0.0"));
-            } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+            } catch (UnknownFunctionOrVariableException ex) {
                 Logger.getLogger(GillespieTokenSim.class.getName()).log(Level.SEVERE, null, ex);
             }
             this.firingRates.put(t.id(), 0.0);
@@ -564,7 +563,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * Evaluate concentrations for all constant places using non-constant concentrations as variables.
          */
         for (Entry<Integer, MathematicalExpression> entr : this.tokenSim.getConstantPlaces().entrySet()) {
-            concentrations.put(entr.getKey(), entr.getValue().evaluate(concentrations, this.time));
+            concentrations.put(entr.getKey(), entr.getValue().evaluateML(concentrations, this.time));
         }
 
         /*
@@ -581,7 +580,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             /*
              * Evaluate deterministic reaction rate constant
              */
-            detReactionRateConst = this.deterministicReactionConstants.get(tID).evaluate(concentrations, this.time);
+            detReactionRateConst = this.deterministicReactionConstants.get(tID).evaluateML(concentrations, this.time);
             /*
              * Convert deterministic reaction rate constant to stochastic reaction rate constant.
              */
@@ -1101,7 +1100,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                 concentrations.put(entr.getKey(), entr.getValue() / volMol);
             }
             MathematicalExpression mathExp = tokenSim.getMathematicalExpression(id);
-            return Math.round(mathExp.evaluate(concentrations, time) * volMol);
+            return Math.round(mathExp.evaluateML(concentrations, time) * volMol);
         }
     }
 

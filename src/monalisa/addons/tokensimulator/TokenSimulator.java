@@ -9,8 +9,7 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
+import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import java.awt.event.ItemEvent;
@@ -1403,7 +1402,7 @@ public class TokenSimulator {
      * -adds the place to constantPlaces-map with the mathematical expression build from the
      *  number of tokens of the place while it was non-constant.
      * If isConstant == false:
-     * -set the places property to non-constat.
+     * -set the places property to non-constant.
      * -removes the place from the constantPlaces-map.
      * -adds the place to the marking-map and tries to evaluate the mathematical expression without variables. This <b>will</b> fail
      * if the expression has variables. In this case, 0 will be set as the number of tokens for the place.

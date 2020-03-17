@@ -100,6 +100,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
     protected void initializeLocation(V v, Point2D coord, Dimension d) {
         Point point = map.get(v);
         coord.setLocation(point.x, point.y);
+        // This is where location is assigned!
     }
 
     /**
@@ -119,6 +120,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
      * @param map a map of the Point2D for every vertex
      */
     public void restore(Map<V, Point> map) {
+        // Here
         this.map = map;
         initializeLocations();
         locked = true;
@@ -130,7 +132,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
      *
      * @param fileName the file to use
      * @throws IOException for file problems
-     * @throws ClassNotFoundException for classpath problems
+     * @throws ClassNotFoundException for class path problems
      */
     @SuppressWarnings("unchecked")
     @Override
@@ -180,6 +182,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
 
         @Override
         public edu.uci.ics.jung.visualization.layout.PersistentLayout.Point create() {
+            System.out.println("used");
             double x = Math.random() * d.width;
             double y = Math.random() * d.height;
             return new Point(x, y);

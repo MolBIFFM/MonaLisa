@@ -9,8 +9,6 @@
  */
 package monalisa.addons.tokensimulator;
 
-import de.congrace.exp4j.UnknownFunctionException;
-import de.congrace.exp4j.UnparsableExpressionException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -343,7 +341,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             this.constantMarkingRun = new long[this.constantPlacesExpRun.length];
             for (int i = 0; i < this.constantMarkingRun.length; i++){
                 MathematicalExpression exp = this.constantPlacesExpRun[i];
-                double val = exp.evaluate(concentrations, this.timePassed);
+                double val = exp.evaluateML(concentrations, this.timePassed);
                 this.constantMarkingRun[i] = Math.round(val * volMol);
                 this.concentrations.put(constantPlaceIDs[i], val);
             }
@@ -574,7 +572,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     LOGGER.debug("Updating marking and concentration for all constant places");
                     for (int i = 0; i < this.constantMarkingRun.length; i++){
                         MathematicalExpression exp = this.constantPlacesExpRun[i];
-                        double val = exp.evaluate(concentrations, this.timePassed);
+                        double val = exp.evaluateML(concentrations, this.timePassed);
                         this.constantMarkingRun[i] = Math.round(val * volMol);
                         this.concentrations.put(this.constantPlaceIDsRun[i], val);
                     }
@@ -740,7 +738,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                 * Evaluate deterministic reaction rate constant
                 */
                 LOGGER.debug("Computing the reaction rate of the reaction with the ID: " + Integer.toString(idx));
-                double detReactionRateConst = reactionRateConstantsRun[idx].evaluate(concentrations, timePassed);
+                double detReactionRateConst = reactionRateConstantsRun[idx].evaluateML(concentrations, timePassed);
                 /*
                 * Convert deterministic reaction rate constant to stochastic one. Get the order and the multiplier of the reaction.
                 */
@@ -1272,7 +1270,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             LOGGER.debug("Updating the marking and concentration for all constant places");
             for (int i = 0; i < this.constantMarkingRun.length; i++){
                 MathematicalExpression exp = this.constantPlacesExpRun[i];
-                double val = exp.evaluate(concentrations, this.timePassed);
+                double val = exp.evaluateML(concentrations, this.timePassed);
                 this.constantMarkingRun[i] = Math.round(val * volMol);
                 this.concentrations.put(this.constantPlaceIDsRun[i], val);
             }

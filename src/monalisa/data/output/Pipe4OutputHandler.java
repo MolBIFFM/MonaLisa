@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -15,8 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -26,6 +24,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
@@ -35,8 +35,11 @@ import org.jdom2.output.XMLOutputter;
  */
 public class Pipe4OutputHandler implements OutputHandler {
 
+    private static final Logger LOGGER = LogManager.getLogger(Pipe4OutputHandler.class);
+
     public void save(FileOutputStream fileOutputStream, PetriNet pn) {
-                Double minX = 0.0 , minY = 0.0, x, y;
+        LOGGER.info("Exporting Petri net to PIPE4 format");
+        Double minX = 0.0 , minY = 0.0, x, y;
         for(Place p : pn.places()) {
             x = (Double) p.getProperty("posX");
             y = (Double) p.getProperty("posY");
@@ -61,11 +64,11 @@ public class Pipe4OutputHandler implements OutputHandler {
         Double corectY = Math.abs(minY)+10.0;
 
         Element root = new Element("pnml");
-        
+
         Element net = new Element("net");
         net.setAttribute("id", "Net-One");
         net.setAttribute("type", "P/T net");
-        
+
 
         Element tokenclass = new Element("token");
         tokenclass.setAttribute("id","Default");
@@ -218,7 +221,7 @@ public class Pipe4OutputHandler implements OutputHandler {
                 value = new Element("value");
                 value.addContent("false");
                 tagged.addContent(value);
-                
+
                 arc.addContent(tagged);
 
                 type = new Element("type");
@@ -272,12 +275,14 @@ public class Pipe4OutputHandler implements OutputHandler {
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
         try {
             outputter.output(doc, fileOutputStream);
+            LOGGER.info("Successfully exported Petri net to PIPE4 format");
         } catch (IOException ex) {
-            Logger.getLogger(Pipe4OutputHandler.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Caught IOException while exporting Petri net to PIPE4 format: ", ex);
         }
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in PIPE4 format");
         if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
             return false;
 
@@ -286,6 +291,7 @@ public class Pipe4OutputHandler implements OutputHandler {
         try {
             doc = builder.build(file);
         } catch (JDOMException e) {
+            LOGGER.error("Caught JDOMException while checking for PIPE4 format", e);
             return false;
         }
         Element root = doc.getRootElement();

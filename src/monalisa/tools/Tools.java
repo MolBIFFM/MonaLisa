@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -20,12 +20,14 @@ import monalisa.tools.mcs.McsTool;
 import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 
 @SuppressWarnings("unchecked")
 public final class Tools {
     private static final List<Class<? extends Tool>> toolTypes =
         Arrays.<Class<? extends Tool>>asList(
             TInvariantTool.class,
+            MInvariantTool.class,
             PInvariantTool.class,
             MctsTool.class,
             ClusterTool.class,

@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -26,6 +24,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Input handler for the Pipe4 PNML format.
@@ -33,11 +33,14 @@ import monalisa.util.FileUtils;
  * @see <a href="http://pipe2.sourceforge.net/">Platform Independent Petri net Editor 4</a>
  **/
 public class Pipe4InputHandler implements InputHandler {
- private final Map<String, Place> places = new HashMap<>();
+    private final Map<String, Place> places = new HashMap<>();
     private final Map<String, Transition> transitions = new HashMap<>();
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(Pipe4InputHandler.class);
+
 
     @Override
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in PIPE4 format");
         if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
             return false;
 
@@ -46,6 +49,7 @@ public class Pipe4InputHandler implements InputHandler {
         try {
             doc = builder.build(file);
         } catch (JDOMException e) {
+            LOGGER.error("Caught JDOMException while checking for PIPE4 format: ", e);
             return false;
         }
         Element root = doc.getRootElement();
@@ -68,6 +72,7 @@ public class Pipe4InputHandler implements InputHandler {
     @SuppressWarnings("unchecked")
     @Override
     public PetriNet load(InputStream in) throws IOException {
+        LOGGER.info("Loading Petri net from PIPE4 file");
         PetriNet ret = new PetriNet();
 
         SAXBuilder builder = new SAXBuilder();
@@ -75,7 +80,7 @@ public class Pipe4InputHandler implements InputHandler {
         try {
             doc = builder.build(in);
         } catch (JDOMException ex) {
-            Logger.getLogger(Pipe3InputHandler.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Failed to parse XML file", ex);
         }
 
         // - pnml
@@ -152,7 +157,7 @@ public class Pipe4InputHandler implements InputHandler {
                 }
             }
         }
-
+        LOGGER.info("Successfully loaded Petri net from PIPE4 file");
         return ret;
     }
 
@@ -160,9 +165,11 @@ public class Pipe4InputHandler implements InputHandler {
         Place place = places.get(stringId);
 
         if (place == null) {
+            LOGGER.debug("Creating new place with placeID '" + Integer.toString(placeId) + "'");
             place = new Place(placeId);
             places.put(stringId, place);
             petriNet.addPlace(place);
+            LOGGER.debug("Successfully created new place with placeID '" + Integer.toString(placeId) + "'");
         }
         return place;
     }
@@ -171,15 +178,17 @@ public class Pipe4InputHandler implements InputHandler {
         Transition transition = transitions.get(stringId);
 
         if (transition == null) {
+            LOGGER.debug("Creating new transition with transitionID '" + Integer.toString(transitionId) + "'");
             transition = new Transition(transitionId);
             transitions.put(stringId, transition);
             petriNet.addTransition(transition);
+            LOGGER.debug("Successfully created new transition with transitionID '" + Integer.toString(transitionId) + "'");
         }
         return transition;
     }
-    
+
     @Override
     public String getDescription() {
         return "Pipe4 (PNML)";
-    }      
+    }
 }

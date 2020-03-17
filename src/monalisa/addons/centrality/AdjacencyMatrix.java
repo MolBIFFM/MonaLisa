@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -15,22 +15,25 @@ import java.util.HashMap;
 import java.util.Map;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class is used to compute respectively the adjacency matrix of transitions and places for a certain Petri net
  * @author Lilya Mirzoyan
  */
 public class AdjacencyMatrix {
-    
+
+    public static final Logger LOGGER =  LogManager.getLogger(AdjacencyMatrix.class);
     public static final String PLACES = "PLACES";
     public static final String TRANSITIONS = "TRANSITIONS";
-    
-    private int[][] adjMatrix;   
+
+    private int[][] adjMatrix;
     private final int length;
     private final Map<Integer, Integer> translationMap;
     private final Map<Integer, Integer> reverseTranlationMap;
-   
-        
+
+
     /**
      * Looks if a node is a place or a transition and yields the adjacency matrix for both. If two places are connected by a transition, then they
      * are adjacent. Otherwise, they are not. The same applies to the transitions
@@ -39,19 +42,22 @@ public class AdjacencyMatrix {
      * @param whichOne
      */
     public AdjacencyMatrix(Collection<Place> places, Collection<Transition> transitions, String whichOne){
+        LOGGER.info("Creating new adjacency matrix");
         translationMap = new HashMap<>();
         reverseTranlationMap = new HashMap<>();
-        
+
         int counter = 0;
         if (whichOne.equals(PLACES)){
+            LOGGER.debug("Adjacency matrix based on places");
             this.length = places.size();
             initMatrix(places.size());
-            
+            LOGGER.debug("Initializing translations maps");
             for(Place p : places) {
                 translationMap.put(p.id(), counter);    // the nodes are numbered
                 reverseTranlationMap.put(counter, p.id());  // stores the ID of a node for each value
                 counter++;
-            }  
+            }
+            LOGGER.debug("Filling matrix based on places");
             for (Transition t : transitions){
                 for (Place p1 : t.inputs()){
                     for (Place p2 : t.outputs()){
@@ -62,14 +68,16 @@ public class AdjacencyMatrix {
                 }
             }
         } else {
+            LOGGER.debug("Adjacency matrix based on transitions");
             initMatrix(transitions.size());
             this.length = transitions.size();
-            
+            LOGGER.debug("Initializing translation maps");
             for(Transition t : transitions) {
                 translationMap.put(t.id(), counter);
                 reverseTranlationMap.put(counter, t.id());
                 counter++;
             }
+            LOGGER.debug("Filling matrix based on transitions");
             for (Place p : places){
                 for (Transition t1 : p.inputs()){
                     for (Transition t2 : p.outputs()){
@@ -78,24 +86,27 @@ public class AdjacencyMatrix {
                         }
                     }
                 }
-            }            
+            }
         }
+        LOGGER.info("Finished creating new adjacency matrix");
     }
-    
-    
+
+
     /**
      * Initializes the adjacency matrix by filling it with zeros
-     * @param size 
+     * @param size
      */
-    private void initMatrix(int size){ 
+    private void initMatrix(int size){
+        LOGGER.info("Initializing adjacency matrix with zeros");
         adjMatrix = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++){
                 adjMatrix[i][j] = 0;
             }
         }
-    }    
-     
+        LOGGER.info("Successfully initialized adjacency matrix with zeros");
+    }
+
     /**
      * Yields the desired entry of the adjacency matrix
      * @param x
@@ -103,19 +114,21 @@ public class AdjacencyMatrix {
      * @return adjMatrix
      */
     public int getEntry(Integer x, Integer y){
+        LOGGER.debug("Getting entry for position " + x.toString() + "," + y.toString());
         return adjMatrix[translationMap.get(x)][translationMap.get(y)];
-    }        
-    
+    }
+
     /**
      * Allows to change entries in the adjacency matrix
      * @param x
      * @param y
-     * @param value 
+     * @param value
      */
     public void setEntry(Integer x, Integer y, int value) {
+        LOGGER.debug("Setting entry for position " + x.toString() + "," + y.toString() + " to " + value);
         adjMatrix[translationMap.get(x)][translationMap.get(y)] = value;
-    }    
-    
+    }
+
     /**
      * Returns the ID of a node for a certain index
      * @param index
@@ -124,7 +137,7 @@ public class AdjacencyMatrix {
     public int getIdForIndex(int index) {
         return reverseTranlationMap.get(index);
     }
-    
+
     /**
      * Returns the index of a node for a certain ID
      * @param id
@@ -133,7 +146,7 @@ public class AdjacencyMatrix {
     public int getIndexForId(int id){
         return translationMap.get(id);
     }
-    
+
     /**
      * Returns the length of the adjacency matrix
      * @return number of nodes in the adjacency matrix
@@ -141,7 +154,7 @@ public class AdjacencyMatrix {
     public int getLength() {
         return this.length;
     }
-    
+
     /**
      * Returns the computed adjacency matrix
      * @return adjacency matrix

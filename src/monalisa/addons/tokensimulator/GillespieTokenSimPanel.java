@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -10,6 +10,8 @@
 package monalisa.addons.tokensimulator;
 
 import java.awt.event.KeyEvent;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -18,6 +20,7 @@ import java.awt.event.KeyEvent;
 public class GillespieTokenSimPanel extends javax.swing.JPanel {
     //BEGIN VARIABLES DECLARATION
     private GillespieTokenSim ts;
+    private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSimPanel.class);
     //END VARIABLES DECLARATION
     
     //BEGIN CONSTRUCTORS
@@ -176,9 +179,11 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
             //switch button mode from "fire transitions" to "stop firing"
             this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
             this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
+            LOGGER.info("Firebutton has been pressed and firing starts");
             this.ts.startFiring();
         } //if a firing sequence is being executed, stop it
         else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))) {
+            LOGGER.info("Firebutton has been pressed and firing stopped");
             this.ts.stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed

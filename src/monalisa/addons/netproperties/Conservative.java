@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -13,15 +13,18 @@ package monalisa.addons.netproperties;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author daniel
  */
-public class Conservative extends NetPropertieAlgorithm<Boolean>{
+public class Conservative extends NetPropertyAlgorithm<Boolean>{
 
     private boolean subConservative;
-    
+    private static final Logger LOGGER = LogManager.getLogger(Conservative.class);
+
     public Conservative(PetriNetFacade pn) {
         super(pn);
     }
@@ -32,6 +35,7 @@ public class Conservative extends NetPropertieAlgorithm<Boolean>{
      */
     @Override
     public void runAlgorithm() {
+        LOGGER.info("Checking whether net is conservative and / or subconservative");
         algorithmName = "conservative";
         algorithmValue = true;
         subConservative = true;
@@ -52,19 +56,20 @@ public class Conservative extends NetPropertieAlgorithm<Boolean>{
             if(tokenSumOutput > tokenSumInput){
                 subConservative = false;
                 break;
-            }            
-        }            
+            }
+        }
+        LOGGER.info("Successfully checked whether net is conservative and / or subconservative");
     }
-    
+
     /**
      * A net is sub-conservative, if all transitions add at most as many tokens
      * to their post-place as they subtract from their pre-places.
-     * 
+     *
      * @return true, if the net is sub-conservative.
      */
     public boolean getSubConservativeValue(){
         return subConservative;
     }
-    
-    
+
+
 }

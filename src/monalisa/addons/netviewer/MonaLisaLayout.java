@@ -1,9 +1,10 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
  *
  */
 
@@ -26,13 +27,15 @@ import edu.uci.ics.jung.visualization.layout.ObservableCachingLayout;
 import edu.uci.ics.jung.visualization.layout.PersistentLayout;
 import edu.uci.ics.jung.visualization.util.Caching;
 import edu.uci.ics.jung.visualization.util.ChangeEventSupport;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * Variation of the JUNG Layout class. 
+ * Variation of the JUNG Layout class.
  * Allows a simpler way to save and restore the layout without writing a file.
  *  * @author JUNG Library, modified by Jens Einloft
  * @param <V>
- * @param <E> 
+ * @param <E>
  */
 public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
         implements PersistentLayout<V, E>, ChangeEventSupport, Caching, Serializable {
@@ -53,6 +56,8 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
      */
     protected boolean locked;
 
+    private static final Logger LOGGER = LogManager.getLogger(MonaLisaLayout.class);
+
     /**
      * create an instance with a passed layout create containers for graph
      * components
@@ -61,9 +66,11 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
      */
     public MonaLisaLayout(Layout<V, E> layout) {
         super(layout);
+        LOGGER.info("Initializing Layout");
         this.map = LazyMap.decorate(new HashMap<V, Point>(), new RandomPointFactory(getSize()));
 
         this.dontmove = new HashSet<>();
+        LOGGER.info("Finished initializing layout");
     }
 
     /**
@@ -72,6 +79,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
      * initial location is set by calling <tt>initializeLocation</tt>.
      */
     protected void initializeLocations() {
+        LOGGER.info("Initializing vertex locations");
         for (V v : getGraph().getVertices()) {
             Point2D coord = delegate.transform(v);
             if (!dontmove.contains(v)) {
@@ -106,7 +114,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
         }
         return map;
     }
-    
+
     /**
      * Set the map of points and initialize their location to the given coordinates
      * @param map a map of the Point2D for every vertex
@@ -116,9 +124,9 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
         this.map = map;
         initializeLocations();
         locked = true;
-        fireStateChanged();        
+        fireStateChanged();
     }
-    
+
     /**
      * Restore the graph Vertex locations from a file
      *
@@ -139,7 +147,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see edu.uci.ics.jung.visualization.Layout#incrementsAreDone()
      */
     @Override
@@ -149,7 +157,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see edu.uci.ics.jung.visualization.Layout#lockVertex(edu.uci.ics.jung.graph.Vertex)
      */
     @Override
@@ -160,7 +168,7 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
 
     @Override
     public void persist(String string) throws IOException {
-        
+
     }
 
     @SuppressWarnings("serial")
@@ -180,5 +188,4 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
             return new Point(x, y);
         }
     }
-
 }

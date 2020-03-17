@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -17,6 +17,8 @@ import monalisa.addons.netviewer.listener.NetChangedListener;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Basic Panel for AddOns. Provides some basic functions like the registration of the tab of the NetViewer ToolBar.
@@ -25,23 +27,25 @@ import monalisa.resources.StringResources;
  */
 public class AddonPanel extends javax.swing.JPanel implements NetChangedListener, AddonStorageManagment {
 
+    private static final Logger LOGGER = LogManager.getLogger(AddonPanel.class);
     protected static final ResourceManager resources = ResourceManager.instance();
-    protected static final StringResources strings = resources.getDefaultStrings();  
-            
+    protected static final StringResources strings = resources.getDefaultStrings();
+
     protected NetViewer netViewer;
-    protected PetriNetFacade petriNet;    
+    protected PetriNetFacade petriNet;
     protected String addonName;
-         
+
    /**
      * Creates new form AddonPanel and add it to the ToolBar
      */
     public AddonPanel(NetViewer netViewer, PetriNetFacade pnf, String addonName) {
-        this.netViewer = netViewer;    
+        LOGGER.info("Adding '" + addonName + "' to ToolBar");
+        this.netViewer = netViewer;
         this.petriNet = pnf;
         this.addonName = addonName;
 
         this.netViewer.addTabToMenuBar(addonName, this);
-        
+
         this.netViewer.addNetChangedListener(this);
     }
 
@@ -67,7 +71,7 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    
+
     /**
      * Returns the name of the AddOn.
      * @return The name of the AddOn
@@ -75,19 +79,18 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     public String getAddOnName() {
         return this.addonName;
     }
-    
+
     /**
      * Is called from the NetViewer, if the Petri net is changed.
      * Should be used to reset the AddOn.
      */
     @Override
     public void netChanged() {
-        
-    }   
-    
+    }
+
     /**
      * Is called from the Project class to get all data, which should be saved for the AddOn.
-     * All kind of objects can be stored here, if the class implements the "Serializable" interface. 
+     * All kind of objects can be stored here, if the class implements the "Serializable" interface.
      * The string is an identifier if more than one object should be saved.
      * @return A map with the data to store.
      */
@@ -95,14 +98,14 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     public Map<String, Object> getObjectsForStorage() {
         return new HashMap<>();
     }
-    
+
     /**
      * Is called from the Project class to send the stored data to the AddOn.
      * It will get the map which is saved with getObjectsForStorage() method.
-     * @param storage 
+     * @param storage
      */
     @Override
     public void reciveStoredObjects(Map<String, Object> storage) {
-        
+
     }
 }

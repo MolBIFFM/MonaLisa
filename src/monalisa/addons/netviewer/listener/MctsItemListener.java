@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -18,6 +18,8 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.ToolBar;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Controls the selection of a MCT Set
@@ -27,6 +29,7 @@ public class MctsItemListener implements ItemListener {
     private final JComboBox cb;
     private final NetViewer nv;
     private final ToolBar tb;
+    private static final Logger LOGGER = LogManager.getLogger(MctsItemListener.class);
 
     public MctsItemListener(NetViewer nv, ToolBar tb, JComboBox cb) {
         this.cb = cb;
@@ -37,6 +40,7 @@ public class MctsItemListener implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent ie) {
         if(ie.getStateChange() == ItemEvent.SELECTED) {
+            LOGGER.debug("New MCTS-Item selected, changing colouring");
             if(cb.getSelectedItem() == null)
                 return;
             if(cb.getSelectedIndex() == 0) {
@@ -47,21 +51,22 @@ public class MctsItemListener implements ItemListener {
                 return;
 
             if(!tb.stackSelection()) {
-                nv.resetColor();                    
-            } 
+                nv.resetColor();
+            }
 
-            Color choosenColor;
+            Color chosenColor;
             if(tb.manuellColorSelection()) {
-                choosenColor = JColorChooser.showDialog(null, "Select color", null);
+                chosenColor = JColorChooser.showDialog(null, "Select color", null);
             } else {
-                choosenColor = NetViewer.MCTS_COLOR;
-            }                 
+                chosenColor = NetViewer.MCTS_COLOR;
+            }
 
             nv.resetMessageLabel();
-            
-            nv.colorTransitions(((MctsWrapper)cb.getSelectedItem()).getMcts().transitions(), choosenColor);             
+
+            nv.colorTransitions(((MctsWrapper)cb.getSelectedItem()).getMcts().transitions(), chosenColor);
 
             nv.getVisualizationViewer().repaint();
-        }   
-    }     
+            LOGGER.debug("Successfully changed colouring on new MCS-Item selection");
+        }
+    }
 }

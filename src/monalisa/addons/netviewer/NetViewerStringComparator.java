@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -11,12 +11,16 @@
 package monalisa.addons.netviewer;
 
 import java.util.Comparator;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
- * Sorts a List of NetViewerNodes by her LabelNames
+ * Sorts a List of NetViewerNodes by their LabelNames
  * @author Jens Einloft
  */
 public class NetViewerStringComparator implements Comparator {
+
+    private static final Logger LOGGER = LogManager.getLogger(NetViewerStringComparator.class);
 
     @Override
     public int compare(Object o1, Object o2) {

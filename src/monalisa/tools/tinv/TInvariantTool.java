@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -31,31 +31,39 @@ import monalisa.data.pn.TInvariant;
 import monalisa.resources.ResourceManager;
 import monalisa.results.TInvariants;
 import monalisa.util.Components;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class TInvariantTool extends AbstractTool implements ActionListener {
-    private static final String ACTION_CALCULATE = "CALCULATE";    
+    private static final String ACTION_CALCULATE = "CALCULATE";
     private static final ResourceManager resources = ResourceManager.instance();
     private static final StringResources strings = resources.getDefaultStrings();
     private JPanel panel;
     private JCheckBox calculate;
-    private JLabel cti;
+    public JLabel cti;
     private Project project;
-    
+    private static final Logger LOGGER = LogManager.getLogger(TInvariantTool.class);
+
+    //public TInvariantTool(Project project){
+    //    this.project = project;
+    //}
     @Override
     public void run(PetriNetFacade pnf, ErrorLog log) throws InterruptedException {
         TInvariantCalculator calculator = null;
         try {
+            LOGGER.info("Running TInvariantTool");
             calculator = new TInvariantCalculator(pnf, log);
             addResult(new TInvariantsConfiguration(), calculator.tinvariants(log));
+            LOGGER.info("Successfully ran TInvariantTool");
             setCTILabelText(calculator.tinvariants(log));
 //            if (calculator.postScriptSource(log) != null)
 //                addResult(new MauritiusMapConfiguration(),
 //                calculator.postScriptSource(log));
         } catch (TInvariantCalculationFailedException e) {
             // Error already handled in calculator.
-        }        
+        }
     }
-    
+
     @Override
     public boolean finishedState(Project project) {
         if (project.hasAllResults(this, 2)) {
@@ -64,7 +72,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
         }
         return false;
     }
-    
+
     @Override
     public JPanel getUI(Project project, StringResources strings) {
         this.project = project;
@@ -81,26 +89,28 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
             panel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-            
+
             layout.setHorizontalGroup(layout.createParallelGroup()
                 .addComponent(calculate)
                 .addComponent(cti));
-            
+
             layout.setVerticalGroup(layout.createSequentialGroup()
                 .addComponent(calculate)
                 .addComponent(cti));
         }
-        
+
         return panel;
     }
 
     private void setCTILabelText() {
         int status = isCTI();
         if(status == 1) {
+            LOGGER.info("Petri net is CTI");
             cti.setText(strings.get("CTI"));
             cti.setForeground(new java.awt.Color(35, 132, 71));
         }
         else if(status == 0) {
+            LOGGER.info("Petri net is not CTI");
             cti.setText(strings.get("NotCTI"));
             cti.setForeground(new java.awt.Color(215, 69, 19));
         }
@@ -110,12 +120,14 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     private void setCTILabelText(TInvariants tinv) {
-        int status = isCTI(tinv);
+        int status = isCTI(tinv, project);
         if(status == 1) {
+            LOGGER.info("Petri net is CTI");
             cti.setText(strings.get("CTI"));
             cti.setForeground(new java.awt.Color(35, 132, 71));
         }
         else if(status == 0) {
+            LOGGER.info("Petri net is not CTI");
             cti.setText(strings.get("NotCTI"));
             cti.setForeground(new java.awt.Color(215, 69, 19));
         }
@@ -125,9 +137,12 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     private int isCTI() {
+        LOGGER.info("Checking whether Petri net is CTI");
         TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
-        if(tinv == null)
+        if(tinv == null) {
+            LOGGER.warn("T-Invariants could not be found");
             return -1;
+        }
         else {
             int nbrOfTransitions = project.getPetriNet().transitions().size();
             int i = 0;
@@ -144,6 +159,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
                 }
             }
             catch (Exception e) {
+                LOGGER.error("Caught exception while checking whether Petri net is CTI", e);
                 return -1;
             }
 
@@ -153,10 +169,13 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
                return 0;
         }
     }
-    
-    private int isCTI(TInvariants tinv) {
-        if(tinv == null)
+
+    public int isCTI(TInvariants tinv, Project project) {
+        LOGGER.info("Checking whether Petri net is CTI");
+        if(tinv == null) {
+            LOGGER.warn("T-Invariants could not be found");
             return -1;
+        }
         else {
             int nbrOfTransitions = project.getPetriNet().transitions().size();
             int i = 0;
@@ -176,7 +195,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
             else
                return 0;
         }
-    }    
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -192,13 +211,13 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     public boolean isActive() {
         return calculate.isSelected();
     }
-    
+
     @Override
     public void saveSettings(Project p) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void setActive(boolean active) {
         if (active != isActive()) {

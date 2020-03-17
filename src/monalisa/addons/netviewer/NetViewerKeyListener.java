@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -13,8 +13,6 @@ package monalisa.addons.netviewer;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -22,11 +20,11 @@ import java.util.logging.Logger;
  * @author Jens Einloft
  */
 public class NetViewerKeyListener implements KeyListener {
-    
+
     private final NetViewer nv;
     private Integer keyCode;
     private boolean activated;
-    
+
     public NetViewerKeyListener(NetViewer nv) {
         this.nv = nv;
         activated = true;
@@ -35,7 +33,7 @@ public class NetViewerKeyListener implements KeyListener {
     public void setActivated(boolean b) {
         this.activated = b;
     }
-    
+
     @Override
     public void keyTyped(KeyEvent e) {
 
@@ -50,7 +48,6 @@ public class NetViewerKeyListener implements KeyListener {
     public void keyReleased(KeyEvent e) {
         if(activated) {
             keyCode = e.getKeyCode();
-
             // ESC
             if(keyCode.equals(KeyEvent.VK_ESCAPE))
                 nv.cancelMouseAction();
@@ -65,7 +62,7 @@ public class NetViewerKeyListener implements KeyListener {
                 nv.edgeMouseAction();
             // R
             else if(keyCode.equals(KeyEvent.VK_R))
-                nv.deleteMouseAction();        
+                nv.deleteMouseAction();
             // S
             else if(keyCode.equals(KeyEvent.VK_S))
                 nv.inVertexMouseAction();
@@ -77,7 +74,7 @@ public class NetViewerKeyListener implements KeyListener {
                 nv.addBendMouseAction();
             // F
             else if(keyCode.equals(KeyEvent.VK_F))
-                    nv.deleteBendMouseAction();
+                nv.deleteBendMouseAction();
             // Y
             else if(keyCode.equals(KeyEvent.VK_Y))
                 nv.alignYMouseAction();
@@ -89,8 +86,8 @@ public class NetViewerKeyListener implements KeyListener {
                 nv.changeMouseModeToPicking();
             // V
             else if(keyCode.equals(KeyEvent.VK_V))
-                    nv.changeMouseModeToTransforming();
-            // Delte
+                nv.changeMouseModeToTransforming();
+            // Delete
             else if(keyCode.equals(KeyEvent.VK_DELETE))
                 nv.removeSelectedVertices();
         }

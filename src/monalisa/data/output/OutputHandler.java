@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -22,9 +22,9 @@ import monalisa.data.pn.PetriNet;
  */
 public interface OutputHandler {
     /**
-     * Save the specified {@code petriNet} into the {@code out}put stream.
-     * @param petriNet The Petri net.
-     * @param out The output stream.
+     * 
+     * @param fileOutputStream
+     * @param pn 
      */
      void save(FileOutputStream fileOutputStream, PetriNet pn);
 

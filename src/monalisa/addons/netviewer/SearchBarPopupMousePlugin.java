@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -24,6 +24,8 @@ import javax.swing.JPopupMenu;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.synchronisation.Synchronizer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Context menu for SearchBar
@@ -38,8 +40,9 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
     private final VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
     private final JList owner;
     private final String type;
-    
+
     private final Synchronizer synchronizer;
+    private static final Logger LOGGER = LogManager.getLogger(SearchBarPopupMousePlugin.class);
 
     public SearchBarPopupMousePlugin(NetViewer nv, Synchronizer synchronizer, JList owner) {
         this.nv = nv;
@@ -51,6 +54,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
 
     @Override
     protected void handlePopup(final MouseEvent me) {
+        LOGGER.debug("Handling popup for SearchBar");
         JPopupMenu popup = new JPopupMenu();
         final List<NetViewerNode> selectedValues = owner.getSelectedValuesList();
         String menuName = null;
@@ -67,6 +71,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     zoomAtChildMenu.add(new AbstractAction(strings.get("NVZoomAtVertex")+" child "+(i++)) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+                            LOGGER.info("Zooming to vertex from SearchBar for logical places");
                             nv.zoomToVertex(n);
                         }
                     });
@@ -78,7 +83,8 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                 popup.add(new AbstractAction(strings.get("NVZoomAtVertex")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                       nv.zoomToVertex(nvNode);
+                        LOGGER.info("Zooming to vertex from SearchBar for non-logical nodes");
+                        nv.zoomToVertex(nvNode);
                     }
                 });
             }
@@ -86,7 +92,9 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
             popup.add(new AbstractAction(strings.get("NVProperties")) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    LOGGER.info("Entering node setup from SearchBar");
                     nv.showVertexSetup(nvNode, me.getX(), me.getY());
+                    LOGGER.info("Leaving node setup from SearchBar");
                 }
             });
 
@@ -102,6 +110,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     popup.add(new AbstractAction(strings.get("NVMeltAllLogicalPlaces")) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+                            LOGGER.info("Melting all logical places");
                             List<NetViewerNode> pickedVerticesList = new ArrayList<>();
                             for(NetViewerNode n : vv.getRenderContext().getPickedVertexState().getPicked())
                                 pickedVerticesList.add(n);
@@ -123,8 +132,9 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                 popup.add(new AbstractAction(strings.get("NVReverseTransition")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        LOGGER.info("Reverse Transitions");
                         synchronizer.reverseTransition(nvNode, me.getX(), me.getY());
-                        nv.modificationActionHappend();                        
+                        nv.modificationActionHappend();
                     }
                 });
             }
@@ -140,6 +150,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
             popup.add(new AbstractAction(menuName) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    LOGGER.info("Merging vertices from SearchBar");
                     synchronizer.mergeVertices(owner.getSelectedValuesList());
                     nv.modificationActionHappend();
                 }
@@ -148,14 +159,17 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
             popup.add(new AbstractAction(strings.get("NVProperties")) {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    LOGGER.info("Entering vertex setup for several vertices");
                     List<NetViewerNode> selectedNodes = new ArrayList<>();
                     for(Object o : selectedValues)
                         selectedNodes.add((NetViewerNode) o);
                     nv.showVertexSetup(selectedNodes, me.getX(), me.getY());
+                    LOGGER.info("Leaving vertex setup for several vertices");
                 }
             });
         }
 
         popup.show(owner, me.getX(), me.getY());
+        LOGGER.debug("Done handling popup for SearchBar");
     }
 }

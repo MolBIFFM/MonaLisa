@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -21,6 +21,8 @@ import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Output handler for MetaTool format
@@ -30,8 +32,11 @@ public class MetaToolOutputHandler implements OutputHandler {
 
     private static final ResourceManager resources = ResourceManager.instance();
     private static final StringResources strings = resources.getDefaultStrings();
+    private static final Logger LOGGER = LogManager.getLogger(MetaToolOutputHandler.class);
+
 
     public void save(FileOutputStream fos, PetriNet pn) {
+        LOGGER.info("Exporting Petri net to MetaTool format");
         try (PrintStream ps = new PrintStream(fos)) {
             ps.println("Generated with MonaLisa Version "+strings.get("CurrentVersion"));
 
@@ -70,7 +75,7 @@ public class MetaToolOutputHandler implements OutputHandler {
                         weight = ""+arc.weight()+" ";
                     ps.print(weight+p.getProperty("name")+" ");
                     if(i < len)
-                        ps.print("+ "); 
+                        ps.print("+ ");
                 }
 
                 ps.print("= ");
@@ -90,10 +95,12 @@ public class MetaToolOutputHandler implements OutputHandler {
                 }
                 ps.println(".");
             }
+            LOGGER.info("Successfully exported Petri net to MetaTool format");
         }
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in MetaTool format");
         return "dat".equalsIgnoreCase(FileUtils.getExtension(file)) || "meta".equalsIgnoreCase(FileUtils.getExtension(file));
     }
 

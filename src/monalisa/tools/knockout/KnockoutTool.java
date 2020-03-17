@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -11,13 +11,9 @@ package monalisa.tools.knockout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -30,7 +26,6 @@ import javax.swing.border.TitledBorder;
 import monalisa.Project;
 import monalisa.MonaLisa;
 import monalisa.data.Pair;
-import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -44,9 +39,11 @@ import monalisa.tools.ProgressEvent;
 import monalisa.tools.ProgressListener;
 import monalisa.tools.Tool;
 import monalisa.tools.tinv.TInvariantCalculationFailedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class KnockoutTool extends AbstractTool implements ActionListener, ProgressListener {
-    
+
     private static final String ACTION_CALCULATE = "CALCULATE";
     private static final String SELECT = "SELECT";
     private JPanel panel;
@@ -59,10 +56,12 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
     private JRadioButton selectKoPlace;
     private JRadioButton selectKoTransition;
     private Project project;
-    
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(KnockoutTool.class);
+
     @Override
     protected void run(PetriNetFacade pnf, ErrorLog log)
             throws InterruptedException {
+        LOGGER.info("Running KnockoutTool");
         KnockoutAlgorithm algorithm = null;
         String userDefinedName = null;
         KnockoutDialog dialog = null;
@@ -82,15 +81,17 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
             dialog = new KnockoutDialog(MonaLisa.appMainWindow(), pnf.transitions());
             algorithm = new MultiTransitionKnockout(pnf, dialog.<Transition>knockouts());
         }
-        
-        if (algorithm == null)
+
+        if (algorithm == null) {
+            LOGGER.error("Failed to initialize algorithm for KnockoutTool");
             throw new RuntimeException("Unreachable code, this should never happen.");
+        }
         try {
             algorithm.run(this, log);
         } catch (TInvariantCalculationFailedException ex) {
-            Logger.getLogger(KnockoutTool.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Caught TInvariantCalculationFailedException while running KnockoutTool: ", ex);
         }
-        
+
         userDefinedName = algorithm.getClass().getSimpleName();
         if(dialog != null) {
             userDefinedName += "Selection";
@@ -98,6 +99,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
         KnockoutConfiguration config = new KnockoutConfiguration(algorithm.getClass(),userDefinedName);
         Map<List<String>, List<String>> results = algorithm.getResults();
         addResult(config, new Knockout(results));
+        LOGGER.info("Successfully ran KnockoutTool");
     }
 
     @Override
@@ -124,7 +126,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
         this.project = project;
         if (panel == null) {
             singleKoPlace = new JRadioButton(strings.get("SinglePlaceKnockout"));
-            
+
             singleKoTransition = new JRadioButton(strings.get("SingleTransitionKnockout"));
             singleKoTransition.setActionCommand(SELECT);
             singleKoTransition.addActionListener(this);
@@ -148,11 +150,11 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
             group.add(doubleKoTransition);
             group.add(selectKoPlace);
             group.add(selectKoTransition);
-            
+
             calculate = new JCheckBox(strings.get("Calculate"));
             calculate.setActionCommand(ACTION_CALCULATE);
             calculate.addActionListener(this);
-            
+
             koPanel = new JPanel();
             koPanel.setBorder(BorderFactory.createTitledBorder(
                 null, "",
@@ -160,7 +162,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
                 TitledBorder.DEFAULT_POSITION));
             GroupLayout koLayout = new GroupLayout(koPanel);
             koPanel.setLayout(koLayout);
-            
+
             koLayout.setHorizontalGroup(koLayout.createParallelGroup()
                 .addComponent(singleKoPlace)
                 .addComponent(singleKoTransition)
@@ -168,7 +170,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
                 .addComponent(doubleKoTransition)
                 .addComponent(selectKoPlace)
                 .addComponent(selectKoTransition));
-            
+
             koLayout.setVerticalGroup(koLayout.createSequentialGroup()
                 .addComponent(singleKoPlace)
                 .addComponent(singleKoTransition)
@@ -176,17 +178,17 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
                 .addComponent(doubleKoTransition)
                 .addComponent(selectKoPlace)
                 .addComponent(selectKoTransition));
-            
+
             panel = new JPanel();
             GroupLayout layout = new GroupLayout(panel);
             panel.setLayout(layout);
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-            
+
             layout.setHorizontalGroup(layout.createParallelGroup()
                 .addComponent(koPanel)
                 .addComponent(calculate));
-            
+
             layout.setVerticalGroup(layout.createSequentialGroup()
                 .addComponent(koPanel)
                 .addComponent(calculate));
@@ -202,7 +204,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
     @Override
     public void saveSettings(Project p) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

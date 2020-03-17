@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -22,6 +22,8 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import layout.TableLayout;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Creates a new frame with a table with statistics
@@ -41,6 +43,8 @@ public class StatisticFrame {
     //If a snapshot is picked, show its statistic in statisticScrollPane
     private final ListSelectionListener snapshotListSelectionListener;
     private TokenSimulator ts;
+    private static final Logger LOGGER = LogManager.getLogger(StatisticFrame.class);
+
     //END VARIABLES DECLARATION
     
     //BEGIN CONSTRUCTORS
@@ -89,6 +93,7 @@ public class StatisticFrame {
      * is shown.
      */
     private void initGUI(){
+        LOGGER.info("Showing current statistics to the simulation");
         this.statisticFrame = new JFrame(TokenSimulator.strings.get("STATName"));
         this.statisticFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.statisticFrame.setLocationRelativeTo(null);

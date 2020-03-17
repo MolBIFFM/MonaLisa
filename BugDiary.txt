@@ -1,0 +1,67 @@
+Where - monalisa.data.output.TinvCalcOutputHandler, line 97: formatter.printf(" %d", place.getProperty("time"));
+
+What - java.lang.ClassCastException: class java.lang.Integer cannot be cast to class [Ljava.lang.Object; (java.lang.Integer and [Ljava.lang.Object; are in module java.base of loader 'bootstrap')
+
+Details - Imported Petri net from .pnt, tried to calculate T-Invariants
+
+--
+
+Where - monalisa.addons.netviewer
+
+What - No popup when selecting more than one edge and less than 2 nodes
+
+Details - Might be intended behaviour, still a bit weird though, since there is no clear information for the user
+
+--
+
+Where - monalisa.addons.netviewer
+
+What - Inserting bends and then removing them sometimes causes edges to become !visually! disconnected in the NetViewer
+
+Details - Seems like bending the edge causes it to "split" into two edges, of which one is then deleted without reconnecting the remaining "edge" to the corresponding vertex. Bug can most likely be found in monalisa.synchronisation.Synchronizer
+
+--
+
+Where - monalisa.addons.netviewer
+
+What - Checkboxes for colouring nodes in NetPropertiesFrame are not reset upon selecting "Reset coloring"
+
+--
+
+Where - monalisa.addons.netviewer
+
+What - EM selection is not properly reset upon selecting "Reset coloring" or selecting other EMs
+
+--
+
+Where - monalisa.addons.netviewer.NetViewer.hideColor
+
+What - java.lang.ClassCastException: class monalisa.addons.netviewer.transformer.VertexDrawPaintTransformer cannot be cast to class monalisa.addons.netviewer.transformer.VertexPaintTransformer
+
+Details - On selecting "Hide the color highlighting" or clicking the toolbar button
+
+--
+
+Where - monalisa.results.clustering
+
+What - Export for clusterings does not work. Literally not implemented
+
+--
+
+Where - monalisa.addons.treeviewer
+
+What - Visualization is clipped off, no scrollbars to look at anything but the left side of the clustering tree, exported image is also suffering from this
+
+--
+
+Where - monalisa.gui.ConverterDialog.getInputHandler
+
+What - GUI offers a selection of formats, among them KGML and PNT, these are however not implemented in getInputHandler
+
+--
+
+Where - monalisa.gui.ConverterDialog.getOutputHandler
+
+What - GUI offers a selection of formats, among them SBML L2V4 and Reaction List, these are however not implemented in getOutputHandler. Also, Pipe2 and Spped format are implemented but not offered in the GUI
+
+--

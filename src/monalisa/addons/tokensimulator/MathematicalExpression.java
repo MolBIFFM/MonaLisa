@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -18,9 +18,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 /**
  * A mathematical expression (equation) which can be solved. An expression is parsed from a string.
  * It can contain several case differentiations, separated by ";". Each case can be either a direct instruction, such as "A + B / C",
@@ -55,6 +54,7 @@ public final class MathematicalExpression {
      * Keys are names of variables, values are IDs of places.
      */
     private Map<String, Integer> variables = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(MathematicalExpression.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -164,17 +164,14 @@ public final class MathematicalExpression {
                     for (String v : variables.keySet()){
                         expBLeft.variable(v);
                     }                    
-                    
-                    Expression leftPart = expBLeft.build();
-                    leftPart.setVariable(MathematicalExpression.PI, Math.PI);
-                    leftPart.setVariable(TIME_VAR, 0);
-                    
-                    for (String v : variables.keySet()){
-                        leftPart.setVariable(v, 0);
+                    leftPart = expBLeft.build();
+                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
+                    try {
+                        leftPart = new ExpressionBuilder("0").build();
+                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
+                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the first part of a mathematical expression", ex1);
                     }
-   
-                } catch (RuntimeException exLeft) {
-                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, exLeft);
+                    LOGGER.error("Invalid custom function found while trying to parse the first part of a mathematical expression", ex);
                 }
                 try {
                   ExpressionBuilder expBRight = new ExpressionBuilder(condition.split(opString)[0])
@@ -184,17 +181,14 @@ public final class MathematicalExpression {
                     for (String v : variables.keySet()){
                         expBRight.variable(v);
                     }                    
-                    
-                    Expression rightPart = expBRight.build();
-                    rightPart.setVariable(MathematicalExpression.PI, Math.PI);
-                    rightPart.setVariable(TIME_VAR, 0);
-                    
-                    for (String v : variables.keySet()){
-                        rightPart.setVariable(v, 0);
+                    rightPart = expBRight.build();
+                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
+                    try {
+                        rightPart = new ExpressionBuilder("0").build();
+                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
+                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the second part of a mathematical expression", ex1);
                     }
-   
-                } catch (RuntimeException exRight) {
-                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, exRight);
+                    LOGGER.error("Invalid custom function found while trying to parse the second part of a mathematical expression", ex);
                 }
 
             }
@@ -262,9 +256,9 @@ public final class MathematicalExpression {
             expB.variable(TIME_VAR);
             expB.variable(MathematicalExpression.PI);
             try {
-                expB.function(int_div);
-            } catch (RuntimeException ex) {
-                Logger.getLogger(MathematicalExpression.class.getName()).log(Level.SEVERE, null, ex);
+                expB.withCustomFunction(new IntegerDivisionFunction());
+            } catch (InvalidCustomFunctionException ex) {
+                LOGGER.error("Invalid custom function found while trying to build an exception message", ex);
             }
             /*
              * Try to build a calculable.

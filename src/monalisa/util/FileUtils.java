@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -20,11 +20,15 @@ import java.net.URL;
 import java.util.Scanner;
 
 import monalisa.resources.ResourceManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class FileUtils {
+
+    private static final Logger LOGGER = LogManager.getLogger(FileUtils.class);
     /**
      * Extracts a resource into a temporary file.
-     * 
+     *
      * @param resource
      *            The path to the resource, relative to the
      *            {@code org/monalisa/resources} directory.
@@ -37,16 +41,20 @@ public class FileUtils {
      */
     public static File extractResource(String resource, String prefix,
             String suffix) throws IOException {
+        LOGGER.debug("Extracting resource '" + resource + "'");
         URL resURL =
             ResourceManager.instance().getResourceUrl(resource);
-        if (resURL == null)
+        if (resURL == null){
+            LOGGER.error("Could not find resource '" + resource + "', throwing exception");
             throw new FileNotFoundException();
+        }
+        LOGGER.debug("Successfully extracted resource '" + resource + "'");
         return extractResource(resURL, prefix, suffix);
     }
 
     /**
      * Extracts a resource into a temporary file.
-     * 
+     *
      * @param resource
      *            A URL to the resource to extract.
      * @param prefix
@@ -58,6 +66,7 @@ public class FileUtils {
      */
     public static File extractResource(URL resource, String prefix,
             String suffix) throws IOException {
+        LOGGER.debug("Extracting resource '" + resource.toString() + "'");
         File file = File.createTempFile(prefix, suffix);
 
         InputStream resStream = null;
@@ -70,6 +79,7 @@ public class FileUtils {
             int i = 0;
             while ((i = resStream.read(buffer)) != -1)
                 tmpFileStream.write(buffer, 0, i);
+        LOGGER.debug("Successfully extracted resource '" + resource.toString() + "'");
         } finally {
             if (resStream != null)
                 resStream.close();
@@ -81,9 +91,10 @@ public class FileUtils {
     }
 
     public static File copyFile(File source, File target) throws IOException {
+        LOGGER.debug("Copying file '" + source.getPath() + "' to target '" + target.getPath() + "'");
         if (target.isDirectory())
             target = new File(target, source.getName());
-        
+
         if (source.equals(target))
             return target;
 
@@ -97,6 +108,7 @@ public class FileUtils {
             int i = 0;
             while ((i = fis.read(buffer)) != -1)
                 fos.write(buffer, 0, i);
+            LOGGER.debug("Successfully copied file '" + source.getPath() + "' to target '" + target.getPath() + "'");
         } finally {
             if (fis != null)
                 fis.close();
@@ -106,7 +118,7 @@ public class FileUtils {
 
         return target;
     }
-    
+
     /**
      * Read a whole file as-is into a string.
      * @param file The file to read.
@@ -114,6 +126,7 @@ public class FileUtils {
      * @throws FileNotFoundException Thrown if the file doesn't exist.
      */
     public static String read(File file) throws FileNotFoundException {
+        LOGGER.debug("Reading file '" + file.getName() + "' to string as is");
         String contents;
         try (Scanner scanner = new Scanner(file)) {
             scanner.useDelimiter("\\Z");
@@ -121,6 +134,7 @@ public class FileUtils {
             if (scanner.hasNext())
                 contents = scanner.next();
         }
+        LOGGER.debug("Successfully read file '" + file.getName() + "' to string as is");
         return contents;
     }
 
@@ -128,7 +142,7 @@ public class FileUtils {
      * Returns the file name extension of {@code file}, if available. If the
      * file ends on a dot ({@code .}), the empty string is returned. If no
      * extension exists, {@code null} is returned instead.
-     * 
+     *
      * @param file The file object.
      * @return A string with the file extension, or {@code null} if it
      *         doesn't exist.
@@ -139,7 +153,7 @@ public class FileUtils {
 
         return pos == -1 ? null : filename.substring(pos + 1);
     }
-    
+
     public static File getTempDir() {
         return new File(System.getProperty("java.io.tmpdir"));
     }

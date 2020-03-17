@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -28,7 +28,6 @@ import javax.swing.SwingConstants;
 
 import monalisa.Project;
 import monalisa.data.Pair;
-import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
 import monalisa.resources.StringResources;
@@ -41,6 +40,8 @@ import monalisa.tools.AbstractTool;
 import monalisa.tools.ErrorLog;
 import monalisa.tools.Tool;
 import monalisa.tools.tinv.TInvariantTool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class McsTool extends AbstractTool implements ActionListener {
     private static final String ACTION_CALCULATE = "CALCULATE";
@@ -52,17 +53,20 @@ public final class McsTool extends AbstractTool implements ActionListener {
     private JComboBox<Transition> transitionCb;
     private JCheckBox calculateButton;
     private Project project;
+    private static final Logger LOGGER = LogManager.getLogger(McsTool.class);
 
     @Override
     protected void run(PetriNetFacade pnf, ErrorLog log) throws InterruptedException {
+        LOGGER.info("Running McsTool");
         final TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
         final Transition objective = transitionCb.getItemAt(transitionCb.getSelectedIndex());
         final int maxCutSetSize = cutSetSizeModel.getNumber().intValue();
 
         McsAlgorithm algorithm = new McsAlgorithm(pnf, tinv, objective);
         List<Set<Transition>> mcs = algorithm.findMcs(maxCutSetSize);
-        
+
         addResult(new McsConfiguration(objective, maxCutSetSize), new Mcs(mcs));
+        LOGGER.info("Successfully ran McsTool");
     }
 
     @Override
@@ -83,15 +87,15 @@ public final class McsTool extends AbstractTool implements ActionListener {
     @Override
     public JPanel getUI(final Project project, StringResources strings) {
         this.project = project;
-        if (panel == null) {            
+        if (panel == null) {
             transitionCb = new JComboBox<>();
-            
+
             List<Transition> transitionList = new ArrayList<>(project.getPetriNet().transitions());
             for(Transition t : transitionList) {
                 transitionCb.addItem(t);
             }
-            transitionLabel = new JLabel(strings.get("ObjectiveTransition"));                        
-            
+            transitionLabel = new JLabel(strings.get("ObjectiveTransition"));
+
             cutSetSizeLabel = new JLabel(strings.get("MaxCutSetSize"));
             cutSetSizeModel = new SpinnerNumberModel(5, 2, 20, 1);
             JSpinner spinnerSetSize = new JSpinner(cutSetSizeModel);
@@ -111,7 +115,7 @@ public final class McsTool extends AbstractTool implements ActionListener {
             layout.setHorizontalGroup(layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(transitionLabel)
-                    .addComponent(transitionCb))                    
+                    .addComponent(transitionCb))
                 .addGroup(layout.createSequentialGroup()
                     .addComponent(cutSetSizeLabel)
                     .addComponent(spinnerSetSize))
@@ -120,7 +124,7 @@ public final class McsTool extends AbstractTool implements ActionListener {
             layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGroup(layout.createBaselineGroup(false, false)
                     .addComponent(transitionLabel)
-                      .addComponent(transitionCb))                        
+                      .addComponent(transitionCb))
                 .addGroup(layout.createParallelGroup()
                     .addComponent(cutSetSizeLabel)
                     .addComponent(spinnerSetSize))

@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -23,23 +23,27 @@ import java.util.Map;
 import monalisa.Project;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.Place;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class PInvariants implements Result, Collection<PInvariant> {
     private static final long serialVersionUID = 8293263678484610772L;
     private final List<PInvariant> pinvariants;
-    
+    private static final Logger LOGGER = LogManager.getLogger(PInvariants.class);
+
     public PInvariants(List<PInvariant> pinvariants) {
         this.pinvariants = Collections.unmodifiableList(pinvariants);
     }
-    
+
     @Override
     public void export(File path, Configuration config, Project project) throws IOException {
         try (PrintWriter printer = new PrintWriter(path)) {
+            LOGGER.info("Exporting P-Invariant results");
             Map<Place, Integer> placeMap = new HashMap<>();
-            StringBuilder sb = new StringBuilder();          
-            
+            StringBuilder sb = new StringBuilder();
+
             sb.append("# species_id:name\n");
-            
+
             int i = 1;
             for(Place p : project.getPetriNet().places()) {
                 placeMap.put(p, i);
@@ -48,9 +52,9 @@ public final class PInvariants implements Result, Collection<PInvariant> {
                 sb.append(p.<String>getProperty("name"));
                 sb.append("\n");
             }
-                    
-            sb.append("\n# pinvariant_id:factor*species_id; ...\n");            
-            
+
+            sb.append("\n# pinvariant_id:factor*species_id; ...\n");
+
             for(PInvariant pinv : pinvariants) {
                 sb.append(pinv.id()+1);
                 sb.append(":");
@@ -61,24 +65,25 @@ public final class PInvariants implements Result, Collection<PInvariant> {
                     sb.append(placeMap.get(p));
                     sb.append(";");
                 }
-                sb.setLength(sb.length() - 1); 
+                sb.setLength(sb.length() - 1);
                 sb.append("\n");
             }
-            
+
             printer.print(sb.toString());
             printer.close();
+            LOGGER.info("Successfully exported P-Invariant results");
         }
     }
-    
+
     @Override
     public String toString() {
         return pinvariants.toString();
     }
-    
+
     private static String placesToString(PInvariant pinvariant, Boolean printId) {
         StringBuilder ret = new StringBuilder();
         boolean first = true;
-        
+
         for (Place place : pinvariant) {
             if (first)
                 first = false;
@@ -86,21 +91,21 @@ public final class PInvariants implements Result, Collection<PInvariant> {
                 ret.append(" ");
             if (pinvariant.factor(place) != 1)
                 ret.append(String.format("%d*", pinvariant.factor(place)));
-            
+
             if(printId)
                 ret.append(place.id()+1);
             else
-                ret.append(((String) place.getProperty("name")).replace(" ", "_"));                
+                ret.append(((String) place.getProperty("name")).replace(" ", "_"));
         }
-        
+
         return ret.toString();
     }
-    
+
     private static List<String> paragraphize(String text, String hangingIndent, int lineLength) {
         List<String> ret = new ArrayList<>();
         int startPos = 0;
         String indent = "";
-        
+
         while (text.length() - startPos > lineLength) {
             // Go forward to the theoretical end of the line and walk backwards
             // to the beginning of the current word.
@@ -111,19 +116,19 @@ public final class PInvariants implements Result, Collection<PInvariant> {
             // Failsafe if the line has no spaces:
             if (startPos == prev)
                 startPos += lineLength; // Don't care: cut the word.
-            
+
             ret.add(indent + text.substring(prev, startPos));
             startPos++; // Skip whitespace.
-            
+
             // Adjust line length by hanging indent.
             lineLength -= hangingIndent.length();
             indent = hangingIndent;
         }
-        
+
         // Add the dangling line.
         if (startPos < text.length())
             ret.add(indent + text.substring(startPos));
-        
+
         return ret;
     }
 
@@ -131,7 +136,7 @@ public final class PInvariants implements Result, Collection<PInvariant> {
     public String filenameExtension() {
         return "inv";
     }
-    
+
 //    public Collection<PInvariant> nonTrivialTInvariants() {
 //        List<PInvariant> nonTrivial = new ArrayList<PInvariant>();
 //        for(PInvariant pinvariant : this) {

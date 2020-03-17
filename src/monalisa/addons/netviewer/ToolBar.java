@@ -5,9 +5,9 @@
  */
 package monalisa.addons.netviewer;
 
-import monalisa.addons.netviewer.listener.PinvItemListener;
+import monalisa.addons.netviewer.listener.PinvSelectionListener;
 import monalisa.addons.netviewer.listener.MctsItemListener;
-import monalisa.addons.netviewer.listener.TinvItemListener;
+import monalisa.addons.netviewer.listener.TinvSelectionListener;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
@@ -16,8 +16,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -25,6 +24,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.DefaultListModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.data.pn.Compartment;
@@ -32,7 +32,12 @@ import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import monalisa.tools.pinv.PInvariantTool;
+import monalisa.tools.tinv.TInvariantTool;
+import monalisa.tools.minv.MInvariantTool;
 import monalisa.util.ColorCollection;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -46,40 +51,64 @@ public class ToolBar extends javax.swing.JPanel {
     private final NetViewer netViewer;
     private final NetViewerKeyListener nvkl;
     
+    protected DefaultListModel allInvList;
+    protected DefaultListModel trivialInvList;
+    protected DefaultListModel cyclicInvList;
+    protected DefaultListModel ioInvList;
+    protected DefaultListModel inputInvList;
+    protected DefaultListModel outputInvList;
+    
+    protected DefaultListModel MinvList;
+    
+    protected DefaultListModel PinvList;
+
     private int lastValue;
     private boolean blockSpinner, blockMenuPaneChangeListener;
-    
+    private static final Logger LOGGER = LogManager.getLogger(ToolBar.class);
+
     /**
      * Creates new form ToolBar
      */
     public ToolBar(final NetViewer netViewer, NetViewerKeyListener nvkl) {
+        LOGGER.info("Initializing ToolBar");
         this.netViewer = netViewer;
         this.nvkl = nvkl;
-        
-        this.lastValue = 100;       
+
+        this.lastValue = 100;
         this.blockSpinner = false;
-        
+
         this.addKeyListener(nvkl);
         
-        blockMenuPaneChangeListener = true;
-        initComponents();                                    
+        allInvList = new DefaultListModel();
+        trivialInvList= new DefaultListModel();
+        cyclicInvList = new DefaultListModel();
+        ioInvList = new DefaultListModel();
+        inputInvList = new DefaultListModel();
+        outputInvList = new DefaultListModel();
         
+        MinvList = new DefaultListModel();
+        
+        PinvList = new DefaultListModel();
+        
+        blockMenuPaneChangeListener = true;
+        initComponents();
+
         this.showCompartmentsCb.addItemListener(new ItemListener() {
-            
+
         Boolean showMe;
 
-        @Override                                 
+        @Override
         public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.DESELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(false);
-                } 
+                }
                 else if(e.getStateChange() == ItemEvent.SELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(true);
-                }                     
+                }
                 netViewer.repaint();
             }
         });
-        
+
         this.compartmentCb.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
@@ -88,54 +117,59 @@ public class ToolBar extends javax.swing.JPanel {
                     deleteCompartmentButton.setEnabled(true);
                 }
             }
-        });            
-        
+        });
+
         if(!this.netViewer.getProject().getPetriNet().getCompartments().isEmpty()) {
             for(Compartment c : this.netViewer.getProject().getPetriNet().getCompartments()) {
                 this.compartmentCb.addItem(c);
             }
-        }   
-        
+        }
+
         if(this.netViewer.getProject().hasProperty("fontSize")) {
-            int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");        
+            int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");
             this.netViewer.setFontSize(fontSize);
             this.fontSizeSpinner.setValue(fontSize);
         }
-        
+
         if(this.netViewer.getProject().hasProperty("arrowSize")) {
-            double arrowSize = (double) this.netViewer.getProject().getProperty("arrowSize");  
+            double arrowSize = (double) this.netViewer.getProject().getProperty("arrowSize");
             this.arrowSizeSpinner.setValue(arrowSize);
         }
-        
+
         if(this.netViewer.getProject().hasProperty("edgeSize")) {
-            int edgeSize = (int) this.netViewer.getProject().getProperty("edgeSize");  
+            int edgeSize = (int) this.netViewer.getProject().getProperty("edgeSize");
             this.edgeSizeSpinner.setValue(edgeSize);
-        }        
-        
+        }
+
         if(this.netViewer.getProject().hasProperty("iconSize")) {
-            int iconSize = (int) this.netViewer.getProject().getProperty("iconSize");  
+            int iconSize = (int) this.netViewer.getProject().getProperty("iconSize");
             this.iconSizeSpinner.setValue(iconSize);
-        }  
-        
+        }
+
         blockMenuPaneChangeListener = false;
+        LOGGER.info("Successfully initialized ToolBar");
     }
 
     public void setZoomSpinnerValue(int value) {
+        LOGGER.debug("Setting ZoomSpinner value");
         this.blockSpinner = true;
         zoomSpinner.setValue(value);
         lastValue = value;
         this.blockSpinner = false;
-    }    
-    
+        LOGGER.debug("Succssfully set ZoomSpinner value");
+    }
+
      /**
      * Add a new Tab to the Menu Bar of the NetViewer
      * @param name The name of the tab, shown in the header of the tab
      * @param tab The Component which is shown in the Tab. (Panel or ToolBar). Please use a TableLayout.
      */
-    public void addTabToMenuBar(String name, Component tab) {        
+    public void addTabToMenuBar(String name, Component tab) {
+        LOGGER.debug("Adding tab to MenuBar");
         this.menuPane.addTab(name, new JScrollPane(tab));
-    }    
-    
+        LOGGER.debug("Successfully added tab to MenuBar");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -197,26 +231,22 @@ public class ToolBar extends javax.swing.JPanel {
         deleteCompartmentButton = new javax.swing.JButton();
         showCompartmentsCb = new javax.swing.JCheckBox();
         analysisPane = new javax.swing.JPanel();
-        tinvPanel = new javax.swing.JPanel();
+        InvPanel = new javax.swing.JPanel();
         emLabel = new javax.swing.JLabel();
-        allEM = new javax.swing.JLabel();
-        allInvCb = new javax.swing.JComboBox();
-        trivialInvCb = new javax.swing.JComboBox();
-        trivialEM = new javax.swing.JLabel();
-        ioEM = new javax.swing.JLabel();
-        ioInvCb = new javax.swing.JComboBox();
-        inputInvCb = new javax.swing.JComboBox();
-        inputEM = new javax.swing.JLabel();
-        outputEM = new javax.swing.JLabel();
-        cylicEM = new javax.swing.JLabel();
-        cyclicInvCb = new javax.swing.JComboBox();
         heatmapButton = new javax.swing.JButton();
-        outputInvCb = new javax.swing.JComboBox();
-        computeTinvsButton = new javax.swing.JButton();
-        pinvPanel = new javax.swing.JPanel();
-        pinvLabel = new javax.swing.JLabel();
-        computePInvsButton = new javax.swing.JButton();
-        pinvCb = new javax.swing.JComboBox();
+        computeInvsButton = new javax.swing.JButton();
+        TinvCheckBox = new javax.swing.JCheckBox();
+        MinvCheckBox = new javax.swing.JCheckBox();
+        PinvCheckBox = new javax.swing.JCheckBox();
+        jLabel2 = new javax.swing.JLabel();
+        InvTabbedPane = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        Tinv_list = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Minv_list = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        Pinv_list = new javax.swing.JList<>();
+        CTILabel = new javax.swing.JLabel();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -224,6 +254,8 @@ public class ToolBar extends javax.swing.JPanel {
         optionsPanel = new javax.swing.JPanel();
         stackSelection = new javax.swing.JCheckBox();
         manuellColorSelection = new javax.swing.JCheckBox();
+        reset_color_button = new javax.swing.JButton();
+        heatMap_CheckBox = new javax.swing.JCheckBox();
         mcsPanel = new javax.swing.JPanel();
         mcsLabel = new javax.swing.JLabel();
         mcsCb = new javax.swing.JComboBox();
@@ -779,115 +811,16 @@ public class ToolBar extends javax.swing.JPanel {
         analysisPane.addKeyListener(nvkl);
         analysisPane.setLayout(new java.awt.GridBagLayout());
 
-        tinvPanel.setLayout(new java.awt.GridBagLayout());
+        InvPanel.setLayout(new java.awt.GridBagLayout());
 
         emLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        emLabel.setText("Elementary Modes");
+        emLabel.setText("Invariants");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
-        tinvPanel.add(emLabel, gridBagConstraints);
-
-        allEM.setText("all:");
-        allEM.setToolTipText("A list of all elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(allEM, gridBagConstraints);
-
-        allInvCb.addItemListener(new TinvItemListener(this.netViewer, this, allInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(allInvCb, gridBagConstraints);
-
-        trivialInvCb.addItemListener(new TinvItemListener(this.netViewer, this, trivialInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(trivialInvCb, gridBagConstraints);
-
-        trivialEM.setText("trivial:");
-        trivialEM.setToolTipText("A list of all trivial elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(trivialEM, gridBagConstraints);
-
-        ioEM.setText("I / O:");
-        ioEM.setToolTipText("A list of all elementary modes connection at least one input reaction with at least one output reaction");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(ioEM, gridBagConstraints);
-
-        ioInvCb.addItemListener(new TinvItemListener(this.netViewer, this, ioInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(ioInvCb, gridBagConstraints);
-
-        inputInvCb.addItemListener(new TinvItemListener(this.netViewer, this, inputInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(inputInvCb, gridBagConstraints);
-
-        inputEM.setText("Input");
-        inputEM.setToolTipText("A list of all elementary modes containing a input reaction but no output reaction ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(inputEM, gridBagConstraints);
-
-        outputEM.setText("Output:");
-        outputEM.setToolTipText("A list of all elementary modes containing a output reaction but no input reaction ");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(outputEM, gridBagConstraints);
-
-        cylicEM.setText("cyclic:");
-        cylicEM.setToolTipText("A list of all cyclic elementary modes");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(cylicEM, gridBagConstraints);
-
-        cyclicInvCb.addItemListener(new TinvItemListener(this.netViewer, this, cyclicInvCb, true));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(cyclicInvCb, gridBagConstraints);
+        InvPanel.add(emLabel, gridBagConstraints);
 
         heatmapButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/map_color.png"))); // NOI18N
         heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
@@ -897,34 +830,85 @@ public class ToolBar extends javax.swing.JPanel {
                 heatmapButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        tinvPanel.add(heatmapButton, gridBagConstraints);
-
-        outputInvCb.addItemListener(new TinvItemListener(this.netViewer, this, outputInvCb, true));
+        heatmapButton.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 2, 0, 0);
-        tinvPanel.add(outputInvCb, gridBagConstraints);
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        InvPanel.add(heatmapButton, gridBagConstraints);
 
-        computeTinvsButton.setText("Compute Elementary Modes");
-        computeTinvsButton.addActionListener(new java.awt.event.ActionListener() {
+        computeInvsButton.setText("Compute Invariants");
+        computeInvsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                computeTinvsButtonActionPerformed(evt);
+                computeInvsButtonActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
+        InvPanel.add(computeInvsButton, gridBagConstraints);
+
+        TinvCheckBox.setText("Transition Invariants");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        InvPanel.add(TinvCheckBox, gridBagConstraints);
+
+        MinvCheckBox.setText("Manatee Invariants");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        InvPanel.add(MinvCheckBox, gridBagConstraints);
+
+        PinvCheckBox.setText("Place Invariants");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        InvPanel.add(PinvCheckBox, gridBagConstraints);
+
+        jLabel2.setText("Select the Invariants you want to compute:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        tinvPanel.add(computeTinvsButton, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
+        InvPanel.add(jLabel2, gridBagConstraints);
+
+        InvTabbedPane.setMinimumSize(new java.awt.Dimension(370, 300));
+        InvTabbedPane.setPreferredSize(new java.awt.Dimension(370, 300));
+
+        Tinv_list.setModel(allInvList);
+        Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));
+        jScrollPane1.setViewportView(Tinv_list);
+
+        InvTabbedPane.addTab("T - Invariants", jScrollPane1);
+
+        Minv_list.setModel(MinvList);
+        Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));
+        jScrollPane2.setViewportView(Minv_list);
+
+        InvTabbedPane.addTab("M - Invariants", jScrollPane2);
+
+        Pinv_list.setModel(PinvList);
+        Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));
+        jScrollPane4.setViewportView(Pinv_list);
+
+        InvTabbedPane.addTab("P - Invariants", jScrollPane4);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        InvPanel.add(InvTabbedPane, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        InvPanel.add(CTILabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -932,46 +916,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        analysisPane.add(tinvPanel, gridBagConstraints);
-
-        pinvPanel.setLayout(new java.awt.GridBagLayout());
-
-        pinvLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
-        pinvLabel.setText("Place Invariants");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-        pinvPanel.add(pinvLabel, gridBagConstraints);
-
-        computePInvsButton.setText("Compute Place Invariants");
-        computePInvsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                computePInvsButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
-        pinvPanel.add(computePInvsButton, gridBagConstraints);
-
-        pinvCb.setPreferredSize(new java.awt.Dimension(212, 24));
-        pinvCb.addItemListener(new PinvItemListener(this.netViewer, this, pinvCb));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        pinvPanel.add(pinvCb, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        analysisPane.add(pinvPanel, gridBagConstraints);
+        analysisPane.add(InvPanel, gridBagConstraints);
 
         mctsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1030,6 +975,25 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         optionsPanel.add(manuellColorSelection, gridBagConstraints);
 
+        reset_color_button.setText("Reset Coloring");
+        reset_color_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reset_color_buttonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
+        optionsPanel.add(reset_color_button, gridBagConstraints);
+
+        heatMap_CheckBox.setText("Show Heatmap with Computation");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        optionsPanel.add(heatMap_CheckBox, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -1076,33 +1040,43 @@ public class ToolBar extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void enableHighlightingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableHighlightingButtonActionPerformed
+        LOGGER.debug("Highlighting Button in ToolBar used");
         Boolean value = this.netViewer.hideColor();
 
         if(value) {
+            LOGGER.debug("Changing ToolBar button to ShowColor");
             enableHighlightingButton.setIcon(resources.getIcon("sw.png"));
             enableHighlightingButton.setToolTipText(strings.get("NVShowColor"));
         } else {
+            LOGGER.debug("Changing ToolBar button to HideColor");
             enableHighlightingButton.setIcon(resources.getIcon("color.png"));
             enableHighlightingButton.setToolTipText(strings.get("NVHideColor"));
         }
+        LOGGER.debug("Done handling use of highlighting button in ToolBar");
     }//GEN-LAST:event_enableHighlightingButtonActionPerformed
 
     private void enableLabelsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableLabelsButtonActionPerformed
+        LOGGER.debug("Label button in ToolBar used");
         Boolean value = this.netViewer.showLabels();
         if(value) {
+            LOGGER.debug("Changing ToolBar button to HideAllLabels");
             enableLabelsButton.setIcon(resources.getIcon("hide_labels.png"));
             enableLabelsButton.setToolTipText(strings.get("NVHideAllLabels"));
         } else {
+            LOGGER.debug("Changing ToolBar button to ShowAllLabels");
             enableLabelsButton.setIcon(resources.getIcon("show_labels.png"));
             enableLabelsButton.setToolTipText(strings.get("NVShowAllLabels"));
         }
+        LOGGER.debug("Done handling use of label button in ToolBar");
     }//GEN-LAST:event_enableLabelsButtonActionPerformed
 
     private void saveImageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveImageButtonActionPerformed
         try {
+            LOGGER.debug("Image button in ToolBar used");
             this.netViewer.makePic();
+            LOGGER.debug("Done handling use of image button in ToolBar");
         } catch (IOException ex) {
-            Logger.getLogger(ToolBar.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Issue while making picture: ", ex);
         }
     }//GEN-LAST:event_saveImageButtonActionPerformed
 
@@ -1159,39 +1133,51 @@ public class ToolBar extends javax.swing.JPanel {
     }//GEN-LAST:event_saveProjectButtonActionPerformed
 
     private void newCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCompartmentButtonActionPerformed
+        LOGGER.debug("AddCompartment button used from ToolBar");
         CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer);
         csf.setVisible(true);
+        LOGGER.debug("Done handling use of AddCompartment button from ToolBar");
     }//GEN-LAST:event_newCompartmentButtonActionPerformed
 
     private void editCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCompartmentButtonActionPerformed
+        LOGGER.debug("EditCompartment button used from ToolBar");
         CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer, (Compartment) this.compartmentCb.getSelectedItem());
         csf.setVisible(true);
+        LOGGER.debug("Done handling use of EditCompartment button from ToolBar");
     }//GEN-LAST:event_editCompartmentButtonActionPerformed
 
     private void deleteCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCompartmentButtonActionPerformed
+        LOGGER.debug("DeleteCompartment button used from ToolBar");
         Compartment c = (Compartment) this.compartmentCb.getSelectedItem();
         this.compartmentCb.removeItem(c);
         this.netViewer.getProject().getPetriNet().removeCompartment(c);
 
         if(this.compartmentCb.getItemCount() == 0) {
+            LOGGER.debug("No Compartments left, disabling EditCompartment and DeleteCompartment button");
             this.editCompartmentButton.setEnabled(false);
             this.deleteCompartmentButton.setEnabled(false);
         }
 
         this.repaint();
+        LOGGER.debug("Done handling use of DeleteCompartment button from ToolBar");
     }//GEN-LAST:event_deleteCompartmentButtonActionPerformed
 
     private void heatmapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatmapButtonActionPerformed
+        LOGGER.debug("HeatMap button used from ToolBar");
         if(this.netViewer.heatMap()) {
+            LOGGER.debug("Changing ToolBar button to HeatMapOff");
             heatmapButton.setIcon(resources.getIcon("map_sw.png"));
             heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
         } else {
+            LOGGER.debug("Changing ToolBar button to HeatMapOn");
             heatmapButton.setIcon(resources.getIcon("map_color.png"));
             heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOn"));
         }
+        LOGGER.debug("Done handling use of HeatMap button from ToolBar");
     }//GEN-LAST:event_heatmapButtonActionPerformed
 
     private void allMctsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allMctsButtonActionPerformed
+        LOGGER.debug("AllMcts button used from ToolBar");
         int numberOfElements = mctsCb.getItemCount();
 
         if(numberOfElements > ColorCollection.colors.size()) {
@@ -1209,25 +1195,59 @@ public class ToolBar extends javax.swing.JPanel {
         }
 
         netViewer.vv.repaint();
+        LOGGER.debug("Done handling use of AllMcts button from ToolBar");
     }//GEN-LAST:event_allMctsButtonActionPerformed
 
-    private void computeTinvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeTinvsButtonActionPerformed
-        netViewer.calcTInvs();
-    }//GEN-LAST:event_computeTinvsButtonActionPerformed
-
-    private void computePInvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computePInvsButtonActionPerformed
-        netViewer.calcPInvs();
-    }//GEN-LAST:event_computePInvsButtonActionPerformed
+    private void computeInvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeInvsButtonActionPerformed
+    if(heatMap_CheckBox.isSelected())
+        netViewer.heatMap = true;
     
+    else
+        netViewer.heatMap = false;
+    
+    ArrayList<String> toolslist = new ArrayList<>();
+    
+    if(TinvCheckBox.isSelected())
+        toolslist.add(TInvariantTool.class.getName());
+    if(MinvCheckBox.isSelected()){
+        toolslist.add(MInvariantTool.class.getName());
+    }
+    if(PinvCheckBox.isSelected())
+        toolslist.add(PInvariantTool.class.getName());
+      
+    netViewer.calcTools(toolslist);
+    
+    // check if the net is CTI
+    //    TInvariantTool TTool  = new TInvariantTool();
+        
+    //    CTILabel.setText(TTool.cti.getText());
+    
+    }//GEN-LAST:event_computeInvsButtonActionPerformed
+
+    private void reset_color_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_color_buttonActionPerformed
+        netViewer.resetColor();
+        Tinv_list.clearSelection();
+        Pinv_list.clearSelection();
+    }//GEN-LAST:event_reset_color_buttonActionPerformed
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
-    
+
     public boolean manuellColorSelection() {
         return this.manuellColorSelection.isSelected();
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JLabel CTILabel;
+    private javax.swing.JPanel InvPanel;
+    protected javax.swing.JTabbedPane InvTabbedPane;
+    private javax.swing.JCheckBox MinvCheckBox;
+    private javax.swing.JList<String> Minv_list;
+    private javax.swing.JCheckBox PinvCheckBox;
+    private javax.swing.JList<String> Pinv_list;
+    private javax.swing.JCheckBox TinvCheckBox;
+    private javax.swing.JList<String> Tinv_list;
     protected javax.swing.JButton addBendButton;
     protected javax.swing.JPanel addBendPanel;
     protected javax.swing.JButton addEdgeButton;
@@ -1236,8 +1256,6 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JPanel addPlacePanel;
     protected javax.swing.JButton addTransitionButton;
     protected javax.swing.JPanel addTransitionPanel;
-    private javax.swing.JLabel allEM;
-    protected javax.swing.JComboBox allInvCb;
     protected javax.swing.JButton allMctsButton;
     protected javax.swing.JButton allignXButton;
     protected javax.swing.JPanel allignXPanel;
@@ -1248,12 +1266,9 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JSpinner arrowSizeSpinner;
     protected javax.swing.JComboBox compartmentCb;
     private javax.swing.JPanel compartmentPanel;
-    private javax.swing.JButton computePInvsButton;
-    private javax.swing.JButton computeTinvsButton;
+    private javax.swing.JButton computeInvsButton;
     private javax.swing.JPanel controlButtonPanel;
     private javax.swing.JPanel controlPane;
-    protected javax.swing.JComboBox cyclicInvCb;
-    private javax.swing.JLabel cylicEM;
     protected javax.swing.JButton deleteButton;
     private javax.swing.JButton deleteCompartmentButton;
     protected javax.swing.JPanel deletePanel;
@@ -1265,16 +1280,17 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JButton enableLabelsButton;
     private javax.swing.JLabel fontSizeLabel;
     protected javax.swing.JSpinner fontSizeSpinner;
+    private javax.swing.JCheckBox heatMap_CheckBox;
     protected javax.swing.JButton heatmapButton;
     private javax.swing.JLabel iconSizeLabel;
     protected javax.swing.JSpinner iconSizeSpinner;
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
-    private javax.swing.JLabel inputEM;
-    protected javax.swing.JComboBox inputInvCb;
-    private javax.swing.JLabel ioEM;
-    protected javax.swing.JComboBox ioInvCb;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     protected javax.swing.JCheckBox manuellColorSelection;
     protected javax.swing.JComboBox mcsCb;
     private javax.swing.JLabel mcsLabel;
@@ -1291,22 +1307,15 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
-    private javax.swing.JLabel outputEM;
-    protected javax.swing.JComboBox outputInvCb;
-    protected javax.swing.JComboBox pinvCb;
-    private javax.swing.JLabel pinvLabel;
-    private javax.swing.JPanel pinvPanel;
     protected javax.swing.JButton removeBendButton;
     protected javax.swing.JPanel removeBendPanel;
+    private javax.swing.JButton reset_color_button;
     protected javax.swing.JButton saveImageButton;
     private javax.swing.JButton saveProjectButton;
     private javax.swing.JCheckBox showCompartmentsCb;
     private javax.swing.JScrollPane sp;
     protected javax.swing.JCheckBox stackSelection;
     private javax.swing.JPanel styleButtonPanel;
-    private javax.swing.JPanel tinvPanel;
-    private javax.swing.JLabel trivialEM;
-    protected javax.swing.JComboBox trivialInvCb;
     protected javax.swing.JLabel zoomLabel;
     protected javax.swing.JSpinner zoomSpinner;
     // End of variables declaration//GEN-END:variables

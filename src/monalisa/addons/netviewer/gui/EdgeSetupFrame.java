@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -16,6 +16,8 @@ import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.util.MonaLisaWindowListener;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -23,24 +25,28 @@ import monalisa.resources.StringResources;
  */
 public class EdgeSetupFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = -8913627945453633118L;
+    private static final Logger LOGGER = LogManager.getLogger(EdgeSetupFrame.class);
 
     /** Creates new form EdgeSetupFrame */
     public EdgeSetupFrame(NetViewer netViewer, NetViewerEdge nvEdge) {
+        LOGGER.info("Initializing new EdgeSetupFrame");
         this.netViewer = netViewer;
         this.nvEdge = nvEdge;
-        
-        setAlwaysOnTop(true);        
-        
+
+        setAlwaysOnTop(true);
+
         initComponents();
-        
+
         loadProperties();
-        
+
         showColorLabelEdge.addMouseListener(new MyColorOptionsMouseListener(showColorLabelEdge));
-        
+
         addWindowListener(new MonaLisaWindowListener(this.netViewer));
+        LOGGER.info("Successfully initialized new EdgeSetupFrame");
     }
-    
+
     private void loadProperties() {
+        LOGGER.debug("Loading properties of edge");
         weightSpinner.setValue(nvEdge.getWeight());
         showColorLabelEdge.setForeground(nvEdge.getColor());
         showColorLabelEdge.setBackground(nvEdge.getColor());
@@ -49,9 +55,10 @@ public class EdgeSetupFrame extends javax.swing.JFrame {
         }
         else {
             edgeNoteTextArea.setText("");
-        }        
+        }
+        LOGGER.debug("Successfully loaded properties of edge");
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -178,9 +185,13 @@ public class EdgeSetupFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        this.netViewer.writeEdgeSetup(nvEdge, (Integer)weightSpinner.getValue(), showColorLabelEdge.getForeground(), edgeNoteTextArea.getText());
+        LOGGER.info("Saving edge properties");
+        if((Integer)weightSpinner.getValue() != nvEdge.getWeight())
+            netViewer.modificationActionHappend();
         
+        this.netViewer.writeEdgeSetup(nvEdge, (Integer)weightSpinner.getValue(), showColorLabelEdge.getForeground(), edgeNoteTextArea.getText());
         this.dispose();
+        LOGGER.info("Successfully saved edge properties");
     }//GEN-LAST:event_saveButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

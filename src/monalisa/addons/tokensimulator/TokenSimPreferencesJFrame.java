@@ -38,12 +38,12 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
      */
     Map<Place, JCheckBox> placesToPlot = new HashMap<>();
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     private TokenSimPreferencesJFrame() {
     }
     //END CONSTRUCTORS
-    
+
     /**
      * Creates new form TokenSimPreferencesJFrame
      * @param tsN
@@ -51,7 +51,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
     public TokenSimPreferencesJFrame(TokenSimulator tsN) {
         this.ts = tsN;
         initComponents();
-        
+
         /*
          * Make frame disappear when ESC pressed and save settings when ENTER pressed.
          */
@@ -71,7 +71,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
                 cancelJButton.doClick();
             }
         });
-        
+
         for (Place p : ts.getPetriNet().places()){
             JCheckBox cb = new JCheckBox((String) p.getProperty("name"), true);
             this.placesToPlot.put(p, cb);
@@ -261,7 +261,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
 
     /**
      * If checked, allow to choose log-file path.
-     * @param evt 
+     * @param evt
      */
     private void createLogJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createLogJCheckBoxActionPerformed
         if (this.createLogJCheckBox.isSelected()){
@@ -276,14 +276,14 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
 
     /**
      * Hide the frame without saving any changes
-     * @param evt 
+     * @param evt
      */
     private void cancelJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJButtonActionPerformed
         ts.netViewer.hideMenu();
     }//GEN-LAST:event_cancelJButtonActionPerformed
     /**
      * Accept all changes and write them to the preferences-map
-     * @param evt 
+     * @param evt
      */
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
         this.ts.preferences.put("LogEnabled", this.createLogJCheckBox.isSelected());
@@ -349,7 +349,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton cancelJButton;

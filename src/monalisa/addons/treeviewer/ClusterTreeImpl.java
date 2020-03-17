@@ -1,9 +1,10 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
  *
  */
 package monalisa.addons.treeviewer;
@@ -17,6 +18,8 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.*;
 import monalisa.tools.cluster.ClusterTreeNodeProperties;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * The ClusterTreeImpl class creates a Clustertree with given properties, from
@@ -31,20 +34,22 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
     private final List<TreeViewerNode> leafs;
     private final List<TreeViewerNode> clusterNodes;
     private final List<TreeViewerNode> allNodes;
-    private final float treshold;
+    private final float threshold;
 
     private boolean redrawed = false;
     private int edgeCount = 0;
+    private static final Logger LOGGER = LogManager.getLogger(ClusterTreeImpl.class);
 
     public ClusterTreeImpl() {
         super();
-
+        LOGGER.info("Creating empty ClusterTreeImpl with standard values");
         this.nodesMap = new HashMap<>();
         this.leafs = new ArrayList<>();
         this.clusterNodes = new ArrayList<>();
         this.allNodes = new ArrayList<>();
         this.tree = new ClusterTree<>();
-        this.treshold = 100;
+        this.threshold = 100;
+        LOGGER.info("Successfully created empty ClusterTreeImpl with standard values");
     }
 
     /**
@@ -53,26 +58,27 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
      *
      * @param ct Clustertree get the given properties for the tree form function
      * HierarchicalClustering
-     * @param treshold get threshold from user interface
+     * @param threshold get threshold from user interface
      *
      */
-    public ClusterTreeImpl(ClusterTree ct, float treshold) {
+    public ClusterTreeImpl(ClusterTree ct, float threshold) {
         super();
-
+        LOGGER.info("Creating new ClusterTreeImpl with specified values");
         this.nodesMap = new HashMap<>();
         this.leafs = new ArrayList<>();
         this.clusterNodes = new ArrayList<>();
         this.allNodes = new ArrayList<>();
         this.tree = ct;
-        this.treshold = treshold;
+        this.threshold = threshold;
 
         TreeViewerNode tvn = new TreeViewerNode(String.valueOf(ct.getRoot().getID()), TreeViewer.CLUSTERNODE);
         nodesMap.put(ct.getRoot().getID(), tvn);
 
         this.addVertex(tvn);
-        
+
         //call function goDeep with root of clustertree
         goDeep(ct.getRoot());
+        LOGGER.info("Successfully created new ClusterTreeImpl with specified values");
     }
 
     /**
@@ -81,7 +87,6 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
      * @param c Cluster gets the properties from Clustertree
      */
     private void goDeep(Cluster c) {
-
         TreeViewerNode tvnC = nodesMap.get(c.getID());
         TreeViewerNode tvnMem;
         Cluster mem;
@@ -89,7 +94,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
         //get max threshold from node to root
         double distanceToFurthestLeaf = tree.getRoot().getDistanceToFurthestLeaf();
         //calculate the cutDist from the whole tree
-        double cutDist = (distanceToFurthestLeaf * this.treshold) / 100;
+        double cutDist = (distanceToFurthestLeaf * this.threshold) / 100;
 
         if (c.getDistanceToRoot() <= cutDist) {
             //create tree top-down
@@ -107,7 +112,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
                 goDeep(mem);
             }
         }
-        
+
         //save nodes in list
         if (this.isLeaf(tvnC)) {
             leafs.add(tvnC);
@@ -116,12 +121,12 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
         }
 
         allNodes.add(tvnC);
-        tvnC.setHeight(c.getDistanceToRoot());        
-        
+        tvnC.setHeight(c.getDistanceToRoot());
+
     }
 
     /**
-     * redraw change the look from tree, without changing the structur or the
+     * redraw changes the look of the tree, without changing the structure or the
      * order of the tree
      *
      * @param layout
@@ -129,7 +134,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
     public void redraw(TreeLayout<TreeViewerNode, TreeViewerEdge> layout) {
         if (redrawed == false) {
             redrawed = true;
-
+            LOGGER.info("Redrawing tree");
             //Set Nodes on Distance to Root
             for (TreeViewerNode tvn : allNodes) {
                 Point2D tvP = layout.transform(tvn);
@@ -226,6 +231,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
             for (TreeViewerEdge tne : toDelete) {
                 this.removeEdge(tne, false);
             }
+            LOGGER.info("Successfully redrawn tree");
         }
     }
 

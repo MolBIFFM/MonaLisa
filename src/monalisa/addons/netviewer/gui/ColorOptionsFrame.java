@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -15,14 +15,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JLabel;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.listener.MyColorOptionsMouseListener;
 import monalisa.util.MonaLisaWindowListener;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -31,15 +31,17 @@ import monalisa.resources.StringResources;
  */
 public class ColorOptionsFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = 8653637787349905596L;
+    private static final Logger LOGGER = LogManager.getLogger(ColorOptionsFrame.class);
 
     /** Creates new form ColorOptionsFrame */
     public ColorOptionsFrame(NetViewer netViewer) {
+        LOGGER.info("Initializing ColorOptionsFrame");
         this.netViewer = netViewer;
-        
+
         initComponents();
-        
+
         setColors();
-        
+
         tinvColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(tinvColorSelectionLabel));
         pinvColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(pinvColorSelectionLabel));
         mctsColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(mctsColorSelectionLabel));
@@ -50,11 +52,13 @@ public class ColorOptionsFrame extends javax.swing.JFrame {
         backgroundColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(backgroundColorSelectionLabel));
         mcsObjectivColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(mcsObjectivColorSelectionLabel));
         mcsColorSelectionLabel.addMouseListener(new MyColorOptionsMouseListener(mcsColorSelectionLabel));
-        
+
         addWindowListener(new MonaLisaWindowListener(this.netViewer));
+        LOGGER.info("Successfully initialized ColorOptionsFrame");
     }
-    
-    private void setColors() {        
+
+    private void setColors() {
+        LOGGER.debug("Setting colors");
         changeLabelColor(tinvColorSelectionLabel, NetViewer.TINV_COLOR);
         changeLabelColor(pinvColorSelectionLabel, NetViewer.PINV_COLOR);
         changeLabelColor(mctsColorSelectionLabel, NetViewer.MCTS_COLOR);
@@ -62,14 +66,16 @@ public class ColorOptionsFrame extends javax.swing.JFrame {
         changeLabelColor(knockedOutColorSelectionLabel, NetViewer.KNOCKEDOUT_COLOR);
         changeLabelColor(alsoKnockedOutColorSelectionLabel, NetViewer.ALSOKNOCKEDOUT_COLOR);
         changeLabelColor(notKnockedOutColorSelectionLabel, NetViewer.NOTKNOCKEDOUTCOLOR);
-        changeLabelColor(backgroundColorSelectionLabel, NetViewer.BACKGROUND_COLOR);               
-        changeLabelColor(mcsObjectivColorSelectionLabel, NetViewer.MCS_COLOR);       
-        changeLabelColor(mcsColorSelectionLabel, NetViewer.MCSOBJECTIV_COLOR);     
+        changeLabelColor(backgroundColorSelectionLabel, NetViewer.BACKGROUND_COLOR);
+        changeLabelColor(mcsObjectivColorSelectionLabel, NetViewer.MCS_COLOR);
+        changeLabelColor(mcsColorSelectionLabel, NetViewer.MCSOBJECTIV_COLOR);
+        LOGGER.debug("Successfully set colors");
     }
-    
+
     private Map<String, Color> getColors() {
+        LOGGER.debug("Getting colors");
         Map<String, Color> colorMap = new HashMap<>();
-        
+
         colorMap.put("tinvColor", tinvColorSelectionLabel.getBackground());
         colorMap.put("pinvColor", pinvColorSelectionLabel.getBackground());
         colorMap.put("mctsColor", mctsColorSelectionLabel.getBackground());
@@ -77,23 +83,25 @@ public class ColorOptionsFrame extends javax.swing.JFrame {
         colorMap.put("knockedOutColor", knockedOutColorSelectionLabel.getBackground());
         colorMap.put("alsoKnockedOutColor", alsoKnockedOutColorSelectionLabel.getBackground());
         colorMap.put("notKnockedOutColor", notKnockedOutColorSelectionLabel.getBackground());
-        colorMap.put("backgroundColor", backgroundColorSelectionLabel.getBackground());   
-        colorMap.put("mcsObjectivColor", mcsObjectivColorSelectionLabel.getBackground());   
-        colorMap.put("mcsColor", mcsColorSelectionLabel.getBackground());           
-        
+        colorMap.put("backgroundColor", backgroundColorSelectionLabel.getBackground());
+        colorMap.put("mcsObjectivColor", mcsObjectivColorSelectionLabel.getBackground());
+        colorMap.put("mcsColor", mcsColorSelectionLabel.getBackground());
+        LOGGER.debug("Successfully got colors");
         return colorMap;
     }
-    
+
     /**
      * Changes the color of given label
      * @param label
      * @param color
      */
     private void changeLabelColor(JLabel label, Color color) {
+        LOGGER.debug("Changing label color");
         label.setForeground(color);
         label.setBackground(color);
-    }    
-    
+        LOGGER.debug("Successfully changed label color");
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -386,13 +394,14 @@ public class ColorOptionsFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         try {
-            this.netViewer.saveColorOptions(getColors());            
+            LOGGER.info("Saving color selection");
+            this.netViewer.saveColorOptions(getColors());
             this.netViewer.setEnabled(false);
-            this.dispose();                        
+            this.dispose();
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ColorOptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.error("Issue while saving color selection: ", ex);
         } catch (IOException ex) {
-            Logger.getLogger(ColorOptionsFrame.class.getName()).log(Level.SEVERE, null, ex);
+           LOGGER.error("Issue while saving color selection: ", ex);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 

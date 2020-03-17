@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -17,7 +17,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 /**
- * Renderer to show the LabelName of a node and not his name.
+ * Renderer to show the LabelName of a node and not its name.
  * @author Jens Einloft
  */
 public class LogicalPlacesListCellRenderer implements ListCellRenderer {

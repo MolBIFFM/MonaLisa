@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -35,6 +35,8 @@ import monalisa.tools.tinv.TInvariantTool;
 import monalisa.util.Components;
 import monalisa.Project;
 import monalisa.data.pn.PetriNetFacade;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public final class MctsTool extends AbstractTool implements ActionListener {
     private static final String ACTION_CALCULATE = "CALCULATE";
@@ -43,15 +45,18 @@ public final class MctsTool extends AbstractTool implements ActionListener {
     private JComboBox combobox;
     private JCheckBox includeTrivialTinvCheckbox;
     private Project project;
-    
+    private static final Logger LOGGER = LogManager.getLogger(MctsTool.class);
+
     @Override
     public void run(PetriNetFacade pnf, ErrorLog log) {
+        LOGGER.info("Running MctsTool");
         boolean includeTrivialTInvariants = includeTrivialTinvCheckbox.isSelected();
         boolean supportOriented = combobox.getSelectedIndex() == 0;
-        
+
         computeMCTSets(project, includeTrivialTInvariants, supportOriented);
+        LOGGER.info("Successfully ran MctsTool");
     }
-    
+
     @Override
     public boolean finishedState(Project project) {
         if (project.hasAllResults(this, 4)) {
@@ -61,7 +66,7 @@ public final class MctsTool extends AbstractTool implements ActionListener {
         }
         return false;
     }
-    
+
     @Override
     public JPanel getUI(Project project, StringResources strings) {
         this.project = project;
@@ -71,34 +76,34 @@ public final class MctsTool extends AbstractTool implements ActionListener {
                 new String[] {
                     strings.get("MctsSupportOriented"),
                     strings.get("MctsOccurrenceOriented") }));
-            
+
             includeTrivialTinvCheckbox = new JCheckBox(strings.get("IncludeTrivialTInvariants"));
             includeTrivialTinvCheckbox.setSelected(false);
-            
+
             calculateCheckbox = new JCheckBox(strings.get("Calculate"));
             calculateCheckbox.setActionCommand(ACTION_CALCULATE);
             calculateCheckbox.addActionListener(this);
-            
-            
+
+
             panel = new JPanel();
             GroupLayout layout = new GroupLayout(panel);
             panel.setLayout(layout);
-            
+
             layout.setAutoCreateGaps(true);
             layout.setAutoCreateContainerGaps(true);
-            
+
             layout.setHorizontalGroup(layout.createParallelGroup()
                 .addComponent(combobox)
                 .addComponent(includeTrivialTinvCheckbox)
                 .addComponent(calculateCheckbox));
-            
+
             layout.setVerticalGroup(layout.createSequentialGroup()
                 .addComponent(combobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                     GroupLayout.PREFERRED_SIZE)
                 .addComponent(includeTrivialTinvCheckbox)
                 .addComponent(calculateCheckbox));
         }
-        
+
         return panel;
     }
 
@@ -116,13 +121,13 @@ public final class MctsTool extends AbstractTool implements ActionListener {
     public boolean isActive() {
         return calculateCheckbox.isSelected();
     }
-    
+
     @Override
     public void saveSettings(Project p) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     @Override
     public void setActive(boolean active) {
         if (active != isActive()) {
@@ -134,7 +139,7 @@ public final class MctsTool extends AbstractTool implements ActionListener {
     @Override
     public void setActive(Configuration... configs) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -152,15 +157,16 @@ public final class MctsTool extends AbstractTool implements ActionListener {
         Collections.sort(result);
         return result;
     }
-    
+
     private void computeMCTSets(Project project, boolean includeTrivialInvariants, boolean supportOriented) {
+        LOGGER.info("Computing MCTSets");
         TInvariants allTinvariants = project.getResult(
             TInvariantTool.class, new TInvariantsConfiguration());
         List<TInvariant> tinvariants = new ArrayList<>(
             includeTrivialInvariants ? allTinvariants :
                 allTinvariants.nonTrivialTInvariants());
         List<Transition> transitions = sortedTransitions(project.getPNFacade());
-        
+
         int[][] matrix = InvariantStatistics.calculateMatrixTInvariant2TransitionOccurrence(
             tinvariants, transitions);
         List<TInvariant> mcts = supportOriented ?
@@ -171,26 +177,29 @@ public final class MctsTool extends AbstractTool implements ActionListener {
                 new MctsConfiguration(!supportOriented, includeTrivialInvariants),
                 new Mcts(mcts));
         }
+        LOGGER.info("Successfully computed MCTSets");
     }
-    
+
     /**
      * For Manatees
      * @param includeTrivialInvariants
      * @param supportOriented
-     * @return 
+     * @return
      */
     public List<TInvariant> computeMCTSets(TInvariants allTinvariants, PetriNetFacade pnf, boolean includeTrivialInvariants) {
+        LOGGER.info("Computing MCTSets for Manatees");
         List<TInvariant> tinvariants = new ArrayList<>(
             includeTrivialInvariants ? allTinvariants :
                 allTinvariants.nonTrivialTInvariants());
         List<Transition> transitions = sortedTransitions(pnf);
-        
+
         int[][] matrix = InvariantStatistics.calculateMatrixTInvariant2TransitionOccurrence(tinvariants, transitions);
         List<TInvariant> mcts = InvariantStatistics.getSupportMCTset(matrix, transitions, tinvariants, pnf);
+        LOGGER.info("Successfully computed MCTSets for Manatess");
         if(mcts != null) {
             return mcts;
         }
-        
+
         return new ArrayList<>();
     }
 }

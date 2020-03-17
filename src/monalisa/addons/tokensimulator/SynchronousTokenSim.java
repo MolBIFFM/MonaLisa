@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -15,14 +15,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -40,6 +40,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
      * Thread which executes simulation.
      */
     private SimulationSwingWorker simSwingWorker;
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(SynchronousTokenSim.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -81,6 +82,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
                      * If no transitions are active, abort simulation.
                      */
                     if (transitionsToFire.isEmpty() || this.isCancelled()){
+                        LOGGER.info("No active Transitions found, simulation stopping");
                         this.isRunning = false;
                         break;
                     }
@@ -90,6 +92,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
                     SwingUtilities.invokeAndWait(new Runnable(){
                         @Override
                         public void run() {
+                            LOGGER.info("Simulate the found active Transitions synchronously ");
                             tokenSim.fireTransitions(transitionsToFire.toArray(new Transition[transitionsToFire.size()]));
                             //If updateInterval is positive, check whether visual output must be updated in current step.
                             if (updateInterval > 0){
@@ -114,7 +117,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
                     }
                     Thread.sleep(timeDelay);
                 } catch (InterruptedException | InvocationTargetException ex) {
-                    Logger.getLogger(SynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Interrupted simulation or invalid target invocated while calculating synchronous simulations", ex);
                 }
             }
             return null;
@@ -125,6 +128,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
             /*
              * Reset the progress bar.
              */
+            LOGGER.info("Synchronous simulation is done, resetting the progress bar and unlocking GUI");
             tsPanel.progressBar.setMaximum(0);
             tsPanel.progressBar.setValue(0);
  
@@ -163,6 +167,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
     @Override
     protected void init(){
         //START CREATING GUI ELEMENTS
+        LOGGER.info("Initiating the GUI for the synchronous simulation");
         this.tsPanel = new SynchronousTokenSimPanel(this);
         this.prefPanel = new SynchronousTokenSimPrefPanel(this);
         this.tsPanel.simName.setText(TokenSimulator.strings.get("STSName"));
@@ -180,6 +185,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
     @Override
     protected void startFiring(){
         //lock GUI
+        LOGGER.info("Synchronous firing started");
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.continuousModeCheckBox.setEnabled(false);
         this.tokenSim.lockGUI(true);
@@ -197,6 +203,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
             simSwingWorker.execute();
         }
         catch(NumberFormatException nfe){
+            LOGGER.error("NumberFormatException found while firing in the synchronous Simulator");
             stopFiring();
             JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
@@ -207,6 +214,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
      */
     @Override
     protected void stopFiring(){
+        LOGGER.info("Firing in the synchronous simulator stopped");
         if (this.simSwingWorker != null ){
             this.simSwingWorker.stopSequence();
         }
@@ -251,6 +259,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
     
     @Override
     protected void startSim(){
+        LOGGER.info("Starting synchronous Simulation");
         this.tsPanel.stepField.setEnabled(true);
         this.tsPanel.fireTransitionsButton.setEnabled(true);
         this.computeActiveTransitions();  
@@ -258,10 +267,12 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
     
     @Override
     protected void endSim(){
+        LOGGER.info("Ending synchronous Simulation");
         try{
             this.simSwingWorker.cancel(true);
         }
         catch(NullPointerException ex){
+            LOGGER.error("NullPointerException while trying to cancel the simSwingWorker in the synchronous simulation");
         }
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.fireTransitionsButton.setEnabled(false);
@@ -278,6 +289,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
      * @return 
      */
     private Set<Transition> getTransitionsToFire(){
+        LOGGER.debug("Calculating the Transitions that shall fire out of the active Transitions");
         /*
         this ArrayList saves all active transitions that can be fired synchron,
         i.e. no firing of a transition of this list can disable another transition in the list.
@@ -377,6 +389,7 @@ public class SynchronousTokenSim extends AsynchronousTokenSim{
                 outSet.add(t);
             }
         }
+        LOGGER.debug("Finished calculating the transitions to fire next in the synchronous simulation");
         return outSet;
     }
 }

@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
  *
@@ -16,17 +16,17 @@ import java.util.Map;
  * @author jens
  */
 public interface AddonStorageManagment {
-       
+
     /**
      * Provides a map of the objects with their identifier, which should be stored in the project file.
      * @return Map<String, Object>
      */
     public Map<String, Object> getObjectsForStorage();
-    
+
     /**
      * This function is called, after the project is loaded and gives the Addon class their stored data back.
-     * @param storage 
+     * @param storage
      */
     public void reciveStoredObjects(Map<String, Object> storage);
-    
+
 }

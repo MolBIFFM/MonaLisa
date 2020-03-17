@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -20,6 +20,8 @@ import net.sourceforge.spargel.interfaces.bipartite.BipartiteGraph;
 import net.sourceforge.spargel.util.collections.collection.ConcatCollection;
 import net.sourceforge.spargel.util.collections.set.TransformedSet;
 import net.sourceforge.spargel.util.collections.transformer.Transformer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <p>A Petri net model.</p>
@@ -52,9 +54,10 @@ public final class PetriNet
     // Inverse lookup tables.
     private final Map<Place, List<Transition>> preTransitions = new HashMap<>();
     private final Map<Transition, List<Place>> prePlaces = new HashMap<>();
-    
+
     private final List<Compartment> compartments = new ArrayList<>();
     private final Map<UniquePetriNetEntity, Compartment> compartmentMap = new HashMap<>();
+    private static final Logger LOGGER = LogManager.getLogger(PetriNet.class);
 
     /**
      * Creates a new, empty Petri net.
@@ -75,6 +78,7 @@ public final class PetriNet
      */
     public PetriNet(PetriNet other) {
         super(other);
+        LOGGER.debug("Creating new deep copy of a Petri net");
 
         for (Place oldPlace : other.places()) {
             Place newPlace = new Place(oldPlace);
@@ -98,6 +102,7 @@ public final class PetriNet
                 addArc(newTransition, newPlace, newArc);
             }
         }
+        LOGGER.debug("Successfully created deep copy of another Petri net");
     }
 
     /**
@@ -106,11 +111,13 @@ public final class PetriNet
      * @param place The place.
      */
     public void addPlace(Place place) {
+        LOGGER.debug("Adding place to Petri net");
         places.put(place.id(), place);
         place.setContainer(this);
         postTransitions.put(place, new ArrayList<Transition>());
         preTransitions.put(place, new ArrayList<Transition>());
         marking.put(place, 0L);
+        LOGGER.debug("Successfully added place to Petri net");
     }
 
     /**
@@ -141,10 +148,12 @@ public final class PetriNet
      * @param transition The transition.
      */
     public void addTransition(Transition transition) {
+        LOGGER.debug("Adding transition to Petri net");
         transitions.put(transition.id(), transition);
         transition.setContainer(this);
         postPlaces.put(transition, new ArrayList<Place>());
         prePlaces.put(transition, new ArrayList<Place>());
+        LOGGER.debug("Successfully added new transition to Petri net");
     }
 
     /**
@@ -193,9 +202,11 @@ public final class PetriNet
      * @param arc The custom arc to add.
      */
     public void addArc(Place from, Transition to, Arc arc) {
+        LOGGER.debug("Adding arc (P->T) to Petri net");
         postTransitions.get(from).add(to);
         transitionInArcs.put(Pair.of(from, to), arc);
         prePlaces.get(to).add(from);
+        LOGGER.debug("Successfully added arc (P->T) to Petri net");
     }
 
     /**
@@ -222,22 +233,27 @@ public final class PetriNet
      * @param arc The custom arc to add.
      */
     public void addArc(Transition from, Place to, Arc arc) {
+        LOGGER.debug("Adding arc (T->P) to Petri net");
         postPlaces.get(from).add(to);
         transitionOutArcs.put(Pair.of(from, to), arc);
         preTransitions.get(to).add(from);
+        LOGGER.debug("Successfully added arc (T->P) to Petri net");
     }
 
     public void removeArc(Place source, Transition aim) {
+        LOGGER.debug("Removing arc (P->T) from Petri net");
         if (postTransitions.containsKey(source)) {
             postTransitions.get(source).remove(aim);
         }
         transitionInArcs.remove(new Pair<>(source, aim));
         if (prePlaces.containsKey(aim)) {
             prePlaces.get(aim).remove(source);
-        }        
+        }
+        LOGGER.debug("Successfully removed arc (P->T) from Petri net");
     }
 
     public void removeArc(Transition source, Place aim) {
+        LOGGER.debug("Removing arc (T->P) from Petri net");
         if (postPlaces.containsKey(source)) {
             postPlaces.get(source).remove(aim);
         }
@@ -245,9 +261,11 @@ public final class PetriNet
         if (preTransitions.containsKey(aim)) {
             preTransitions.get(aim).remove(source);
         }
+        LOGGER.debug("Successfully removed arc (T->P) from Petri net");
     }
 
     public void removePlace(Place place) {
+        LOGGER.debug("Removing place from Petri net");
         places.remove(place.id());
         postTransitions.remove(place);
 
@@ -277,9 +295,11 @@ public final class PetriNet
         for (List<Place> p : prePlaces.values()) {
             p.remove(place);
         }
+        LOGGER.debug("Sucessfully removed place from Petri net");
     }
 
     public void removeTransition(Transition transition) {
+        LOGGER.debug("Removing transition from Petri net");
         transitions.remove(transition.id());
         postPlaces.remove(transition);
 
@@ -306,40 +326,41 @@ public final class PetriNet
         for (List<Transition> t : preTransitions.values()) {
             t.remove(transition);
         }
+        LOGGER.debug("Successfully removed transition from Petri net");
     }
-    
+
     /**
      * Adds a compartment to the Petri net
-     * @param name 
+     * @param c
      */
     public void addCompartment(Compartment c) {
         this.compartments.add(c);
     }
-    
+
     /**
      * Removes a compartment
-     * @param c 
+     * @param c
      */
-    public void removeCompartment(Compartment c) {       
+    public void removeCompartment(Compartment c) {
         if(this.compartments.contains(c)) {
-            this.compartments.remove(c);            
+            this.compartments.remove(c);
             for(Place p : places()) {
                 if(this.compartmentMap.containsKey(p)) {
                     p.unsetCompartment(c);
                 }
             }
-            
+
             for(Transition t : transitions()) {
                 if(this.compartmentMap.containsKey(t)) {
                     t.unsetCompartment(c);
                 }
-            }            
+            }
         }
     }
-        
+
     /**
      * Returns a list of all compartments
-     * @return 
+     * @return
      */
     public List<Compartment> getCompartments() {
         if(this.compartments == null) {
@@ -348,10 +369,10 @@ public final class PetriNet
             return this.compartments;
         }
     }
-    
+
     /**
      * Returns the map of node to compartment
-     * @return 
+     * @return
      */
     public Map<UniquePetriNetEntity, Compartment> getCompartmentMap() {
         if(this.compartmentMap == null) {
@@ -360,11 +381,11 @@ public final class PetriNet
             return Collections.unmodifiableMap(this.compartmentMap);
         }
     }
-    
+
     /**
      * Set the compartment for a UniquePetriNetEntity
      * @param upne
-     * @param c 
+     * @param c
      */
     public void setCompartment(UniquePetriNetEntity upne, Compartment c) {
         this.compartmentMap.put(upne, c);
@@ -373,14 +394,14 @@ public final class PetriNet
     /**
      * Remove a compartment for a UniquePetriNetEntity
      * @param upne
-     * @param c 
+     * @param c
      */
     public void unsetCompartment(UniquePetriNetEntity upne, Compartment c) {
         if(this.compartmentMap.containsKey(upne)) {
             this.compartmentMap.remove(upne);
         }
     }
-    
+
     /**
      * Returns the token count associated with a place. Default is 0.
      *
@@ -519,12 +540,12 @@ public final class PetriNet
 
     /**
      * Returns the number of edges of the PetriNet.
-     * @return 
+     * @return
      */
     public int getNumberOfEdges() {
         return transitionInArcs.size() + transitionOutArcs.size();
-    }    
-    
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void readExternal(ObjectInput in) throws IOException,
@@ -565,7 +586,7 @@ public final class PetriNet
                 preTransitions.get(place).add(entry.getKey());
             }
         }
-    }    
+    }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {

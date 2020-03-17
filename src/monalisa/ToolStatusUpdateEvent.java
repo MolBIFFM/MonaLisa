@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -32,11 +32,11 @@ public class ToolStatusUpdateEvent extends EventObject {
         ABORTED,
         FINISHED_ALL,
     }
-    
+
     private final String toolName;
     private final Status status;
     private final int progress;
-    
+
     public ToolStatusUpdateEvent(Object source, String toolName, int progress) {
         this(source, toolName, Status.PROGRESS, progress);
     }
@@ -59,7 +59,7 @@ public class ToolStatusUpdateEvent extends EventObject {
     public Status getStatus() {
         return status;
     }
-    
+
     public int getProgress() {
         return progress;
     }

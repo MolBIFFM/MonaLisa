@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -17,9 +17,9 @@ import monalisa.data.pn.PetriNetFacade;
  * @author daniel
  */
 
-public class SubConservative extends NetPropertieAlgorithm<Boolean>{
+public class SubConservative extends NetPropertyAlgorithm<Boolean>{
     private final Conservative conservative;
-    
+
     public SubConservative(PetriNetFacade pn) {
         super(pn);
         conservative = new Conservative(pn);
@@ -31,7 +31,7 @@ public class SubConservative extends NetPropertieAlgorithm<Boolean>{
      */
     @Override
     public void runAlgorithm() {
-        
+
         conservative.runAlgorithm();
         algorithmValue = conservative.getSubConservativeValue();
     }

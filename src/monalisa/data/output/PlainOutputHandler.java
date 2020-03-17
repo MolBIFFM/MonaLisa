@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -18,6 +18,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -25,10 +27,13 @@ import monalisa.util.FileUtils;
  */
 public class PlainOutputHandler implements OutputHandler {
 
+    private static final Logger LOGGER = LogManager.getLogger(PlainOutputHandler.class);
+
     public void save(FileOutputStream fos, PetriNet pn) {
+        LOGGER.info("Exporting Petri net in plain format");
         try (PrintStream ps = new PrintStream(fos)) {
             int i, weight, nbr;
-            String name;     
+            String name;
             for(Transition t : pn.transitions()) {
                 name = (String) t.getProperty("name");
                 ps.print(name+": ");
@@ -63,10 +68,12 @@ public class PlainOutputHandler implements OutputHandler {
 
                 ps.print("\n");
             }
+        LOGGER.info("Successfully exported Petri net in plain format");
         }
     }
 
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in plain format");
         return ("txt".equalsIgnoreCase(FileUtils.getExtension(file)));
     }
 

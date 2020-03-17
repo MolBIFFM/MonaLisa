@@ -1,9 +1,10 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
  *
  */
 package monalisa.util;
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * A modified version of the {@link java.io.ObjectInputStream} to avoid ClassNotFoundExeptions (of not longer existing classes) during de-serialization. 
+ * A modified version of the {@link java.io.ObjectInputStream} to avoid ClassNotFoundExeptions (of not longer existing classes) during de-serialization.
  * Found: http://stackoverflow.com/questions/20543100/how-to-bypass-classnotfoundexception-while-objectinputstream-readobject
  * @author Jens Einloft
  */

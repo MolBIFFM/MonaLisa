@@ -36,6 +36,7 @@ import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
 import org.jfree.data.xy.XYSeries;
 
 /**
@@ -45,7 +46,8 @@ import org.jfree.data.xy.XYSeries;
 public class TokenSimPanel extends AddonPanel {
 
     private final TokenSimulator ts;
-  
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(TokenSimPanel.class);
+
     // START INNER CLASSES
 /**
      * Handles navigation through the history. When a history entry in historyList is picked, all steps between the current state and picked state
@@ -55,6 +57,7 @@ public class TokenSimPanel extends AddonPanel {
     public class HistorySelectionListener implements ListSelectionListener{
         @Override
         public void valueChanged(ListSelectionEvent e) {
+            LOGGER.info("New Entry chosen from history list");
             if(e.getValueIsAdjusting() == false){
                 int selectedVar = historyJList.getSelectedIndex();
                 if(selectedVar > -1){
@@ -169,7 +172,7 @@ public class TokenSimPanel extends AddonPanel {
      */
     public TokenSimPanel(final NetViewer netViewer, PetriNetFacade petriNet) {      
         super(netViewer, petriNet, "Simulator"); 
-        
+        LOGGER.info("Initiating TokenSimPanel");
         initComponents();
         
         this.ts = new TokenSimulator();
@@ -215,6 +218,7 @@ public class TokenSimPanel extends AddonPanel {
         historyBackJButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
+                LOGGER.info("Backwards button in the history has been pressed, going one step back");
                 historyForwardJButton.setEnabled(true);
                 //cancel the last performed step
                 ts.reverseFireTransitions(ts.historyArrayList.get(ts.lastHistoryStep--));
@@ -232,6 +236,7 @@ public class TokenSimPanel extends AddonPanel {
         historyForwardJButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
+                LOGGER.info("Forwards button in the history has been pressed, going one step forward");
                 historyBackJButton.setEnabled(true);
                 //perform the next step after last performed
                 ts.fireTransitions(false, ts.historyArrayList.get(++ts.lastHistoryStep));
@@ -262,6 +267,7 @@ public class TokenSimPanel extends AddonPanel {
             public void actionPerformed(ActionEvent ae) {
                 //save current marking to a new entry in customMarkingsMap
                 //name of current marking
+                LOGGER.info("SaveMarkingButton has been pressed, saving the current Marking");
                 String markingName = JOptionPane.showInputDialog(TokenSimPanel.this, strings.get("TSNameOfMarkingOptionPane"), ("Marking " + (ts.customMarkingsMap.size() + 1)));
                 if(markingName != null){
                     //if a marking with given name already exists, promt to give a new name
@@ -288,6 +294,7 @@ public class TokenSimPanel extends AddonPanel {
         deleteMarkingJButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent ae) {
+                LOGGER.info("Button to delete the currently selected marking has been pressed - deleting current marking");
                 //delete the marking that is currently selected in customMarkingsComboBox
                 String markingName = customMarkingsJComboBox.getSelectedItem().toString();
                 ts.customMarkingsMap.remove(markingName);

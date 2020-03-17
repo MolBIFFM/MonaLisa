@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -20,6 +20,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Input handler for the MetaTool format.
@@ -32,9 +34,11 @@ public class MetaToolInputHandler implements InputHandler {
     private List<Transition> reversible;
     private List<String> external;
     private int placeCounter, transitionCounter;
+    private static final Logger LOGGER = LogManager.getLogger(MetaToolInputHandler.class);
 
     @Override
     public PetriNet load(InputStream in) throws IOException {
+        LOGGER.info("Loading Petri net from MetaTool file");
         places = new HashMap<>();
         transitions = new HashMap<>();
         reversible = new ArrayList<>();
@@ -51,7 +55,7 @@ public class MetaToolInputHandler implements InputHandler {
         Place place = null;
         Boolean isReversible;
 
-        while(true) {            
+        while(true) {
             line = reader.readLine();
             if(line == null)
                 break;
@@ -141,12 +145,13 @@ public class MetaToolInputHandler implements InputHandler {
                 }
             }
         }
-
+        LOGGER.info("Successfully loaded Petri net from MetaTool file");
         return ret;
     }
-    
+
     @Override
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in MetaTool format");
         return "dat".equalsIgnoreCase(FileUtils.getExtension(file)) || "meta".equalsIgnoreCase(FileUtils.getExtension(file));
     }
 
@@ -154,10 +159,12 @@ public class MetaToolInputHandler implements InputHandler {
         Place place = places.get(placeName);
 
         if (place == null) {
+            LOGGER.debug("Creating new place with name '" + placeName + "'");
             place = new Place(++placeCounter);
             places.put(placeName, place);
             place.putProperty("name", placeName);
             petriNet.addPlace(place);
+            LOGGER.debug("Successfully created new place with name '" + placeName + "'");
         }
         return place;
     }
@@ -166,17 +173,19 @@ public class MetaToolInputHandler implements InputHandler {
         Transition transition = transitions.get(transitionName);
 
         if (transition == null) {
+            LOGGER.debug("Creating new transition with name '" + transitionName + "'");
             transition = new Transition(++transitionCounter);
             transitions.put(transitionName, transition);
             transition.putProperty("name", transitionName);
             petriNet.addTransition(transition);
+            LOGGER.debug("Successfully created new place with name '" + transitionName + "'");
         }
         return transition;
     }
-    
+
     @Override
     public String getDescription() {
         return "MetaTool (DAT)";
-    }      
-    
+    }
+
 }

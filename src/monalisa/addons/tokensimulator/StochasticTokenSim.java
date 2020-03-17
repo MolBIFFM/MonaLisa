@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -19,8 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -44,6 +42,8 @@ import monalisa.data.pn.Transition;
 import monalisa.util.MonaLisaFileChooser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * This class simulates a stochastic petri net (PN).
@@ -86,6 +86,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
      * the values are the arrays of firing time intervals, which are doubles
      */
     private final Map<Transition, ArrayList<Double>> nextFiringTime;
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(StochasticTokenSim.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -130,6 +131,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
                      * If no transitions are active, abort simulation.
                      */
                     if (activeTransitions.isEmpty() || this.isCancelled()) {
+                        LOGGER.debug("No more active transitions, therefore stopping the stochastic token simulation");
                         this.isRunning = false;
                         break;
                     }
@@ -163,7 +165,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
                     }
                     Thread.sleep(timeDelay);
                 } catch (InterruptedException | InvocationTargetException ex) {
-                    Logger.getLogger(StochasticTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Simulation interupted or InvocationTargetException", ex);
                 }
             }
             return null;
@@ -195,6 +197,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
          * Signal to stop simulation.
          */
         public void stopSequence() {
+            LOGGER.debug("Stopping the sequence and updating the visual output");
             this.isRunning = false;
             //update visual output
             tokenSim.updateVisualOutput();
@@ -267,6 +270,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
         /*
          * Update time delay.
          */
+        LOGGER.debug("Updating time delay, update interval and marking checkbox depending on the preferences");
         int timeDelay = Integer.parseInt(this.prefPanel.timeDelayJFormattedTextField.getText());
         if (timeDelay >= 0)
             this.tokenSim.preferences.put("Time delay", timeDelay);
@@ -294,16 +298,17 @@ public class StochasticTokenSim extends AbstractTokenSim{
         this.tsPanel.stepField.setEnabled(true);
         this.tsPanel.fireTransitionsButton.setEnabled(true);
         this.tsPanel.firingRateButton.setEnabled(true);
-
         this.computeActiveTransitions();
     }
 
     @Override
     protected void endSim() {
+        LOGGER.debug("Ending the stochastic token simulator");
         try{
             this.simSwingWorker.cancel(true);
         }
         catch(NullPointerException ex){
+            LOGGER.error("Nullpointer exception while trying to cancel the simSwingWorker in the stochastic token simulator", ex);
         }
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.fireTransitionsButton.setEnabled(false);
@@ -322,6 +327,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
      */
     @Override
     protected Transition getTransitionToFire() {
+        LOGGER.debug("Getting all transitions that will fire next in the stochastic token simulator");
         Set<Transition> activeTransitions = this.tokenSim.getActiveTransitions();
         /*
          * calculate the next firing time for every active transition
@@ -336,6 +342,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
          * same firing time as the actual transition, put in in the transitionsToFire - set. This collects all transitions with the same (lowest)
          * firing time in an set. Then choose randomly which transition from transitionsToFire.
          */
+        LOGGER.debug("Search through all transitions and choose those, that have the lowest firing time");
         Set<Transition> transitionsToFire = new HashSet<>();
         //Add any transition to the transitionsToFire-set and save its firing time.
         Transition firstT = activeTransitions.iterator().next();
@@ -397,6 +404,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
          * weight of the arc between p and t; the minimal value is the q-value
          */
         //Enabling-degree q of the transition t.
+        LOGGER.debug("Updating the next firing time for a given transition");
         long q;
         
         if ((Boolean) this.tokenSim.preferences.get("Marking dependent rates")){
@@ -464,6 +472,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
             simSwingWorker.execute();
         }        
         catch(NumberFormatException nfe){
+            LOGGER.error("NumberFormatException while trying to start firing, therefore stopping the firing", nfe);
             stopFiring();
             JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
@@ -473,6 +482,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
      * Stop actual firing sequence.
      */
     protected void stopFiring(){
+        LOGGER.debug("Stopping the current firing sequence");
         if (this.simSwingWorker != null){
             this.simSwingWorker.stopSequence();
         }
@@ -483,6 +493,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
         /*
          * Ask user where he wants to have the setup file and how to name it.
          */
+        LOGGER.info("Exporting the setup of the stochastic token simulator");
         File outFile;
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -495,6 +506,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
             /*
              * Create a XML-document
              */
+            LOGGER.debug("Creating a .XML-document and the needed builders");
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             //Create root element and append it to the document.
             Element root = doc.createElement("SimulationSetup");
@@ -505,6 +517,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
             root.appendChild(placesEl);
             
             //Iterate through all places and create an element for each one.
+            LOGGER.debug("Iterating through all places and putting the data into the builders");
             for (Place place : this.petriNet.places()){
                 //Create place element and append it to places element
                 Element placeEl = doc.createElement("place");
@@ -546,6 +559,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
             root.appendChild(transitionsEl);
             
             //Iterate through all transitions and create an element for each one.
+            LOGGER.debug("Iterating through all transitions and putting the data into the builders");
             for (Transition transition : this.petriNet.transitions()){
                 //Create a transition element.
                 Element transitionEl = doc.createElement("transition");
@@ -564,16 +578,18 @@ public class StochasticTokenSim extends AbstractTokenSim{
             StreamResult result = new StreamResult(outFile);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException ex) {
-            Logger.getLogger(StochasticTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("ParserConfigurationException or TransformerException while trying to create an export file for the stochastic token sim");
         }
     }
 
     @Override
     protected void importSetup() {
+        LOGGER.info("Imporing the setup for the stochastic token simulator");
         try {
             /*
              * Get the setup file.
              */
+            LOGGER.debug("Creating the needed file, factory and parsers for extracting the information out of the input file");
             File inFile;
             MonaLisaFileChooser fc = new MonaLisaFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -592,7 +608,7 @@ public class StochasticTokenSim extends AbstractTokenSim{
             MathematicalExpression mathExp = null;
             Map<String, Integer> variables = new HashMap<>();
             StringBuilder sb = new StringBuilder();
-
+            LOGGER.debug("Parsing through the input file");
             while (parser.hasNext()){
                 switch ( parser.getEventType() ){
                     case XMLStreamConstants.START_DOCUMENT:
@@ -706,9 +722,9 @@ public class StochasticTokenSim extends AbstractTokenSim{
         } catch (FileNotFoundException | XMLStreamException ex) {
             JOptionPane.showMessageDialog(null, "Invalid XML file!",
                     TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Importfile was not found or the .XML-Stream was interrupted unexpectedly", ex);
         } catch (Exception ex) {
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("General exception while trying to import a setupfile");
         }
     }
 

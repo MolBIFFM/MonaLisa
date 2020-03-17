@@ -1,9 +1,10 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Molekulare Bioinformatik, Goethe University Frankfurt, Frankfurt am Main, Germany
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
+ *  Goethe-University Frankfurt am Main, Germany
  *
  */
 package monalisa.synchronisation;
@@ -36,6 +37,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.data.pn.UniquePetriNetEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A class to synchronize NetViewer and PetriNet class. This class synchronize
@@ -60,6 +63,8 @@ public class Synchronizer implements Serializable {
     private final Map<Integer, NetViewerNode> transitionMap;
     private final Map<Integer, NetViewerNode> placeMap;
 
+    private static final Logger LOGGER = LogManager.getLogger(Synchronizer.class);
+
     /**
      * Create a new Synchronizer for a given PetriNet
      *
@@ -67,7 +72,7 @@ public class Synchronizer implements Serializable {
      */
     public Synchronizer(PetriNet pn) {
         this.pn = pn;
-        this.g = new SparseGraph<>();        
+        this.g = new SparseGraph<>();
         this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
 
         transitionMap = new HashMap<>();
@@ -133,7 +138,7 @@ public class Synchronizer implements Serializable {
     /**
      * Returns the corresponding NetViewerNode to ID of a transition.
      *
-     * @param upne Either a Place or a Transition
+     * @param id
      * @return The corresponding transition, if for the given ID exist a
      * Transition, NULL otherwise.
      */
@@ -150,7 +155,7 @@ public class Synchronizer implements Serializable {
     /**
      * Returns the corresponding NetViewerNode to ID of a place.
      *
-     * @param upne Either a Place or a Transition
+     * @param id
      * @return The corresponding place, if for the given ID exist a place, NULL
      * otherwise.
      */
@@ -190,6 +195,7 @@ public class Synchronizer implements Serializable {
      */
     private void translatePNtoGraph() {
         if (this.g != null) {
+            LOGGER.info("Translating Petri net to graph for NetViewer");
             int edgeCount = 0;
             NetViewerNode nvNode;
             // generate Places
@@ -257,6 +263,7 @@ public class Synchronizer implements Serializable {
                     edgeCount++;
                 }
             }
+            LOGGER.info("Successfully translated Petri net to graph for NetViewer");
         }
     }
 
@@ -273,11 +280,12 @@ public class Synchronizer implements Serializable {
      * @return the created NetViewerNode
      */
     public NetViewerNode addNode(String type, String labelName, double x, double y) {
+        LOGGER.debug("Adding new node to NetViewer and Petri net");
         NetViewerNode ret = new NetViewerNode(getNewNodeId(), type, labelName);
-        g.addVertex(ret);       
-        
-        Point.Double point = new Point.Double(x,y);  
-        layout.setLocation(ret, point);        
+        g.addVertex(ret);
+
+        Point.Double point = new Point.Double(x,y);
+        layout.setLocation(ret, point);
 
         if (ret.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
             Place place = new Place(ret.getId());
@@ -293,19 +301,20 @@ public class Synchronizer implements Serializable {
             transition.putProperty("posY", y);
             this.pn.addTransition(transition);
             this.transitionMap.put(transition.id(), ret);
-        } 
-        
+        }
+        LOGGER.debug("Successfully added new node to NetViewer and Petri net");
         return ret;
     }
-    
+
     /**
      * Add a new node in dependence to another node
      * @param nvNode
      * @param direction 0 = input ; 1 = output
-     */    
+     */
     public NetViewerNode addNode(NetViewerNode nvNode, Boolean direction) {
+        LOGGER.debug("Adding new node to NetViewer in dependence from another node");
         NetViewerNode ret;
-        
+
         Point2D coordinates = layout.transform(nvNode);
         if((nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)))
             ret = addNode(NetViewer.PLACE, "Created_from_"+nvNode.getName(), (int)coordinates.getX()+50, (int)coordinates.getY()+50);
@@ -315,11 +324,11 @@ public class Synchronizer implements Serializable {
         if(direction)
             addEdge(1, ret, nvNode);
         else
-            addEdge(1, nvNode , ret);       
-        
+            addEdge(1, nvNode , ret);
+        LOGGER.debug("Successfully added new node to NetViewer in dependence from another node");
         return ret;
     }
-    
+
     /**
      * Create a new logical place
      * @param sourceNode
@@ -328,18 +337,19 @@ public class Synchronizer implements Serializable {
      */
     public void addLogicalPlace(NetViewerNode sourceNode, List<NetViewerNode> selectedNodes, Point2D nodePosition) {
         if(!selectedNodes.isEmpty()) {
+            LOGGER.debug("Adding new logical place to NetViewer");
             NetViewerNode newNode = sourceNode.getMasterNode().generateLocicalPlace(getNewNodeId());
             sourceNode.getMasterNode().setColor(Color.GRAY);
             g.addVertex(newNode);
 
             if(!(sourceNode.getMasterNode().getColor().equals(Color.WHITE) || sourceNode.getMasterNode().getColor().equals(Color.GRAY)))
                 newNode.setColor(sourceNode.getColor());
-            
+
             if(!sourceNode.getMasterNode().getStrokeColor().equals(Color.BLACK))
                 newNode.setStrokeColor(sourceNode.getMasterNode().getStrokeColor());
             else
                 newNode.setStrokeColor(Color.BLACK);
-            
+
             if(sourceNode.getCorners() != 0)
                 newNode.setCorners(sourceNode.getCorners());
 
@@ -364,7 +374,7 @@ public class Synchronizer implements Serializable {
                 }
 
                 oldEdge.getAim().removeInEdge(oldEdge);
-                oldEdge.getSource().removeOutEdge(oldEdge);                
+                oldEdge.getSource().removeOutEdge(oldEdge);
             }
             if(nodePosition == null) {
                 Point2D coordinates = layout.transform(sourceNode);
@@ -372,21 +382,23 @@ public class Synchronizer implements Serializable {
             }
             else {
                 layout.setLocation(newNode, nodePosition);
-            }            
+            }
+            LOGGER.debug("Successfully added new logical place to NetViewer");
         }
-    }    
-    
+    }
+
     /**
      * Add a bend to a given edge at a given point (x,y)
      * @param nvEdge
      * @param x
-     * @param y 
+     * @param y
      */
     public NetViewerEdge addBend(NetViewerEdge nvEdge, double x, double y) {
+        LOGGER.debug("Adding bend to edge in NetViewer");
         NetViewerEdge newEdge;
-        NetViewerEdge masterEdge = nvEdge.getMasterEdge();        
-        NetViewerNode newNode = addNode(NetViewer.BEND, "B", x+30.0, y+30.0);        
-        
+        NetViewerEdge masterEdge = nvEdge.getMasterEdge();
+        NetViewerNode newNode = addNode(NetViewer.BEND, "B", x+30.0, y+30.0);
+
         addBendEdge(nvEdge.getSource(), newNode, masterEdge);
 
         newEdge = new NetViewerEdge("n" + this.getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge);
@@ -404,10 +416,10 @@ public class Synchronizer implements Serializable {
             nvEdge.getAim().removeInEdge(nvEdge);
             nvEdge.getSource().removeOutEdge(nvEdge);
         }
-                   
-        return newEdge;        
+        LOGGER.debug("Successfully added bend to edge in NetViewer");
+        return newEdge;
     }
-   
+
     /**
      * Add a edge to the Graph and the PetriNet.
      *
@@ -417,6 +429,7 @@ public class Synchronizer implements Serializable {
      * @return The new created NetViewerEdge
      */
     public NetViewerEdge addEdge(int weight, NetViewerNode source, NetViewerNode aim) {
+        LOGGER.debug("Adding new edge to NetViewer and Petri net");
         NetViewerEdge ret = new NetViewerEdge("n" + this.getNewEdgeId(), weight, source, aim);
         g.addEdge(ret, source, aim, EdgeType.DIRECTED);
 
@@ -436,41 +449,45 @@ public class Synchronizer implements Serializable {
                 this.pn.addArc((Transition) from, (Place) to, arc);
                 break;
         }
-
+        LOGGER.debug("Successfully added new edge to NetViewer and Petri net");
         return ret;
     }
-        
+
     /**
      * Add a new bend edge to the Graph
      * @param weight
      * @param source
      * @param aim
      * @param masterEdge
-     * @return 
+     * @return
      */
     private NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
+        LOGGER.debug("Adding new bended edge to NetViewer");
         NetViewerEdge ret = new NetViewerEdge("n" + this.getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge);
         g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
-        
+        LOGGER.debug("Successfully added new bended edge to NetViewer");
         return ret;
     }
-    
+
     /**
      * Removes the given edge from the Graph and the PetriNet.
      *
      * @param edge The edge to remove
      */
     public void removeEdge(NetViewerEdge edge) {
-        removeEdgeFromPetriNet(edge);        
-        removeAllBends(edge);        
+        LOGGER.debug("Removing edge from Graph and Petri net");
+        removeEdgeFromPetriNet(edge);
+        removeAllBends(edge);
         removeEdgeFromGraph(edge);
+        LOGGER.debug("Successfully removed edge from Graph and Petri net");
     }
-    
+
     /**
      * Removes the edge from the graph
-     * @param edge 
+     * @param edge
      */
     private void removeEdgeFromGraph(NetViewerEdge edge) {
+        LOGGER.debug("Removing edge from graph");
         if(edge.getMasterEdge().equals(edge)) {
             edge.getAim().removeInEdge(edge);
             edge.getSource().removeOutEdge(edge);
@@ -478,17 +495,19 @@ public class Synchronizer implements Serializable {
 
         edge.getMasterEdge().getAim().removeInEdge(edge.getMasterEdge());
         edge.getMasterEdge().getSource().removeOutEdge(edge.getMasterEdge());
-        g.removeEdge(edge.getMasterEdge());        
+        g.removeEdge(edge.getMasterEdge());
+        LOGGER.debug("Successfully removed edge from graph");
     }
-    
+
     /**
      * Removes the edge from the Petri net.
-     * @param edge 
+     * @param edge
      */
     private void removeEdgeFromPetriNet(NetViewerEdge edge) {
         if(edge == null) {
             return;
         }
+        LOGGER.debug("Removing edge from Petri net");
         if(edge.getSource().getNodeType().equals(NetViewer.PLACE)) {
             Place from = this.pn.findPlace(edge.getSource().getMasterNode().getId());
             Transition to = this.pn.findTransition(edge.getAim().getId());
@@ -503,11 +522,12 @@ public class Synchronizer implements Serializable {
             if (arc != null) {
                 this.pn.removeArc(from, to);
             }
-        }        
+        }
+        LOGGER.debug("Successfully removed edge from Petri net");
     }
-    
+
     /**
-     * Removes a logical places. All edges a go back to master node or to a
+     * Removes a logical place. All edges a go back to master node or to a
      * other given logical places
      *
      * @param nvNode Place to remove
@@ -520,7 +540,7 @@ public class Synchronizer implements Serializable {
         if (nvNode.equals(nvNode.getMasterNode())) {
             return;
         }
-
+        LOGGER.debug("Removing logical place from NetViewer");
         List<NetViewerEdge> edgesToDelete = new ArrayList<>();
 
         for (NetViewerEdge e : nvNode.getInEdges()) {
@@ -538,7 +558,7 @@ public class Synchronizer implements Serializable {
             removeEdgeFromGraph(nvEdge);
         }
 
-        nvNode.getMasterNode().removeLocicalNode(nvNode);
+        nvNode.getMasterNode().removeLogicalNode(nvNode);
 
         if(!nvNode.getMasterNode().getColor().equals(Color.WHITE)) {
             nvNode.getMasterNode().setColor(nvNode.getMasterNode().getColor());
@@ -549,40 +569,44 @@ public class Synchronizer implements Serializable {
         if(nvNode.getMasterNode().getLogicalPlaces().size() == 1) {
             nvNode.getMasterNode().setColor(Color.WHITE);
         }
+        LOGGER.debug("Successfully removed logical place from NetViewer");
     }
-    
+
     /**
      * Melt multiple logical places to the master node. The master node is detected automatically
      * @param nvNodes The list of logical places to be melted
      */
-    public void mergeLogicalPlaces(List<NetViewerNode> nvNodes) {               
+    public void mergeLogicalPlaces(List<NetViewerNode> nvNodes) {
+        LOGGER.debug("Merging logical places with master node in NetViewer");
         NetViewerNode masterNode = nvNodes.get(0).getMasterNode();
-        
+
         for(NetViewerNode nvNode : nvNodes) {
             if(!nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
                 return;
             }
         }
-        
+
         if(nvNodes.contains(masterNode)) {
             nvNodes.remove(masterNode);
         }
-        
+
         for(NetViewerNode nvNode : nvNodes) {
             removeNode(nvNode);
         }
+        LOGGER.debug("Successfully merged logical places with master node in NetViewer");
     }
-    
+
     /**
      * Removes the given node from the Graph and the Petri net
-     * @param nvNode 
+     * @param nvNode
      */
     public void removeNode(NetViewerNode nvNode) {
+        LOGGER.debug("Removing node from graph and Petri net");
         boolean notLogicalAnymore = false;
-        
+
         // Remove all bends
         List<NetViewerEdge> bends2remove = new ArrayList<>();
-        for (NetViewerEdge edge : nvNode.getInEdges()) {            
+        for (NetViewerEdge edge : nvNode.getInEdges()) {
             if (!edge.getMasterEdge().equals(edge)) {
                 continue;
             }
@@ -600,8 +624,8 @@ public class Synchronizer implements Serializable {
         }
         for (NetViewerEdge edge : bends2remove) {
             removeAllBends(edge);
-        }        
-        
+        }
+
         if(nvNode.isMasterNode()) {
             // Needed to avoid ConcurrentModification Errors
             List<NetViewerNode> nvList = new ArrayList<>();
@@ -610,7 +634,7 @@ public class Synchronizer implements Serializable {
                     continue;
                 }
                 nvList.add(n);
-            }            
+            }
             for(NetViewerNode n : nvList) {
                 removeNode(n);
             }
@@ -619,7 +643,7 @@ public class Synchronizer implements Serializable {
             removeLogicalPlace(nvNode, nvNode.getMasterNode());
             // If a logical place is delted, bends and egdes have to be removed from Graph but not from Petri net!!!
             notLogicalAnymore = true;
-        }      
+        }
 
         // Now remove all edges
         for(NetViewerEdge edge : nvNode.getOutEdges()) {
@@ -632,7 +656,7 @@ public class Synchronizer implements Serializable {
             edge.getSource().removeOutEdge(edge.getMasterEdge());
         }
 
-        
+
         // and than the node
         g.removeVertex(nvNode);
         // and from the PetriNet
@@ -644,15 +668,17 @@ public class Synchronizer implements Serializable {
                 this.pn.removeTransition(this.pn.findTransition(nvNode.getId()));
                 this.transitionMap.remove(nvNode.getId());
             }
-        } 
+        }
+        LOGGER.debug("Successfully removed node from graph and Petri net");
     }
-    
+
     /**
      * Remove all bends of a gives edge
      *
-     * @param bendEdges
+     * @param edge
      */
     public void removeAllBends(NetViewerEdge edge) {
+        LOGGER.debug("Removing all bends from edge in NetViewer");
         List<NetViewerEdge> edgeList = edge.getMasterEdge().getBendEdges();
 
         for (NetViewerEdge e : edgeList) {
@@ -667,25 +693,27 @@ public class Synchronizer implements Serializable {
         }
         edge.getMasterEdge().clearBendEdges();
         edge.getMasterEdge().setVisible(true);
+        LOGGER.debug("Successfully removed all bends from edge in NetViewer");
     }
-    
+
     /**
      * Removes a bend from the given edge
-     * @param edge 
+     * @param edge
      */
     public void removeBend(NetViewerEdge edge) {
+        LOGGER.debug("Removing one bend from an edge in NetViewer");
         NetViewerEdge invisibleEdge = null, otherEdge;
 
         // NetViewer.BEND ------ NODE
         if(edge.getSource().getNodeType().equalsIgnoreCase(NetViewer.BEND) && !edge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
             edge.getAim().removeInEdge(edge);
-            edge.getSource().removeOutEdge(edge);                        
+            edge.getSource().removeOutEdge(edge);
             otherEdge = (NetViewerEdge)edge.getSource().getInEdges().toArray()[0];
-            
+
             if(!otherEdge.getSource().getNodeType().equals(NetViewer.BEND)) {
                 invisibleEdge = g.findEdge(otherEdge.getSource(), edge.getAim());
-            } else {            
-                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());                                 
+            } else {
+                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
             }
             g.removeVertex(edge.getSource());
         }
@@ -694,21 +722,21 @@ public class Synchronizer implements Serializable {
             edge.getSource().removeOutEdge(edge);
             edge.getAim().removeInEdge(edge);
             otherEdge = (NetViewerEdge)edge.getAim().getOutEdges().toArray()[0];
-            
+
             if(!otherEdge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                 invisibleEdge = g.findEdge(edge.getSource(), otherEdge.getAim());
-            } else {            
+            } else {
                 addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge());
             }
             g.removeVertex(edge.getAim());
-        }        
+        }
         // NetViewer.BEND ------ NetViewer.BEND
         else {
             edge.getAim().removeInEdge(edge);
             edge.getSource().removeOutEdge(edge);
-            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);            
-            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());                       
-            g.removeVertex(otherEdge.getAim());           
+            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);
+            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
+            g.removeVertex(otherEdge.getAim());
         }
 
         otherEdge.getMasterEdge().removeBendEdge(otherEdge);
@@ -718,69 +746,74 @@ public class Synchronizer implements Serializable {
 
         if(invisibleEdge != null) {
             invisibleEdge.setVisible(true);
-        }        
+        }
+        LOGGER.debug("Successfully removed one bend from an edge in NetViewer");
     }
-    
+
     /**
      * Merges a set of vertices to one vertex
      * @param meltingPot List of NetViewerNode to be merged
      */
     public void mergeVertices(List<NetViewerNode> meltingPot) {
+        LOGGER.debug("Merging vertices to a single vertex in NetViewer");
         // Define the vertex which "survive"
         NetViewerNode meltAim = meltingPot.get(0);
 
         // Go through all other vertices to melt these
         NetViewerEdge newEdge;
-        List<NetViewerEdge> toDelte = new ArrayList<>();
+        List<NetViewerEdge> toDelete = new ArrayList<>();
         for(NetViewerNode nvNode : meltingPot) {;
             if(nvNode.equals(meltAim)) {
                 continue;
-            }              
-            
-            // Delte old edges and create the new ones
-            for(NetViewerEdge e : nvNode.getOutEdges()) {
-                toDelte.add(e);
             }
-            for(NetViewerEdge e : toDelte) {
+
+            // Delete old edges and create the new ones
+            for(NetViewerEdge e : nvNode.getOutEdges()) {
+                toDelete.add(e);
+            }
+            for(NetViewerEdge e : toDelete) {
                 addEdge(e.getWeight(), meltAim, e.getAim());
                 removeEdge(e);
-            }            
-            toDelte.clear();
-            for(NetViewerEdge e : nvNode.getInEdges()) {
-                toDelte.add(e);
             }
-            for(NetViewerEdge e : toDelte) {
+            toDelete.clear();
+            for(NetViewerEdge e : nvNode.getInEdges()) {
+                toDelete.add(e);
+            }
+            for(NetViewerEdge e : toDelete) {
                 addEdge(e.getWeight(), e.getSource(), meltAim);
                 removeEdge(e);
             }
-            
+
             // Remove the old vertex
             removeNode(nvNode);
-        }        
+        }
+        LOGGER.debug("Successfully merged vertices to a single vertex in NetViewer");
     }
-    
+
     /**
      * Reverse a transition. Do nothing if a place is given
-     * @param nvNode 
+     * @param nvNode
      */
     public void reverseTransition(NetViewerNode nvNode, int x, int y) {
-        if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {            
+        if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+            LOGGER.debug("Reversing transition");
             NetViewerNode newNode = addNode(NetViewer.TRANSITION, nvNode.getName()+"_rev" , x, y);
-                
+
             Arc a;
-            Transition t = this.getTransitionFromNode(nvNode);            
+            Transition t = this.getTransitionFromNode(nvNode);
             for(Place p : t.inputs()) {
                 a = this.pn.getArc(p, t);
                 addEdge(a.weight(), newNode, getNodeFromPlaceId(p.id()));
             }
-            
+
             for(Place p : t.outputs()) {
                 a = this.pn.getArc(t, p);
                 addEdge(a.weight(), getNodeFromPlaceId(p.id()), newNode);
-            }                      
+            }
+            LOGGER.debug("Successfully reversed transition");
         }
     }
-    
+
     /**
      * Return a new node id. This ID is higher than any other, older, ID.
      *
@@ -837,5 +870,5 @@ public class Synchronizer implements Serializable {
         if(map != null) {
             this.layout.restore(map);
         }
-    }    
+    }
 }

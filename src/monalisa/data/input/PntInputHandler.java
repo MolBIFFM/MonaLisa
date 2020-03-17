@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -26,6 +26,8 @@ import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Input handler for the PNT format.
@@ -36,12 +38,14 @@ import monalisa.util.FileUtils;
 public final class PntInputHandler implements InputHandler {
     private final Map<Integer, Place> places = new HashMap<>();
     private final Map<Integer, Transition> transitions = new HashMap<>();
-    
+    private static final Logger LOGGER = LogManager.getLogger(PntInputHandler.class);
+
     @Override
     public PetriNet load(InputStream in) throws IOException {
+        LOGGER.info("Loading Petri net from .pnt file");
         places.clear();
         transitions.clear();
-        
+
         PetriNet ret = new PetriNet();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -74,7 +78,7 @@ public final class PntInputHandler implements InputHandler {
         Scanner scanner = null;
         Transition transition;
         Boolean endOfInArcs = false, noInput;
-        while (!(line = reader.readLine()).equals("@")) {            
+        while (!(line = reader.readLine()).equals("@")) {
             scanner = new Scanner(line);
             placeId = scanner.nextInt();
             Place place = findPlace(placeId, ret);
@@ -92,7 +96,7 @@ public final class PntInputHandler implements InputHandler {
             if(!noInput) {
                 endOfInArcs = false;
                 while (scanner.hasNext()) {
-                    token = scanner.next();                    
+                    token = scanner.next();
                     if(token.contains(":")) {
                         transitionId = Integer.parseInt(token.substring(0,token.indexOf(":")));
                         token = scanner.next();
@@ -182,40 +186,45 @@ public final class PntInputHandler implements InputHandler {
             transition.putProperty("priority", priority);
             transition.putProperty("time", time);
         }
-
+        LOGGER.info("Successfully loaded Petri net from .pnt file");
         return ret;
     }
 
     private Place findPlace(int placeId, PetriNet petriNet) {
         Place place = places.get(placeId);
-        
+
         if (place == null) {
+            LOGGER.debug("Creating new place with placeID '" + Integer.toString(placeId) + "'");
             place = new Place(placeId);
             places.put(placeId, place);
             petriNet.addPlace(place);
+            LOGGER.debug("Successfully created new place with placeID '" + Integer.toString(placeId) + "'");
         }
         return place;
     }
 
     private Transition findTransition(int transitionId, PetriNet petriNet) {
         Transition transition = transitions.get(transitionId);
-        
+
         if (transition == null) {
+            LOGGER.debug("Creating new transition with transitionID '" + Integer.toString(transitionId) + "'");
             transition = new Transition(transitionId);
             transitions.put(transitionId, transition);
             petriNet.addTransition(transition);
+            LOGGER.debug("Successfully created new transition with transitionID '" + Integer.toString(transitionId) + "'");
         }
         return transition;
     }
 
     @Override
     public boolean isKnownFile(File file) throws IOException {
+        LOGGER.debug("Checking whether file is in PNT format");
         return "pnt".equalsIgnoreCase(FileUtils.getExtension(file));
     }
-    
+
     @Override
     public String getDescription() {
         return "PNT";
-    }      
-    
+    }
+
 }

@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.util.HashMap;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * A Class where the logic and the gui can be separated;
@@ -21,15 +23,17 @@ import javax.swing.JLabel;
  */
 public class NetPropertiesPanelLogic {
 
-    HashMap<JCheckBox, NetPropertieAlgorithm> algorithmMap;
+    private static final Logger LOGGER = LogManager.getLogger(NetPropertiesPanelLogic.class);
+    HashMap<JCheckBox, NetPropertyAlgorithm> algorithmMap;
     HashMap<JCheckBox, JLabel> labelMap;
 
-    public NetPropertiesPanelLogic(HashMap<JCheckBox, NetPropertieAlgorithm> algorithmMap, HashMap<JCheckBox, JLabel> labelMap) {
+    public NetPropertiesPanelLogic(HashMap<JCheckBox, NetPropertyAlgorithm> algorithmMap, HashMap<JCheckBox, JLabel> labelMap) {
         this.algorithmMap = algorithmMap;
         this.labelMap = labelMap;
     }
 
     protected void checkAlgorithms() {
+        LOGGER.info("Running algorithms and setting results for net properties");
         for (JCheckBox b : algorithmMap.keySet()) {
             if (b.isSelected()) {
                 algorithmMap.get(b).runAlgorithm();
@@ -42,6 +46,7 @@ public class NetPropertiesPanelLogic {
                 }
             }
         }
+        LOGGER.info("Successfully ran algorithms and set results for net properties");
     }
 
     protected void checkAlgorithms(int a) {

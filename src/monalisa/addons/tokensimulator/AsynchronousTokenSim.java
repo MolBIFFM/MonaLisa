@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -17,8 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -41,6 +39,9 @@ import monalisa.data.pn.Transition;
 import monalisa.util.MonaLisaFileChooser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 /**
  * This simulation mode allows to fire selected amount of steps with selected delay between firings.
@@ -56,6 +57,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
      * Thread which executes simulation.
      */
     private SimulationSwingWorker simSwingWorker;
+    private static final Logger LOGGER = LogManager.getLogger(AsynchronousTokenSim.class);
     //END VARIABLES DECLARATION
     
     //BEGIN INNER CLASSES
@@ -100,6 +102,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                      * If no transitions are active, abort simulation.
                      */
                     if (activeTransitions.isEmpty() || this.isCancelled()){
+                        LOGGER.info("Simulation stopped since no more transitions are active");
                         this.isRunning = false;
                         break;
                     }
@@ -133,7 +136,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                     }
                     Thread.sleep(timeDelay);
                 } catch (InterruptedException | InvocationTargetException ex) {
-                    Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error("Background process got interrupted or broke because of an invalid target", ex);
                 }
             }
             return null;
@@ -182,6 +185,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
     @Override
     protected void init(){
         //START CREATING GUI ELEMENTS
+        LOGGER.debug("GUI for Asynchronous Token Simulator initialized");
         this.tsPanel = new AsynchronousTokenSimPanel(this);
         this.prefPanel = new AsynchronousTokenSimPrefPanel(this);
         this.tsPanel.simName.setText(TokenSimulator.strings.get("ATSName"));
@@ -228,6 +232,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
      */
     protected void startFiring(){
         //Lock GUI
+        LOGGER.info("Firing of Asynchronous Token Simulator started");
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.continuousModeCheckBox.setEnabled(false);
         this.tokenSim.lockGUI(true);
@@ -246,6 +251,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         } 
         catch(NumberFormatException nfe){
             stopFiring();
+            LOGGER.error("NumberFormatException while checking the number of firing steps in the asynchronous token simulator", nfe);
             JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
     } 
@@ -267,11 +273,13 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
     protected Transition getTransitionToFire() {
         Transition[] activeTransitions = this.tokenSim.getActiveTransitions().toArray(new Transition[0]);
         int transitionIndex = random.nextInt(activeTransitions.length);
+        LOGGER.debug("Random transition to fire has been chosen in asynchronous token simulator");
         return activeTransitions[transitionIndex];
     }
     
     @Override
     protected void startSim(){
+        LOGGER.info("Asynchronous token simulation started");
         this.tsPanel.stepField.setEnabled(true);
         this.tsPanel.fireTransitionsButton.setEnabled(true);
         this.computeActiveTransitions();  
@@ -283,6 +291,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             this.simSwingWorker.cancel(true);
         }
         catch(NullPointerException ex){
+            LOGGER.error("Nullpointer exception while trying to cancel simSwingWorker in asynchronous token simulator", ex);
         }
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.fireTransitionsButton.setEnabled(false);
@@ -290,6 +299,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         this.tokenSim.tokenSimPanel.saveSetupButton.setEnabled(false);
         this.tokenSim.tokenSimPanel.loadSetupButton.setEnabled(false);
         tokenSim.lockGUI(true);
+        LOGGER.info("Asynchronous token simulator ended");
     }
 
     @Override
@@ -297,6 +307,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         /*
          * Ask user where he wants to have the setup file and how to name it.
          */
+        LOGGER.debug("Export of setup started");
         File outFile;
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -309,6 +320,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             /*
              * Create a XML-document
              */
+            LOGGER.debug("Creating a new Builder for Setupexport in the asynchronous token simulator");
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             //Create root element and append it to the document.
             Element root = doc.createElement("SimulationSetup");
@@ -320,6 +332,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             
             //Iterate through all places and create an element for each one.
             for (Place place : this.petriNet.places()){
+                LOGGER.debug("New place is found and processed for export");
                 //Create place element and append it to places element
                 Element placeEl = doc.createElement("place");
                 placesEl.appendChild(placeEl);
@@ -330,9 +343,11 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                 //if the place is non-constant, store the number of tokens on this place. Otherwise, store the corresponding
                 //mathematical expression
                 if (!place.isConstant()){
+                    LOGGER.debug("Place is constant and gets the according properties");
                     placeEl.setAttribute("nrOfTokens", String.valueOf(this.tokenSim.getMarking().get(place.id())));
                 }
                 else{
+                    LOGGER.debug("Creating a new mathematical expression element for this place since it is not constant");
                     //Create a mathematical expression element for the place
                     Element mathExpressionEl = doc.createElement("mathematicalExpression");
                     placeEl.appendChild(mathExpressionEl);
@@ -354,7 +369,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                     }
                 }
             }
-            
+            LOGGER.debug("Writing the created document into a file");
             //Write the document into a file.
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -363,12 +378,13 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             StreamResult result = new StreamResult(outFile);
             transformer.transform(source, result);
         } catch (ParserConfigurationException | TransformerException ex) {
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("Parser or Transformer exception while handling the setupexport in the asynchronous token simulator", ex);
         }
     }
     
     @Override
     protected void importSetup() {
+        LOGGER.info("Import of setup initiated");
         try {
             /*
              * Get the setup file.
@@ -380,6 +396,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                 return;
             }
             inFile = fc.getSelectedFile();
+            LOGGER.info("File for import has been chosen, new factory and parser are initiated");
             //Create a SAX-parser.
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader( new FileInputStream(inFile));
@@ -480,10 +497,10 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             }
         } catch (FileNotFoundException | XMLStreamException ex) {
             JOptionPane.showMessageDialog(null, "Invalid XML file!",
-                    TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
+            LOGGER.error("File for import was not found or was invalid", ex);
         } catch (Exception ex) {
-            Logger.getLogger(AsynchronousTokenSim.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("General exception while trying to import .XML setup in the asynchronous token simulator", ex);
         }
     }
     

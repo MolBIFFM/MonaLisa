@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -25,10 +25,13 @@ import monalisa.Project;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class Mcts implements Result, Collection<TInvariant> {
     private static final long serialVersionUID = -2642935086875477004L;
     private final List<TInvariant> mcts;
+    private static final Logger LOGGER = LogManager.getLogger(Mcts.class);
 
     public Mcts(List<TInvariant> mcts) {
         this.mcts = mcts;
@@ -36,16 +39,18 @@ public final class Mcts implements Result, Collection<TInvariant> {
 
     @Override
     public void export(File path, Configuration config, Project project) throws IOException {
+        LOGGER.info("Exporting MCTS results");
         MctsConfiguration mctsConfig = (MctsConfiguration) config;
         String comment = mctsConfig.isStrong() ? "# Enzyme Subsets (occurrence-oriented)" : "# Maximal Common Transition Sets (support-oriented)";
         mctSetExport(project, comment, path, mcts);
+        LOGGER.info("Successfully exported MCTS results");
     }
 
     @Override
     public String filenameExtension() {
         return "mct";
     }
-    
+
     @Override
     public String toString() {
         return mcts.toString();
@@ -115,7 +120,7 @@ public final class Mcts implements Result, Collection<TInvariant> {
     public <T> T[] toArray(T[] a) {
         return mcts.toArray(a);
     }
-    
+
     private static List<Transition> sortedTransitions(PetriNet petriNet) {
         ArrayList<Transition> result = new ArrayList<>(petriNet.transitions());
         Collections.sort(result);
@@ -126,10 +131,10 @@ public final class Mcts implements Result, Collection<TInvariant> {
         try (PrintWriter out = new PrintWriter(file)) {
             List<Transition> transitions = sortedTransitions(project.getPetriNet());
             Map<Transition, Integer> transitionMap = new HashMap<>();
-            StringBuilder sb = new StringBuilder(); 
-            
+            StringBuilder sb = new StringBuilder();
+
             sb.append("# reaction_id:name\n");
-            
+
             int i = 1;
             for(Transition t : transitions) {
                 transitionMap.put(t, i);
@@ -137,18 +142,18 @@ public final class Mcts implements Result, Collection<TInvariant> {
                 sb.append(":");
                 sb.append(t.<String>getProperty("name"));
                 sb.append("\n");
-            }            
-            
-            sb.append("\n# mcts_id:reaction_id; ...\n");             
-            
+            }
+
+            sb.append("\n# mcts_id:reaction_id; ...\n");
+
             i = 1;
             Transition t;
             for (TInvariant inv : mctSet) {
                 List<Integer> values = inv.asVector(transitions);
-                
+
                 sb.append(i++);
                 sb.append(":");
-                
+
                 for (int j = 0; j < values.size(); j++) {
                     if (values.get(j) == 0)
                         continue;
@@ -156,15 +161,15 @@ public final class Mcts implements Result, Collection<TInvariant> {
                     sb.append(transitionMap.get(t));
                     sb.append(";");
                 }
-                sb.setLength(sb.length() - 1);                
+                sb.setLength(sb.length() - 1);
                 sb.append("\n");
-            }             
-            
+            }
+
             out.print(sb.toString());
             out.close();
-                       
+
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Caught IOException while exporting MCTS results: ", e);
         }
     }
 }

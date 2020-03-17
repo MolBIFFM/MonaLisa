@@ -1,7 +1,7 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
  *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import monalisa.data.pn.Transition;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Saves a state-snapshot of the Petri net.
@@ -35,6 +37,8 @@ public class Snapshot {
     private final Map<Integer, MathematicalExpression> constantPlaces;         
     //Statistic of current step
     private Statistic statistic;
+    private static final Logger LOGGER = LogManager.getLogger(Snapshot.class);
+
     //END VARIABLES DECLARATION
     
     //BEGIN CONSTRUCTORS
@@ -57,6 +61,7 @@ public class Snapshot {
      * @param markingN actual marking
      */
     Snapshot(int stepNrN, DefaultListModel historyListModelN, ArrayList<Transition[]> historyArrayListN, Map<Integer, Long> markingN, Map<Integer, MathematicalExpression> constantPlacesN){
+        LOGGER.info("Creating a new snapshot at stepnumber " + Integer.toString(stepNrN));
         this.stepNr = stepNrN;
         this.historyListModel = historyListModelN.toArray();
         

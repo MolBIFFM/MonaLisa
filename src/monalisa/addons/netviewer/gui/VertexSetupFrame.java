@@ -1,9 +1,9 @@
 /*
  *
- *  This file ist part of the software MonaLisa.
- *  MonaLisa is free software, dependend on non-free software. For more information read LICENCE and README.
+ *  This file is part of the software MonaLisa.
+ *  MonaLisa is free software, dependent on non-free software. For more information read LICENCE and README.
  *
- *  (c) Department of Molecular Bioinformatics, Institue of Computer Science, Johann Wolfgang
+ *  (c) Department of Molecular Bioinformatics, Institute of Computer Science, Johann Wolfgang
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
@@ -22,6 +22,8 @@ import monalisa.data.pn.UniquePetriNetEntity;
 import monalisa.util.MonaLisaWindowListener;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -29,35 +31,38 @@ import monalisa.resources.StringResources;
  */
 public class VertexSetupFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = -1522812473959407238L;
-        
+    private static final Logger LOGGER = LogManager.getLogger(VertexSetupFrame.class);
+
     /**
      * Create a new setup frame for a single NetViewerNode at a given point on the screen
      * @param netViewer
-     * @param nvNode 
+     * @param nvNode
      * @param x
      * @param y
      */
     public VertexSetupFrame(NetViewer netViewer, List<NetViewerNode> nvNodes) {
-        this.nvNodes = nvNodes;   
-        this.netViewer = netViewer;  
-        
-        setAlwaysOnTop(true);            
-        
-        initComponents();          
-        
+        LOGGER.info("Initializing VertexSetupFrame");
+        this.nvNodes = nvNodes;
+        this.netViewer = netViewer;
+
+        setAlwaysOnTop(true);
+
+        initComponents();
+
         loadProperties();
-                
-        addWindowListener(new MonaLisaWindowListener(netViewer));        
+
+        addWindowListener(new MonaLisaWindowListener(netViewer));
     }
 
     private void loadProperties() {
-        if(nvNodes.size() == 1) {
+        if(nvNodes.size() == 1)
             loadPropertiesForSingleNode();
-        } else if(nvNodes.size() > 1)
+        else if(nvNodes.size() > 1)
             loadPropertiesForNodeSet();
     }
-    
+
     private void loadPropertiesForNodeSet() {
+        LOGGER.debug("Loading properties for multiple vertices");
         vertexNameLabel.setText("Multi selection");
         vertexTypeLabel.setText("");
         vertexTypeLabel.setEnabled(false);
@@ -66,34 +71,36 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         polygoneRadioButton.setEnabled(false);
         polygoneRadioButton.setSelected(false);
         cornerSpinner.setEnabled(false);
-        
+
         showColorLabel.setForeground(nvNodes.get(0).getColor());
-        showColorLabel.setBackground(nvNodes.get(0).getColor());   
+        showColorLabel.setBackground(nvNodes.get(0).getColor());
         showStrokeColorLabel.setForeground(nvNodes.get(0).getStrokeColor());
-        showStrokeColorLabel.setBackground(nvNodes.get(0).getStrokeColor());  
-        
-        SE.setSelected(true);        
-        
+        showStrokeColorLabel.setBackground(nvNodes.get(0).getStrokeColor());
+
+        SE.setSelected(true);
+
         vertexNameTextField.setText("");
         vertexNameTextField.setEnabled(false);
         tokensTextField.setText("0");
-        tokensTextField.setEnabled(false);        
+        tokensTextField.setEnabled(false);
         vertexNoteTextArea.setText("");
         vertexNoteTextArea.setEnabled(false);
-   
+
         if(netViewer.getProject().getPetriNet().getCompartments().size() > 0) {
             for(Compartment c : netViewer.getProject().getPetriNet().getCompartments()) {
                 compartmentCb.addItem(c);
-            }                
-        }            
+            }
+        }
+        LOGGER.debug("Successfully loaded properties for multiple vertices");
     }
-    
+
     /**
      * Load the properties from the NetViewerNode.
      */
     private void loadPropertiesForSingleNode() {
+        LOGGER.debug("Loading properties for single vertex");
         NetViewerNode nvNode = nvNodes.get(0);
-                
+
         vertexNameLabel.setText(nvNode.getName());
         vertexTypeLabel.setText("["+nvNode.getReadableNodeType()+"]");
         if(nvNode.getCorners() == 0) {
@@ -103,11 +110,11 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         }
         cornerSpinner.setValue((nvNode.getCorners() == 0) ? 4 : nvNode.getCorners());
         showColorLabel.setForeground(nvNode.getColor());
-        showColorLabel.setBackground(nvNode.getColor());        
+        showColorLabel.setBackground(nvNode.getColor());
         showStrokeColorLabel.setForeground(nvNode.getStrokeColor());
-        showStrokeColorLabel.setBackground(nvNode.getStrokeColor());            
+        showStrokeColorLabel.setBackground(nvNode.getStrokeColor());
         vertexNameTextField.setText(nvNode.getName());
-        
+
         if(nvNode.getNodeType().equals(NetViewer.PLACE)) {
             tokensTextField.setText(Long.toString(nvNode.getTokens()));
             tokensTextField.setEnabled(true);
@@ -115,7 +122,7 @@ public class VertexSetupFrame extends javax.swing.JFrame {
             tokensTextField.setText("0");
             tokensTextField.setEnabled(false);
         }
-        
+
         if(nvNode.hasProperty("toolTip")) {
             vertexNoteTextArea.setText((String) nvNode.getProperty("toolTip"));
         }
@@ -164,18 +171,19 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         if(netViewer.getProject().getPetriNet().getCompartments().size() > 0) {
             for(Compartment c : netViewer.getProject().getPetriNet().getCompartments()) {
                 compartmentCb.addItem(c);
-            }                
+            }
 
             UniquePetriNetEntity upne = netViewer.getProject().getPetriNet().findPlace(nvNode.getId());
             if(upne == null) {
                 upne = netViewer.getProject().getPetriNet().findTransition(nvNode.getId());
-            }                
-            if(netViewer.getProject().getPetriNet().getCompartmentMap().containsKey(upne)) {                    
+            }
+            if(netViewer.getProject().getPetriNet().getCompartmentMap().containsKey(upne)) {
                 compartmentCb.setSelectedItem(netViewer.getProject().getPetriNet().getCompartmentMap().get(upne));
             }
-        }    
+        }
+        LOGGER.debug("Successfully loaded properties for single vertex");
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -582,12 +590,13 @@ public class VertexSetupFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        LOGGER.info("Saving vertex properties");
         int corners = 0;
         if(circleRadioButon.isSelected())
             corners = 0;
         else if(polygoneRadioButton.isSelected())
-            corners = (Integer)cornerSpinner.getValue();        
-        
+            corners = (Integer)cornerSpinner.getValue();
+
         Position lablePosition = Position.CNTR;
         if(C.isSelected())
             lablePosition = Position.CNTR;
@@ -606,21 +615,22 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         else if(SW.isSelected())
             lablePosition = Position.SW;
         else if(W.isSelected())
-            lablePosition = Position.W;        
-        
+            lablePosition = Position.W;
+
         Long tokens;
-        
+
         try {
             tokens = Long.valueOf(tokensTextField.getText());
         } catch(NumberFormatException e) {
-            String message = "The given input of tokens is not a valid number";            
-            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);               
+            String message = "The given input of tokens is not a valid number";
+            LOGGER.error(message, e);
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         boolean error = false;
         if(nvNodes.size() == 1) {
-           error = !netViewer.writeVertexSetup(nvNodes.get(0), showColorLabel.getForeground(), showStrokeColorLabel.getForeground() , corners, vertexNameTextField.getText(), tokens, vertexNoteTextArea.getText(), lablePosition, (Compartment) compartmentCb.getSelectedItem()); 
+           error = !netViewer.writeVertexSetup(nvNodes.get(0), showColorLabel.getForeground(), showStrokeColorLabel.getForeground() , corners, vertexNameTextField.getText(), tokens, vertexNoteTextArea.getText(), lablePosition, (Compartment) compartmentCb.getSelectedItem());
         }
         else {
             for(NetViewerNode nvNode : nvNodes) {
@@ -629,12 +639,13 @@ public class VertexSetupFrame extends javax.swing.JFrame {
                 }
             }
         }
-        
+
         if(!error) {
             this.dispose();
         } else {
-            String message = "A place or transition with the given name already exists";            
-            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);            
+            String message = "A place or transition with the given name already exists";
+            LOGGER.error("A place or transition with the given name already exists");
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 

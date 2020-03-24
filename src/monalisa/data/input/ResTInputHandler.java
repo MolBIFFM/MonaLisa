@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
  */
 public final class ResTInputHandler implements TInputHandler {
 
-    private static final Logger LOGGER = LogManager.getLogger(ApnnInputHandler.class);
+    private static final Logger LOGGER = LogManager.getLogger(ResTInputHandler.class);
 
     @Override
     public boolean isKnownFile(File file) throws IOException {

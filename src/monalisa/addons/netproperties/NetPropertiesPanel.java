@@ -643,7 +643,7 @@ public class NetPropertiesPanel extends AddonPanel {
     }//GEN-LAST:event_jButtonCheckAlgorithmsActionPerformed
 
     private void helpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpButtonActionPerformed
-        HelpDialog hd = new HelpDialog();
+        NetPropertyHelpDialog hd = new NetPropertyHelpDialog();
         hd.setVisible(true);
     }//GEN-LAST:event_helpButtonActionPerformed
 

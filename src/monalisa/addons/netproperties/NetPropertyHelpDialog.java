@@ -15,7 +15,7 @@ import monalisa.util.MonaLisaHyperlinkListener;
  *
  * @author jens
  */
-public class HelpDialog extends javax.swing.JFrame {
+public class NetPropertyHelpDialog extends javax.swing.JFrame {
 
     private static final ResourceManager resources = ResourceManager.instance();
     private static final StringResources strings = resources.getDefaultStrings();    
@@ -25,7 +25,7 @@ public class HelpDialog extends javax.swing.JFrame {
     /**
      * Creates new form HelpDialog
      */
-    public HelpDialog() {
+    public NetPropertyHelpDialog() {
         setPreferredSize(new Dimension(400,500));
         setSize(new Dimension(400,500));
         setTitle("NetProperties - Help");

@@ -332,9 +332,9 @@ public class AnnotationsPanel extends AddonPanel {
             UniquePetriNetEntity upe;
 
             if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
+                upe = pnf.findTransition(selectedNV.getId());
             } else {
-                upe = petriNet.findPlace(selectedNV.getId());
+                upe = pnf.findPlace(selectedNV.getId());
             }
 
             ((List<CVTerm>)upe.getProperty(MIRIAM_BIO_QUALIFIERS)).remove(mw.getCVTerm());
@@ -617,9 +617,9 @@ public class AnnotationsPanel extends AddonPanel {
                 UniquePetriNetEntity upe;
 
                 if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                    upe = petriNet.findTransition(selectedNV.getId());
+                    upe = pnf.findTransition(selectedNV.getId());
                 } else {
-                    upe = petriNet.findPlace(selectedNV.getId());
+                    upe = pnf.findPlace(selectedNV.getId());
                 }
                 List<CVTerm> cvts = (List<CVTerm>) upe.getProperty(MIRIAM_BIO_QUALIFIERS);
                 // Same identifier = update the uri
@@ -694,9 +694,9 @@ public class AnnotationsPanel extends AddonPanel {
                 UniquePetriNetEntity upe;
 
                 if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                    upe = petriNet.findTransition(selectedNV.getId());
+                    upe = pnf.findTransition(selectedNV.getId());
                 } else {
-                    upe = petriNet.findPlace(selectedNV.getId());
+                    upe = pnf.findPlace(selectedNV.getId());
                 }
 
                 if(!upe.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
@@ -730,9 +730,9 @@ public class AnnotationsPanel extends AddonPanel {
 
             UniquePetriNetEntity upe;
             if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
+                upe = pnf.findTransition(selectedNV.getId());
             } else {
-                upe = petriNet.findPlace(selectedNV.getId());
+                upe = pnf.findPlace(selectedNV.getId());
             }
 
             upe.putProperty(SBO_TERM, (String)sboCb.getSelectedItem());
@@ -750,9 +750,9 @@ public class AnnotationsPanel extends AddonPanel {
 
             UniquePetriNetEntity upe;
             if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
+                upe = pnf.findTransition(selectedNV.getId());
             } else {
-                upe = petriNet.findPlace(selectedNV.getId());
+                upe = pnf.findPlace(selectedNV.getId());
             }
 
             upe.removeProperty(SBO_TERM);

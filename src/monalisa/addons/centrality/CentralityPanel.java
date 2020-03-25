@@ -452,16 +452,16 @@ public class CentralityPanel extends AddonPanel {
      */
     private void computeRankingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeRankingButtonActionPerformed
         LOGGER.info("Computing rankings of nodes");
-        adjMatrixPlaces = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.PLACES);
-        adjMatrixTransitions = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.TRANSITIONS);
+        adjMatrixPlaces = new AdjacencyMatrix(this.pnf.places(), this.pnf.transitions(), AdjacencyMatrix.PLACES);
+        adjMatrixTransitions = new AdjacencyMatrix(this.pnf.places(), this.pnf.transitions(), AdjacencyMatrix.TRANSITIONS);
 
-        cc = new ClosenessCentrality(this.petriNet);
+        cc = new ClosenessCentrality(this.pnf);
         cc.calculate();
-        ecc = new EccentricityCentrality(this.petriNet);
+        ecc = new EccentricityCentrality(this.pnf);
         ecc.calculate();
-        bc = new BetweennessCentrality(this.petriNet);
+        bc = new BetweennessCentrality(this.pnf);
         bc.calculate();
-        ec = new EigenvectorCentrality(this.petriNet);
+        ec = new EigenvectorCentrality(this.pnf);
         ec.calculate();
 
         int pL = adjMatrixPlaces.getLength();
@@ -554,7 +554,7 @@ public class CentralityPanel extends AddonPanel {
         //Why do we calculate these again on every seletion?
         if (getComboElement().equals("Closeness")) {
             LOGGER.info("New centrality for heatmap will be closeness");
-            cc = new ClosenessCentrality(this.petriNet);
+            cc = new ClosenessCentrality(this.pnf);
             cc.calculate();
             Map<Integer, Double> rankingTransitions = cc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = cc.getRankingForPlaces();
@@ -562,7 +562,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to closeness");
         } else if (getComboElement().equals("Eccentricity")) {
             LOGGER.info("New centrality for heatmap will be eccentricity");
-            ecc = new EccentricityCentrality(this.petriNet);
+            ecc = new EccentricityCentrality(this.pnf);
             ecc.calculate();
             Map<Integer, Double> rankingTransitions = ecc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ecc.getRankingForPlaces();
@@ -570,7 +570,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to eccentricity");
         } else if (getComboElement().equals("Betweenness")) {
             LOGGER.info("New centrality for heatmap will be betweenness");
-            bc = new BetweennessCentrality(this.petriNet);
+            bc = new BetweennessCentrality(this.pnf);
             bc.calculate();
             Map<Integer, Double> rankingTransitions = bc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = bc.getRankingForPlaces();
@@ -578,7 +578,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to betweenness");
         } else if (getComboElement().equals("Eigenvector")) {
             LOGGER.info("New centrality for heatmap is eigenvector");
-            ec = new EigenvectorCentrality(this.petriNet);
+            ec = new EigenvectorCentrality(this.pnf);
             ec.calculate();
             Map<Integer, Double> rankingTransitions = ec.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ec.getRankingForPlaces();

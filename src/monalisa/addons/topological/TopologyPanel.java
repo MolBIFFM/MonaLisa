@@ -47,33 +47,22 @@ import org.jfree.data.category.DefaultCategoryDataset;
  */
 public class TopologyPanel extends AddonPanel {
 
-    private Map<Integer, Integer> ndPlacesAll;
-    private Map<Integer, Integer> ndPlacesIn;
-    private Map<Integer, Integer> ndPlacesOut;
-    private Map<Integer, Integer> ndTransitionsAll;
-    private Map<Integer, Integer> ndTransitionsIn;
-    private Map<Integer, Integer> ndTransitionsOut;
-
-    private Map<Integer, Double> freqPlacesAll;
-    private Map<Integer, Double> freqPlacesIn;
-    private Map<Integer, Double> freqPlacesOut;
-    private Map<Integer, Double> freqTransitionsAll;
-    private Map<Integer, Double> freqTransitionsIn;
-    private Map<Integer, Double> freqTransitionsOut;
-
     private final DefaultTableModel modelPlaces;
     private final DefaultTableModel modelTransitions;
+
+    private final TopologyUtils topologyUtils;
 
     private static final Logger LOGGER = LogManager.getLogger(TopologyPanel.class);
 
     /**
      * Creates new form TopologcialPanel
      */
-    public TopologyPanel(final NetViewer netViewer, PetriNetFacade petriNet){
-        super(netViewer, petriNet, "Topology");
+    public TopologyPanel(final NetViewer netViewer, PetriNetFacade pnf){
+        super(netViewer, pnf, "Topology");
         LOGGER.info("Initializing TopologyPanel");
         initComponents();
 
+        topologyUtils = new TopologyUtils();
         modelPlaces = (DefaultTableModel) placesTable.getModel();
         placesTable.addMouseListener(new MouseAdapter(){
             @Override
@@ -96,21 +85,21 @@ public class TopologyPanel extends AddonPanel {
             }
         });
 
-        modelTransitions = (DefaultTableModel) transitionsTabel.getModel();
-        transitionsTabel.addMouseListener(new MouseAdapter(){
+        modelTransitions = (DefaultTableModel) transitionsTable.getModel();
+        transitionsTable.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                if(transitionsTabel.getRowCount() > 0) {
+                if(transitionsTable.getRowCount() > 0) {
                     LOGGER.debug("Transition selected in TopologyPanel");
                     //get the selected column
-                    int col = transitionsTabel.columnAtPoint(e.getPoint());
-                    int row = transitionsTabel.rowAtPoint(e.getPoint());
+                    int col = transitionsTable.columnAtPoint(e.getPoint());
+                    int row = transitionsTable.rowAtPoint(e.getPoint());
                     //respond only if fist column is selected + double click
                     if (col == 0){
                         if(e.getClickCount() == 1) {
                             LOGGER.debug("Reflecting transition selection in NetViewer");
                             netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTabel.getValueAt(row, col)).getMasterNode() , true);
+                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode() , true);
                         }
                     }
                     LOGGER.debug("Handled transition selection in TopologyPanel");
@@ -138,7 +127,7 @@ public class TopologyPanel extends AddonPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        transitionsTabel = new javax.swing.JTable();
+        transitionsTable = new javax.swing.JTable();
         exportButton = new javax.swing.JButton();
         spacerLeft = new javax.swing.JPanel();
         spacerRight = new javax.swing.JPanel();
@@ -245,8 +234,8 @@ public class TopologyPanel extends AddonPanel {
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(350, 300));
 
-        transitionsTabel.setAutoCreateRowSorter(true);
-        transitionsTabel.setModel(new javax.swing.table.DefaultTableModel(
+        transitionsTable.setAutoCreateRowSorter(true);
+        transitionsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -269,15 +258,15 @@ public class TopologyPanel extends AddonPanel {
                 return canEdit [columnIndex];
             }
         });
-        transitionsTabel.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        transitionsTabel.setColumnSelectionAllowed(true);
-        jScrollPane2.setViewportView(transitionsTabel);
-        transitionsTabel.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (transitionsTabel.getColumnModel().getColumnCount() > 0) {
-            transitionsTabel.getColumnModel().getColumn(0).setPreferredWidth(250);
-            transitionsTabel.getColumnModel().getColumn(1).setPreferredWidth(50);
-            transitionsTabel.getColumnModel().getColumn(2).setPreferredWidth(30);
-            transitionsTabel.getColumnModel().getColumn(3).setPreferredWidth(30);
+        transitionsTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        transitionsTable.setColumnSelectionAllowed(true);
+        jScrollPane2.setViewportView(transitionsTable);
+        transitionsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (transitionsTable.getColumnModel().getColumnCount() > 0) {
+            transitionsTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+            transitionsTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+            transitionsTable.getColumnModel().getColumn(2).setPreferredWidth(30);
+            transitionsTable.getColumnModel().getColumn(3).setPreferredWidth(30);
         }
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -342,13 +331,13 @@ public class TopologyPanel extends AddonPanel {
         LOGGER.info("Initializing TopologicalFrame to show plots");
         TopologicalFrame tpf = new TopologicalFrame();
         LOGGER.info("Adding plots to TopologicalFrame");
-        tpf.mainTP.addTab("Species (in+out)", new ChartFrame("dummy", createChart(freqPlacesAll)).getRootPane());
-        tpf.mainTP.addTab("Species (in)", new ChartFrame("dummy", createChart(freqPlacesIn)).getRootPane());
-        tpf.mainTP.addTab("Species (out)", new ChartFrame("dummy", createChart(freqPlacesOut)).getRootPane());
+        tpf.mainTP.addTab("Species (in+out)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("PlacesAll"))).getRootPane());
+        tpf.mainTP.addTab("Species (in)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("PlacesIn"))).getRootPane());
+        tpf.mainTP.addTab("Species (out)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("PlacesOut"))).getRootPane());
 
-        tpf.mainTP.addTab("Reactions (in+out)", new ChartFrame("dummy", createChart(freqTransitionsAll)).getRootPane());
-        tpf.mainTP.addTab("Reactions (in)", new ChartFrame("dummy", createChart(freqTransitionsIn)).getRootPane());
-        tpf.mainTP.addTab("Reactions (out)", new ChartFrame("dummy", createChart(freqTransitionsOut)).getRootPane());
+        tpf.mainTP.addTab("Reactions (in+out)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("TransitionsAll"))).getRootPane());
+        tpf.mainTP.addTab("Reactions (in)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("TransitionsIn"))).getRootPane());
+        tpf.mainTP.addTab("Reactions (out)", new ChartFrame("dummy", createChart(topologyUtils.getFreqMap("TransitionsOut"))).getRootPane());
 
         tpf.setVisible(true);
         LOGGER.info("Successfully initialized TopologicalFrame to show plots");
@@ -381,7 +370,7 @@ public class TopologyPanel extends AddonPanel {
         }
 
     /**
-     * Calculates the degrees
+     * Calls function to compute the degrees
      * @param evt
      */
     private void calcDegreesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcDegreesActionPerformed
@@ -396,92 +385,28 @@ public class TopologyPanel extends AddonPanel {
             for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                 modelTransitions.removeRow(i);
             }
-        }
-
-        ndPlacesAll = new HashMap<>();
-        ndPlacesIn = new HashMap<>();
-        ndPlacesOut = new HashMap<>();
-        ndTransitionsAll = new HashMap<>();
-        ndTransitionsIn = new HashMap<>();
-        ndTransitionsOut = new HashMap<>();
-
-        freqPlacesAll = new HashMap<>();
-        freqPlacesIn = new HashMap<>();
-        freqPlacesOut = new HashMap<>();
-        freqTransitionsAll = new HashMap<>();
-        freqTransitionsIn = new HashMap<>();
-        freqTransitionsOut = new HashMap<>();
-
+        } 
+        topologyUtils.computeDegrees(pnf);
         Integer all, in, out;
-        for(Place p : petriNet.places()) {
+        for(Place p : pnf.places()) {
             in = p.inputs().size();
             out = p.outputs().size();
             all = p.inputs().size() + p.outputs().size();
-
-            if(!ndPlacesAll.containsKey(all))
-                ndPlacesAll.put(all, 0);
-            ndPlacesAll.put(all, ndPlacesAll.get(all)+1);
-
-            if(!ndPlacesIn.containsKey(in))
-                ndPlacesIn.put(in, 0);
-            ndPlacesIn.put(in, ndPlacesIn.get(in)+1);
-
-            if(!ndPlacesOut.containsKey(out))
-                ndPlacesOut.put(out, 0);
-            ndPlacesOut.put(out, ndPlacesOut.get(out)+1);
-
             modelPlaces.addRow(new Object[]{netViewer.getNodeFromPlaceId(p.id()),all,in,out});
         }
-        calcFreq(ndPlacesAll, freqPlacesAll, (double) petriNet.places().size());
-        calcFreq(ndPlacesIn, freqPlacesIn, (double) petriNet.places().size());
-        calcFreq(ndPlacesOut, freqPlacesOut, (double) petriNet.places().size());
-
-        for(Transition t : petriNet.transitions()) {
+        for(Transition t : pnf.transitions()) {
             in = t.inputs().size();
             out = t.outputs().size();
             all = t.inputs().size() + t.outputs().size();
-
-            if(!ndTransitionsAll.containsKey(all))
-                ndTransitionsAll.put(all, 0);
-            ndTransitionsAll.put(all, ndTransitionsAll.get(all)+1);
-
-            if(!ndTransitionsIn.containsKey(in))
-                ndTransitionsIn.put(in, 0);
-            ndTransitionsIn.put(in, ndTransitionsIn.get(in)+1);
-
-            if(!ndTransitionsOut.containsKey(out))
-                ndTransitionsOut.put(out, 0);
-            ndTransitionsOut.put(out, ndTransitionsOut.get(out)+1);
-
-            modelTransitions.addRow(new Object[]{netViewer.getNodeFromTransitionId(t.id()),all,in,out});
+            modelTransitions.addRow(new Object[]{netViewer.getNodeFromTransitionId(t.id()),all,in,out});            
         }
-        calcFreq(ndTransitionsAll, freqTransitionsAll, (double)petriNet.transitions().size());
-        calcFreq(ndTransitionsIn, freqTransitionsIn, (double) petriNet.transitions().size());
-        calcFreq(ndTransitionsOut, freqTransitionsOut, (double) petriNet.transitions().size());
-
-        if(petriNet.transitions().size() > 0 && petriNet.places().size() > 0) {
+        if(pnf.transitions().size() > 0 && pnf.places().size() > 0) {
             showPlotsButton.setEnabled(true);
             exportButton.setEnabled(true);
         }
         LOGGER.info("Successfully calculated vertex degrees");
     }//GEN-LAST:event_calcDegreesActionPerformed
 
-    /**
-     * Calculates the p(k) values
-     * @param ndMap
-     * @param freqMap
-     * @param elementCounter
-     */
-    private void calcFreq(Map<Integer, Integer> ndMap, Map<Integer, Double> freqMap, double elementCounter) {
-        LOGGER.debug("Calculating frequency");
-        List<Integer> listOfDegrees = new ArrayList<>(ndMap.keySet());
-        Collections.sort(listOfDegrees);
-
-        for (Integer i : listOfDegrees) {
-            freqMap.put(i, (double) ndMap.get(i) / elementCounter);
-        }
-        LOGGER.debug("Successfully calculated frequency");
-    }
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         LOGGER.info("Exporting vertex degree distributions");
@@ -491,43 +416,16 @@ public class TopologyPanel extends AddonPanel {
         fc.setApproveButtonText("Export here");
 
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            writeCSVtoFile(freqPlacesAll, new File(fc.getSelectedFile()+"/places_in_out.csv"));
-            writeCSVtoFile(freqPlacesIn, new File(fc.getSelectedFile().getAbsolutePath()+"/places_in.csv"));
-            writeCSVtoFile(freqPlacesOut, new File(fc.getSelectedFile().getAbsolutePath()+"/places_out.csv"));
-            writeCSVtoFile(freqTransitionsAll, new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in_out.csv"));
-            writeCSVtoFile(freqTransitionsIn, new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in.csv"));
-            writeCSVtoFile(freqTransitionsOut, new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesAll"), new File(fc.getSelectedFile()+"/places_in_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesIn"), new File(fc.getSelectedFile().getAbsolutePath()+"/places_in.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesOut"), new File(fc.getSelectedFile().getAbsolutePath()+"/places_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsAll"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsIn"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsOut"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_out.csv"));
         }
         LOGGER.info("Successfully exported vertex degree distributions");
     }//GEN-LAST:event_exportButtonActionPerformed
 
-    /**
-     * Export of the node degree statistics
-     */
-    private void writeCSVtoFile(Map<Integer, Double> fraqMap, File file) {
-        LOGGER.debug("Writing vertex degree distribution to file '" + file.getName() + "'");
-        List<Integer> listOfDegrees = new ArrayList<>(fraqMap.keySet());
-        Collections.sort(listOfDegrees);
-
-        Writer writer = null;
-
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
-            writer.write("p\tp(k)\n");
-            for(Integer i : listOfDegrees) {
-                writer.write(i+"\t"+fraqMap.get(i)+"\n");
-            }
-            LOGGER.debug("Successfully wrote vertex degree distribution to file '" + file.getName() + "'");
-        } catch (IOException ex) {
-            LOGGER.error("Issue while writing vertex degree distribution to file '" + file.getName() + "': ", ex);
-        } finally {
-            try {
-                writer.close();
-            } catch (Exception ex) {
-                LOGGER.error("Issue while closing writer :", ex);
-            }
-        }
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton calcDegrees;
@@ -543,26 +441,16 @@ public class TopologyPanel extends AddonPanel {
     private javax.swing.JPanel spacerLeft;
     private javax.swing.JPanel spacerRight;
     private javax.swing.JPanel spacerTop;
-    private javax.swing.JTable transitionsTabel;
+    private javax.swing.JTable transitionsTable;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void netChanged() {
         LOGGER.debug("Handling net change for TopologyPanel");
-        if(ndPlacesAll != null) {
-            ndPlacesAll = new HashMap<>();
-            ndPlacesIn = new HashMap<>();
-            ndPlacesOut = new HashMap<>();
-            ndTransitionsAll = new HashMap<>();
-            ndTransitionsIn = new HashMap<>();
-            ndTransitionsOut = new HashMap<>();
+        if(topologyUtils.getNdMap("PlacesAll") != null) {
 
-            freqPlacesAll = new HashMap<>();
-            freqPlacesIn = new HashMap<>();
-            freqPlacesOut = new HashMap<>();
-            freqTransitionsAll = new HashMap<>();
-            freqTransitionsIn = new HashMap<>();
-            freqTransitionsOut = new HashMap<>();
+            topologyUtils.resetNdMaps();
+            topologyUtils.resetFreqMaps();
 
             showPlotsButton.setEnabled(false);
             exportButton.setEnabled(false);

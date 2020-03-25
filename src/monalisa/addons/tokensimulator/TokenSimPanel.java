@@ -138,7 +138,7 @@ public class TokenSimPanel extends AddonPanel {
                 */
                 ts.marking.putAll(ts.customMarkingsMap.get(markingName));
                 //re-compute active transitions
-                ts.tokenSim.addTransitionsToCheck(petriNet.transitions().toArray(new Transition[0]));
+                ts.tokenSim.addTransitionsToCheck(pnf.transitions().toArray(new Transition[0]));
                 ts.tokenSim.computeActiveTransitions();
                 //clear history
                 ts.historyListModel.clear();
@@ -275,8 +275,8 @@ public class TokenSimPanel extends AddonPanel {
                         JOptionPane.showMessageDialog(null, strings.get("TSMarkingNameAlreadyExists"));
                     }
                     else{
-                        Map<Integer, Long> tmpMarking = new HashMap<>(petriNet.places().size());
-                        for (Place place : petriNet.places()){
+                        Map<Integer, Long> tmpMarking = new HashMap<>(pnf.places().size());
+                        for (Place place : pnf.places()){
                             tmpMarking.put(place.id(), ts.tokenSim.getTokens(place.id()));
                         }
                         ts.customMarkingsMap.put(markingName, tmpMarking);

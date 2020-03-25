@@ -501,7 +501,7 @@ public class NetPropertiesPanel extends AddonPanel {
         Color color = jLabelTransitionWithoutPrePlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPrePlace.isSelected()) {
             LOGGER.info("Colouring transitions without pre-places");
-            transitionWithoutPrePlace = new TransitionWithoutPrePlace(petriNet);
+            transitionWithoutPrePlace = new TransitionWithoutPrePlace(pnf);
             transitionWithoutPrePlace.runAlgorithm();
 
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
@@ -530,7 +530,7 @@ public class NetPropertiesPanel extends AddonPanel {
         Color color = jLabelTransitionWithoutPostPlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPostPlace.isSelected()) {
             LOGGER.info("Colouring transitions without post-places");
-            transitionWithoutPostPlace = new TransitionWithoutPostPlace(petriNet);
+            transitionWithoutPostPlace = new TransitionWithoutPostPlace(pnf);
             transitionWithoutPostPlace.runAlgorithm();
 
             for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
@@ -559,7 +559,7 @@ public class NetPropertiesPanel extends AddonPanel {
         Color color = jLabelPlaceWithoutPreTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPreTransition.isSelected()) {
             LOGGER.info("Colouring places without pre-transitions");
-            placeWithoutPreTransition = new PlaceWithoutPreTransition(petriNet);
+            placeWithoutPreTransition = new PlaceWithoutPreTransition(pnf);
             placeWithoutPreTransition.runAlgorithm();
 
             for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
@@ -588,7 +588,7 @@ public class NetPropertiesPanel extends AddonPanel {
         Color color = jLabelPlaceWithoutPostTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPostTransition.isSelected()) {
             LOGGER.info("Colouring places without post-transitions");
-            placeWithoutPostTransition = new PlaceWithoutPostTransition(petriNet);
+            placeWithoutPostTransition = new PlaceWithoutPostTransition(pnf);
             placeWithoutPostTransition.runAlgorithm();
 
             for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
@@ -628,7 +628,7 @@ public class NetPropertiesPanel extends AddonPanel {
         LOGGER.info("Checking selected properties");
         if (jButtonCheckAlgorithmIsSelected == false) {
             netPropertiesPanelLogic = new NetPropertiesPanelLogic(algorithmMap, labelMap);
-            if (petriNet.places().size() + petriNet.transitions().size() == 0) { //checks if there is a Petri net selected
+            if (pnf.places().size() + pnf.transitions().size() == 0) { //checks if there is a Petri net selected
                 LOGGER.info("No petri net selected to check for properties");
                 netPropertiesPanelLogic.checkAlgorithms(0); //set the return text to 'no net'
                 return;
@@ -702,15 +702,15 @@ public class NetPropertiesPanel extends AddonPanel {
      * @return
      */
     private HashMap<JCheckBox, NetPropertyAlgorithm> getAlgorithmMap() {
-        ordinary = new Ordinary(petriNet);
-        homogenous = new Homogenous(petriNet);
-        nonBlockingMultiplicity = new NonBlockingMultiplicity(petriNet);
-        pure = new Pure(petriNet);
-        conservative = new Conservative(petriNet);
-        subConservative = new SubConservative(petriNet);
-        staticConflictFree = new StaticConflictFree(petriNet);
-        connected = new Connected(petriNet);
-        stronglyConnected = new StronglyConnected(petriNet);
+        ordinary = new Ordinary(pnf);
+        homogenous = new Homogenous(pnf);
+        nonBlockingMultiplicity = new NonBlockingMultiplicity(pnf);
+        pure = new Pure(pnf);
+        conservative = new Conservative(pnf);
+        subConservative = new SubConservative(pnf);
+        staticConflictFree = new StaticConflictFree(pnf);
+        connected = new Connected(pnf);
+        stronglyConnected = new StronglyConnected(pnf);
         algorithmMap.put(jCheckBoxOrdinary, ordinary);
         algorithmMap.put(jCheckBoxHomogenous, homogenous);
         algorithmMap.put(jCheckBoxNonBlockingMultiplicity, nonBlockingMultiplicity);
@@ -724,10 +724,10 @@ public class NetPropertiesPanel extends AddonPanel {
     }
 
     private HashMap<JCheckBox, NetPropertyAlgorithm> getOneSidedAlgorithmMap() {
-        transitionWithoutPrePlace = new TransitionWithoutPrePlace(petriNet);
-        transitionWithoutPostPlace = new TransitionWithoutPostPlace(petriNet);
-        placeWithoutPreTransition = new PlaceWithoutPreTransition(petriNet);
-        placeWithoutPostTransition = new PlaceWithoutPostTransition(petriNet);
+        transitionWithoutPrePlace = new TransitionWithoutPrePlace(pnf);
+        transitionWithoutPostPlace = new TransitionWithoutPostPlace(pnf);
+        placeWithoutPreTransition = new PlaceWithoutPreTransition(pnf);
+        placeWithoutPostTransition = new PlaceWithoutPostTransition(pnf);
         oneSidedAlgorithmMap.put(jCheckBoxTransitionWithoutPrePlace, transitionWithoutPrePlace);
         oneSidedAlgorithmMap.put(jCheckBoxTransitionWithoutPostPlace, transitionWithoutPostPlace);
         oneSidedAlgorithmMap.put(jCheckBoxPlaceWithoutPreTransition, placeWithoutPreTransition);

@@ -32,7 +32,7 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     protected static final StringResources strings = resources.getDefaultStrings();
 
     protected NetViewer netViewer;
-    protected PetriNetFacade petriNet;
+    protected PetriNetFacade pnf;
     protected String addonName;
 
    /**
@@ -41,7 +41,7 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     public AddonPanel(NetViewer netViewer, PetriNetFacade pnf, String addonName) {
         LOGGER.info("Adding '" + addonName + "' to ToolBar");
         this.netViewer = netViewer;
-        this.petriNet = pnf;
+        this.pnf = pnf;
         this.addonName = addonName;
 
         this.netViewer.addTabToMenuBar(addonName, this);

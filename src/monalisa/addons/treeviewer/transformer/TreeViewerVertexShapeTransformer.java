@@ -11,7 +11,6 @@
 package monalisa.addons.treeviewer.transformer;
 
 import java.awt.Shape;
-import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.transformer.NetViewerVertexShapeFactory;
 import monalisa.addons.treeviewer.TreeViewerNode;
 import org.apache.commons.collections15.Transformer;

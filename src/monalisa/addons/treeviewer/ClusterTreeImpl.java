@@ -11,11 +11,8 @@ package monalisa.addons.treeviewer;
 
 import de.molbi.mjcl.clustering.ds.Cluster;
 import de.molbi.mjcl.clustering.ds.ClusterTree;
-import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import de.molbi.mjcl.clustering.ds.Properties;
 import edu.uci.ics.jung.graph.DelegateForest;
-import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.*;
 import monalisa.tools.cluster.ClusterTreeNodeProperties;
 import org.apache.logging.log4j.Logger;
@@ -71,7 +68,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
         this.tree = ct;
         this.threshold = threshold;
 
-        TreeViewerNode tvn = new TreeViewerNode(String.valueOf(ct.getRoot().getID()), TreeViewer.CLUSTERNODE);
+        TreeViewerNode tvn = new TreeViewerNode(String.valueOf(ct.getRoot().getID()), TreeViewerNode.CLUSTERNODE);
         nodesMap.put(ct.getRoot().getID(), tvn);
 
         this.addVertex(tvn);
@@ -102,13 +99,13 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
                 mem = c.getMember(i);
 
                 if (tree.getNodeProperty(mem) != null) {
-                    tvnMem = new TreeViewerNode(String.valueOf(mem.getID()), TreeViewer.CLUSTERNODE, tree.getNodeProperty(mem).getTinvs());
+                    tvnMem = new TreeViewerNode(String.valueOf(mem.getID()), TreeViewerNode.CLUSTERNODE, tree.getNodeProperty(mem).getTinvs());
                 } else {
-                    tvnMem = new TreeViewerNode(String.valueOf(mem.getID()), TreeViewer.CLUSTERNODE);
+                    tvnMem = new TreeViewerNode(String.valueOf(mem.getID()), TreeViewerNode.CLUSTERNODE);
                 }
                 nodesMap.put(mem.getID(), tvnMem);
                 this.addVertex(tvnMem);
-                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewer.CLUSTEREDGE), tvnC, tvnMem);
+                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewerEdge.CLUSTEREDGE), tvnC, tvnMem);
                 goDeep(mem);
             }
         }
@@ -123,116 +120,6 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
         allNodes.add(tvnC);
         tvnC.setHeight(c.getDistanceToRoot());
 
-    }
-
-    /**
-     * redraw changes the look of the tree, without changing the structure or the
-     * order of the tree
-     *
-     * @param layout
-     */
-    public void redraw(TreeLayout<TreeViewerNode, TreeViewerEdge> layout) {
-        if (redrawed == false) {
-            redrawed = true;
-            LOGGER.info("Redrawing tree");
-            //Set Nodes on Distance to Root
-            for (TreeViewerNode tvn : allNodes) {
-                Point2D tvP = layout.transform(tvn);
-                Point.Double newcluster = new Point.Double();
-                //Distance is really small and +30 because root is 0.0
-                double parentY = tvn.getHeight() + 30;
-                newcluster.y = parentY;
-                newcluster.x = tvP.getX();
-                layout.setLocation(tvn, newcluster);
-            }
-            // get max Y value to set leafs on the same line (important for threshold after calculating
-            // to set leaves at same level)
-            double maxY = 0.0;
-            for (TreeViewerNode tvn : leafs) {
-                Point2D tvL = layout.transform(tvn);
-                double pointer = tvL.getY();
-                if (maxY <= pointer) {
-                    maxY = pointer;
-                }
-            }
-            //set all Leaves on max-Y (put them in one line after threshold)
-            for (TreeViewerNode tvn : leafs) {
-                Point2D tvL = layout.transform(tvn);
-                Point.Double newPointLeaf = new Point.Double();
-                if (tvL.getY() < maxY) {
-                    newPointLeaf.y = maxY;
-                    newPointLeaf.x = tvL.getX();
-                    layout.setLocation(tvn, newPointLeaf);
-                }
-            }
-
-            Double beforeNodeA = 0.0;
-            Double beforeNodeB = 0.0;
-            TreeViewerNode beforeTvnA = null;
-            TreeViewerNode beforeTvnB = null;
-            int counter = 0;
-            //create new list for edges which get delete
-            List<TreeViewerEdge> toDelete = new ArrayList<>();
-
-            Point.Double newPointNode1, newPointNode2, newPointOldNode;
-            Point2D tvnCTransform;
-            TreeViewerNode newNode1, newNode2;
-            TreeViewerEdge findEdge;
-
-            for (TreeViewerNode tvn : clusterNodes) {
-                Point2D tvnTransform = layout.transform(tvn);
-                Collection<TreeViewerNode> children = this.getChildren(tvn);
-                //get Y- Cordinates from Children to set nodes in same lines
-                for (TreeViewerNode tvnC : children) {
-                    //list to remove old Edges from the Tree between Nodes
-                    findEdge = this.findEdge(tvn, tvnC);
-                    toDelete.add(findEdge);
-                    //saves the X Cordinates from first Children of the Node
-                    tvnCTransform = layout.transform(tvnC);
-                    if (counter == 0) {
-                        beforeNodeA = tvnCTransform.getX();
-                        beforeTvnA = tvnC;
-                        counter += 1;
-                        //saves from the second children
-                    } else if (counter == 1) {
-                        beforeNodeB = tvnCTransform.getX();
-                        beforeTvnB = tvnC;
-                        counter += 1;
-                    }
-                }
-                //set the new Points right and left of the Node
-                newPointNode1 = new Point.Double(beforeNodeA, tvnTransform.getY());
-                newPointNode2 = new Point.Double(beforeNodeB, tvnTransform.getY());
-
-                newNode1 = new TreeViewerNode(newPointNode1.toString(), TreeViewer.BENDNODE);
-                newNode2 = new TreeViewerNode(newPointNode2.toString(), TreeViewer.BENDNODE);
-
-                //add both new points (right and left)
-                this.addVertex(newNode1);
-                this.addVertex(newNode2);
-
-                //set old CusterNode in the middle of the two children
-                Double Zahl = (beforeNodeA + beforeNodeB) / 2;
-                newPointOldNode = new Point.Double(Zahl, tvnTransform.getY());
-                layout.setLocation(tvn, newPointOldNode);
-
-                //add edges between new and old node
-                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewer.BENDEDGE), tvn, newNode1);
-                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewer.BENDEDGE), tvn, newNode2);
-                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewer.CLUSTEREDGE), newNode1, beforeTvnA);
-                this.addEdge(new TreeViewerEdge(edgeCount++, TreeViewer.CLUSTEREDGE), newNode2, beforeTvnB);
-
-                //set new points to the layout
-                layout.setLocation(newNode1, newPointNode1);
-                layout.setLocation(newNode2, newPointNode2);
-                counter = 0;
-            }
-            //remove the old Edges
-            for (TreeViewerEdge tne : toDelete) {
-                this.removeEdge(tne, false);
-            }
-            LOGGER.info("Successfully redrawn tree");
-        }
     }
 
     // Collections.unmodifiableCollection() ensures that lists outsides the class do not

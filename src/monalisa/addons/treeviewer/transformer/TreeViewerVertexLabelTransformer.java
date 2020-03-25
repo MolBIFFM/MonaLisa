@@ -10,7 +10,6 @@
 
 package monalisa.addons.treeviewer.transformer;
 
-import monalisa.addons.treeviewer.TreeViewer;
 import monalisa.addons.treeviewer.TreeViewerNode;
 import org.apache.commons.collections15.Transformer;
 
@@ -22,7 +21,7 @@ public class TreeViewerVertexLabelTransformer implements Transformer<TreeViewerN
 
     @Override
     public String transform(TreeViewerNode n) {
-        if(n.getNodeType().equalsIgnoreCase(TreeViewer.CLUSTERNODE)) {
+        if(n.getNodeType().equalsIgnoreCase(TreeViewerNode.CLUSTERNODE)) {
             if(n.getTinvs().size() == 1) {
                 StringBuilder sb = new StringBuilder();       
                 sb.append("EM:");

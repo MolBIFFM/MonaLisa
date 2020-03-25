@@ -24,6 +24,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class TreeViewerNode {
     private static final long serialVersionUID = -5990160642604154557L;
+    public static final String CLUSTERNODE = "cn";
+    public static final String BENDNODE = "bn";
 
     private final String name;
     private final String nodeType;

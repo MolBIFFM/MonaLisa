@@ -20,6 +20,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class TreeViewerEdge {
     private static final long serialVersionUID = 8440480344225497981L;
+    public static final String CLUSTEREDGE = "ce";
+    public static final String BENDEDGE = "be";
 
     private final int id;
     private final String edgeType;

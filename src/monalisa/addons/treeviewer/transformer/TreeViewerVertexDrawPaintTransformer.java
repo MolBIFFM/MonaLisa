@@ -12,7 +12,6 @@ package monalisa.addons.treeviewer.transformer;
 
 import java.awt.Color;
 import java.awt.Paint;
-import monalisa.addons.treeviewer.TreeViewer;
 import monalisa.addons.treeviewer.TreeViewerNode;
 import org.apache.commons.collections15.Transformer;
 
@@ -26,7 +25,7 @@ public class TreeViewerVertexDrawPaintTransformer implements Transformer<TreeVie
     
     @Override
     public Paint transform(TreeViewerNode n) {
-        if(n.getNodeType().equalsIgnoreCase(TreeViewer.BENDNODE)) {
+        if(n.getNodeType().equalsIgnoreCase(TreeViewerNode.BENDNODE)) {
             return transparent;
         } else  {
             return Color.BLACK;

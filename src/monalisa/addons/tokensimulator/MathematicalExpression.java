@@ -164,14 +164,17 @@ public final class MathematicalExpression {
                     for (String v : variables.keySet()){
                         expBLeft.variable(v);
                     }                    
-                    leftPart = expBLeft.build();
-                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
-                    try {
-                        leftPart = new ExpressionBuilder("0").build();
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the first part of a mathematical expression", ex1);
+                    
+                    Expression leftPart = expBLeft.build();
+                    leftPart.setVariable(MathematicalExpression.PI, Math.PI);
+                    leftPart.setVariable(TIME_VAR, 0);
+                    
+                    for (String v : variables.keySet()){
+                        leftPart.setVariable(v, 0);
                     }
-                    LOGGER.error("Invalid custom function found while trying to parse the first part of a mathematical expression", ex);
+   
+                } catch (RuntimeException exLeft) {
+                    LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the first part of a mathematical expression", exLeft);
                 }
                 try {
                   ExpressionBuilder expBRight = new ExpressionBuilder(condition.split(opString)[0])
@@ -181,17 +184,21 @@ public final class MathematicalExpression {
                     for (String v : variables.keySet()){
                         expBRight.variable(v);
                     }                    
-                    rightPart = expBRight.build();
-                } catch (InvalidCustomFunctionException | UnknownFunctionException | UnparsableExpressionException ex) {
-                    try {
-                        rightPart = new ExpressionBuilder("0").build();
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex1) {
-                        LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the second part of a mathematical expression", ex1);
+                    
+                    Expression rightPart = expBRight.build();
+                    rightPart.setVariable(MathematicalExpression.PI, Math.PI);
+                    rightPart.setVariable(TIME_VAR, 0);
+                    
+                    for (String v : variables.keySet()){
+                        rightPart.setVariable(v, 0);
                     }
-                    LOGGER.error("Invalid custom function found while trying to parse the second part of a mathematical expression", ex);
+   
+                } catch (RuntimeException exRight) {
+                    LOGGER.error("Unknown Function or Unparseable Expression found while trying to parse the second part of a mathematical expression", exRight);
                 }
 
             }
+
 
             /**
              * Get the calculable of the part left to the operator.
@@ -256,8 +263,8 @@ public final class MathematicalExpression {
             expB.variable(TIME_VAR);
             expB.variable(MathematicalExpression.PI);
             try {
-                expB.withCustomFunction(new IntegerDivisionFunction());
-            } catch (InvalidCustomFunctionException ex) {
+                expB.function(int_div);
+            } catch (RuntimeException ex) {
                 LOGGER.error("Invalid custom function found while trying to build an exception message", ex);
             }
             /*

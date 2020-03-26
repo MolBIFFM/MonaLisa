@@ -192,7 +192,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                             exp = new MathematicalExpression(Double.toString(tokenSim.convertCToK(t, Double.valueOf((String) value))));
                         }
                         reactionRates.put(t, exp);
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                    } catch (RuntimeException ex) {
                         LOGGER.error("Unknown function or unparsable Expression has been encountered while creating the reaction table model", ex);
                     }
                 }

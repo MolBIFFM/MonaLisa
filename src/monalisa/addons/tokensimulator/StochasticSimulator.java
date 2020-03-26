@@ -35,7 +35,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -313,7 +312,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             for (int i = 0; i < constantPlacesExp.length; i++){
                 try {
                     this.constantPlacesExpRun[i] = new MathematicalExpression(constantPlacesExp[i]);
-                } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                } catch (RuntimeException ex) {
                     LOGGER.error("Unknown function or unparsable expression while trying to initiate a runnable and trying to express a constantplace property" + ex);
                 }
             }
@@ -321,7 +320,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             for (int i = 0;  i< reactionRateConstants.length; i++){
                 try {
                     this.reactionRateConstantsRun[i] = new MathematicalExpression(reactionRateConstants[i]);
-                } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                } catch (RuntimeException ex) {
                     LOGGER.error("Unknown function or unparsable expression while trying to initiate a runnable and trying to express a reaction rate property" + ex);
                 }
             }

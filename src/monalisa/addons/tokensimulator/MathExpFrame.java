@@ -361,7 +361,7 @@ public class MathExpFrame extends javax.swing.JFrame {
             for (ChangeListener l : this.listeners.keySet()){
                 l.stateChanged(new ChangeEvent(this));
             }
-        } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+        } catch (RuntimeException ex) {
             LOGGER.error("Unknown function or unparsable expression found while trying to build a mathematical expression out of the input in the frame");
             JOptionPane.showMessageDialog(rootPane, TokenSimulator.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
         }

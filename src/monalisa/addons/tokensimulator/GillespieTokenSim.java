@@ -9,7 +9,6 @@
  */
 package monalisa.addons.tokensimulator;
 
-import net.objecthunter.exp4j.tokenizer.UnknownFunctionOrVariableException;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -299,8 +298,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
             this.reactionOrder.put(t.id(), inf);
             try {
                 this.deterministicReactionConstants.put(t.id(), new MathematicalExpression("0.0"));
-            } catch (UnknownFunctionException | UnparsableExpressionException ex) {
-                LOGGER.error("Unknown function or unparsable Expression found while trying to put the current transition into the deterministic reaction constans in the gillespie simulation");
+            } catch (RuntimeException ex) {
+                LOGGER.error("Unknown function or unparsable Expression found while trying to put the current transition into the deterministic reaction constans in the gillespie simulation", ex);
             }
             this.firingRates.put(t.id(), 0.0);
         }

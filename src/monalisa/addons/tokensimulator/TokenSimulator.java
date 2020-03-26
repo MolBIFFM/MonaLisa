@@ -318,7 +318,7 @@ public class TokenSimulator {
                     for (Transition t : place.outputs()){
                         this.constantPlacesPostTransitions.add(t);
                     }
-                } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                } catch (RuntimeException ex) {
                     LOGGER.error("Issue while initializing marking for constant places: ", ex);
                 }
             }
@@ -1426,7 +1426,7 @@ public class TokenSimulator {
                     for (Transition t : p.outputs()){
                         this.constantPlacesPostTransitions.add(t);
                     }
-                    } catch (UnknownFunctionException | UnparsableExpressionException ex) {
+                    } catch (RuntimeException ex) {
                         LOGGER.error("Issue while setting place to constant: ", ex);
                 }
             }

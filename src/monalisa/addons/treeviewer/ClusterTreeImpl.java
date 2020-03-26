@@ -33,7 +33,7 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
     private final List<TreeViewerNode> allNodes;
     private final float threshold;
 
-    private boolean redrawed = false;
+    private boolean redrawn = false;
     private int edgeCount = 0;
     private static final Logger LOGGER = LogManager.getLogger(ClusterTreeImpl.class);
 
@@ -124,11 +124,11 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
 
     // Collections.unmodifiableCollection() ensures that lists outsides the class do not
     // get changed.
-    public Collection<TreeViewerNode> getAllNode() {
+    public Collection<TreeViewerNode> getAllNodes() {
         return Collections.unmodifiableCollection(this.allNodes);
     }
 
-    public Collection<TreeViewerNode> getAllClusterNode() {
+    public Collection<TreeViewerNode> getAllClusterNodes() {
         return Collections.unmodifiableCollection(this.clusterNodes);
     }
 
@@ -138,5 +138,13 @@ public class ClusterTreeImpl extends DelegateForest<TreeViewerNode, TreeViewerEd
 
     public TreeViewerNode getTreeViewerNode(int id) {
         return this.nodesMap.get(id);
+    }
+
+    boolean isRedrawn() {
+        return redrawn;
+    }
+
+    void setRedrawn(boolean b) {
+        redrawn = b;
     }
 }

@@ -376,13 +376,14 @@ public final class TreeViewer extends MonaLisaFrame {
      * order of the tree
      *
      * @param layout
+     * @param clusterTreeImpl
      */
     public void redraw(TreeLayout<TreeViewerNode, TreeViewerEdge> layout, ClusterTreeImpl clusterTreeImpl) {
-        if (clusterTreeImpl.redrawed == false) {
-            clusterTreeImpl.redrawed = true;
+        if (clusterTreeImpl.isRedrawn() == false) {
+            clusterTreeImpl.setRedrawn(true);
             LOGGER.info("Redrawing tree");
             //Set Nodes on Distance to Root
-            for (TreeViewerNode tvn : clusterTreeImpl.allNodes) {
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllNodes()) {
                 Point2D tvP = layout.transform(tvn);
                 Point.Double newcluster = new Point.Double();
                 //Distance is really small and +30 because root is 0.0
@@ -394,7 +395,7 @@ public final class TreeViewer extends MonaLisaFrame {
             // get max Y value to set leafs on the same line (important for threshold after calculating
             // to set leaves at same level)
             double maxY = 0.0;
-            for (TreeViewerNode tvn : clusterTreeImpl.leafs) {
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllTreeLeaves()) {
                 Point2D tvL = layout.transform(tvn);
                 double pointer = tvL.getY();
                 if (maxY <= pointer) {
@@ -402,7 +403,7 @@ public final class TreeViewer extends MonaLisaFrame {
                 }
             }
             //set all Leaves on max-Y (put them in one line after threshold)
-            for (TreeViewerNode tvn : clusterTreeImpl.leafs) {
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllTreeLeaves()) {
                 Point2D tvL = layout.transform(tvn);
                 Point.Double newPointLeaf = new Point.Double();
                 if (tvL.getY() < maxY) {
@@ -425,7 +426,7 @@ public final class TreeViewer extends MonaLisaFrame {
             TreeViewerNode newNode1;
             TreeViewerNode newNode2;
             TreeViewerEdge findEdge;
-            for (TreeViewerNode tvn : clusterTreeImpl.clusterNodes) {
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllClusterNodes()) {
                 Point2D tvnTransform = layout.transform(tvn);
                 Collection<TreeViewerNode> children = clusterTreeImpl.getChildren(tvn);
                 //get Y- Cordinates from Children to set nodes in same lines
@@ -459,10 +460,12 @@ public final class TreeViewer extends MonaLisaFrame {
                 newPointOldNode = new Point.Double(Zahl, tvnTransform.getY());
                 layout.setLocation(tvn, newPointOldNode);
                 //add edges between new and old node
-                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.edgeCount++, TreeViewerEdge.BENDEDGE), tvn, newNode1);
-                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.edgeCount++, TreeViewerEdge.BENDEDGE), tvn, newNode2);
-                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.edgeCount++, TreeViewerEdge.CLUSTEREDGE), newNode1, beforeTvnA);
-                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.edgeCount++, TreeViewerEdge.CLUSTEREDGE), newNode2, beforeTvnB);
+                /*These errors should be fixable by using clusterTreeImpl.getEdgeCount from its super-class. No idea why this was used in the first place.
+                However, can't test this until I have a working implementation of MonaLisa.*/
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.BENDEDGE), tvn, newNode1);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.BENDEDGE), tvn, newNode2);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.CLUSTEREDGE), newNode1, beforeTvnA);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.CLUSTEREDGE), newNode2, beforeTvnB);
                 //set new points to the layout
                 layout.setLocation(newNode1, newPointNode1);
                 layout.setLocation(newNode2, newPointNode2);

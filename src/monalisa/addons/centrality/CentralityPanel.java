@@ -525,11 +525,11 @@ public class CentralityPanel extends AddonPanel {
                 }
 
                 if (!file.exists()) {
-                    SaveResults.saveResults(file, placesTable, transitionsTable);
+                    SaveResults.saveResults(file, cc, ecc, bc, ec, pnf);
                 } else {
                     int option = JOptionPane.showConfirmDialog(this.netViewer, "The file already exists. Do you want to overwrite this file?", "Save", JOptionPane.OK_CANCEL_OPTION, 2);
                     if (option == JOptionPane.OK_OPTION) {
-                        SaveResults.saveResults(file, placesTable, transitionsTable);
+                        SaveResults.saveResults(file, cc, ecc, bc, ec, pnf);
                     }
                 }
                 LOGGER.info("Successfully exported centralities");

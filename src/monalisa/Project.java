@@ -55,8 +55,6 @@ public final class Project implements Serializable {
     private final PetriNet petriNet;
 
     transient private File projectPath;
-    transient private List<Tool> tools;
-    transient private Map<Class<? extends Tool>, CollapsiblePanel> toolPanels;
 
     private Boolean projectChanged;
 
@@ -224,7 +222,7 @@ public final class Project implements Serializable {
      * @throws IOException
      */
     public void save() throws IOException {
-        LOGGER.info("Saving to given file.");
+        LOGGER.info("Saving to given file: " + projectPath.getAbsolutePath());
         try (ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(projectPath))) {
             oout.writeObject(this);
         }
@@ -247,7 +245,6 @@ public final class Project implements Serializable {
 
             project.toolMan = new ToolManager(project);
             LOGGER.info("Initializing tools.");
-            project.tools = project.toolMan.getTools();
 
             // Add tools that have been newly added to the MonaLisa
             // application since the project has been saved.

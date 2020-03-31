@@ -5,6 +5,7 @@
  */
 package monalisa;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,15 +31,18 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcel Gehrmann
  */
-public class ToolManager implements BooleanChangeListener, ProgressListener {
-    private List<Tool> tools;
-    Map<Class<? extends Tool>, Map<Configuration, Result>> results;
+public class ToolManager implements BooleanChangeListener, ProgressListener, Serializable {
+    
     private final Project project;
-    private static final Logger LOGGER = LogManager.getLogger(ToolManager.class);
-    transient List<ToolStatusUpdateListener> toolStatusUpdateListeners;
-    transient private ErrorLog toolMessages;
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
+
+    transient private List<Tool> tools;
+    transient private Map<Class<? extends Tool>, Map<Configuration, Result>> results;    
+    transient private ErrorLog toolMessages;
     transient Thread toolsThread;
+    transient List<ToolStatusUpdateListener> toolStatusUpdateListeners;
+
+    private static final Logger LOGGER = LogManager.getLogger(ToolManager.class);
 
     public ToolManager(Project project){
         LOGGER.info("Initializing new ToolManager.");

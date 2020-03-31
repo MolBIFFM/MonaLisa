@@ -27,6 +27,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.Pair;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
@@ -58,7 +59,7 @@ public final class McsTool extends AbstractTool implements ActionListener {
     @Override
     protected void run(PetriNetFacade pnf, ErrorLog log) throws InterruptedException {
         LOGGER.info("Running McsTool");
-        final TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
+        final TInvariants tinv = project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());
         final Transition objective = transitionCb.getItemAt(transitionCb.getSelectedIndex());
         final int maxCutSetSize = cutSetSizeModel.getNumber().intValue();
 
@@ -70,7 +71,7 @@ public final class McsTool extends AbstractTool implements ActionListener {
     }
 
     @Override
-    public boolean finishedState(Project project) {
+    public boolean finishedState(ToolManager toolMan) {
         return false;
     }
 

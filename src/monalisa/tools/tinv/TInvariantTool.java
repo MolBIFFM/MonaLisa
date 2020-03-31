@@ -26,6 +26,7 @@ import monalisa.tools.AbstractTool;
 import monalisa.tools.ErrorLog;
 import monalisa.tools.Tool;
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.TInvariant;
 import monalisa.resources.ResourceManager;
@@ -65,8 +66,8 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
     }
 
     @Override
-    public boolean finishedState(Project project) {
-        if (project.hasAllResults(this, 2)) {
+    public boolean finishedState(ToolManager toolMan) {
+        if (toolMan.hasAllResults(this, 2)) {
             calculate.setSelected(false);
             Components.setEnabled(panel, false);
         }
@@ -138,7 +139,7 @@ public final class TInvariantTool extends AbstractTool implements ActionListener
 
     private int isCTI() {
         LOGGER.info("Checking whether Petri net is CTI");
-        TInvariants tinv = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
+        TInvariants tinv = project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());
         if(tinv == null) {
             LOGGER.warn("T-Invariants could not be found");
             return -1;

@@ -25,6 +25,7 @@ import monalisa.tools.AbstractTool;
 import monalisa.tools.ErrorLog;
 import monalisa.tools.Tool;
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.resources.ResourceManager;
 import monalisa.util.Components;
@@ -57,8 +58,8 @@ public final class MInvariantTool extends AbstractTool implements ActionListener
     }
     
     @Override
-    public boolean finishedState(Project project) {
-        if (project.hasAllResults(this, 2)) {
+    public boolean finishedState(ToolManager toolMan) {
+        if (toolMan.hasAllResults(this, 2)) {
             calculate.setSelected(false);
             Components.setEnabled(panel, false);
         }

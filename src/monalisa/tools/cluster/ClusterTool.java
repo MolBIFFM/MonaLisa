@@ -42,6 +42,7 @@ import monalisa.tools.ErrorLog;
 import monalisa.tools.Tool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
 import monalisa.tools.cluster.distances.Distances;
@@ -75,7 +76,7 @@ public final class ClusterTool extends AbstractTool implements ActionListener {
         boolean includeTrivialTInvariants = includeTrivialTinvCheckbox.isSelected();
 
         // Building the input for the cluster library
-        TInvariants tinvs = project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
+        TInvariants tinvs = project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());
         int nbrOfTransitions = pnf.transitions().size();
         int nbrOfTInvs = 0;
         // Determine the number of TInvariants
@@ -153,7 +154,7 @@ public final class ClusterTool extends AbstractTool implements ActionListener {
 
 
     @Override
-    public boolean finishedState(Project project) {
+    public boolean finishedState(ToolManager toolMan) {
         return false;
     }
 

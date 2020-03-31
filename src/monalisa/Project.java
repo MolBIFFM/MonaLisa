@@ -10,9 +10,6 @@
 
 package monalisa;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,45 +17,20 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
-import javax.swing.GroupLayout.ParallelGroup;
-import javax.swing.GroupLayout.SequentialGroup;
-import javax.swing.filechooser.FileFilter;
-
-import monalisa.ToolStatusUpdateEvent.Status;
 import monalisa.addons.AddonPanel;
-import monalisa.data.Pair;
 import monalisa.data.PropertyList;
 import monalisa.data.input.PetriNetInputHandlers;
-import monalisa.data.input.TInputHandlers;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
-import monalisa.gui.ConfirmOverwriteDialog;
-import monalisa.gui.ExportDialog;
 import monalisa.gui.components.CollapsiblePanel;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
-import monalisa.results.Result;
-import monalisa.tools.BooleanChangeEvent;
-import monalisa.tools.BooleanChangeListener;
-import monalisa.tools.ErrorLog;
-import monalisa.tools.ProgressEvent;
-import monalisa.tools.ProgressListener;
 import monalisa.tools.Tool;
-import monalisa.tools.ToolRunner;
-import monalisa.tools.Tools;
-import monalisa.tools.tinv.TInvariantTool;
-import monalisa.results.Configuration;
-import monalisa.results.TInvariantsConfiguration;
 import monalisa.synchronisation.Synchronizer;
-import monalisa.util.FileUtils;
-import monalisa.util.MonaLisaFileChooser;
 import monalisa.util.MonaLisaObjectInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -71,7 +43,7 @@ import org.apache.logging.log4j.Logger;
  * @author Anja Thormann
  * @author Jens Einloft
  */
-public final class Project implements Serializable, ProgressListener, BooleanChangeListener {
+public final class Project implements Serializable {
     private static final long serialVersionUID = -7900422748294040894L;
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
 
@@ -80,22 +52,11 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
 
-    private static final Color COMPLETE_COLOR = Settings.getAsColor("completeResult");
-    private static final Color HAS_RESULT_COLOR = Settings.getAsColor("hasResults");
-    private static final Color WARNING_COLOR = Settings.getAsColor("warning");
-    private static final Color ERROR_COLOR = Settings.getAsColor("error");
-    private static final Color NOT_FINISHED_COLOR = Settings.getAsColor("notFinished");
-
     private final PetriNet petriNet;
-    private Map<Class<? extends Tool>, Map<Configuration, Result> > results;
 
     transient private File projectPath;
     transient private List<Tool> tools;
     transient private Map<Class<? extends Tool>, CollapsiblePanel> toolPanels;
-    transient private List<ToolStatusUpdateListener> toolStatusUpdateListeners;
-
-    transient private Thread toolsThread;
-    transient private ErrorLog toolMessages;
 
     private Boolean projectChanged;
 
@@ -105,6 +66,7 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     private transient List<AddonPanel> registeredAddOns;
     private Map<String , Map<String, Object>> addonStorage;
+    private ToolManager toolMan;
 
     /**
      * Create a new Project out of a external file. For the given file the correct file handler is searched.
@@ -115,14 +77,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     private Project(File petriNetFile) throws IOException {
         LOGGER.info("Creating new project from external file.");
         this.petriNet = PetriNetInputHandlers.load(petriNetFile);
-        this.results = new HashMap<>();
-        this.toolStatusUpdateListeners = new ArrayList<>();;
         this.addonStorage = new HashMap<>();
 
-        initTools();
-
-        for (Class<? extends Tool> toolType : Tools.toolTypes())
-            results.put(toolType, new HashMap<Configuration, Result>());
+        this.toolMan = new ToolManager(this);
 
         this.properties = new PropertyList();
 
@@ -138,14 +95,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     public Project() {
         LOGGER.info("Creating new empty project.");
         this.petriNet = new PetriNet();
-        this.results = new HashMap<>();
-        this.toolStatusUpdateListeners = new ArrayList<>();
         this.addonStorage = new HashMap<>();
 
-        initTools();
-
-        for (Class<? extends Tool> toolType : Tools.toolTypes())
-            results.put(toolType, new HashMap<Configuration, Result>());
+        this.toolMan = new ToolManager(this);
 
         this.projectChanged = false;
 
@@ -162,14 +114,9 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     private Project(PetriNet pn) {
         LOGGER.info("Creating new project from Petri net.");
         this.petriNet = pn;
-        this.results = new HashMap<>();
-        this.toolStatusUpdateListeners = new ArrayList<>();
         this.addonStorage = new HashMap<>();
-
-        initTools();
-
-        for (Class<? extends Tool> toolType : Tools.toolTypes())
-            results.put(toolType, new HashMap<Configuration, Result>());
+        
+        this.toolMan = new ToolManager(this);
 
         this.projectChanged = false;
 
@@ -185,13 +132,10 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
     private Project(Project oldProject, File newProjectFile) {
         LOGGER.info("Cloning project for 'Save as...'");
         this.petriNet = oldProject.petriNet;
-        this.results = oldProject.results;
-        this.toolStatusUpdateListeners = oldProject.toolStatusUpdateListeners;
         this.addonStorage = oldProject.addonStorage;
-        this.results = oldProject.results;
         this.properties = oldProject.properties;
         this.synchronizer = oldProject.synchronizer;
-        this.tools = oldProject.tools;
+        this.toolMan = oldProject.toolMan;
         this.projectPath = newProjectFile;
         LOGGER.info("Finished cloning project for 'Save as...'");
     }
@@ -202,24 +146,6 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      */
     public Synchronizer getSynchronizer() {
         return this.synchronizer;
-    }
-
-    /**
-     * Add a new ToolStatusUpdateListener to the project.
-     * @param listener
-     */
-    public synchronized void addToolStatusUpdateListener(ToolStatusUpdateListener listener) {
-        if (!toolStatusUpdateListeners.contains(listener))
-            toolStatusUpdateListeners.add(listener);
-    }
-
-    /**
-     * Removes a ToolStatusUpdateListener to the project.
-     * @param listener
-     */
-    public synchronized void removeToolStatusUpdateListener(
-            ToolStatusUpdateListener listener) {
-        toolStatusUpdateListeners.remove(listener);
     }
 
     /**
@@ -238,6 +164,13 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
         return projectPath;
     }
 
+    /**
+     * Changes projectPath
+     * @param projectFile new project path.
+     */
+    public void setPath(File projectFile) {
+        this.projectPath = projectFile;
+    }
 
     /**
      * Returns the name of the file of the project. Cuts out the path and the extension of the path.
@@ -251,203 +184,6 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             dirName = projectPath.getName();
         // Cut file extension.
         return dirName.replace("\\..*$", "");
-    }
-
-    /**
-     * Returns all error messages and warnings generated by the last run of the
-     * tools, or {@code null} if the tools have not yet been run.
-     */
-    public ErrorLog getToolMessages() {
-        return toolMessages;
-    }
-
-    /**
-     * Tests whether a specific result has already been calculated.
-     * A result is identified by the {@link Tool} calculating it, as well as a
-     * {@link Configuration}.
-     * @param tool The type of the tool class that calculated the result.
-     * @param config The configuration to reproduce the result.
-     * @return Returns <code>true</code> if the result exists, else
-     *          <code>false</code>.
-     */
-    public boolean hasResult(Class<? extends Tool> tool, Configuration config) {
-        return results.get(tool).containsKey(config);
-    }
-
-    /**
-     * Tests whether a specific result has already been calculated.
-     * A result is identified by the {@link Tool} calculating it, as well as a
-     * {@link Configuration}.
-     * @param tool The tool that calculated the result.
-     * @param config The configuration to reproduce the result.
-     * @return Returns <code>true</code> if the result exists, else
-     *          <code>false</code>.
-     * @see #hasResult(Class, Configuration)
-     */
-    public boolean hasResult(Tool tool, Configuration config) {
-        return hasResult(tool.getClass(), config);
-    }
-
-    /**
-     * Tests whether the specified tool already has calculated some results.
-     * @param tool The type of the tool class.
-     * @return Returns <code>true</code> if at least one result is associated
-     *          with the tool, otherwise <code>false</code>.
-     */
-    public boolean hasResults(Class<? extends Tool> tool) {
-        Map<Configuration, Result> res = results.get(tool);
-        return res != null && res.size() > 0;
-    }
-
-    /**
-     * Tests whether the specified tool already has calculated some results.
-     * @param tool The tool.
-     * @return Returns <code>true</code> if at least one result is associated
-     *          with the tool, otherwise <code>false</code>.
-     * @see #hasResults(Class)
-     */
-    public boolean hasResults(Tool tool) {
-        return hasResults(tool.getClass());
-    }
-
-    /**
-     * Test whether all possible results have been calculated for a given tool.
-     * Since the project doesn't know which results are possible, the expected
-     * number of results is passed to this method and is compared against the
-     * number of available results.
-     * @param tool The type of the tool class that calculated the results.
-     * @param expectedNumber The expected number of overall results for that
-     *          tool.
-     * @return Returns <code>true</code> if the number of results matches the
-     *          expected number, else <code>false</code>.
-     */
-    public boolean hasAllResults(Class<? extends Tool> tool, int expectedNumber) {
-        return results.get(tool).size() == expectedNumber;
-    }
-
-    /**
-     * Test whether all possible results have been calculated for a given tool.
-     * Since the project doesn't know which results are possible, the expected
-     * number of results is passed to this method and is compared against the
-     * number of available results.
-     * @param tool The tool that calculated the results.
-     * @param expectedNumber The expected number of overall results for that
-     *          tool.
-     * @return Returns <code>true</code> if the number of results matches the
-     *          expected number, else <code>false</code>.
-     * @see #hasAllResults(Class, int)
-     */
-    public boolean hasAllResults(Tool tool, int expectedNumber) {
-        return hasAllResults(tool.getClass(), expectedNumber);
-    }
-
-    /**
-     * Retrieves the result specified by a tool and a configuration.
-     * @param <T> The type of the result.
-     * @param tool The type of the tool class that calculated the result.
-     * @param config The configuration that calculated the result.
-     * @return Returns the requested result, or <code>null</code> if
-     *          <code>{@link #hasResult}(tool, config)</code> returns
-     *          <code>false</code>.
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getResult(Class<? extends Tool> tool, Configuration config) {
-        if(!results.containsKey(tool))
-            putResult(tool, config, null);
-        return (T) results.get(tool).get(config);
-    }
-
-    /**
-     * Retrieves the result specified by a tool and a configuration.
-     * @param <T> The type of the result.
-     * @param tool The tool that calculated the result.
-     * @param config The configuration that calculated the result.
-     * @return Returns the requested result, or <code>null</code> if
-     *          <code>{@link #hasResult}(tool, config)</code> returns
-     *          <code>false</code>.
-     * @see #getResult(Class, Configuration)
-     */
-    public <T> T getResult(Tool tool, Configuration config) {
-        return (T)getResult(tool.getClass(), config);
-    }
-
-    /**
-     * Stores a new result calculated by the given tool class and configuration.
-     * @param tool The type of the tool class that calculated the result.
-     * @param config The configuration that calculated the result.
-     * @param result The result.
-     */
-    public void putResult(Class<? extends Tool> tool, Configuration config, Result result) {
-        LOGGER.debug("Putting result.");
-        if(results.containsKey(tool))
-            results.get(tool).put(config, result);
-        else {
-            Map<Configuration, Result> map = new HashMap<>();
-            map.put(config, result);
-            results.put(tool, map);
-        }
-        LOGGER.debug("Finished putting result");
-    }
-
-    /**
-     * Stores a new result calculated by the given tool class and configuration.
-     * @param tool The tool that calculated the result.
-     * @param config The configuration that calculated the result.
-     * @param result The result.
-     * @see #putResult(Class, Configuration, Result)
-     */
-    public void putResult(Tool tool, Configuration config, Result result) {
-        putResult(tool.getClass(), config, result);
-    }
-
-    /**
-     * Returns all results calculated by the specified tool.
-     * @param tool The type of the tool class that calculated the results.
-     * @return Returns a map from configurations to results, or
-     *          <code>null</code> if <code>{@link #hasResults}(tool)</code>
-     *          returns <code>false</code>.
-     */
-    public Map<Configuration, Result> getResults(Class<? extends Tool> tool) {
-        return Collections.unmodifiableMap(results.get(tool));
-    }
-
-    /**
-     * Returns all results calculated by the specified tool.
-     * @param tool The tool that calculated the results.
-     * @return Returns a map from configurations to results, or
-     *          <code>null</code> if <code>{@link #hasResults}(tool)</code>
-     *          returns <code>false</code>.
-     * @see #getResults(Class)
-     */
-    public Map<Configuration, Result> getResults(Tool tool) {
-        return getResults(tool.getClass());
-    }
-
-    /**
-     * Returns all calculated results of all tools
-     * @return Returns a map from configurations to results, off all tool
-     */
-    public Map<Class<? extends Tool>, Map<Configuration, Result> > getAllResults() {
-        return results;
-    }
-
-    /**
-     * Sets the reults of the project to the given results
-     * @param results
-     */
-    public void setResults(Map<Class<? extends Tool>, Map<Configuration, Result> > results) {
-        this.results = results;
-
-        // Check for existing results and mark these tools as calculated
-        Tool t;
-        for(Class<? extends Tool> toolClass : Tools.toolTypes()) {
-            t = getTool(toolClass);
-            if(hasResults(t)) {
-                setHasResults(t);
-            } else {
-                setHasNoResults(t);
-            }
-        }
     }
 
     /**
@@ -485,82 +221,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
     /**
      * Saves the whole Project to a given File
-     * @param location
      * @throws IOException
      */
-    public void save(File location) throws IOException {
+    public void save() throws IOException {
         LOGGER.info("Saving to given file.");
-        projectPath = location;
-        try (ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(location))) {
+        try (ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(projectPath))) {
             oout.writeObject(this);
         }
         LOGGER.info("Finished saving to given file.");
-    }
-
-    /**
-     * Save the whole Project with asking for a path
-     * @return
-     * @throws IOException
-     */
-    public boolean save() throws IOException {
-        LOGGER.info("Saving project");
-        boolean ret = false;
-
-        if(projectPath == null) {
-            File projectFile;
-            MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
-
-            projectLocationChooser.setFileFilter(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory() || Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(f));
-                }
-                @Override
-                public String getDescription() {
-                    return strings.get("ProjectFileType");
-                }
-            });
-
-            projectLocationChooser.setDialogTitle(strings.get("SaveEmptyProjectLocation"));
-            if (projectLocationChooser.showDialog(null, strings.get("NVSave")) != JFileChooser.APPROVE_OPTION) {
-                LOGGER.info("Aborted saving of project");
-                return false;
-            }
-            projectFile = projectLocationChooser.getSelectedFile();
-
-            if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(projectFile)))
-                projectFile = new File(projectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-
-            projectPath = projectFile;
-
-            String recentlyProjects = Settings.get("recentlyProjects");
-            // If project are in the list, set it to the last place
-            if(recentlyProjects.contains(projectFile.getAbsolutePath())) {
-                recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath()+",", "");
-            }
-            else {
-                // Check if the list is to large and delte the first element
-                String projects[] = recentlyProjects.split(",");
-                if(projects.length == 10) {
-                    String tmp = "";
-                    for(int i = 1; i < 10; i++) {
-                        tmp += projects[i] + ",";
-                    }
-                    recentlyProjects = tmp;
-                }
-            }
-            // Add the new project at the last place
-            recentlyProjects += projectFile.getAbsolutePath()+",";
-
-            Settings.set("recentlyProjects", recentlyProjects);
-            Settings.writeToFile(Settings.getConfigFile());
-
-            ret = true;
-        }
-
-        save(projectPath);
-        LOGGER.info("Successfully saving project");
-        return ret;
     }
 
     /**
@@ -576,17 +244,15 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
 
             // Explicitly set projectPath.
             project.projectPath = location;
-            project.toolStatusUpdateListeners = new ArrayList<>();
 
-            project.initTools();
+            project.toolMan = new ToolManager(project);
+            LOGGER.info("Initializing tools.");
+            project.tools = project.toolMan.getTools();
 
             // Add tools that have been newly added to the MonaLisa
             // application since the project has been saved.
-            for (Class<? extends Tool> toolType : Tools.toolTypes()) {
-                if (!project.results.containsKey(toolType)) {
-                    project.results.put(toolType, new HashMap<Configuration, Result>());
-                }
-            }
+            project.toolMan.updateTools();
+
             LOGGER.info("Finished loading project from file.");
             return project;
         } catch (ClassNotFoundException e) {
@@ -594,431 +260,6 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
             // Thrown if an older version is loaded with yet non existing classes / tools
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Load the given file and tries to construct given invariants and matches them to the Petri net.
-     * @param TFile
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public void loadTFile(File TFile) throws IOException, InterruptedException {
-        LOGGER.info("Loading from given TFile.");
-        Result loadTFileResults = TInputHandlers.load(TFile, this.petriNet);
-        Configuration loadTFileConfig = new TInvariantsConfiguration();
-        Tool tool = new TInvariantTool();
-        this.putResult(tool, loadTFileConfig, loadTFileResults);
-        tool.finishedState(Project.this);
-        setComplete(tool);
-        LOGGER.info("Finished loading from given TFile.");
-    }
-
-    /**
-     * Initialize all tools.
-     */
-    public void initTools() {
-        LOGGER.info("Initializing tools.");
-        this.tools = new ArrayList<>();
-        for (Class<? extends Tool> toolType : Tools.toolTypes()) {
-            try {
-                this.tools.add(toolType.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(
-                    "An unexpected error has occurred while trying to load " +
-                    "the tools. Sorry! Please report this error.", e);
-            }
-        }
-    }
-
-    /**
-     * Reset all results of all tools.
-     */
-    public void resetTools() {
-        LOGGER.info("Resetting tool results");
-        results.clear();
-        initTools();
-        for (Class<? extends Tool> toolType : Tools.toolTypes())
-            results.put(toolType, new HashMap<Configuration, Result>());
-    }
-
-    /**
-     * Creates the GUI for the Analyze Frame.
-     * @param container
-     * @param strings
-     */
-    public void createUI(final JComponent container, StringResources strings) {
-        LOGGER.info("Creating UI for Analyze Frame.");
-        GroupLayout containerLayout = (GroupLayout) container.getLayout();
-        ParallelGroup horizontal = containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        SequentialGroup vertical = containerLayout.createSequentialGroup();
-
-        toolPanels = new HashMap<>();
-        if(tools != null) {
-            LOGGER.info("Laying out tools.");
-            JPanel[] allPanels = new JPanel[tools.size()];
-            int panelIndex = 0;
-            boolean first = false;
-
-            for (Tool tool : tools) {
-                if (!first)
-                    first = true;
-                else {
-                    Component space = Box.createRigidArea(new Dimension(0, 3));
-                    horizontal.addComponent(space);
-                    vertical.addComponent(space);
-                }
-
-                CollapsiblePanel panel = new CollapsiblePanel(strings.get(panelName(tool)));
-                GroupLayout layout = new GroupLayout(panel);
-                panel.setLayout(layout);
-
-                layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(tool.getUI(this, strings)));
-                layout.setVerticalGroup(layout.createSequentialGroup()
-                    .addComponent(tool.getUI(this, strings)));
-
-                panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                panel.setPreferredSize(new Dimension(container.getWidth(), panel.getHeight()));
-                horizontal.addComponent(panel,
-                    GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE);
-                vertical.addComponent(panel);
-                allPanels[panelIndex++] = panel;
-                toolPanels.put(tool.getClass(), panel);
-
-                if(!tool.getClass().getSimpleName().equalsIgnoreCase("TInvariantTool"))
-                    panel.setCollapsed(true);
-
-                if (tool.finishedState(this)) {
-                    panel.setCollapsed(true);
-                    setComplete(tool);
-                }
-                else if (hasResults(tool))
-                    setHasResults(tool);
-                tool.addActivityChangedListener(this);
-            }
-            containerLayout.setHorizontalGroup(horizontal);
-            containerLayout.setVerticalGroup(vertical);
-            containerLayout.linkSize(SwingConstants.HORIZONTAL, allPanels);
-            LOGGER.info("Finished laying out tools.");
-        }
-        LOGGER.info("Finished creating UI for Analyze Frame.");
-    }
-
-    /**
-     * Starts all selected Tools.
-     */
-    public void runSelectedTools() {
-        LOGGER.info("Running selected tools.");
-        toolMessages = new ErrorLog();
-        toolsThread = new Thread() {
-            @Override
-            public void run() {
-                for (Tool tool : tools) {
-                    if (toolsThread.isInterrupted())
-                        return;
-                    runSingleTool(tool);
-                }
-                fireToolStatusUpdate(new ToolStatusUpdateEvent(Project.this, null, Status.FINISHED_ALL));
-            }
-        };
-        toolsThread.start();
-    }
-
-    /**
-     * Starts all given tools.
-     */
-    public void runGivenTools(final List<String> givenTool) {
-        LOGGER.info("Running given tools.");
-        toolMessages = new ErrorLog();
-        toolsThread = new Thread() {
-            @Override
-            public void run() {
-                for (Tool tool : tools) {
-                    if(givenTool.contains(tool.getClass().getName())) {
-                        tool.setActive(true);
-                        if (toolsThread.isInterrupted())
-                            return;
-                        runSingleTool(tool);
-                    }
-                }
-                fireToolStatusUpdate(new ToolStatusUpdateEvent(Project.this, null, Status.FINISHED_ALL));
-            }
-        };
-        toolsThread.start();
-    }
-
-    /**
-     * Stops all running tools.
-     */
-    public void stopRunningTools() {
-        LOGGER.warn("Aborting the running of tools.");
-        toolsThread.interrupt();
-        fireToolStatusUpdate(
-            new ToolStatusUpdateEvent(this, null, Status.ABORTED));
-        LOGGER.warn("Finished aborting the running tools.");
-    }
-
-    /**
-     * Run a single tool.
-     * @param tool
-     */
-    private void runSingleTool(Tool tool) {
-        if (tool.isActive()) {
-            if (!checkToolRequirements(tool)) {
-                setFailed(tool, new ErrorLog());
-                return;
-            }
-
-            tool.addProgressListener(Project.this);
-            fireToolStatusUpdate(tool, Status.STARTED);
-            LOGGER.info(panelName(tool) + " started");
-
-            ErrorLog log = new ErrorLog();
-            ToolRunner runner = new ToolRunner(tool, Project.this, log);
-
-            runner.start();
-
-            try {
-                runner.join();
-            } catch (InterruptedException e) {
-                runner.interrupt();
-                LOGGER.warn("Interrupt caught.");
-                Thread.currentThread().interrupt();
-                LOGGER.warn("Interrupt propagated.");
-                return;
-            }
-            finally {
-                tool.removeProgressListener(Project.this);
-            }
-
-            for (Map.Entry<Configuration, Result> entry : runner.results().entrySet())
-                putResult(tool, entry.getKey(), entry.getValue());
-
-            if (log.has(ErrorLog.Severity.ERROR))
-                setFailed(tool, log);
-            else if (log.has(ErrorLog.Severity.WARNING))
-                setCompleteWithWarnings(tool, log);
-            else
-                setHasResults(tool);
-            if (tool.finishedState(Project.this))
-                setComplete(tool);
-
-            toolMessages.logAll(log);
-            fireToolStatusUpdate(tool, Status.FINISHED);
-            LOGGER.info(panelName(tool) + " finished");
-        }
-    }
-
-    /**
-     * Checks if all requirements for a given tool are fulfilled.
-     * @param tool The Tool to be checked
-     * @return <code> true </code> if all requirements are fulfilled, otherwise <code> false </code>
-     */
-    private boolean checkToolRequirements(Tool tool) {
-        LOGGER.info("Checking requirements for tool " + strings.get(Tools.name(tool)));
-        List<Pair<Class<? extends Tool>, Configuration>> requirements =
-            tool.getRequirements();
-        boolean requirementsSatisfied = true;
-        for (Pair<Class<? extends Tool>, Configuration> requirement : requirements) {
-            if (!hasResult(requirement.first(), requirement.second())) {
-                requirementsSatisfied = false;
-                break;
-            }
-        }
-
-        if (!requirementsSatisfied) {
-            String toolName = strings.get(Tools.name(tool));
-            LOGGER.warn("Requirements for tool " + toolName + " not met");
-            JOptionPane.showMessageDialog(
-                MonaLisa.appMainWindow(),
-                strings.get("NotAllRequirementsSatisfiedMessage", toolName),
-                strings.get("NotAllRequirementsSatisfiedTitle", toolName),
-                JOptionPane.ERROR_MESSAGE);
-        }
-        else {
-            LOGGER.info("Requirements for tool " + strings.get(Tools.name(tool))+ " met");
-        }
-        return requirementsSatisfied;
-    }
-
-    /**
-     * Marks a given tool with the "has results" tag
-     * @param tool The tool to be marked
-     */
-    private void setHasResults(Tool tool) {
-        LOGGER.info("Setting tool results for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
-        panel.setComment(strings.get("ToolHasResults"));
-        panel.setTitleShade(HAS_RESULT_COLOR);
-    }
-
-    /**
-     * Marks a given tool with the "has no results" tag
-     * @param tool The tool to be marked
-     */
-    private void setHasNoResults(Tool tool) {
-        LOGGER.info("Seeting lack of tool results for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
-        panel.setComment("");
-        panel.setTitleShade(NOT_FINISHED_COLOR);
-    }
-
-    /**
-     *  Marks a given tool with the "complete" tag
-     * @param tool The tool to be marked
-     */
-    private void setComplete(Tool tool) {
-        LOGGER.info("Setting tool complete for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
-        panel.setComment(strings.get("ToolComplete"));
-        panel.setTitleShade(COMPLETE_COLOR);
-    }
-
-    /**
-     *  Marks a given tool with the "complete with warnings" tag
-     * @param tool The tool to be marked
-     */
-    private void setCompleteWithWarnings(Tool tool, ErrorLog log) {
-        LOGGER.warn("Setting tool as complete with warnings for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
-        panel.setComment(strings.get("ToolCompleteWithWarnings"));
-        panel.setTitleShade(WARNING_COLOR);
-    }
-
-    /**
-     *  Marks a given tool with the "failed" tag
-     * @param tool The tool to be marked
-     */
-    private void setFailed(Tool tool, ErrorLog log) {
-        LOGGER.warn("Setting tool as failed for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
-        panel.setComment(strings.get("ToolFailure"));
-        panel.setTitleShade(ERROR_COLOR);
-    }
-
-    @Override
-    public void progressUpdated(ProgressEvent e) {
-        LOGGER.info("Updating progress for a tool");
-        fireToolStatusUpdate((Tool) e.getSource(), e.getPercent());
-    }
-
-    /**
-     * Returns the name of the panel of a given tool.
-     * @param tool
-     * @return
-     */
-    private String panelName(Tool tool) {
-        return Tools.name(tool);
-    }
-
-    private void fireToolStatusUpdate(Tool tool, Status status) {
-        fireToolStatusUpdate(new ToolStatusUpdateEvent(this, panelName(tool), status));
-    }
-
-    private void fireToolStatusUpdate(Tool tool, int progress) {
-        fireToolStatusUpdate(new ToolStatusUpdateEvent(this, panelName(tool), progress));
-    }
-
-    private synchronized void fireToolStatusUpdate(ToolStatusUpdateEvent e) {
-        List<ToolStatusUpdateListener> listeners =
-            new ArrayList<>(toolStatusUpdateListeners);
-        for (ToolStatusUpdateListener listener : listeners)
-            listener.updated(e);
-    }
-
-    @Override
-    public void changed(BooleanChangeEvent e) {
-        Tool tool = (Tool) e.getSource();
-        LOGGER.info("Change in requirements for '" + strings.get(Tools.name(tool)) + "'");
-        if (e.getNewValue()) {
-            LOGGER.info("Selecting requirements for tool configuration of '" + strings.get(Tools.name(tool)) + "' that are not yet calculated");
-            // Select all requirements for the tool configuration that are not
-            // yet calculated.
-            List<Pair<Class<? extends Tool>, Configuration>> requirements =
-                tool.getRequirements();
-            for (Pair<Class<? extends Tool>, Configuration> requirement : requirements) {
-                if (hasResult(requirement.first(), requirement.second()))
-                    continue;
-                getTool(requirement.first()).setActive(requirement.second());
-            }
-        }
-        else {
-            LOGGER.info("Deselecting all tools that are dependent on " + strings.get(Tools.name(tool)));
-            // Deselect all tools that depend on this tool.
-            for (Tool otherTool : tools) {
-                List<Pair<Class<? extends Tool>, Configuration>> requirements =
-                    otherTool.getRequirements();
-                for (Pair<Class<? extends Tool>, ?> requirement : requirements) {
-                    if (requirement.first().isInstance(tool)) {
-                        otherTool.setActive(false);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the instance of a given Tool.
-     * @param toolType The class of the requested tool.
-     * @return
-     */
-    private Tool getTool(Class<? extends Tool> toolType) {
-        for (Tool tool : tools)
-            if(toolType.isInstance(tool))
-                return tool;
-
-        return null;
-    }
-
-    /**
-     * Opens a dialog to export the results.
-     * @param toolList A List of the tools to be exported
-     * @throws IOException
-     */
-    public void exportResults(List<Class<? extends Tool>> toolList) throws IOException {
-        LOGGER.info("Exporting results for tool run");
-        ExportDialog exportDialog = new ExportDialog(this, toolList);
-
-        if (exportDialog.isCancelled())
-            return;
-
-        Map<Pair<Class<? extends Tool>,Configuration>,String> exports = exportDialog.exportPaths();
-        boolean retainAll = false;
-        boolean deleteAll = false;
-
-        for (Pair<Class<? extends Tool>, Configuration> export : exports.keySet()) {
-            // Determine output file name.
-            Result result = getResult(export.first(), export.second());
-            File outputFile = new File(exportDialog.exportPaths().get(export));
-
-            // See whether file already exists.
-            if (outputFile.exists()) {
-                if (retainAll)
-                    continue;
-                else if (deleteAll) {
-                    // Do nothing.
-                }
-                else {
-                    ConfirmOverwriteDialog dialog = new ConfirmOverwriteDialog(new JFrame(), outputFile.getName());
-                    switch (dialog.getResult()) {
-                        case ConfirmOverwriteDialog.YES:
-                            break;
-                        case ConfirmOverwriteDialog.YES_FOR_ALL:
-                            deleteAll = true;
-                            break;
-                        case ConfirmOverwriteDialog.NO:
-                            continue;
-                        case ConfirmOverwriteDialog.NO_FOR_ALL:
-                            retainAll = true;
-                            continue;
-                    }
-                }
-            }
-
-            result.export(outputFile, export.second(), this);
-        }
-        LOGGER.info("Finished exporting File");
     }
 
     /**
@@ -1130,6 +371,14 @@ public final class Project implements Serializable, ProgressListener, BooleanCha
      */
     public PetriNetFacade getPNFacade() {
         return new PetriNetFacade(this.petriNet);
+    }
+
+    /**
+     * Getter for project's ToolManager.
+     * @return the project's ToolManager.
+     */
+    public ToolManager getToolManager(){
+        return toolMan;
     }
 
     /**

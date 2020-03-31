@@ -82,10 +82,10 @@ public final class TreeViewer extends MonaLisaFrame {
         this.layout = new TreeLayout(forest);
 
         ClusterConfiguration config;
-        for (Map.Entry<Configuration, Result> entry : this.project.getResults(ClusterTool.class).entrySet()) {
+        for (Map.Entry<Configuration, Result> entry : this.project.getToolManager().getResults(ClusterTool.class).entrySet()) {
             config = (ClusterConfiguration) entry.getKey();
             try {
-                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getResult(new ClusterTool(), config)),  config));
+                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)),  config));
             } catch (ClassCastException e) {
                 LOGGER.error("Issue while initializing TreeViewer: ", e);
             }
@@ -151,13 +151,13 @@ public final class TreeViewer extends MonaLisaFrame {
 
     public void updateClusterResults() {
         LOGGER.info("Updating clustering results");
-        if (this.project.hasResults(ClusterTool.class)) {
+        if (this.project.getToolManager().hasResults(ClusterTool.class)) {
             ccbl.setDisabled(true);
             clusterModel.removeAllElements();
             ClusterConfiguration config;
-            for (Map.Entry<Configuration, Result> entry : this.project.getResults(ClusterTool.class).entrySet()) {
+            for (Map.Entry<Configuration, Result> entry : this.project.getToolManager().getResults(ClusterTool.class).entrySet()) {
                 config = (ClusterConfiguration) entry.getKey();
-                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getResult(new ClusterTool(), config)), config));
+                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)), config));
             }
             ccbl.setDisabled(false);
             showClustering(clusterModel.getElementAt(0));

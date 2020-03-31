@@ -105,7 +105,7 @@ public final class ExportDialog extends JDialog implements ActionListener {
             String displayTag = strings.get("Export" + toolType.getSimpleName());
             TaggedTreeNode toolNode = new TaggedTreeNode(toolType, displayTag);
 
-            for (Configuration config : project.getResults(toolType).keySet()) {
+            for (Configuration config : project.getToolManager().getResults(toolType).keySet()) {
                 if(!config.isExportable())
                     continue;
                 if(exklusivExport != null)
@@ -228,7 +228,10 @@ public final class ExportDialog extends JDialog implements ActionListener {
         pathField.setEnabled(enabled);
         pathButton.setEnabled(enabled);
         if (enabled && "".equals(pathField.getText())) {
-            pathField.setText(project.getPath().getParent());
+            // Only set pathField if project has a path.
+            if (project.getPath() != null) {
+                pathField.setText(project.getPath().getParent());
+            }
         }
     }
 
@@ -318,7 +321,7 @@ public final class ExportDialog extends JDialog implements ActionListener {
             String delimiter = isDir ? File.separator : "-";
 
             for (Pair<Class<? extends Tool>, Configuration> export : exports) {
-                Result result = project.getResult(export.first(), export.second());
+                Result result = project.getToolManager().getResult(export.first(), export.second());
                 String path = basePath.getAbsolutePath() + delimiter
                     + escapePathName(export.second().toString()) + "."
                     + result.filenameExtension();
@@ -330,7 +333,7 @@ public final class ExportDialog extends JDialog implements ActionListener {
             // Gather export file names manually.
 
             for (Pair<Class<? extends Tool>, Configuration> export : exports) {
-                final Result result = project.getResult(export.first(), export.second());
+                final Result result = project.getToolManager().getResult(export.first(), export.second());
                 MonaLisaFileChooser fileChooser = new MonaLisaFileChooser(project.getPath());
                 fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
                     @Override

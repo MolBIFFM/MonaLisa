@@ -34,6 +34,7 @@ import monalisa.tools.Tool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.util.Components;
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.pn.PetriNetFacade;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -58,8 +59,8 @@ public final class MctsTool extends AbstractTool implements ActionListener {
     }
 
     @Override
-    public boolean finishedState(Project project) {
-        if (project.hasAllResults(this, 4)) {
+    public boolean finishedState(ToolManager toolMan) {
+        if (toolMan.hasAllResults(this, 4)) {
             calculateCheckbox.setSelected(false);
             Components.setEnabled(panel, false);
             return true;
@@ -160,7 +161,7 @@ public final class MctsTool extends AbstractTool implements ActionListener {
 
     private void computeMCTSets(Project project, boolean includeTrivialInvariants, boolean supportOriented) {
         LOGGER.info("Computing MCTSets");
-        TInvariants allTinvariants = project.getResult(
+        TInvariants allTinvariants = project.getToolManager().getResult(
             TInvariantTool.class, new TInvariantsConfiguration());
         List<TInvariant> tinvariants = new ArrayList<>(
             includeTrivialInvariants ? allTinvariants :

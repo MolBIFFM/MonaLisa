@@ -41,6 +41,7 @@ import javax.swing.*;
 import layout.TableLayout;
 import monalisa.Project;
 import monalisa.Settings;
+import monalisa.ToolUI;
 import monalisa.addons.netviewer.listener.NetChangedListener;
 import monalisa.addons.netviewer.transformer.AdvancedVertexLabelRenderer;
 import monalisa.addons.netviewer.transformer.EdgeArrowTransformer;
@@ -163,6 +164,7 @@ public class NetViewer extends JFrame implements ActionListener {
     protected ToolBar tb;
     private SearchBar sb;
     private LogicalPlacesFrame lpf;
+    private ToolUI toolUI;
 
     private final List<JPanel> mouseModePanels = new ArrayList<>();
 
@@ -181,8 +183,9 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param project
      * @throws java.lang.InterruptedException
      */
-    public NetViewer(MainDialog owner, Project project) throws IOException, ClassNotFoundException, InterruptedException {
+    public NetViewer(MainDialog owner, Project project, ToolUI toolUI) throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Initializing NetViewer");
+        this.toolUI = toolUI;
         this.alignmentList = new ArrayList<>();
         this.project = project;
         this.mainDialog = owner;
@@ -553,7 +556,7 @@ public class NetViewer extends JFrame implements ActionListener {
     public void netChanged() {
         if(netChanged) {
             LOGGER.debug("Petri net has changed");
-            if(project.hasResults(new TInvariantTool()) || project.hasResults(new PInvariantTool()) || project.hasResults(new MctsTool())) {
+            if(project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
             }
         }
@@ -561,7 +564,7 @@ public class NetViewer extends JFrame implements ActionListener {
             LOGGER.debug("netChanged && !lastChanged");
             lastChanged = netChanged;
 
-            if(project.hasResults(new TInvariantTool()) || project.hasResults(new PInvariantTool()) || project.hasResults(new MctsTool())) {
+            if(project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
 
                 tinvs = null;
@@ -583,8 +586,8 @@ public class NetViewer extends JFrame implements ActionListener {
                 tb.mctsCb.removeAllItems();
                 mcsResults = null;
                 tb.mcsCb.removeAllItems();
-                project.resetTools();
-                mainDialog.updateUI();
+                project.getToolManager().resetTools();
+                mainDialog.updateAnalyzeFrame();
                 
                 tb.InvTabbedPane.setTitleAt(0, "T - Invariants");
                 tb.InvTabbedPane.setTitleAt(1, "M - Invariants");
@@ -828,7 +831,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void calcTools(ArrayList<String> tools){
         
-        project.runGivenTools(tools);
+        toolUI.runGivenTools(tools); // Issue to address
 
     }
     
@@ -856,18 +859,18 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return
      */
     private TInvariants getTInvs() {
-        return project.getResult(TInvariantTool.class, new TInvariantsConfiguration());
+        return project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());
     }
     
     private MInvariants getMInvs() {
-        return project.getResult(MInvariantTool.class, new MInvariantsConfiguration());
+        return project.getToolManager().getResult(MInvariantTool.class, new MInvariantsConfiguration());
     }
     /**
      * Returns all p-invariants form loaded Petri net
      * @return
      */
     private PInvariants getPInvs() {
-        return project.getResult(PInvariantTool.class, new PInvariantsConfiguration());
+        return project.getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());
     }
 
     /**
@@ -875,7 +878,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return
      */
     private Map<Configuration, Result> getMcsResults() {
-        return project.getResults(McsTool.class);
+        return project.getToolManager().getResults(McsTool.class);
     }
 
     /**
@@ -883,7 +886,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return
      */
     private Map<Configuration, Result> getMctsResults() {
-        return project.getResults(MctsTool.class);
+        return project.getToolManager().getResults(MctsTool.class);
     }
 
     /**
@@ -1244,7 +1247,7 @@ public class NetViewer extends JFrame implements ActionListener {
             Mcs result;
             for(Entry<Configuration, Result> entry : mcsResults.entrySet()) {
                 config = (McsConfiguration) entry.getKey();
-                result = project.getResult(new McsTool(), config);
+                result = project.getToolManager().getResult(new McsTool(), config);
                 if(result != null) {
                     configParts = config.toString().split("-");
                     configName = configParts[2] + " with max size of "+configParts[5];
@@ -1283,7 +1286,7 @@ public class NetViewer extends JFrame implements ActionListener {
             Mcts results;
             for(Map.Entry<Configuration, Result> entry : mctsResults.entrySet()) {
                 config = entry.getKey();
-                results = project.getResult(new MctsTool(), config);
+                results = project.getToolManager().getResult(new MctsTool(), config);
                 if(results != null) {
                     configName = config.toString(strings).split(" ");
                     if(configName[2].contains("with"))
@@ -2744,10 +2747,10 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Saving project");
         try {
             if(this.project.getPath() == null) {
-                this.project.save();
+                mainDialog.save();
                 LOGGER.info("Successfully saved project");
             } else {
-                this.project.save(this.project.getPath());
+                this.project.save();
                 LOGGER.info("Successfully saved project");
             }
         } catch (IOException ex) {

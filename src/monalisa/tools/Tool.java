@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import monalisa.Project;
+import monalisa.ToolManager;
 import monalisa.data.Pair;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.resources.StringResources;
@@ -86,11 +87,11 @@ public interface Tool {
      * possible configurations have been exhausted. The tool may also disable
      * all visual components associated with exhausted configurations, even if
      * other configurations are still choose-able.
-     * @param project The associated project that stores the results.
+     * @param toolMan The associated ToolManager that stores the results.
      * @return Returns <code>true</code> if the tool has exhausted <em>all</em>
      *          configurations, otherwise <code>false</code>.
      */
-    boolean finishedState(Project project);
+    boolean finishedState(ToolManager toolMan);
     
     /**
      * Return a panel that holds the GUI necessary to control the settings of

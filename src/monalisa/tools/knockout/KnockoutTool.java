@@ -25,6 +25,7 @@ import javax.swing.border.TitledBorder;
 
 import monalisa.Project;
 import monalisa.MonaLisa;
+import monalisa.ToolManager;
 import monalisa.data.Pair;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
@@ -116,7 +117,7 @@ public class KnockoutTool extends AbstractTool implements ActionListener, Progre
     }
 
     @Override
-    public boolean finishedState(Project project) {
+    public boolean finishedState(ToolManager toolMan) {
         // TODO Auto-generated method stub
         return false;
     }

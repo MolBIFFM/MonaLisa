@@ -2746,13 +2746,8 @@ public class NetViewer extends JFrame implements ActionListener {
     public void saveProject() {
         LOGGER.info("Saving project");
         try {
-            if(this.project.getPath() == null) {
-                mainDialog.save();
-                LOGGER.info("Successfully saved project");
-            } else {
-                this.project.save();
-                LOGGER.info("Successfully saved project");
-            }
+            mainDialog.save();
+            LOGGER.info("Successfully saved project");
         } catch (IOException ex) {
             LOGGER.error("Issue while saving project: ", ex);
         }

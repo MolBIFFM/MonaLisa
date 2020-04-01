@@ -758,12 +758,12 @@ public class TokenSimPanel extends AddonPanel {
     }
     
     /**
-     * Is called from the Project class to send the stored data to the AddOn.
+     * Is called to send the stored data to the AddOn.
      * It will get the map which is saved with getObjectsForStorage() method.
      * @param storage 
      */
     @Override
-    public void reciveStoredObjects(Map<String, Object> storage) {
+    public void receiveStoredObjects(Map<String, Object> storage) {
         ts.customMarkingsMap = (Map<String, Map<Integer, Long>>) storage.get("customMarking");
     }    
     

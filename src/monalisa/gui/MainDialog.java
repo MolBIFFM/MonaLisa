@@ -119,6 +119,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private String documentTitle;
     private Project project;
     private ToolUI toolUI;
+    private List<AddonPanel> addonPanels;
 
     public MainDialog() {
         LOGGER.info("Initializing MainDialog");
@@ -589,6 +590,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                         try {
                             LOGGER.info("Saving project on application exit");
                             if(project.getPath() != null)  {
+                                updateProjectStorage();
                                 project.save();
                             } else {
                                 save();
@@ -735,7 +737,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
             if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(newProjectFile)))
                 newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-
+            
+            updateProjectStorage();
             Project newProject = Project.create(oldProject, newProjectFile);
             this.project = newProject;
             newProject.save();
@@ -978,7 +981,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         netViewer.addNetChangedListener(this);
 
         PetriNetFacade pnFacade = this.project.getPNFacade();
-        List<AddonPanel> addonPanels = new ArrayList<>();
+        addonPanels = new ArrayList<>();
         // Load all AddonPanels
         for(Class<? extends AddonPanel> c : Addons.addons) {
             try {
@@ -988,8 +991,13 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 LOGGER.error("Caught exception while trying to load all AddonPanels: ", ex);
             }
         }
-        project.registerAddOns(addonPanels);
-        project.transferStorageToAddOns(addonPanels);
+        // Addon Storage
+        Map<String, Map<String, Object>> storage = project.getStorage();
+        for (AddonPanel a: addonPanels) {
+            if (storage.get(a.getAddOnName()) != null) {
+                a.receiveStoredObjects(storage.get(a.getAddOnName()));
+            }
+        }
 
         Settings.writeToFile(System.getProperty("user.home")+"/.monalisaSettings");
 
@@ -1207,8 +1215,17 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             Settings.writeToFile(Settings.getConfigFile());
             ret = true;
         }
+        updateProjectStorage();
         project.save();
         LOGGER.info("Successfully saving project");
         return ret;
+    }
+
+    public void updateProjectStorage(){
+        for (AddonPanel a: addonPanels) {
+            if(a.getObjectsForStorage() != null) {
+                    project.putStorage(a.getAddOnName(), a.getObjectsForStorage());
+                }
+        }    
     }
 }

@@ -27,6 +27,6 @@ public interface AddonStorageManagment {
      * This function is called, after the project is loaded and gives the Addon class their stored data back.
      * @param storage
      */
-    public void reciveStoredObjects(Map<String, Object> storage);
+    public void receiveStoredObjects(Map<String, Object> storage);
 
 }

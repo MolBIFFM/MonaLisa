@@ -221,7 +221,7 @@ public final class Project implements Serializable {
      * Saves the whole Project to a given File
      * @throws IOException
      */
-    public void save() throws IOException {
+    public void save() throws IOException { // Called on exitApplication, Save as.. and save
         LOGGER.info("Saving to given file: " + projectPath.getAbsolutePath());
         try (ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(projectPath))) {
             oout.writeObject(this);
@@ -378,47 +378,12 @@ public final class Project implements Serializable {
         return toolMan;
     }
 
-    /**
-     * Get a list off AddonPanels and register them in the project.
-     * If the project is saved, all these AddOns get a request to send their data to store in the project.
-     * @param addOns
-     */
-    public void registerAddOns(List<AddonPanel> addOns) {
-        this.registeredAddOns = addOns;
+    public Map<String , Map<String, Object>> getStorage() {
+        return addonStorage;
     }
 
-    /**
-     * Get a list of AddonPanels and send them their stored data.
-     * The list of AddOn Panels is needed, to get the current instances of the AddonPanels.
-     * @param addOns
-     */
-    public void transferStorageToAddOns(List<AddonPanel> addOns) {
-        LOGGER.info("Transfering stored data to addon panels");
-        for(AddonPanel a : addOns) {
-            if(addonStorage.get(a.getAddOnName()) != null) {
-                a.reciveStoredObjects(addonStorage.get(a.getAddOnName()));
-            }
-        }
-    }
-
-    /**
-     * Function is called if the Project is saved.
-     * First the function collects all data from AddOns, that should be saved, too.
-     * @param objectOutput
-     * @throws IOException
-     */
-    private void writeObject(ObjectOutputStream objectOutput) throws IOException {
-        LOGGER.info("Collecting data from addons for saving");
-        if(registeredAddOns != null) {
-            for(AddonPanel a : registeredAddOns) {
-                if(a.getObjectsForStorage() != null) {
-                    this.addonStorage.put(a.getAddOnName(), a.getObjectsForStorage());
-                }
-            }
-        }
-        LOGGER.info("Writing to Output");
-        objectOutput.defaultWriteObject();
-
+    public void putStorage(String addonName, Map<String, Object> toStore) {
+        addonStorage.put(addonName, toStore);
     }
 
     /**

@@ -13,13 +13,14 @@ package monalisa.data.pn;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import monalisa.data.PropertyList;
 
 /**
  * A Facade for the PetriNet class. This class is used in all AddOns. The Facade provides only a subset 
  * of the PetriNet class functions. That prevents that AddOns can manipulate the PetriNet.
  * @author Jens Einloft
  */
-public class PetriNetFacade {
+public class PetriNetFacade extends AbstractPetriNetEntity {
 
     private final PetriNet pn;
     
@@ -136,6 +137,7 @@ public class PetriNetFacade {
     /**
      * @see monalisa.data.pn.PetriNet#hasProperty(String)
      */  
+    @Override
     public boolean hasProperty(String key) {
         return pn.hasProperty(key);
     }  
@@ -143,10 +145,12 @@ public class PetriNetFacade {
     /**
      * @see monalisa.data.pn.PetriNet#getProperty(String)
      */ 
+    @Override
     public <T> T getProperty(String key) {
         return pn.getProperty(key);
     }
 
+    @Override
     public <T> T getValueOrDefault(String key, T defaultValue) {
         return pn.getValueOrDefault(key, defaultValue);
     }
@@ -154,6 +158,7 @@ public class PetriNetFacade {
     /**
      * @see monalisa.data.pn.PetriNet#removeProperty(String)
      */ 
+    @Override
     public void removeProperty(String key) {
         pn.removeProperty(key);
     }   
@@ -161,10 +166,27 @@ public class PetriNetFacade {
     /**
      * @see monalisa.data.pn.PetriNet#putProperty(String,T)
      */     
+    @Override
     public <T> void putProperty(String key, T value) {
         pn.putProperty(key, value);
     }    
-    
+
+    /**
+     * @see monalisa.data.pn.PetriNet#setPropertyList(monalisa.data.PropertyList) 
+     */
+    @Override
+    public void setPropertyList(PropertyList pl) {
+        pn.setPropertyList(pl);
+    }
+
+    /**
+     * @see monalisa.data.pn.PetriNet#getPropertyList()
+     */
+    @Override
+    public PropertyList getPropertyList() {
+        return pn.getPropertyList();
+    } 
+
     /**
      * @see monalisa.data.pn.PetriNet#getNumberOfEdges()
      */  

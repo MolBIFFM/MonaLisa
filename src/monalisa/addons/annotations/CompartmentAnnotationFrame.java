@@ -27,13 +27,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import static monalisa.addons.annotations.AnnotationsPanel.MIRIAM_BIO_QUALIFIERS;
-import static monalisa.addons.annotations.AnnotationsPanel.SBO_TERM;
 import monalisa.data.pn.Compartment;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.util.ComboboxToolTipRenderer;
-import monalisa.util.MonaLisaHyperlinkListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
@@ -55,6 +52,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     private final Component parent;
     private final Compartment compartment;
+    private final AnnotationUtils annUtils;
 
     private DefaultListModel<MiriamWrapper> miModel;
 
@@ -71,6 +69,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         LOGGER.info("Initializing CompartmentAnnotationFrame");
         this.compartment = c;
         this.parent = parent;
+        this.annUtils = new AnnotationUtils();
 
         setLocationRelativeTo(parent);
         setTitle("Compartment Annotation");
@@ -98,9 +97,9 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         qualifier.addItem(CVTerm.Qualifier.BQB_OCCURS_IN);
         qualifier.addItem(CVTerm.Qualifier.BQB_UNKNOWN);
 
-        if(compartment.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
+        if(compartment.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
             int childCount;
-            for(CVTerm cvt : (List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)) {
+            for(CVTerm cvt : (List<CVTerm>)compartment.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
                 childCount =  cvt.getChildCount();
                 if(childCount > 1) {
                     for(int i=0; i < cvt.getChildCount(); i++) {
@@ -196,8 +195,8 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         LOGGER.debug("Finished MIRIAM registry part");
         LOGGER.debug("Setting SBO terms to compartments");
         sboCb.setSelectedIndex(0);
-        if(compartment.hasProperty(SBO_TERM)) {
-            sboCb.setSelectedItem(compartment.getProperty(SBO_TERM));
+        if(compartment.hasProperty(AnnotationUtils.SBO_TERM)) {
+            sboCb.setSelectedItem(compartment.getProperty(AnnotationUtils.SBO_TERM));
         } else {
             sboCb.setSelectedIndex(0);
         }
@@ -212,8 +211,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
             addMiriamIdentifier.setText("Add");
             identifierInEdit = null;
         }
-
-        ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).remove(mw.getCVTerm());
+        annUtils.updateCVTerms(compartment, "remove", AnnotationUtils.MIRIAM_BIO_QUALIFIERS , mw.getCVTerm());
         miModel.removeElement(mw);
         LOGGER.info("Successfully deleted MIRIAM identifier from compartment");
     }
@@ -269,6 +267,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         saveSBOTerm = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         compartmentLabel = new javax.swing.JLabel();
+        DeleteSBOTermButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(400, 600));
@@ -421,7 +420,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridy = 12;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(25, 0, 0, 0);
         jPanel2.add(jButton1, gridBagConstraints);
@@ -434,6 +433,20 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         jPanel2.add(compartmentLabel, gridBagConstraints);
+
+        DeleteSBOTermButton.setText("Delete SBO Term");
+        DeleteSBOTermButton.setToolTipText("Delete all made annotations!!!!");
+        DeleteSBOTermButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteSBOTermButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 11;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        jPanel2.add(DeleteSBOTermButton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -461,54 +474,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Invalid accession number");
                     return;
                 }
-
-                List<CVTerm> cvts = (List<CVTerm>) compartment.getProperty(MIRIAM_BIO_QUALIFIERS);
-
-                // Same identifier = update the uri
-                LOGGER.info("Same identifier, updating the uri");
-                if(identifierInEdit.getCVTerm().getBiologicalQualifierType().equals((Qualifier) qualifier.getSelectedItem())) {
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEdit.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                            cvt.getResources().set(cvt.getResources().indexOf(identifierInEdit.getURI()), mrw.getURL()+uri.getText().trim());
-                            break;
-                        }
-                    }
-                } else { // new identifier = update the identifier and the uri
-                    LOGGER.info("New identifier, updating identifier and uri");
-                    // first: delete the old one
-                    CVTerm toRemove = null;
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEdit.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                            cvt.getResources().remove(cvt.getResources().indexOf(identifierInEdit.getURI()));
-                            if(cvt.getResourceCount() == 0) {
-                                toRemove = cvt;
-                            }
-                            break;
-                        }
-                    }
-                    if(toRemove != null) {
-                        LOGGER.info("Removing old one");
-                        cvts.remove(toRemove);
-                        compartment.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                    }
-                    LOGGER.info("Adding new ones");
-                    // now add the new ones
-                    cvts = (List<CVTerm>) compartment.getProperty(MIRIAM_BIO_QUALIFIERS);
-                    boolean qualifierWasThere = false;
-                    for(CVTerm cvt : cvts) {
-                        if(((Qualifier) qualifier.getSelectedItem()).equals(cvt.getBiologicalQualifierType())) {
-                            qualifierWasThere = true;
-                            cvt.addResource(uri.getText().trim());
-                        }
-                        compartment.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                    }
-
-                    if(!qualifierWasThere) {
-                        MiriamWrapper mw = new MiriamWrapper((Qualifier) qualifier.getSelectedItem(), mrw.getURL()+uri.getText().trim());
-                        ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).add(mw.getCVTerm());
-                    }
-
-                }
+                annUtils.editMiriam(compartment, identifierInEdit, mrw, uri.getText().trim(), qualifier.getSelectedItem());
 
                 identifierInEdit.setQualifier((Qualifier) qualifier.getSelectedItem());
                 identifierInEdit.setURI(mrw.getURL()+uri.getText().trim());
@@ -533,23 +499,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                 MiriamWrapper mw = new MiriamWrapper((Qualifier) qualifier.getSelectedItem(), mrw.getURL()+uri.getText().trim());
                 miModel.addElement(mw);
 
-                if(!compartment.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
-                    compartment.putProperty(MIRIAM_BIO_QUALIFIERS, new ArrayList<CVTerm>());
-                }
-
-                List<CVTerm> cvts = (List<CVTerm>) compartment.getProperty(MIRIAM_BIO_QUALIFIERS);
-                boolean qualifierWasThere = false;
-                for(CVTerm cvt : cvts) {
-                    if((mw.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                        qualifierWasThere = true;
-                        cvt.addResource(uri.getText().trim());
-                    }
-                    compartment.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                }
-
-                if(!qualifierWasThere) {
-                    ((List<CVTerm>)compartment.getProperty(MIRIAM_BIO_QUALIFIERS)).add(mw.getCVTerm());
-                }
+                annUtils.addMiriam(compartment, mw, uri.getText().trim());
                 LOGGER.info("Finished adding new entry for compartment");
             }
 
@@ -561,7 +511,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
     private void saveSBOTermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSBOTermActionPerformed
         LOGGER.info("Adding SBO term to compartment");
         if(sboCb.getSelectedItem() != null && sboCb.getSelectedIndex() > 0) {
-            compartment.putProperty(SBO_TERM, (String)sboCb.getSelectedItem());
+            annUtils.addProperty(compartment, AnnotationUtils.SBO_TERM, (String) sboCb.getSelectedItem());
         }
         LOGGER.info("Succesfully added SBO term to compartment");
         // Shouldn't there also be a function to remove SBO terms like in AnnotationsPanel?
@@ -572,7 +522,15 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void DeleteSBOTermButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteSBOTermButtonActionPerformed
+        LOGGER.info("Removing SBO term");
+        if(sboCb.getSelectedItem() != null &&  sboCb.getSelectedIndex() > 0) {
+            annUtils.removeProperty(compartment, AnnotationUtils.SBO_TERM);
+        }
+        LOGGER.info("Finished removing SBO term");    }//GEN-LAST:event_DeleteSBOTermButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton DeleteSBOTermButton;
     private javax.swing.JButton addMiriamIdentifier;
     private javax.swing.JLabel compartmentLabel;
     private javax.swing.JButton jButton1;

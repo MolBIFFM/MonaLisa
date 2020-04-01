@@ -18,9 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
-import monalisa.addons.annotations.AnnotationsPanel;
-import static monalisa.addons.annotations.AnnotationsPanel.MIRIAM_BIO_QUALIFIERS;
-
+import monalisa.addons.annotations.AnnotationUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -112,14 +110,14 @@ public class KeggInputHandler implements InputHandler {
         }
         Element root = doc.getRootElement();
 
-        ret.putProperty(AnnotationsPanel.MODEL_NAME, root.getAttributeValue("title"));
+        ret.putProperty(AnnotationUtils.MODEL_NAME, root.getAttributeValue("title"));
         List<CVTerm> cvts = new ArrayList<>();
         CVTerm cvt= new CVTerm();
         cvt.setQualifierType(CVTerm.Type.MODEL_QUALIFIER);
         cvt.setModelQualifierType(CVTerm.Qualifier.BQM_IS);
         cvt.addResourceURI("http://identifiers.org/kegg.pathway/"+root.getAttributeValue("name").split(":")[1]);
         cvts.add(cvt);
-        ret.putProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS, cvts);
+        ret.putProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, cvts);
 
         Map<String, Element> entryMap = new HashMap<>();
         for(Element element : root.getChildren("entry")) {
@@ -236,7 +234,7 @@ public class KeggInputHandler implements InputHandler {
                 }
             }
 
-            t.putProperty(MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
+            t.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
 
             pn.addTransition(t);
         }
@@ -269,7 +267,7 @@ public class KeggInputHandler implements InputHandler {
                     p.putProperty("posY", new Double(e.getChild("graphics").getAttributeValue("y")));
                 }
             }
-            p.putProperty(MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
+            p.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
 
             pn.addPlace(p);
         }

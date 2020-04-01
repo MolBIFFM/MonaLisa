@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
@@ -25,7 +24,7 @@ import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
 
 import javax.xml.stream.XMLStreamException;
-import monalisa.addons.annotations.AnnotationsPanel;
+import monalisa.addons.annotations.AnnotationUtils;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +34,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.sbml.jsbml.AbstractTreeNode;
 import org.sbml.jsbml.CVTerm;
-import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
 import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.SBMLDocument;
@@ -145,12 +143,12 @@ public final class SbmlInputHandler implements InputHandler {
             history.addCreator(c);
         }*/
 
-        petriNet.putProperty(AnnotationsPanel.HISTORY, history);
-        petriNet.putProperty(AnnotationsPanel.MODEL_NAME, model.getName());
+        petriNet.putProperty(AnnotationUtils.HISTORY, history);
+        petriNet.putProperty(AnnotationUtils.MODEL_NAME, model.getName());
 
         if(model.getCVTermCount() > 0) {
             tmp =  model.getCVTerms();
-            petriNet.putProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS, tmp);
+            petriNet.putProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, tmp);
         }
 
         Map<org.sbml.jsbml.Compartment, monalisa.data.pn.Compartment> compartmentMap = new HashMap<>();
@@ -160,9 +158,9 @@ public final class SbmlInputHandler implements InputHandler {
                 pnComp.putProperty("size", c.getSize());
                 pnComp.putProperty("constant", c.getConstant());
                 pnComp.putProperty("spatialDimensions", c.getSpatialDimensions());
-                pnComp.putProperty(AnnotationsPanel.SBO_TERM, c.getSBOTermID());
+                pnComp.putProperty(AnnotationUtils.SBO_TERM, c.getSBOTermID());
                 tmp = c.getCVTerms();
-                pnComp.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+                pnComp.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
                 petriNet.addCompartment(pnComp);
                 compartmentMap.put(c,pnComp);
             }
@@ -198,12 +196,12 @@ public final class SbmlInputHandler implements InputHandler {
             }
 
             if(!s.getSBOTermID().isEmpty()) {
-                place.putProperty(AnnotationsPanel.SBO_TERM, s.getSBOTermID());
+                place.putProperty(AnnotationUtils.SBO_TERM, s.getSBOTermID());
             } else {
-                place.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                place.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
             }
             tmp = s.getCVTerms();
-            place.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+            place.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
             if(s.getCompartmentInstance() != null) {
                 petriNet.setCompartment(place, compartmentMap.get(s.getCompartmentInstance()));
@@ -270,12 +268,12 @@ public final class SbmlInputHandler implements InputHandler {
             }
 
             if(!r.getSBOTermID().isEmpty()) {
-                transition.putProperty(AnnotationsPanel.SBO_TERM, r.getSBOTermID());
+                transition.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
             } else {
-                transition.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                transition.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
             }
             tmp = r.getCVTerms();
-            transition.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+            transition.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
             if(reversible) {
                 countTransitions++;
@@ -287,12 +285,12 @@ public final class SbmlInputHandler implements InputHandler {
                 }
 
                 if(!r.getSBOTermID().isEmpty()) {
-                    transition_rev.putProperty(AnnotationsPanel.SBO_TERM, r.getSBOTermID());
+                    transition_rev.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
                 } else {
-                    transition_rev.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                    transition_rev.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
                 }
                 tmp = r.getCVTerms();
-                transition_rev.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+                transition_rev.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
             }
 
             for(SpeciesReference spr : r.getListOfReactants()) {

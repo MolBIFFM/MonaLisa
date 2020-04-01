@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
+import monalisa.addons.annotations.AnnotationUtils;
 import monalisa.addons.annotations.AnnotationsPanel;
 
 import monalisa.data.pn.PetriNet;
@@ -69,19 +70,19 @@ public class SbmlOutputHandler implements OutputHandler {
         SBMLDocument doc = new SBMLDocument(this.level,this.version);
         Model model = doc.createModel("MonaLisaExport");
 
-        if(pn.hasProperty(AnnotationsPanel.MODEL_NAME)) {
-            model.setName((String) pn.getProperty(AnnotationsPanel.MODEL_NAME));
+        if(pn.hasProperty(AnnotationUtils.MODEL_NAME)) {
+            model.setName((String) pn.getProperty(AnnotationUtils.MODEL_NAME));
         }
 
-        if(pn.hasProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS)) {
-            List<CVTerm> cvts = (List<CVTerm>) pn.getProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS);
+        if(pn.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
+            List<CVTerm> cvts = (List<CVTerm>) pn.getProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS);
             for(CVTerm cvt : cvts) {
                 model.addCVTerm(cvt);
             }
         }
 
-        if(pn.hasProperty(AnnotationsPanel.HISTORY)) {
-            model.setHistory((History) pn.getProperty(AnnotationsPanel.HISTORY));
+        if(pn.hasProperty(AnnotationUtils.HISTORY)) {
+            model.setHistory((History) pn.getProperty(AnnotationUtils.HISTORY));
         }
         LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
         model.addExtension(LayoutConstants.getNamespaceURI(level, version),mplugin);
@@ -129,12 +130,12 @@ public class SbmlOutputHandler implements OutputHandler {
                             compartment.setConstant(true);
                         }
 
-                        if(c.hasProperty(AnnotationsPanel.SBO_TERM)) {
-                            compartment.setSBOTerm((String) c.getProperty(AnnotationsPanel.SBO_TERM));
+                        if(c.hasProperty(AnnotationUtils.SBO_TERM)) {
+                            compartment.setSBOTerm((String) c.getProperty(AnnotationUtils.SBO_TERM));
                         }
 
-                        if(c.hasProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS)) {
-                            List<CVTerm> cvts = (List<CVTerm>) c.getProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS);
+                        if(c.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                            List<CVTerm> cvts = (List<CVTerm>) c.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
                             for(CVTerm cvt : cvts) {
                                 compartment.addCVTerm(cvt);
                             }
@@ -193,16 +194,16 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             // MIRIAM Annotaions
-            if(p.hasProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS)) {
-                List<CVTerm> cvts = (List<CVTerm>) p.getProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS);
+            if(p.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                List<CVTerm> cvts = (List<CVTerm>) p.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
                 for(CVTerm cvt : cvts) {
                     species.addCVTerm(cvt);
                 }
             }
 
             // SBO Term
-            if(p.hasProperty(AnnotationsPanel.SBO_TERM)) {
-                species.setSBOTerm((String) p.getProperty(AnnotationsPanel.SBO_TERM));
+            if(p.hasProperty(AnnotationUtils.SBO_TERM)) {
+                species.setSBOTerm((String) p.getProperty(AnnotationUtils.SBO_TERM));
             }
         }
 
@@ -239,16 +240,16 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             // MIRIAM Annotaion
-            if(t.hasProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS)) {
-                List<CVTerm> cvts = (List<CVTerm>) t.getProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS);
+            if(t.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                List<CVTerm> cvts = (List<CVTerm>) t.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
                 for(CVTerm cvt : cvts) {
                     reaction.addCVTerm(cvt);
                 }
             }
 
             // SBO Term
-            if(t.hasProperty(AnnotationsPanel.SBO_TERM)) {
-                reaction.setSBOTerm((String) t.getProperty(AnnotationsPanel.SBO_TERM));
+            if(t.hasProperty(AnnotationUtils.SBO_TERM)) {
+                reaction.setSBOTerm((String) t.getProperty(AnnotationUtils.SBO_TERM));
             }
 
             SpeciesReference sr = null;

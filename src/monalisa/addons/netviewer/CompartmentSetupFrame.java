@@ -99,6 +99,14 @@ public class CompartmentSetupFrame extends javax.swing.JFrame {
         LOGGER.info("Finished initializing CompartmentSetupFrame with given compartment");
     }
 
+    private void updateCompartment(Compartment c, String name, Color col, String dim, Double size, boolean constant){
+        c.setName(name);
+        c.putProperty("color", col);
+        c.putProperty("spatialDimensions", dim);
+        c.putProperty("size", size);
+        c.putProperty("constant", constant);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -254,11 +262,8 @@ public class CompartmentSetupFrame extends javax.swing.JFrame {
             switch (actionButton.getText()) {
                 case CREATE:
                     LOGGER.info("Creating new compartment");
-                    c = new Compartment(cName.getText());
-                    c.putProperty("color", cColor.getBackground());
-                    c.putProperty("spatialDimensions", getSpatialDimensions());
-                    c.putProperty("size", compartmentSize);
-                    c.putProperty("constant", getConstant());
+                    c = new Compartment();
+                    updateCompartment(c, cName.getText(), cColor.getBackground(), getSpatialDimensions(), compartmentSize, getConstant());
                     this.netViewer.tb.compartmentCb.addItem(c);
                     this.netViewer.getProject().getPetriNet().addCompartment(c);
                     LOGGER.info("Successfully created new compartment");
@@ -266,11 +271,7 @@ public class CompartmentSetupFrame extends javax.swing.JFrame {
                 case SAVE:
                     LOGGER.info("Saving compartment");
                     c = (Compartment) this.netViewer.tb.compartmentCb.getItemAt(((DefaultComboBoxModel) this.netViewer.tb.compartmentCb.getModel()).getIndexOf(this.compartmentForEdit));
-                    c.setName(cName.getText());
-                    c.putProperty("color", cColor.getBackground());
-                    c.putProperty("spatialDimensions", getSpatialDimensions());
-                    c.putProperty("size", compartmentSize);
-                    c.putProperty("constant", getConstant());
+                    updateCompartment(c, cName.getText(), cColor.getBackground(), getSpatialDimensions(), compartmentSize, getConstant());
                     this.netViewer.tb.compartmentCb.repaint();
                     LOGGER.info("Successfully saved compartment");
                     break;
@@ -302,25 +303,29 @@ public class CompartmentSetupFrame extends javax.swing.JFrame {
         switch (sd) {
             case "1D":
                 this.spatialDimensionsCb.setSelectedIndex(0);
+                break;
             case "2D":
                 this.spatialDimensionsCb.setSelectedIndex(1);
+                break;
             case "3D":
                 this.spatialDimensionsCb.setSelectedIndex(2);
+                break;
             default:
                 this.spatialDimensionsCb.setSelectedIndex(0);
         }
     }
 
     private String getSpatialDimensions() {
-        switch ((String)this.spatialDimensionsCb.getSelectedItem()) {
+        String sd = ((String) this.spatialDimensionsCb.getSelectedItem()).trim();
+        switch (sd) {
             case "1D":
-                return "1";
+                return "1D";
             case "2D":
-                return "2";
+                return "2D";
             case "3D":
-                return "3";
+                return "3D";
             default:
-                return "1";
+                return "1D";
         }
     }
 

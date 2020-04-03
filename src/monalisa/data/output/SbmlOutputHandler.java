@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import monalisa.addons.annotations.AnnotationUtils;
-import monalisa.addons.annotations.AnnotationsPanel;
 
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;

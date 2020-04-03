@@ -18,7 +18,6 @@ import java.awt.event.*;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
@@ -45,7 +44,6 @@ import monalisa.data.input.TInputHandlers;
 import monalisa.data.output.OutputHandler;
 import monalisa.data.output.PetriNetOutputHandlers;
 import monalisa.data.pn.PetriNetFacade;
-import monalisa.gui.components.CollapsiblePanel;
 import monalisa.gui.components.SplashScreen;
 import monalisa.gui.components.StatusBar;
 import monalisa.resources.ResourceManager;
@@ -706,11 +704,14 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     }
 
     /**
-     * "Save project as...". Creates a new project from the current project.
+     * "Save project as...".Creates a new project from the current project.
      * @param oldProject
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.lang.InterruptedException
      */
     public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException {
-        File newProjectFile = null;
+        File newProjectFile;
 
         if(oldProject != null) {
             LOGGER.info("Creating new project from current project to save project as");
@@ -739,9 +740,9 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
             
             updateProjectStorage();
-            Project newProject = Project.create(oldProject, newProjectFile);
-            this.project = newProject;
-            newProject.save();
+            Project newProj = Project.create(oldProject, newProjectFile);
+            this.project = newProj;
+            newProj.save();
             projectLoaded();
             LOGGER.info("Successfully created new project from current project to save project as");
         }

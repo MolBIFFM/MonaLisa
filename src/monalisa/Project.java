@@ -18,10 +18,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import monalisa.addons.AddonPanel;
 import monalisa.data.PropertyList;
 import monalisa.data.input.PetriNetInputHandlers;
 import monalisa.data.pn.PetriNet;
@@ -60,7 +58,6 @@ public final class Project implements Serializable {
 
     private Synchronizer synchronizer;
 
-    private transient List<AddonPanel> registeredAddOns;
     private Map<String , Map<String, Object>> addonStorage;
     private ToolManager toolMan;
 

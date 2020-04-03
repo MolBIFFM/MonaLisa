@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import monalisa.addons.netviewer.MonaLisaLayout;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerEdge;
@@ -175,7 +176,7 @@ public class Synchronizer implements Serializable {
      * @param nvNode
      * @return The corresponding Place or NULL, if nvNode is not a Place
      */
-    public Place getPlaceFromNode(NetViewerNode nvNode) {
+    public Place getPlaceFromNode(NetViewerNode nvNode) { // Would prefer to remove this direction.
         return this.pn.findPlace(nvNode.getMasterNode().getId());
     }
 
@@ -870,5 +871,24 @@ public class Synchronizer implements Serializable {
         if(map != null) {
             this.layout.restore(map);
         }
+    }
+
+    public PetriNet getSubNetwork(Set<Place> places, Set<Transition> transitions, Set<Arc> arcs) {
+        PetriNet subNetwork = new PetriNet();
+        for (Place p : places) {
+            subNetwork.addPlace(p);
+        }
+        for (Transition t : transitions) {
+            subNetwork.addTransition(t);
+        }
+        for (Arc a : arcs) {
+            if (a.source().getClass() == Place.class) {
+                subNetwork.addArc((Place) a.source(), (Transition) a.aim(), a.weight());
+            }
+            if (a.source().getClass() == Transition.class) {
+                subNetwork.addArc((Transition) a.source(), (Place) a.aim(), a.weight());
+            }
+        }
+        return subNetwork;
     }
 }

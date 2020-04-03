@@ -164,7 +164,7 @@ public class NetViewer extends JFrame implements ActionListener {
     protected ToolBar tb;
     private SearchBar sb;
     private LogicalPlacesFrame lpf;
-    private ToolUI toolUI;
+    private final ToolUI toolUI;
 
     private final List<JPanel> mouseModePanels = new ArrayList<>();
 
@@ -181,6 +181,9 @@ public class NetViewer extends JFrame implements ActionListener {
      *
      * @param owner
      * @param project
+     * @param toolUI
+     * @throws java.io.IOException
+     * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
      */
     public NetViewer(MainDialog owner, Project project, ToolUI toolUI) throws IOException, ClassNotFoundException, InterruptedException {
@@ -273,7 +276,7 @@ public class NetViewer extends JFrame implements ActionListener {
         });
 
         // --- Graph Section ---
-        g = this.synchronizer.getGraph();
+        g = this.synchronizer.getGraph(); // Should move that function here probably
 
         layout = this.synchronizer.getLayout();
         LOGGER.debug("Initializing VisualizationViewer");
@@ -830,9 +833,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param tools
      */
     public void calcTools(ArrayList<String> tools){
-        
-        toolUI.runGivenTools(tools); // Issue to address
-
+        toolUI.runGivenTools(tools);
     }
     
     /**
@@ -1452,11 +1453,12 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Write the given properties if the NetViewerNode and to the place/transition.
-     * This function is used, if a MultiSelection of vertices is edited.
+     * Write the given properties if the NetViewerNode and to the place/transition.This function is used, if a MultiSelection of vertices is edited.
      * @param nvNode
      * @param lablePosition
      * @param compartment
+     * @param color
+     * @param strokeColor
      */
     public void writeVertexSetup(NetViewerNode nvNode, Position lablePosition, Compartment compartment, Color color, Color strokeColor) {
         LOGGER.info("Multiple vertices edited, updating setup");
@@ -1484,16 +1486,17 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Write the given properties the NetViewerNode and to the place/transition.
-     * This function is used, if only a single vertex is edited.
+     * Write the given properties the NetViewerNode and to the place/transition.This function is used, if only a single vertex is edited.
      * @param nvNode
      * @param color
      * @param strokeColor
      * @param corners
      * @param name
+     * @param tokens
      * @param toolTip
      * @param lablePosition
      * @param compartment
+     * @return 
      */
     public boolean writeVertexSetup(NetViewerNode nvNode, Color color, Color strokeColor, int corners, String name, Long tokens, String toolTip, Position lablePosition, Compartment compartment) {
         LOGGER.info("Single vertex edited, updating setup");
@@ -1999,7 +2002,6 @@ public class NetViewer extends JFrame implements ActionListener {
      * @throws FileNotFoundException
      */
     protected void exportSelectedSubGraphMouseAction() throws FileNotFoundException {
-        LOGGER.info("Exporting selected sub-graph to file");
         MonaLisaFileChooser petriNetFileChooser = new MonaLisaFileChooser();
 
         petriNetFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -2013,44 +2015,44 @@ public class NetViewer extends JFrame implements ActionListener {
         if (petriNetFileChooser.showDialog(this, "Export") != JFileChooser.APPROVE_OPTION)
             return;
 
-        PetriNet subNet = new PetriNet();
-        Set<NetViewerEdge> possibleEdges = new HashSet<>();
-
-        for(NetViewerNode n : vv.getRenderContext().getPickedVertexState().getPicked()) {
-            if(n.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                subNet.addPlace(synchronizer.getPetriNet().findPlace(n.getMasterNode().getId()));
-            }
-            else if(n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                subNet.addTransition(synchronizer.getPetriNet().findTransition(n.getMasterNode().getId()));
-            }
-
-            for(NetViewerEdge e : n.getInEdges()) {
-                possibleEdges.add(e);
-            }
-            for(NetViewerEdge e : n.getOutEdges()) {
-                possibleEdges.add(e);
-            }
-        }
-
-        for(NetViewerEdge e : possibleEdges) {
-            if(e.getSource().getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                if(subNet.findPlace(e.getSource().getId()) != null && subNet.findTransition(e.getAim().getId()) != null) {
-                    subNet.addArc(subNet.findPlace(e.getSource().getId()), subNet.findTransition(e.getAim().getId()), e.getWeight());
-                }
-            }
-            else if(e.getSource().getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                 if(subNet.findTransition(e.getSource().getId()) != null && subNet.findPlace(e.getAim().getId()) != null) {
-                     subNet.addArc(subNet.findTransition(e.getSource().getId()), subNet.findPlace(e.getAim().getId()), e.getWeight());
-                 }
-            }
-        }
-
         File petriNetFile = petriNetFileChooser.getSelectedFile();
         OutputFileFilter selectedFileFilter = ((OutputFileFilter)petriNetFileChooser.getFileFilter());
         petriNetFile = selectedFileFilter.checkFileNameForExtension(petriNetFile);
-        selectedFileFilter.getHandler().save(new FileOutputStream(petriNetFile), subNet);
+        LOGGER.info("Exporting selected sub-graph to file: " + petriNetFile.getAbsolutePath());
+        exportSubGraph(petriNetFile, selectedFileFilter.getHandler(), synchronizer, vv.getRenderContext().getPickedVertexState().getPicked());
+        LOGGER.info("Successfully exported selected sub-graph to file: " + petriNetFile.getAbsolutePath());
     }
-
+    
+    
+    private void exportSubGraph(File petriNetFile, OutputHandler handler, Synchronizer sync, Set<NetViewerNode> picked) throws FileNotFoundException {
+        Set<Place> places = new HashSet<>();
+        Set<Transition> transitions = new HashSet<>();
+        Set<Arc> arcs = new HashSet<>();
+        for(NetViewerNode n : picked) {
+            if(n.getNodeType().equalsIgnoreCase("PLACE")) {
+                places.add(sync.getPetriNet().findPlace(n.getMasterNode().getId()));
+            }
+            else if(n.getNodeType().equalsIgnoreCase("TRANSITION")) {
+                transitions.add(sync.getPetriNet().findTransition(n.getMasterNode().getId()));
+            }
+        }
+        for (Place p : places) {
+            for (Transition t : transitions) {
+                if (sync.getPetriNet().getArc(p, t) != null){
+                    arcs.add(sync.getPetriNet().getArc(p,t));
+                }
+            }
+        }
+        for (Transition t : transitions) {
+            for (Place p : places) {
+                if (sync.getPetriNet().getArc(t, p) != null) {
+                    arcs.add(sync.getPetriNet().getArc(t, p));
+                }
+            }
+        }
+        handler.save(new FileOutputStream(petriNetFile), sync.getSubNetwork(places, transitions, arcs));   
+    }
+        
     /**
      * Cancel mouse action and set mouse to picking mode.
      */
@@ -2833,7 +2835,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the corresponding NetViewerNode to ID of a transition.
-     * @param upne Either a Place or a Transition
+     * @param id
      * @return The corresponding transition, if for the given ID exist a Transition, NULL otherwise.
      */
     public NetViewerNode getNodeFromTransitionId(Integer id) {
@@ -2842,7 +2844,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the corresponding NetViewerNode to ID of a place.
-     * @param upne Either a Place or a Transition
+     * @param id
      * @return The corresponding place, if for the given ID exist a place, NULL otherwise.
      */
     public NetViewerNode getNodeFromPlaceId(Integer id) {
@@ -2886,6 +2888,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Removes a component from the CardLayout
+     * @param name
      * @param c
      */
     public void removeMenu(String name) {

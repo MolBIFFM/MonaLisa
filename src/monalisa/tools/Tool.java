@@ -46,7 +46,7 @@ public interface Tool {
      * @throws InterruptedException Thrown when the user interrupts the
      *          execution of the tools.
      */
-    Map<Configuration, Result> start(PetriNetFacade pnf, ErrorLog log) throws InterruptedException;
+    Map<Configuration, Result> start(Project project, ErrorLog log, Configuration config) throws InterruptedException;
 
     /**
      * Add a new {@link ProgressListener}.
@@ -58,80 +58,11 @@ public interface Tool {
      * Remove a {@link ProgressListener} from the listeners list.
      * @param pl The listener.
      */
-    void removeProgressListener(ProgressListener pl);
-    
-    /**
-     * Returns whether this tool should be executed (i.e. whether the user has
-     * activated it on the UI).
-     */
-    boolean isActive();
-    
-    /**
-     * Set whether this tool should be (re-)executed.
-     * @param active The new value for the activity.
-     */
-    void setActive(boolean active);
-    
-    /**
-     * Activates the tool, and sets its settings to calculate the required
-     * {@link Configuration}s {@code configs}. This does not modify any other
-     * of the tool's settings, if the tool is able to calculate several results
-     * at once.
-     * @param configs The required configurations.
-     */
-    void setActive(Configuration... configs);
- 
-    /**
-     * Determines whether a tool has calculated results for all possible
-     * configurations. As a consequence, this method disables the tool if all
-     * possible configurations have been exhausted. The tool may also disable
-     * all visual components associated with exhausted configurations, even if
-     * other configurations are still choose-able.
-     * @param toolMan The associated ToolManager that stores the results.
-     * @return Returns <code>true</code> if the tool has exhausted <em>all</em>
-     *          configurations, otherwise <code>false</code>.
-     */
-    boolean finishedState(ToolManager toolMan);
-    
-    /**
-     * Return a panel that holds the GUI necessary to control the settings of
-     * this tool.
-     * <b>Note to implementors:</b> This panel should be created only once and
-     * cached internally.
-     * @param project The associated project.
-     * @param strings A {@link StringResources} that holds the localization
-     * strings to populate the user interface.
-     * @return A panel holding the user interface.
-     */
-    JPanel getUI(Project project, StringResources strings);
+    void removeProgressListener(ProgressListener pl);    
     
     /**
      * Save all the changes made to the properties via the GUI to the project.
      * @param p The project.
      */
     void saveSettings(Project p);
-    
-    /**
-     * Add a new {@link BooleanChangeListener} that gets fired whenever the
-     * tool's {@link #isActive()} value changes.
-     * @param bcl The change listener to add.
-     */
-    void addActivityChangedListener(BooleanChangeListener bcl);
-    
-    /**
-     * Remove a change listener added by
-     * {@link #addActivityChangedListener(BooleanChangeListener)}.
-     * @param bcl The change listener to remove.
-     */
-    void removeActivityChangedListener(BooleanChangeListener bcl);
-    
-    /**
-     * Determine the requirements for the tool in its current configuration.
-     * The requirements of a tool may change depending on what options are set.
-     * @return A read-only list of pairs that denote 1. the required tool, and
-     *          2. the required {@link Configuration} that will yield the
-     *          required result.
-     */
-    List<Pair<Class<? extends Tool>, Configuration>> getRequirements();
-
 }

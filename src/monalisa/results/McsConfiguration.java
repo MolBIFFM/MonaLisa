@@ -39,7 +39,7 @@ public class McsConfiguration implements Configuration {
 
     @Override
     public String toString() {
-        return String.format("MinimalCutSet-from-%s-max-size-%d", this.objective.getProperty("name"), this.maxCutSetSize);
+        return String.format("MinimalCutSet-from-%s-max-size-%d", this.objective.getProperty("name"), this.getMaxCutSetSize());
     }
 
     @Override
@@ -62,6 +62,13 @@ public class McsConfiguration implements Configuration {
         }
         
         final McsConfiguration other = (McsConfiguration) obj;        
-        return this.maxCutSetSize == other.maxCutSetSize && this.objective.equals(other.objective);                
+        return this.getMaxCutSetSize() == other.getMaxCutSetSize() && this.objective.equals(other.objective);                
     }           
+
+    /**
+     * @return the maxCutSetSize
+     */
+    public int getMaxCutSetSize() {
+        return maxCutSetSize;
+    }
 }

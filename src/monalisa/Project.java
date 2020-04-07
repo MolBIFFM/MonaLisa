@@ -72,7 +72,7 @@ public final class Project implements Serializable {
         this.petriNet = PetriNetInputHandlers.load(petriNetFile);
         this.addonStorage = new HashMap<>();
 
-        this.toolMan = new ToolManager(this);
+        this.toolMan = new ToolManager();
 
         this.properties = new PropertyList();
 
@@ -90,7 +90,7 @@ public final class Project implements Serializable {
         this.petriNet = new PetriNet();
         this.addonStorage = new HashMap<>();
 
-        this.toolMan = new ToolManager(this);
+        this.toolMan = new ToolManager();
 
         this.projectChanged = false;
 
@@ -109,7 +109,7 @@ public final class Project implements Serializable {
         this.petriNet = pn;
         this.addonStorage = new HashMap<>();
         
-        this.toolMan = new ToolManager(this);
+        this.toolMan = new ToolManager();
 
         this.projectChanged = false;
 
@@ -238,7 +238,7 @@ public final class Project implements Serializable {
             // Explicitly set projectPath.
             project.projectPath = location;
 
-            project.toolMan = new ToolManager(project);
+            project.toolMan = new ToolManager();
             LOGGER.info("Initializing tools.");
 
             // Add tools that have been newly added to the MonaLisa

@@ -11,11 +11,10 @@ package monalisa.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import monalisa.data.pn.PetriNetFacade;
+import monalisa.Project;
 import monalisa.results.Configuration;
 import monalisa.results.Result;
 
@@ -26,14 +25,13 @@ import monalisa.results.Result;
  */
 public abstract class AbstractTool implements Tool {
     private final List<ProgressListener> progressListeners = new ArrayList<>();
-    private final List<BooleanChangeListener> activityChangedListeners = new ArrayList<>();
     private final Map<Configuration, Result> results = new HashMap<>();
 
     @Override
-    public final Map<Configuration, Result> start(PetriNetFacade pnf, ErrorLog log)
+    public final Map<Configuration, Result> start(Project project, ErrorLog log, Configuration config)
             throws InterruptedException {
         results.clear();
-        run(pnf, log);
+        run(project, log, config);
         return Collections.unmodifiableMap(results);
     }
     
@@ -47,43 +45,17 @@ public abstract class AbstractTool implements Tool {
     public synchronized void removeProgressListener(ProgressListener listener) {
         progressListeners.remove(listener);
     }
-    
-    @Override
-    public synchronized void addActivityChangedListener(
-            BooleanChangeListener listener) {
-        if (!activityChangedListeners.contains(listener))
-            activityChangedListeners.add(listener);
-    }
-    
-    @Override
-    public synchronized void removeActivityChangedListener(
-            BooleanChangeListener listener) {
-        activityChangedListeners.remove(listener);
-    }
-    
+
     /**
      * Fire a {@link ProgressListener} update.
      * @param percent The new progress percentage.
      */
     protected final void fireProgressUpdated(int percent) {
-        List<ProgressListener> listeners = getListenersCopy(progressListeners);
+        List<ProgressListener> listeners = getProgressListenersCopy(progressListeners);
         ProgressEvent event = new ProgressEvent(this, percent);
         
         for (ProgressListener listener : listeners)
             listener.progressUpdated(event);
-    }
-    
-    /**
-     * Fire a {@link BooleanChangeListener} update.
-     * @param newValue The new value.
-     */
-    protected final void fireActivityChanged(boolean newValue) {
-        List<BooleanChangeListener> listeners =
-            getListenersCopy(activityChangedListeners);
-        BooleanChangeEvent event = new BooleanChangeEvent(this, newValue);
-        
-        for (BooleanChangeListener listener : listeners)
-            listener.changed(event);
     }
 
     /**
@@ -114,11 +86,11 @@ public abstract class AbstractTool implements Tool {
     * @throws InterruptedException Thrown when the user interrupts the
     *          execution of the tools.
     */
-    protected abstract void run(PetriNetFacade pnf, ErrorLog log)
+    protected abstract void run(Project project, ErrorLog log, Configuration config)
             throws InterruptedException;
     
-    private synchronized <T extends EventListener> List<T> getListenersCopy(
-            List<T> listeners) {
+    private synchronized List<ProgressListener> getProgressListenersCopy(
+            List<ProgressListener> listeners) {
         return new ArrayList<>(listeners);
     }
 }

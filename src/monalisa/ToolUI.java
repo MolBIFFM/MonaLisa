@@ -10,6 +10,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +29,19 @@ import monalisa.resources.StringResources;
 import monalisa.results.Configuration;
 import monalisa.results.Result;
 import monalisa.results.TInvariantsConfiguration;
+import monalisa.tools.BooleanChangeEvent;
+import monalisa.tools.BooleanChangeListener;
 import monalisa.tools.ErrorLog;
 import monalisa.tools.Tool;
+import monalisa.tools.ToolPanel;
 import monalisa.tools.Tools;
+import monalisa.tools.cluster.ClusterPanel;
+import monalisa.tools.knockout.KnockoutPanel;
+import monalisa.tools.mcs.McsPanel;
+import monalisa.tools.mcts.MctsPanel;
+import monalisa.tools.minv.MInvariantPanel;
+import monalisa.tools.pinv.PInvariantPanel;
+import monalisa.tools.tinv.TInvariantPanel;
 import monalisa.tools.tinv.TInvariantTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,14 +50,14 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcel Gehrmann
  */
-public class ToolUI {
+public class ToolUI implements BooleanChangeListener {
     
     private final ToolManager toolMan;
-    transient private Map<Class<? extends Tool>, CollapsiblePanel> toolPanels;
-    
+    private final Project project;
+    transient private Map<Class<? extends Tool>, CollapsiblePanel> collapsibleToolPanels;
+    transient private Map<Class<? extends Tool>, ToolPanel> toolPanels;
     private final static Logger LOGGER = LogManager.getLogger(ToolUI.class);
     transient List<ToolStatusUpdateListener> toolStatusUpdateListeners;
-    Map<Class<? extends Tool>, Map<Configuration, Result>> results;
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
  
     private static final Color COMPLETE_COLOR = Settings.getAsColor("completeResult");
@@ -54,10 +66,48 @@ public class ToolUI {
     private static final Color ERROR_COLOR = Settings.getAsColor("error");
     private static final Color NOT_FINISHED_COLOR = Settings.getAsColor("notFinished");
     
-    public ToolUI(ToolManager toolMan){
+    // Defines order of collapsible panels
+    private static final List<Class<? extends ToolPanel>> toolPanTypes =
+        Arrays.<Class<? extends ToolPanel>>asList(
+            TInvariantPanel.class,
+            MInvariantPanel.class,
+            PInvariantPanel.class,
+            MctsPanel.class,
+            ClusterPanel.class,
+            KnockoutPanel.class,
+            McsPanel.class
+        );
+    
+    public ToolUI(ToolManager toolMan, Project project){
         this.toolMan = toolMan;
+        this.project = project;
     }
 
+    public List<Class<? extends ToolPanel>> getToolPanels() {
+        return Collections.unmodifiableList(toolPanTypes);
+    }
+    
+    public ToolPanel createPanel(Class <? extends ToolPanel> type) {
+        LOGGER.info("Creating new panel: " + type.getSimpleName());
+        if (type.equals(ClusterPanel.class)) {
+            return new ClusterPanel(project);
+        } else if (type.equals(KnockoutPanel.class)) {
+            return new KnockoutPanel(project);
+        } else if (type.equals(McsPanel.class)) {
+            return new McsPanel(project);
+        } else if (type.equals(MctsPanel.class)) {
+            return new MctsPanel(project);
+        } else if (type.equals(MInvariantPanel.class)) {
+            return new MInvariantPanel(project);
+        } else if (type.equals(PInvariantPanel.class)) {
+            return new PInvariantPanel(project);
+        } else if (type.equals(TInvariantPanel.class)) {
+            return new TInvariantPanel(project);
+        } else {
+            return null;
+        }
+    }
+        
     /**
      * Creates the GUI for the Analyze Frame.
      * @param container
@@ -69,13 +119,15 @@ public class ToolUI {
         GroupLayout.ParallelGroup horizontal = containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         GroupLayout.SequentialGroup vertical = containerLayout.createSequentialGroup();
         List<Tool> tools = toolMan.getTools();
+        collapsibleToolPanels = new HashMap<>();
         toolPanels = new HashMap<>();
         if (tools != null) {
             LOGGER.info("Laying out tools.");
             JPanel[] allPanels = new JPanel[tools.size()];
             int panelIndex = 0;
             boolean first = false;
-            for (Tool tool : tools) {
+            // Alternate Variant
+            for (Class <? extends ToolPanel> toolPanel : toolPanTypes){
                 if (!first) {
                     first = true;
                 } else {
@@ -83,27 +135,31 @@ public class ToolUI {
                     horizontal.addComponent(space);
                     vertical.addComponent(space);
                 }
+                ToolPanel tp = createPanel(toolPanel);
+                Tool tool = toolMan.getTool(tp.getToolType());
                 CollapsiblePanel panel = new CollapsiblePanel(strings.get(toolMan.getToolName(tool)));
                 GroupLayout layout = new GroupLayout(panel);
                 panel.setLayout(layout);
-                layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(tool.getUI(toolMan.getProject(), strings)));
-                layout.setVerticalGroup(layout.createSequentialGroup().addComponent(tool.getUI(toolMan.getProject(), strings)));
+
+                layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent((Component) tp));
+                layout.setVerticalGroup(layout.createSequentialGroup().addComponent((Component) tp));
                 panel.setAlignmentX(Component.LEFT_ALIGNMENT);
                 panel.setPreferredSize(new Dimension(container.getWidth(), panel.getHeight()));
                 horizontal.addComponent(panel, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, Short.MAX_VALUE);
                 vertical.addComponent(panel);
                 allPanels[panelIndex++] = panel;
-                toolPanels.put(tool.getClass(), panel);
+                collapsibleToolPanels.put(tool.getClass(), panel);
+                toolPanels.put(tool.getClass(), tp);
                 if (!tool.getClass().getSimpleName().equalsIgnoreCase("TInvariantTool")) {
                     panel.setCollapsed(true);
                 }
-                if (tool.finishedState(toolMan)) {
+                if (tp.finishedState(toolMan)) {
                     panel.setCollapsed(true);
                     setComplete(tool);
                 } else if (toolMan.hasResults(tool)) {
                     setHasResults(tool);
                 }
-                tool.addActivityChangedListener(toolMan); // This line here is functionality for sure, but how would I change it? Just do it on startup of the toolMan?
+                tp.addActivityChangedListener(this);
             }
             containerLayout.setHorizontalGroup(horizontal);
             containerLayout.setVerticalGroup(vertical);
@@ -117,13 +173,14 @@ public class ToolUI {
      * Run a single tool.
      * @param tool
      */
-    private void runSingleTool(Tool tool) { // Also needs to remain here in part
-        if (tool.isActive()) {
+    private void runSingleTool(Tool tool) {
+        if (toolPanels.get(tool.getClass()).isActive()) {
             if (!checkToolRequirements(tool)) {
                 setFailed(tool, new ErrorLog());
                 return;
             }
-            ErrorLog log = toolMan.runSingleTool(tool);
+            // Get the config from toolPanels somehow
+            ErrorLog log = toolMan.runSingleTool(tool, toolPanels.get(tool.getClass()).getConfig(), project);
             if (log.has(ErrorLog.Severity.ERROR)) {
                 setFailed(tool, log);
             } else if (log.has(ErrorLog.Severity.WARNING)) {
@@ -131,7 +188,7 @@ public class ToolUI {
             } else {
                 setHasResults(tool);
             }
-            if (tool.finishedState(toolMan)) {
+            if (toolPanels.get(tool.getClass()).finishedState(toolMan)) {
                 setComplete(tool);
             }
         }
@@ -144,7 +201,7 @@ public class ToolUI {
      */
     private boolean checkToolRequirements(Tool tool) { // UI
         LOGGER.info("Checking requirements for tool " + strings.get(Tools.name(tool)));
-        List<Pair<Class<? extends Tool>, Configuration>> requirements = tool.getRequirements();
+        List<Pair<Class<? extends Tool>, Configuration>> requirements = toolPanels.get(tool.getClass()).getRequirements();
         boolean requirementsSatisfied = true;
         for (Pair<Class<? extends Tool>, Configuration> requirement : requirements) {
             if (!toolMan.hasResult(requirement.first(), requirement.second())) {
@@ -175,7 +232,7 @@ public class ToolUI {
             public void run() {
                 for (Tool tool : toolMan.getTools()) {
                     if (givenTool.contains(tool.getClass().getName())) {
-                        tool.setActive(true);
+                        toolPanels.get(tool.getClass()).setActive(true);
                         if (toolMan.toolsThread.isInterrupted()) {
                             return;
                         }
@@ -210,11 +267,10 @@ public class ToolUI {
     }
 
     /**
-     * Sets the reults of the project to the given results
+     * Sets the reults of the toolManager to the given results
      * @param results
      */
     public void setResults(Map<Class<? extends Tool>, Map<Configuration, Result>> results) { // Calls UI (setHasResults, setHasNoResults)
-        this.results = results;
         // Check for existing results and mark these tools as calculated
         Tool t;
         for (Class<? extends Tool> toolClass : Tools.toolTypes()) {
@@ -233,7 +289,7 @@ public class ToolUI {
      */
     private void setFailed(Tool tool, ErrorLog log) { // UI
         LOGGER.warn("Setting tool as failed for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
+        CollapsiblePanel panel = collapsibleToolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolFailure"));
         panel.setTitleShade(ERROR_COLOR);
     }
@@ -244,7 +300,7 @@ public class ToolUI {
      */
     private void setHasResults(Tool tool) { // UI
         LOGGER.info("Setting tool results for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
+        CollapsiblePanel panel = collapsibleToolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolHasResults"));
         panel.setTitleShade(HAS_RESULT_COLOR);
     }
@@ -255,7 +311,7 @@ public class ToolUI {
      */
     private void setHasNoResults(Tool tool) { // UI
         LOGGER.info("Setting lack of tool results for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
+        CollapsiblePanel panel = collapsibleToolPanels.get(tool.getClass());
         panel.setComment("");
         panel.setTitleShade(NOT_FINISHED_COLOR);
     }
@@ -266,7 +322,7 @@ public class ToolUI {
      */
     private void setComplete(Tool tool) {  // UI
         LOGGER.info("Setting tool complete for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
+        CollapsiblePanel panel = collapsibleToolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolComplete"));
         panel.setTitleShade(COMPLETE_COLOR);
     }
@@ -277,7 +333,7 @@ public class ToolUI {
      */
     private void setCompleteWithWarnings(Tool tool, ErrorLog log) { // UI
         LOGGER.warn("Setting tool as complete with warnings for " + strings.get(Tools.name(tool)));
-        CollapsiblePanel panel = toolPanels.get(tool.getClass());
+        CollapsiblePanel panel = collapsibleToolPanels.get(tool.getClass());
         panel.setComment(strings.get("ToolCompleteWithWarnings"));
         panel.setTitleShade(WARNING_COLOR);
     }
@@ -290,13 +346,44 @@ public class ToolUI {
      */
     public void loadTFile(File TFile) throws IOException, InterruptedException {
         LOGGER.info("Loading from given TFile.");
-        Result loadTFileResults = TInputHandlers.load(TFile, toolMan.getProject().getPetriNet());
+        Result loadTFileResults = TInputHandlers.load(TFile, project.getPetriNet());
         Configuration loadTFileConfig = new TInvariantsConfiguration();
         Tool tool = new TInvariantTool();
         toolMan.putResult(tool, loadTFileConfig, loadTFileResults);
-        tool.finishedState(toolMan);
+        toolPanels.get(tool.getClass()).finishedState(toolMan);
         setComplete(tool);
         LOGGER.info("Finished loading from given TFile.");
+    }
+
+    @Override
+    public void changed(BooleanChangeEvent e) {
+        ToolPanel tp = (ToolPanel) e.getSource();
+        Tool tool = toolMan.getTool(tp.getToolType());
+        LOGGER.info("Change in requirements for '" + strings.get(Tools.name(tool)) + "'");
+        if (e.getNewValue()) {
+            LOGGER.info("Selecting requirements for tool configuration of '" + strings.get(Tools.name(tool)) + "' that are not yet calculated");
+            // Select all requirements for the tool configuration that are not
+            // yet calculated.
+            List<Pair<Class<? extends Tool>, Configuration>> requirements = toolPanels.get(tool.getClass()).getRequirements();
+            for (Pair<Class<? extends Tool>, Configuration> requirement : requirements) {
+                if (toolMan.hasResult(requirement.first(), requirement.second())) {
+                    continue;
+                }
+                toolPanels.get(toolMan.getTool(requirement.first()).getClass()).setActive(requirement.second());
+            }
+        } else {
+            LOGGER.info("Deselecting all tools that are dependent on " + strings.get(Tools.name(tool)));
+            // Deselect all tools that depend on this tool.
+            for (Tool otherTool : toolMan.getTools()) {
+                List<Pair<Class<? extends Tool>, Configuration>> requirements = toolPanels.get(otherTool.getClass()).getRequirements();
+                for (Pair<Class<? extends Tool>, ?> requirement : requirements) {
+                    if (requirement.first().isInstance(tool)) {
+                        toolPanels.get(otherTool.getClass()).setActive(false);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     /**

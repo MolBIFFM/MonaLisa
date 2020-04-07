@@ -26,6 +26,7 @@ import layout.TableLayout;
 import monalisa.MonaLisa;
 import monalisa.Project;
 import monalisa.Settings;
+import monalisa.ToolManager;
 import monalisa.ToolStatusUpdateEvent;
 import monalisa.ToolStatusUpdateListener;
 import monalisa.ToolUI;
@@ -960,7 +961,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         mainContainer.add(scrollPane);
         setDocumentTitle(project.getName());
         setProjectRelatedEnabled(true);
-        toolUI = new ToolUI(project.getToolManager());
+        toolUI = new ToolUI(project.getToolManager(), project);
+        LOGGER.info("Successfully initialized ToolUI");
         toolUI.getToolManager().addToolStatusUpdateListener(this);        
         toolUI.createAnalyzeFrame(contentPanel, strings);
         recursivelyDoLayout(mainContainer);
@@ -1058,6 +1060,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                         statusBar.setIndeterminateProgress(true);
                         break;
                     case FINISHED:
+                        LOGGER.info(e.getToolName() + " has finished.");
                         statusBar.setIndeterminateProgress(false);
                         statusBar.setProgressValue(100);
                         statusBar.setStatusText(" ");
@@ -1133,10 +1136,12 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     }
 
      private void updateTreeViewer() {
+         LOGGER.warn("Updating TreeViewer");
          if(toolUI.getToolManager().hasResults(ClusterTool.class)) {
+            LOGGER.warn("ClusterResults are available.");
             treeViewer.updateClusterResults();
             enableTVButton(true);
-         }
+         } else LOGGER.warn("ClusterResults are not available");
      }
 
     /**

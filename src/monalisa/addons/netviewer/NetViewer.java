@@ -72,6 +72,7 @@ import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
+import monalisa.tools.tinv.TInvariantPanel;
 import monalisa.util.MonaLisaFileChooser;
 import monalisa.util.MonaLisaFileFilter;
 import monalisa.util.OutputFileFilter;
@@ -841,18 +842,21 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void checkCTI(){
         tinvs = getTInvs();
-        int status  = new TInvariantTool().isCTI(tinvs, project);
-        
-        if(status == 1){
-            tb.CTILabel.setText(strings.get("CTI"));
-            tb.CTILabel.setForeground(new java.awt.Color(35, 132, 71));
-        }
-        else if(status == 0){
-            tb.CTILabel.setText(strings.get("NotCTI"));
-            tb.CTILabel.setForeground(new java.awt.Color(215, 69, 19));
-        }
-        else if(status == -1){
-            tb.CTILabel.setText("");
+        int status = ((TInvariantTool) project.getToolManager().getTool(TInvariantTool.class)).isCTI(tinvs, project);
+        switch (status) {
+            case 1:
+                tb.CTILabel.setText(strings.get("CTI"));
+                tb.CTILabel.setForeground(new java.awt.Color(35, 132, 71));
+                break;
+            case 0:
+                tb.CTILabel.setText(strings.get("NotCTI"));
+                tb.CTILabel.setForeground(new java.awt.Color(215, 69, 19));
+                break;
+            case -1:
+                tb.CTILabel.setText("");
+                break;
+            default:
+                break;
         }
     }
     /**

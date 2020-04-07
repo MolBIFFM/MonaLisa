@@ -11,13 +11,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import monalisa.data.Pair;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.results.Configuration;
 import monalisa.results.Result;
-import monalisa.tools.BooleanChangeEvent;
-import monalisa.tools.BooleanChangeListener;
 import monalisa.tools.ErrorLog;
 import monalisa.tools.ProgressEvent;
 import monalisa.tools.ProgressListener;
@@ -31,9 +28,8 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcel Gehrmann
  */
-public class ToolManager implements BooleanChangeListener, ProgressListener, Serializable {
+public class ToolManager implements ProgressListener, Serializable {
     
-    private final Project project;
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
 
     transient private List<Tool> tools;
@@ -44,12 +40,10 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
 
     private static final Logger LOGGER = LogManager.getLogger(ToolManager.class);
 
-    public ToolManager(Project project){
+    public ToolManager(){
         LOGGER.info("Initializing new ToolManager.");
-        this.project = project;
         this.toolStatusUpdateListeners = new ArrayList<>();        
         initTools();
-        
         LOGGER.info("Successfully initialized new ToolManager.");
     }
 
@@ -91,16 +85,12 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
         return Tools.name(tool);
     }
 
-    public Project getProject() {
-        return project;
-    }
-
     /**
      * Returns the instance of a given Tool.
      * @param toolType The class of the requested tool.
      * @return
      */
-    Tool getTool(Class<? extends Tool> toolType) {
+    public Tool getTool(Class<? extends Tool> toolType) {
         for (Tool tool : tools) {
             if (toolType.isInstance(tool)) {
                 return tool;
@@ -172,7 +162,7 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
      * @param result The result.
      */
     public void putResult(Class<? extends Tool> tool, Configuration config, Result result) {
-        LOGGER.debug("Putting result.");
+        LOGGER.debug("Putting result for tool " + tool.getSimpleName());
         if (results.containsKey(tool)) {
             results.get(tool).put(config, result);
         } else {
@@ -275,36 +265,6 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
         return getResults(tool.getClass());
     }
 
-    @Override
-    public void changed(BooleanChangeEvent e) {
-        Tool tool = (Tool) e.getSource();
-        LOGGER.info("Change in requirements for '" + strings.get(Tools.name(tool)) + "'");
-        if (e.getNewValue()) {
-            LOGGER.info("Selecting requirements for tool configuration of '" + strings.get(Tools.name(tool)) + "' that are not yet calculated");
-            // Select all requirements for the tool configuration that are not
-            // yet calculated.
-            List<Pair<Class<? extends Tool>, Configuration>> requirements = tool.getRequirements();
-            for (Pair<Class<? extends Tool>, Configuration> requirement : requirements) {
-                if (hasResult(requirement.first(), requirement.second())) {
-                    continue;
-                }
-                getTool(requirement.first()).setActive(requirement.second());
-            }
-        } else {
-            LOGGER.info("Deselecting all tools that are dependent on " + strings.get(Tools.name(tool)));
-            // Deselect all tools that depend on this tool.
-            for (Tool otherTool : tools) {
-                List<Pair<Class<? extends Tool>, Configuration>> requirements = otherTool.getRequirements();
-                for (Pair<Class<? extends Tool>, ?> requirement : requirements) {
-                    if (requirement.first().isInstance(tool)) {
-                        otherTool.setActive(false);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Tests whether the specified tool already has calculated some results.
      * @param tool The type of the tool class.
@@ -362,7 +322,6 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
 
     @Override
     public void progressUpdated(ProgressEvent e) {
-        LOGGER.info("Updating progress for a tool");
         fireToolStatusUpdate((Tool) e.getSource(), e.getPercent());
     }
 
@@ -380,12 +339,12 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
         toolMessages = new ErrorLog();
     }
 
-    public ErrorLog runSingleTool(Tool tool) {
+    public ErrorLog runSingleTool(Tool tool, Configuration config, Project project) {
         LOGGER.info(getToolName(tool) + " started");
         tool.addProgressListener(this);
         fireToolStatusUpdate(tool, ToolStatusUpdateEvent.Status.STARTED);
         ErrorLog log = new ErrorLog();
-        ToolRunner runner = new ToolRunner(tool, getProject().getPNFacade(), log);
+        ToolRunner runner = new ToolRunner(tool, project, log, config);
         runner.start();
         try {
             runner.join();
@@ -399,7 +358,7 @@ public class ToolManager implements BooleanChangeListener, ProgressListener, Ser
                 tool.removeProgressListener(this);
         }
         for (Map.Entry<Configuration, Result> entry : runner.results().entrySet()) {
-                putResult(tool, entry.getKey(), entry.getValue());
+            putResult(tool, entry.getKey(), entry.getValue());
         }
         toolMessages.logAll(log);
         fireToolStatusUpdate(tool, ToolStatusUpdateEvent.Status.FINISHED);

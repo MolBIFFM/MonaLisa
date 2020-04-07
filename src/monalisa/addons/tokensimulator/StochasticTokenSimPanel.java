@@ -16,10 +16,11 @@ import java.awt.event.KeyEvent;
  * @author Pavel Balazki.
  */
 public class StochasticTokenSimPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATION
     private StochasticTokenSim ts;
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form StochasticTokenSimPanel
@@ -27,8 +28,8 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
     private StochasticTokenSimPanel() {
         initComponents();
     }
-    
-    public StochasticTokenSimPanel(StochasticTokenSim tsN){
+
+    public StochasticTokenSimPanel(StochasticTokenSim tsN) {
         this.ts = tsN;
         initComponents();
     }
@@ -180,7 +181,7 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"

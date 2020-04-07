@@ -7,11 +7,11 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.tinv;
 
 @SuppressWarnings("serial")
 public final class TInvariantCalculationFailedException extends Exception {
+
     public TInvariantCalculationFailedException(Exception cause) {
         super(cause);
     }

@@ -7,8 +7,8 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.wrapper;
+
 import java.util.Set;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Wrapper Class for Mcs Combobox Items
+ *
  * @author Jens Einloft
  */
 public class McsWrapper {
@@ -29,7 +30,7 @@ public class McsWrapper {
         this.mcs = input;
         this.id = id;
         this.objective = objective;
-        LOGGER.debug("Created new McsWrapper " + this.id+" ("+this.mcs.size()+")");
+        LOGGER.debug("Created new McsWrapper " + this.id + " (" + this.mcs.size() + ")");
     }
 
     public Transition getObjective() {
@@ -46,6 +47,6 @@ public class McsWrapper {
 
     @Override
     public String toString() {
-        return "MC-Set "+this.id+" ("+this.mcs.size()+")";
+        return "MC-Set " + this.id + " (" + this.mcs.size() + ")";
     }
 }

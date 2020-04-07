@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.pn;
 
 import java.io.IOException;
@@ -24,14 +23,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * <p>A Petri net model.</p>
- * <p><strong>Note</strong>: For performance reasons, minimal sanity checks are
+ * <p>
+ * A Petri net model.</p>
+ * <p>
+ * <strong>Note</strong>: For performance reasons, minimal sanity checks are
  * performed. As a consequence, many forbidden operations yield undefined
  * behavior rather than failing gracefully with an appropriate exception. As an
  * example, trying to retrieve the tokens of a non-existing place will yield an
- * undefined result, as will calling
- * <code>addArc</code> etc.</p>
- * <p><strong>Attention!</strong> The API of this class is subject to change!
+ * undefined result, as will calling <code>addArc</code> etc.</p>
+ * <p>
+ * <strong>Attention!</strong> The API of this class is subject to change!
  * Future versions of this class will be immutable to change, a builder class
  * will provide functionality to build and change Petri nets. Do not rely on
  * this preliminary API in external projects.</p>
@@ -273,16 +274,16 @@ public final class PetriNet
             p.remove(place);
         }
 
-        Iterator<Pair<Place, Transition>> inarciter =
-                transitionInArcs.keySet().iterator();
+        Iterator<Pair<Place, Transition>> inarciter
+                = transitionInArcs.keySet().iterator();
         while (inarciter.hasNext()) {
             if (inarciter.next().first().equals(place)) {
                 inarciter.remove();
             }
         }
 
-        Iterator<Pair<Transition, Place>> outarciter =
-                transitionOutArcs.keySet().iterator();
+        Iterator<Pair<Transition, Place>> outarciter
+                = transitionOutArcs.keySet().iterator();
         while (outarciter.hasNext()) {
             if (outarciter.next().second().equals(place)) {
                 outarciter.remove();
@@ -331,6 +332,7 @@ public final class PetriNet
 
     /**
      * Adds a compartment to the Petri net
+     *
      * @param c
      */
     public void addCompartment(Compartment c) {
@@ -339,19 +341,20 @@ public final class PetriNet
 
     /**
      * Removes a compartment
+     *
      * @param c
      */
     public void removeCompartment(Compartment c) {
-        if(this.compartments.contains(c)) {
+        if (this.compartments.contains(c)) {
             this.compartments.remove(c);
-            for(Place p : places()) {
-                if(this.compartmentMap.containsKey(p)) {
+            for (Place p : places()) {
+                if (this.compartmentMap.containsKey(p)) {
                     p.unsetCompartment(c);
                 }
             }
 
-            for(Transition t : transitions()) {
-                if(this.compartmentMap.containsKey(t)) {
+            for (Transition t : transitions()) {
+                if (this.compartmentMap.containsKey(t)) {
                     t.unsetCompartment(c);
                 }
             }
@@ -360,11 +363,12 @@ public final class PetriNet
 
     /**
      * Returns a list of all compartments
+     *
      * @return
      */
     public List<Compartment> getCompartments() {
-        if(this.compartments == null) {
-           return new ArrayList<>();
+        if (this.compartments == null) {
+            return new ArrayList<>();
         } else {
             return this.compartments;
         }
@@ -372,11 +376,12 @@ public final class PetriNet
 
     /**
      * Returns the map of node to compartment
+     *
      * @return
      */
     public Map<UniquePetriNetEntity, Compartment> getCompartmentMap() {
-        if(this.compartmentMap == null) {
-           return new HashMap<>();
+        if (this.compartmentMap == null) {
+            return new HashMap<>();
         } else {
             return Collections.unmodifiableMap(this.compartmentMap);
         }
@@ -384,6 +389,7 @@ public final class PetriNet
 
     /**
      * Set the compartment for a UniquePetriNetEntity
+     *
      * @param upne
      * @param c
      */
@@ -393,11 +399,12 @@ public final class PetriNet
 
     /**
      * Remove a compartment for a UniquePetriNetEntity
+     *
      * @param upne
      * @param c
      */
     public void unsetCompartment(UniquePetriNetEntity upne, Compartment c) {
-        if(this.compartmentMap.containsKey(upne)) {
+        if (this.compartmentMap.containsKey(upne)) {
             this.compartmentMap.remove(upne);
         }
     }
@@ -540,6 +547,7 @@ public final class PetriNet
 
     /**
      * Returns the number of edges of the PetriNet.
+     *
      * @return
      */
     public int getNumberOfEdges() {
@@ -562,7 +570,6 @@ public final class PetriNet
         // Revive all Petri net components by setting their container.
         // At the same time, initialize the inverse lookup tables to save one
         // loop.
-
         for (Place p : places()) {
             p.setContainer(this);
             preTransitions.put(p, new ArrayList<Transition>());
@@ -574,7 +581,6 @@ public final class PetriNet
 
         // Build up inverse lookup tables.
         // CONSIDER: This may be slow.
-
         for (Map.Entry<Place, List<Transition>> entry : postTransitions.entrySet()) {
             for (Transition transition : entry.getValue()) {
                 prePlaces.get(transition).add(entry.getKey());

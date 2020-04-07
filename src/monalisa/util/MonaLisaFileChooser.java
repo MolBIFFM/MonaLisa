@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.io.File;
@@ -19,38 +18,38 @@ import monalisa.Settings;
  * @author Jens Einloft
  */
 public class MonaLisaFileChooser extends JFileChooser {
-    
+
     private String latestDirectory;
     //private static Boolean blockSelectedFile;            
-    
+
     public MonaLisaFileChooser() {
         super();
-        
+
         latestDirectory = Settings.get("latestDirectory");
-        
-        if(!latestDirectory.isEmpty()) {
+
+        if (!latestDirectory.isEmpty()) {
             this.setCurrentDirectory(new File(latestDirectory));
         }
     }
-       
+
     public MonaLisaFileChooser(String currentDirectoryPath) {
         super(currentDirectoryPath);
     }
 
     public MonaLisaFileChooser(File currentDirectory) {
         super(currentDirectory);
-    }    
-    
+    }
+
     @Override
     public File getSelectedFile() {
-        File selectedFile = super.getSelectedFile();        
-        
-        if(selectedFile != null) {
-            Settings.set("latestDirectory", selectedFile.getAbsolutePath().substring(0, selectedFile.getAbsolutePath().lastIndexOf(System.getProperty("file.separator"))));                    
-            Settings.writeToFile(Settings.getConfigFile());   
+        File selectedFile = super.getSelectedFile();
+
+        if (selectedFile != null) {
+            Settings.set("latestDirectory", selectedFile.getAbsolutePath().substring(0, selectedFile.getAbsolutePath().lastIndexOf(System.getProperty("file.separator"))));
+            Settings.writeToFile(Settings.getConfigFile());
         }
-        
+
         return selectedFile;
     }
-    
+
 }

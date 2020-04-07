@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.listener;
 
 import monalisa.addons.netviewer.wrapper.PinvWrapper;
@@ -32,6 +31,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jens Einloft
  */
 public class PinvSelectionListener implements ListSelectionListener {
+
     private final JList js;
     private final NetViewer nv;
     private final ToolBar tb;
@@ -39,6 +39,7 @@ public class PinvSelectionListener implements ListSelectionListener {
 
     /**
      * Init a new Listener
+     *
      * @param nv
      * @param tb
      * @param js
@@ -52,36 +53,36 @@ public class PinvSelectionListener implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent se) {
         boolean adjust = se.getValueIsAdjusting();
-        if(!adjust) {
+        if (!adjust) {
             LOGGER.debug("New P-Invariant selected, changing colouring");
-            if(js.getSelectedValue() == null)
+            if (js.getSelectedValue() == null) {
                 return;
-            
-        
+            }
+
             List<PinvWrapper> selectionValues = new ArrayList<PinvWrapper>();
             selectionValues = js.getSelectedValuesList();
-            
-            for(PinvWrapper sv : selectionValues){
+
+            for (PinvWrapper sv : selectionValues) {
 
                 nv.resetMessageLabel();
 
-                if(!tb.stackSelection()) {
+                if (!tb.stackSelection()) {
                     nv.resetColor();
                 }
 
                 Color chosenColor;
-                if(tb.manuellColorSelection()) {
+                if (tb.manuellColorSelection()) {
                     chosenColor = JColorChooser.showDialog(null, "Select color", null);
                 } else {
                     chosenColor = NetViewer.PINV_COLOR;
                 }
 
-                PInvariant pinv = ((PinvWrapper)sv).getPinv();
+                PInvariant pinv = ((PinvWrapper) sv).getPinv();
                 Set<Place> places = pinv.places();
 
                 Iterator<Place> it = places.iterator();
-                while(it.hasNext()) {
-                   nv.getNodeFromVertex(it.next()).getMasterNode().setColorForAllNodes(chosenColor);
+                while (it.hasNext()) {
+                    nv.getNodeFromVertex(it.next()).getMasterNode().setColorForAllNodes(chosenColor);
                 }
             }
             nv.getVisualizationViewer().repaint();

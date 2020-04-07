@@ -17,8 +17,10 @@ import monalisa.util.HighQualityRandom;
  * @author Pavel Balazki
  */
 public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATION
     private GillespieTokenSim ts;
+
     //END VARIABLES DECLARATION
     //BEGIN CONSTRUCTORS
     /**
@@ -27,7 +29,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
     private GillespieTokenSimPrefPanel() {
         initComponents();
     }
-    
+
     public GillespieTokenSimPrefPanel(GillespieTokenSim tsN) {
         this.ts = tsN;
         initComponents();

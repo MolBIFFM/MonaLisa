@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer;
 
 import java.awt.event.ItemEvent;
@@ -39,7 +38,7 @@ public class ClusterComboBoxItemListener implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent ie) {
-        if(!disabled) {
+        if (!disabled) {
             LOGGER.debug("Handling clustering selection");
             tv.showClustering((ClusteringWrapper) cb.getModel().getSelectedItem());
             LOGGER.debug("Successfully handled clustering selection");

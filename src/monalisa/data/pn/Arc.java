@@ -13,15 +13,17 @@ import java.util.Objects;
 
 /**
  * Any arc in a Petri net.
+ *
  * @author Konrad Rudolph
  */
 public final class Arc extends AbstractPetriNetEntity {
+
     private static final long serialVersionUID = -1924781466391771603L;
 
     private Object source;
     private Object aim;
 
-     /**
+    /**
      * Create a new default arc.
      */
     public Arc() {
@@ -36,18 +38,20 @@ public final class Arc extends AbstractPetriNetEntity {
         this.source = source;
         this.aim = aim;
     }
-    
+
     /**
      * Create a copy of the given arc and all its properties.
+     *
      * @param other The other arc.
      */
     public Arc(Arc other) {
         super(other);
         setWeight(other.weight());
     }
-    
+
     /**
      * Create a new arc with a given weight.
+     *
      * @param weight The weight of the arc.
      */
     public Arc(Object source, Object aim, int weight) {
@@ -55,16 +59,17 @@ public final class Arc extends AbstractPetriNetEntity {
         this.aim = aim;
         setWeight(weight);
     }
-    
+
     /**
      * @return The weight of the arc.
      */
     public int weight() {
         return getValueOrDefault("weight", 1);
     }
-    
+
     /**
      * Set a new weight for the arc.
+     *
      * @param weight The new weight.
      */
     public void setWeight(int weight) {
@@ -73,6 +78,7 @@ public final class Arc extends AbstractPetriNetEntity {
 
     /**
      * Returns the source of the arc
+     *
      * @return source
      */
     public Object source() {
@@ -81,6 +87,7 @@ public final class Arc extends AbstractPetriNetEntity {
 
     /**
      * Returns the aim of the arc
+     *
      * @return aim
      */
     public Object aim() {
@@ -106,5 +113,5 @@ public final class Arc extends AbstractPetriNetEntity {
         final Arc other = (Arc) obj;
         return (this.source.equals(other.source) && this.aim.equals(other.aim));
     }
-    
+
 }

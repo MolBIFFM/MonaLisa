@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -23,8 +22,8 @@ import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 public final class Knockout implements Result {
+
     private static final long serialVersionUID = 3512064024064281251L;
     private final Map<List<String>, List<String>> knockouts;
     private static final Logger LOGGER = LogManager.getLogger(Knockout.class);
@@ -48,7 +47,7 @@ public final class Knockout implements Result {
             // List of all transitions
             sb.append("# reaction_id:name\n");
             int i = 1;
-            for(Transition t : project.getPetriNet().transitions()) {
+            for (Transition t : project.getPetriNet().transitions()) {
                 transitionMap.put((String) t.getProperty("name"), i);
                 sb.append(i++);
                 sb.append(":");
@@ -59,7 +58,7 @@ public final class Knockout implements Result {
             // List of all Places
             sb.append("\n# species_id:name\n");
             i = 1;
-            for(Place p : project.getPetriNet().places()) {
+            for (Place p : project.getPetriNet().places()) {
                 placeMap.put((String) p.getProperty("name"), i);
                 sb.append(i++);
                 sb.append(":");
@@ -68,7 +67,7 @@ public final class Knockout implements Result {
             }
 
             // What is knocked out - places or transitions?
-            if(config.toString().contains("Transition")) {
+            if (config.toString().contains("Transition")) {
                 knockedOutString = "reactions";
                 knockedOutMap = transitionMap;
             } else {
@@ -81,7 +80,7 @@ public final class Knockout implements Result {
             sb.append("_id; ... : ko_affected_reaction; ...\n");
 
             int knockedOutSize, alsoKnockedOutSize;
-            for(List<String> knockedOut : knockouts.keySet()) {
+            for (List<String> knockedOut : knockouts.keySet()) {
                 knockedOutSize = knockedOut.size();
                 for (i = 0; i < knockedOutSize; i++) {
                     sb.append(knockedOutMap.get(knockedOut.get(i)));

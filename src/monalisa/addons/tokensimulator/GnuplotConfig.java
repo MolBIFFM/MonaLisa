@@ -16,11 +16,13 @@ import javax.swing.JCheckBox;
 import monalisa.data.pn.Place;
 
 /**
- * Configuration used for creating a gnuplot-file for simulation results.
- * Not used in the current version.
+ * Configuration used for creating a gnuplot-file for simulation results. Not
+ * used in the current version.
+ *
  * @author Pavel Balazki
  */
 public class GnuplotConfig extends javax.swing.JFrame {
+
     //BEGIN VARIABLES DECLARATION
     /**
      * Output format of gnuplot.
@@ -38,7 +40,9 @@ public class GnuplotConfig extends javax.swing.JFrame {
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form GnuplotConfigFrame
-     * @param places Collection of places of the system which values can be plotted.
+     *
+     * @param places Collection of places of the system which values can be
+     * plotted.
      */
     public GnuplotConfig(Collection<Place> places) {
         initComponents();
@@ -46,7 +50,7 @@ public class GnuplotConfig extends javax.swing.JFrame {
         /*
          * Create a check box for each place of the net.
          */
-        for (Place p : places){
+        for (Place p : places) {
             JCheckBox cb = new JCheckBox(p.getProperty("name").toString());
             cb.setSelected(true);
             this.placesSelectionPanel.add(cb);

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui.components;
 
 import java.awt.Color;
@@ -22,17 +21,18 @@ import javax.swing.JPanel;
 import monalisa.resources.ResourceManager;
 
 public class SplashScreen extends JPanel {
+
     private static final long serialVersionUID = 1L;
     private Icon splash;
-    
+
     public SplashScreen() {
         initComponents();
     }
-    
+
     private void initComponents() {
         splash = ResourceManager.instance().getIcon("splash.png");
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         final Color shade = getBackground();
@@ -42,7 +42,7 @@ public class SplashScreen extends JPanel {
 
         g2d.setPaint(new GradientPaint(0, 0, shade, 0, h, shade.darker()));
         g2d.fill(new Rectangle(w, h));
-        
+
         int x = getWidth() / 2 - splash.getIconWidth() / 2;
         int y = getHeight() / 2 - splash.getIconHeight() / 2;
         splash.paintIcon(this, g, x, y);

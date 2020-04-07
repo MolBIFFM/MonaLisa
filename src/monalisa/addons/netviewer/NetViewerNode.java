@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.awt.Color;
@@ -24,15 +23,16 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * A Node in the NetViewer
+ *
  * @author Jens Einloft
  */
-
 public class NetViewerNode implements Serializable {
+
     private static final long serialVersionUID = 2021607424070798173L;
 
     private static final String READ_PLACE = "Place";
     private static final String READ_TRANSITION = "Transition";
-    private static final Color transparent = new Color(0,0,0,0);
+    private static final Color transparent = new Color(0, 0, 0, 0);
 
     private final String nodeType;
     private String labelName;
@@ -54,9 +54,10 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Generate a new NetViewerNode
+     *
      * @param id
      * @param nodeType PLACE, TRANSITION or BEND
-     * @param name  name shown in layout
+     * @param name name shown in layout
      */
     public NetViewerNode(int id, String nodeType, String name) {
         LOGGER.debug("Creating new NetViewerNode: " + nodeType + " " + name);
@@ -64,15 +65,13 @@ public class NetViewerNode implements Serializable {
         this.nodeType = nodeType;
         this.labelName = name;
 
-        if(nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
+        if (nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
             this.corners = 4;
             this.color = Color.BLACK;
-        }
-        else if(nodeType.equalsIgnoreCase(NetViewer.PLACE)) {
+        } else if (nodeType.equalsIgnoreCase(NetViewer.PLACE)) {
             this.corners = 0;
             this.color = Color.WHITE;
-        }
-        else if(nodeType.equalsIgnoreCase(NetViewer.BEND)) {
+        } else if (nodeType.equalsIgnoreCase(NetViewer.BEND)) {
             this.corners = 4;
             this.color = transparent;
         }
@@ -94,10 +93,11 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Generates a logical place
+     *
      * @param id
      * @param nodeType PLACE
-     * @param name  intern name
-     * @param name  name shown in layout
+     * @param name intern name
+     * @param name name shown in layout
      * @param masterNode
      */
     public NetViewerNode(int id, NetViewerNode masterNode) {
@@ -119,6 +119,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * generates a new logical place
+     *
      * @param id
      * @return
      */
@@ -131,6 +132,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Return the corners of shape
+     *
      * @return
      */
     public int getCorners() {
@@ -139,6 +141,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Set the corners for shape
+     *
      * @param corners
      */
     public void setCorners(int corners) {
@@ -147,6 +150,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the node type
+     *
      * @return
      */
     public String getNodeType() {
@@ -155,6 +159,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the label name
+     *
      * @return
      */
     public String getName() {
@@ -163,6 +168,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the label name
+     *
      * @param name
      */
     public void setName(String name) {
@@ -171,6 +177,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the id
+     *
      * @return
      */
     public int getId() {
@@ -179,6 +186,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Set the given number of tokens
+     *
      * @param tokens
      */
     public void setTokens(Long tokens) {
@@ -187,20 +195,21 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Change the color of all logical places
+     *
      * @param color
      */
     public void setColorForAllNodes(Color color) {
         LOGGER.info("Changing color for all logical places");
         this.setColor(color);
-        for(NetViewerNode n : this.logicalPlaces) {
+        for (NetViewerNode n : this.logicalPlaces) {
             n.setColor(color);
         }
         LOGGER.info("Successfully changed color for all logical places");
     }
 
-
     /**
      * Returns the number of tokens
+     *
      * @return
      */
     public Long getTokens() {
@@ -209,19 +218,22 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns "Transition x" instead of "TRANSITION x" (same with PLACE)
+     *
      * @return
      */
     public String getReadableNodeType() {
-        if(nodeType.equalsIgnoreCase(NetViewer.TRANSITION))
+        if (nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
             return READ_TRANSITION;
-        else if(nodeType.equalsIgnoreCase(NetViewer.PLACE))
+        } else if (nodeType.equalsIgnoreCase(NetViewer.PLACE)) {
             return READ_PLACE;
+        }
 
         return "ERROR";
     }
 
     /**
      * Returns all logical places
+     *
      * @return
      */
     public List<NetViewerNode> getLogicalPlaces() {
@@ -240,6 +252,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the number of logical places
+     *
      * @return
      */
     public int getNbrOfLogicalPlaces() {
@@ -248,6 +261,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the color
+     *
      * @return
      */
     public Color getColor() {
@@ -256,6 +270,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Set to given color
+     *
      * @param color
      */
     public void setColor(Color color) {
@@ -280,6 +295,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Is it a logical place?
+     *
      * @return
      */
     public Boolean hasMasterNode() {
@@ -288,6 +304,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns the master node of a logical place
+     *
      * @return
      */
     public NetViewerNode getMasterNode() {
@@ -296,19 +313,22 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Remove a logical place from the list of logical places
+     *
      * @param logicalNode
      */
     public void removeLogicalNode(NetViewerNode logicalNode) {
         LOGGER.info("Removing logical place from list for '" + this.getName() + "'");
         this.logicalPlaces.remove(logicalNode);
         logicalNode.setLogical(false);
-        if(this.logicalPlaces.isEmpty())
+        if (this.logicalPlaces.isEmpty()) {
             isLogical = false;
+        }
         LOGGER.info("Successfully removed logical place from list for '" + this.getName() + "'");
     }
 
     /**
      * Add a new input edge
+     *
      * @param inEdge
      */
     public void addInEdge(NetViewerEdge inEdge) {
@@ -317,6 +337,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Remove a input edge
+     *
      * @param inEdge
      */
     public void removeInEdge(NetViewerEdge inEdge) {
@@ -325,6 +346,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Add a new output edge
+     *
      * @param outEdge
      */
     public void addOutEdge(NetViewerEdge outEdge) {
@@ -333,6 +355,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Remove a output edge
+     *
      * @param outEdge
      */
     public void removeOutEdge(NetViewerEdge outEdge) {
@@ -341,6 +364,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns a List of all input edges
+     *
      * @return
      */
     public List<NetViewerEdge> getInEdges() {
@@ -349,6 +373,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Returns a list of all output edges
+     *
      * @return
      */
     public List<NetViewerEdge> getOutEdges() {
@@ -357,12 +382,13 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Set the amount of tokens for all logical places of the node
+     *
      * @param tokens
      */
     public void setTokensForAllNodes(Long tokens) {
         LOGGER.info("Setting token amount for all logical places of '" + this.getName() + "'");
         this.setTokens(tokens);
-        for(NetViewerNode n : this.logicalPlaces) {
+        for (NetViewerNode n : this.logicalPlaces) {
             n.setTokens(tokens);
         }
         LOGGER.info("Successfully set token amount for all logical places of '" + this.getName() + "'");
@@ -370,12 +396,13 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Change the stroke color of all logical places
+     *
      * @param color
      */
     public void setStrokeColorForAllNodes(Color color) {
         LOGGER.info("Setting stroke color for all logical places of '" + this.getName() + "'");
         this.setStrokeColor(color);
-        for(NetViewerNode n : this.logicalPlaces) {
+        for (NetViewerNode n : this.logicalPlaces) {
             n.setStrokeColor(color);
         }
         LOGGER.info("Successfully set stroke color for all logical places of '" + this.getName() + "'");
@@ -383,12 +410,13 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Change the corners of all logical places
+     *
      * @param corners
      */
     public void setCornersForAllNodes(int corners) {
         LOGGER.info("Setting corner for all logical places of '" + this.getName() + "'");
         this.setCorners(corners);
-        for(NetViewerNode n : this.logicalPlaces) {
+        for (NetViewerNode n : this.logicalPlaces) {
             n.setCorners(corners);
         }
         LOGGER.info("Successfully set corner for all logical places of '" + this.getName() + "'");
@@ -396,11 +424,12 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Change the name of all logical places
+     *
      * @param name
      */
     public void setNameForAllNodes(String name) {
         LOGGER.info("Setting name for all logical places of '" + this.getName() + "' to '" + name + "'");
-        for(NetViewerNode n : this.logicalPlaces) {
+        for (NetViewerNode n : this.logicalPlaces) {
             n.setName(name);
         }
         LOGGER.info("Successfully set name for all logical places of '" + this.getName() + "' to '" + name + "'");
@@ -411,8 +440,9 @@ public class NetViewerNode implements Serializable {
      * @return
      */
     public Position getLabelPosition() {
-        if(labelPosition == null)
+        if (labelPosition == null) {
             return Position.SE;
+        }
 
         return labelPosition;
     }
@@ -423,21 +453,24 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Is master node?
+     *
      * @return
      */
     public Boolean isMasterNode() {
-        if(this.logicalPlaces.isEmpty())
+        if (this.logicalPlaces.isEmpty()) {
             return false;
-        else if(this.logicalPlaces.size() == 1 && !this.isLogical)
+        } else if (this.logicalPlaces.size() == 1 && !this.isLogical) {
             return false;
-        else if(this.logicalPlaces.size() > 1)
+        } else if (this.logicalPlaces.size() > 1) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     /**
      * Is this node a logical place?
+     *
      * @return
      */
     public Boolean isLogical() {
@@ -452,7 +485,7 @@ public class NetViewerNode implements Serializable {
      * Set the showLabel flag
      */
     public void setShowLabel(Boolean value) {
-            showLabel = value;
+        showLabel = value;
     }
 
     /*
@@ -464,6 +497,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Set the color of the nodes label in the SearchBar
+     *
      * @param searchBarColor
      */
     public void setSearchBarColor(Color searchBarColor) {
@@ -480,6 +514,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Add a property to the Petri net entity.
+     *
      * @param <T> The type of the property.
      * @param key The key of the property.
      * @param value The property.
@@ -490,6 +525,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Retrieve a strongly typed property, based on its key.
+     *
      * @param <T> The type of the property to retrieve.
      * @param key The key of the property.
      * @return The property, cast to type <code>T</code>.
@@ -500,18 +536,21 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Removes a property from the properties list
+     *
      * @param key
      */
     public void removeProperty(String key) {
-        if(properties.has(key)) {
+        if (properties.has(key)) {
             properties.remove(key);
         }
     }
 
-     /**
+    /**
      * Test whether the entity has a given property.
+     *
      * @param key The key to look for.
-     * @return <code>true</code>, if the key is present, otherwise <code>false</code>.
+     * @return <code>true</code>, if the key is present, otherwise
+     * <code>false</code>.
      */
     public boolean hasProperty(String key) {
         return properties.has(key);
@@ -519,6 +558,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Retrieve the whole PropertyList
+     *
      * @return The PropertyList of the PetriNetEntity
      */
     public PropertyList getPropertyList() {
@@ -532,20 +572,21 @@ public class NetViewerNode implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this)
+        if (obj == this) {
             return true;
-        try {
-            if(obj.getClass().equals(this.getClass())) {
-                NetViewerNode nvNode = (NetViewerNode) obj;
-                if(!this.getNodeType().equalsIgnoreCase(nvNode.getNodeType()))
-                    return false;
-                return this.id == nvNode.getId();
-            }
-            else
-                return false;
         }
-        catch(Exception ex) {
+        try {
+            if (obj.getClass().equals(this.getClass())) {
+                NetViewerNode nvNode = (NetViewerNode) obj;
+                if (!this.getNodeType().equalsIgnoreCase(nvNode.getNodeType())) {
+                    return false;
+                }
+                return this.id == nvNode.getId();
+            } else {
                 return false;
+            }
+        } catch (Exception ex) {
+            return false;
         }
     }
 
@@ -556,6 +597,7 @@ public class NetViewerNode implements Serializable {
 
     /**
      * Function is called, if a project is loaded.
+     *
      * @param objectInput
      * @throws IOException
      * @throws ClassNotFoundException
@@ -563,7 +605,7 @@ public class NetViewerNode implements Serializable {
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
         objectInput.defaultReadObject();
 
-        if(tokens == null) {
+        if (tokens == null) {
             tokens = 0L;
         }
     }

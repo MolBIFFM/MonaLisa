@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer;
 
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import org.apache.logging.log4j.Logger;
  * @author Stefan Marchi
  */
 public class TreeViewerNode {
+
     private static final long serialVersionUID = -5990160642604154557L;
     public static final String CLUSTERNODE = "cn";
     public static final String BENDNODE = "bn";
@@ -58,6 +58,7 @@ public class TreeViewerNode {
 
     /**
      * Returns the original hight of this node in the Clustertree
+     *
      * @return
      */
     public double getHeight() {
@@ -66,6 +67,7 @@ public class TreeViewerNode {
 
     /**
      * Set the original hight of this node in the Clustertree
+     *
      * @param height
      */
     public void setHeight(double height) {

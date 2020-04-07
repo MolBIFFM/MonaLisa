@@ -14,10 +14,11 @@ package monalisa.addons.tokensimulator;
  * @author Pavel Balazki.
  */
 public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATOIN
     private AsynchronousTokenSim ts;
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form SynchronousTokenSimPrefPanel
@@ -25,7 +26,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     private SynchronousTokenSimPrefPanel() {
         initComponents();
     }
-    
+
     public SynchronousTokenSimPrefPanel(AsynchronousTokenSim tsN) {
         this.ts = tsN;
         initComponents();

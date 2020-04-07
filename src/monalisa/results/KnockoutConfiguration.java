@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.util.Collections;
@@ -18,6 +17,7 @@ import monalisa.resources.StringResources;
 import monalisa.tools.knockout.KnockoutAlgorithm;
 
 public final class KnockoutConfiguration implements Configuration {
+
     private static final long serialVersionUID = -7979281931471497240L;
     private final KnockoutAlgorithm algorithm;
     private final List<? extends UniquePetriNetEntity> entities;
@@ -36,14 +36,14 @@ public final class KnockoutConfiguration implements Configuration {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this)
+        if (obj == this) {
             return true;
-        else if (obj instanceof KnockoutConfiguration) {
+        } else if (obj instanceof KnockoutConfiguration) {
             KnockoutConfiguration other = (KnockoutConfiguration) obj;
             return getAlgorithm() == other.getAlgorithm() && getEntities().equals(other.getEntities());
-        }
-        else
+        } else {
             return false;
+        }
     }
 
     @Override
@@ -53,10 +53,11 @@ public final class KnockoutConfiguration implements Configuration {
 
     @Override
     public String toString() {
-        if (getEntities().isEmpty())
+        if (getEntities().isEmpty()) {
             return algorithmName();
-        else
+        } else {
             return String.format("%s-%d-entities", algorithmName(), getEntities().size());
+        }
     }
 
     @Override

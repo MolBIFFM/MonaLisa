@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.awt.event.WindowEvent;
@@ -16,9 +15,11 @@ import monalisa.addons.netviewer.NetViewer;
 
 /**
  * Window listener for option frames in addons
+ *
  * @author Jens Einloft
  */
 public class MonaLisaWindowListener implements WindowListener {
+
     private final NetViewer parent;
 
     public MonaLisaWindowListener(NetViewer parent) {
@@ -26,7 +27,8 @@ public class MonaLisaWindowListener implements WindowListener {
     }
 
     @Override
-    public void windowOpened(WindowEvent e) { }
+    public void windowOpened(WindowEvent e) {
+    }
 
     @Override
     public void windowClosing(WindowEvent e) {
@@ -39,15 +41,19 @@ public class MonaLisaWindowListener implements WindowListener {
     }
 
     @Override
-    public void windowIconified(WindowEvent e) { }
+    public void windowIconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeiconified(WindowEvent e) { }
+    public void windowDeiconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowActivated(WindowEvent e) { }
+    public void windowActivated(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeactivated(WindowEvent e) { }
+    public void windowDeactivated(WindowEvent e) {
+    }
 
 }

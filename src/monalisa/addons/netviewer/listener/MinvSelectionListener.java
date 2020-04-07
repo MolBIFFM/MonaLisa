@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
  * @author daniel
  */
 public class MinvSelectionListener implements ListSelectionListener {
+
     private final JList js;
     private final Boolean colorPlaces;
     private final NetViewer nv;
@@ -37,9 +38,9 @@ public class MinvSelectionListener implements ListSelectionListener {
     private final ToolBar tb;
     private final Logger LOGGER = LogManager.getLogger(MinvSelectionListener.class);
 
-   public MinvSelectionListener(NetViewer nv, ToolBar tb, JList js, Boolean colorPlaces) {
+    public MinvSelectionListener(NetViewer nv, ToolBar tb, JList js, Boolean colorPlaces) {
         this.js = js;
-        this.tb  = tb;
+        this.tb = tb;
         this.colorPlaces = colorPlaces;;
         this.nv = nv;
 
@@ -47,36 +48,35 @@ public class MinvSelectionListener implements ListSelectionListener {
     }
 
     public void enableSelectionListener() {
-        this.blocked = false;  
+        this.blocked = false;
     }
 
     @Override
     public void valueChanged(ListSelectionEvent se) {
         boolean adjust = se.getValueIsAdjusting();
-        if(!adjust) 
-        {
+        if (!adjust) {
             LOGGER.debug("New M-Invariant selected, changing colouring");
             // Nothing is selected
-            if(js.getSelectedValue() == null)
+            if (js.getSelectedValue() == null) {
                 return;
+            }
 
             List<MinvWrapper> selectionValues;
             selectionValues = js.getSelectedValuesList();
-            
-            for(Object sv : selectionValues){
+
+            for (Object sv : selectionValues) {
                 // if an object is selected, that is not a Wrapper
-                if(!sv.getClass().getSimpleName().equalsIgnoreCase("MinvWrapper")){
+                if (!sv.getClass().getSimpleName().equalsIgnoreCase("MinvWrapper")) {
                     nv.resetColor();
-                }
-                else {
+                } else {
                     nv.resetMessageLabel();
 
-                    if(!tb.stackSelection()) {
+                    if (!tb.stackSelection()) {
                         nv.resetColor();
                     }
 
                     Color chosenColor;
-                    if(tb.manuellColorSelection()) {
+                    if (tb.manuellColorSelection()) {
                         chosenColor = JColorChooser.showDialog(null, "Select color", null);
                     } else {
                         chosenColor = NetViewer.TINV_COLOR;
@@ -90,46 +90,49 @@ public class MinvSelectionListener implements ListSelectionListener {
                     float norm;
                     List<Integer> allFactors = new ArrayList<>();
 
-                    MInvariant tinv = ((MinvWrapper)sv).getMinv();
+                    MInvariant tinv = ((MinvWrapper) sv).getMinv();
                     transitions = new HashSet<>(tinv.transitions());
 
                     // Find minimum and maximum value
-                    if(nv.getHeatMap()) {
+                    if (nv.getHeatMap()) {
                         hsbvals = Color.RGBtoHSB(chosenColor.getRed(), chosenColor.getGreen(), chosenColor.getBlue(), null);
                         allFactors.clear();
                         it = transitions.iterator();
-                        while(it.hasNext()) {
+                        while (it.hasNext()) {
                             allFactors.add(tinv.factor(it.next()));
                         }
-                        min = (float)Collections.min(allFactors);
-                        max = (float)Collections.max(allFactors);
-                        maxmin = max-min;
+                        min = (float) Collections.min(allFactors);
+                        max = (float) Collections.max(allFactors);
+                        maxmin = max - min;
                     }
 
                     // Coloring of the transitions, edges and places
                     it = transitions.iterator();
-                    while(it.hasNext()) {
+                    while (it.hasNext()) {
                         t = it.next();
-                        if(nv.getHeatMap()) {
+                        if (nv.getHeatMap()) {
                             norm = (tinv.factor(t) - min) / maxmin;
-                            if(norm < 0.05)
-                                norm = (float)0.05;
+                            if (norm < 0.05) {
+                                norm = (float) 0.05;
+                            }
                             chosenColor = new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2]));
                         }
 
                         nv.getNodeFromVertex(t).setColor(chosenColor);
-                        if(colorPlaces) {
+                        if (colorPlaces) {
                             // Color all in/out edges and their source/aim places
-                            for(NetViewerEdge nvEdge : nv.getNodeFromVertex(t).getOutEdges()) {
+                            for (NetViewerEdge nvEdge : nv.getNodeFromVertex(t).getOutEdges()) {
                                 nvEdge.getMasterEdge().setColorForAllEdges(chosenColor);
-                                if(nvEdge.getMasterEdge().getAim().getNodeType().equals(NetViewer.PLACE))
+                                if (nvEdge.getMasterEdge().getAim().getNodeType().equals(NetViewer.PLACE)) {
                                     nvEdge.getMasterEdge().getAim().getMasterNode().setColorForAllNodes(chosenColor);
+                                }
                             }
 
-                            for(NetViewerEdge nvEdge : nv.getNodeFromVertex(t).getInEdges()) {
+                            for (NetViewerEdge nvEdge : nv.getNodeFromVertex(t).getInEdges()) {
                                 nvEdge.getMasterEdge().setColorForAllEdges(chosenColor);
-                                if(nvEdge.getMasterEdge().getSource().getNodeType().equals(NetViewer.PLACE))
+                                if (nvEdge.getMasterEdge().getSource().getNodeType().equals(NetViewer.PLACE)) {
                                     nvEdge.getMasterEdge().getSource().getMasterNode().setColorForAllNodes(chosenColor);
+                                }
                             }
                         }
                     }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.pinv;
 
 import monalisa.data.pn.PInvariant;

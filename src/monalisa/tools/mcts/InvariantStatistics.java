@@ -7,9 +7,7 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.mcts;
-
 
 import java.util.*;
 import monalisa.data.pn.PetriNetFacade;
@@ -20,7 +18,7 @@ import monalisa.data.pn.Transition;
 public class InvariantStatistics {
 
     public static int[][] calculateMatrixTInvariant2TransitionOccurrence(
-            List<TInvariant> invariants, 
+            List<TInvariant> invariants,
             List<Transition> transitions) {
         int[][] matrix = new int[invariants.size()][transitions.size()];
         for (int indexInvariant = 0; indexInvariant < invariants.size(); indexInvariant++) {
@@ -35,7 +33,7 @@ public class InvariantStatistics {
 
     public static List<TInvariant> getSupportMCTset(
             int[][] matrix,
-            List<Transition> transitions, 
+            List<Transition> transitions,
             List<TInvariant> invariants,
             PetriNetFacade pnf) {
         MCTSFactory mctsf = new MCTSFactory(matrix, transitions, invariants, pnf);
@@ -44,7 +42,7 @@ public class InvariantStatistics {
 
     public static List<TInvariant> getStrongMCTset(
             int[][] matrix,
-            List<Transition> transitions, 
+            List<Transition> transitions,
             List<TInvariant> invariants,
             PetriNetFacade pnf) {
         MCTSFactory mctsf = new MCTSFactory(matrix, transitions, invariants, pnf);

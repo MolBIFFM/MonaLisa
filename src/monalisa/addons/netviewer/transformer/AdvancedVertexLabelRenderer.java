@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import java.awt.Component;
@@ -33,6 +32,7 @@ import monalisa.addons.netviewer.NetViewerNode;
 
 /**
  * VertexLabelRenderer with a specific label position for every vertex
+ *
  * @author from JUNG modifyed by Jens Einloft
  */
 public class AdvancedVertexLabelRenderer<V, E> implements Renderer.VertexLabel<V, E> {
@@ -67,12 +67,11 @@ public class AdvancedVertexLabelRenderer<V, E> implements Renderer.VertexLabel<V
     }
 
     /**
-     * Labels the specified vertex with the specified label.
-     * Uses the font specified by this instance's
-     * <code>VertexFontFunction</code>.  (If the font is unspecified, the existing
-     * font for the graphics context is used.)  If vertex label centering
-     * is active, the label is centered on the position of the vertex; otherwise
-     * the label is offset slightly.
+     * Labels the specified vertex with the specified label. Uses the font
+     * specified by this instance's <code>VertexFontFunction</code>. (If the
+     * font is unspecified, the existing font for the graphics context is used.)
+     * If vertex label centering is active, the label is centered on the
+     * position of the vertex; otherwise the label is offset slightly.
      */
     @Override
     public void labelVertex(RenderContext<V, E> rc, Layout<V, E> layout, V v, String label) {
@@ -220,7 +219,7 @@ public class AdvancedVertexLabelRenderer<V, E> implements Renderer.VertexLabel<V
     }
 
     /**
-     * @param positioner the positioner to set 
+     * @param positioner the positioner to set
      */
     @Override
     public void setPositioner(Positioner positioner) {

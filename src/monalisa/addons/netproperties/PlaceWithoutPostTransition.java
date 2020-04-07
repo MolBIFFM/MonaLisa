@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -18,9 +17,10 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * returns all places without post transitions.
+ *
  * @author daniel
  */
-public class PlaceWithoutPostTransition extends NetPropertyAlgorithm <ArrayList<Place>>{
+public class PlaceWithoutPostTransition extends NetPropertyAlgorithm<ArrayList<Place>> {
 
     private static final Logger LOGGER = LogManager.getLogger(PlaceWithoutPostTransition.class);
 
@@ -35,8 +35,8 @@ public class PlaceWithoutPostTransition extends NetPropertyAlgorithm <ArrayList<
         LOGGER.info("Checking whether net contains places without post-transitions");
         algorithmName = "place withouth post transition";
         algorithmValue = new ArrayList();
-        for(Place p : petriNet.places()){
-            if(p.outputs().isEmpty()){
+        for (Place p : petriNet.places()) {
+            if (p.outputs().isEmpty()) {
                 algorithmValue.add(p);
             }
         }

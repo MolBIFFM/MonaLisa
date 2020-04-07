@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer.transformer;
 
 import monalisa.addons.treeviewer.TreeViewerNode;
@@ -16,17 +15,18 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  * Adds a ToolTip to a vertex
+ *
  * @author Jens Einloft
  */
 public class TreeViewerToolTipTransformer implements Transformer<TreeViewerNode, String> {
 
     @Override
     public String transform(TreeViewerNode n) {
-        StringBuilder sb = new StringBuilder();        
-        
-        for(TInvariant tinv : n.getTinvs()) {
+        StringBuilder sb = new StringBuilder();
+
+        for (TInvariant tinv : n.getTinvs()) {
             sb.append(" EM ");
-            sb.append(tinv.id()+1);                    
+            sb.append(tinv.id() + 1);
         }
 
         return sb.toString();

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.knockout;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Knocks out a set of places
+ *
  * @author Jens Einloft
  */
 public class MultiPlaceKnockout extends KnockoutAlgorithm {
@@ -31,13 +31,12 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
     private int knockOutCounter = 0;
     private static final Logger LOGGER = LogManager.getLogger(MultiPlaceKnockout.class);
 
-    public MultiPlaceKnockout(PetriNetFacade pn, List<Place> places){
+    public MultiPlaceKnockout(PetriNetFacade pn, List<Place> places) {
         super(pn);
         LOGGER.info("Initializing MultiPlaceKnockout algorithm");
         toKnockout = places;
         LOGGER.info("Successfully initialized MultiPlaceKnockout algorithm");
     }
-
 
     @Override
     protected PetriNetFacade getNextKnockOutNetwork() {
@@ -45,7 +44,7 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
         PetriNet copy = getPetriNetFacade().getPNCopy();
 
         currentKnockouts = new ArrayList<>();
-        for(Place p : toKnockout) {
+        for (Place p : toKnockout) {
             copy.removePlace(p);
             currentKnockouts.add(p);
         }
@@ -56,10 +55,11 @@ public class MultiPlaceKnockout extends KnockoutAlgorithm {
     @Override
     protected boolean hasNextKnockOutNetwork() {
         knockOutCounter++;
-        if(knockOutCounter == 1)
+        if (knockOutCounter == 1) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     @Override

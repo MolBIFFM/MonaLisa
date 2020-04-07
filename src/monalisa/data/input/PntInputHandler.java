@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.BufferedReader;
@@ -30,12 +29,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Input handler for the PNT format.
- * Format specifications may be found at
+ * Input handler for the PNT format. Format specifications may be found at
  * <a href="http://www2.informatik.hu-berlin.de/lehrstuehle/automaten/ina/node14.html#SECTION00534100000000000000">www2.informatik.hu-berlin.de</a>.
+ *
  * @author Konrad Rudolph - modified by Jens Einloft
  */
 public final class PntInputHandler implements InputHandler {
+
     private final Map<Integer, Place> places = new HashMap<>();
     private final Map<Integer, Transition> transitions = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(PntInputHandler.class);
@@ -50,28 +50,27 @@ public final class PntInputHandler implements InputHandler {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
         // Skip the header line, but save the name of the Petri net.
-
         Pattern whitespace = Pattern.compile("\\s");
         String header = reader.readLine();
         String[] headerParts = whitespace.split(header);
-        String idAndNamePart = headerParts[headerParts.length-1];
+        String idAndNamePart = headerParts[headerParts.length - 1];
 
         int id = 0;
         String name = null;
-        if(!idAndNamePart.contains(":"))
+        if (!idAndNamePart.contains(":")) {
             id = Integer.parseInt(idAndNamePart);
-        else {
+        } else {
             int indexOfDoublePoint = idAndNamePart.indexOf(":");
-            id = Integer.parseInt(idAndNamePart.substring(0,indexOfDoublePoint));
-            name = idAndNamePart.substring(indexOfDoublePoint+1, idAndNamePart.length());
+            id = Integer.parseInt(idAndNamePart.substring(0, indexOfDoublePoint));
+            name = idAndNamePart.substring(indexOfDoublePoint + 1, idAndNamePart.length());
         }
 
         ret.putProperty("id", id);
-        if (name != null)
+        if (name != null) {
             ret.putProperty("name", name);
+        }
 
         // Net structure section.
-
         String line, token;
         int placeId, weight = 0, transitionId;;
         Long tokens = 0L;
@@ -87,36 +86,33 @@ public final class PntInputHandler implements InputHandler {
             ret.setTokens(place, tokens);
 
             noInput = false;
-            if(scanner.hasNext(",")) {
+            if (scanner.hasNext(",")) {
                 scanner.next();
                 noInput = true;
             }
 
             // List of input arcs.
-            if(!noInput) {
+            if (!noInput) {
                 endOfInArcs = false;
                 while (scanner.hasNext()) {
                     token = scanner.next();
-                    if(token.contains(":")) {
-                        transitionId = Integer.parseInt(token.substring(0,token.indexOf(":")));
+                    if (token.contains(":")) {
+                        transitionId = Integer.parseInt(token.substring(0, token.indexOf(":")));
                         token = scanner.next();
-                        if(token.contains(",")) {
+                        if (token.contains(",")) {
                             weight = Integer.parseInt(token.substring(0, token.indexOf(",")));
                             endOfInArcs = true;
-                        }
-                        else {
+                        } else {
                             weight = Integer.parseInt(token);
                         }
                         transition = findTransition(transitionId, ret);
                         ret.addArc(transition, place, new Arc(place, transition, weight));
-                    }
-                    else {
-                        if(token.length() >= 1) {
-                            if(token.contains(",")) {
+                    } else {
+                        if (token.length() >= 1) {
+                            if (token.contains(",")) {
                                 transitionId = Integer.parseInt(token.substring(0, token.indexOf(",")));
                                 endOfInArcs = true;
-                            }
-                            else {
+                            } else {
                                 transitionId = Integer.parseInt(token);
                             }
                             transition = findTransition(transitionId, ret);
@@ -124,21 +120,21 @@ public final class PntInputHandler implements InputHandler {
                         }
                     }
 
-                    if(endOfInArcs)
+                    if (endOfInArcs) {
                         break;
+                    }
                 }
             }
 
-             // List of output arcs.
+            // List of output arcs.
             while (scanner.hasNext()) {
                 token = scanner.next();
-                if(token.contains(":")) {
-                    transitionId = Integer.parseInt(token.substring(0,token.indexOf(":")));
+                if (token.contains(":")) {
+                    transitionId = Integer.parseInt(token.substring(0, token.indexOf(":")));
                     weight = Integer.parseInt(scanner.next());
                     transition = findTransition(transitionId, ret);
                     ret.addArc(place, transition, new Arc(transition, place, weight));
-                }
-                else {
+                } else {
                     transitionId = Integer.parseInt(token);
                     transition = findTransition(transitionId, ret);
                     ret.addArc(place, transition);

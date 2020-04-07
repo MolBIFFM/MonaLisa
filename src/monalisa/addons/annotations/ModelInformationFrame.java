@@ -7,11 +7,9 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -72,7 +70,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
         initComponents();
 
-        miModelModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiersModel.getModel();
+        miModelModel = (DefaultListModel<MiriamWrapper>) miriamIdentifiersModel.getModel();
         modelQualifier.removeAllItems();
         modelQualifier.addItem(CVTerm.Qualifier.BQM_IS);
         modelQualifier.addItem(CVTerm.Qualifier.BQM_IS_DERIVED_FROM);
@@ -86,19 +84,20 @@ public class ModelInformationFrame extends javax.swing.JFrame {
         selectedModellerIndex = -1;
         selectedDateIndex = -1;
 
-        if(petriNet.hasProperty(AnnotationUtils.MODEL_NAME)) {
-            modelName.setText( (String) petriNet.getProperty(AnnotationUtils.MODEL_NAME));
+        if (petriNet.hasProperty(AnnotationUtils.MODEL_NAME)) {
+            modelName.setText((String) petriNet.getProperty(AnnotationUtils.MODEL_NAME));
         }
-        if(petriNet.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
+        if (petriNet.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
             LOGGER.debug("Adding MIRIAM model qualifiers");
             List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS);
             int childCount;
-            for(CVTerm cvt : cvts) {
-                childCount =  cvt.getChildCount();
-                if(childCount > 1) {
-                    for(int i=0; i < cvt.getChildCount(); i++) {
-                        if(cvt.getModelQualifierType() == null)
+            for (CVTerm cvt : cvts) {
+                childCount = cvt.getChildCount();
+                if (childCount > 1) {
+                    for (int i = 0; i < cvt.getChildCount(); i++) {
+                        if (cvt.getModelQualifierType() == null) {
                             continue;
+                        }
                         miModelModel.addElement(new MiriamWrapper(cvt.getModelQualifierType(), cvt.getChildAt(i).toString()));
                     }
                 } else {
@@ -107,28 +106,28 @@ public class ModelInformationFrame extends javax.swing.JFrame {
             }
         }
 
-        if(petriNet.hasProperty(AnnotationUtils.HISTORY)) {
+        if (petriNet.hasProperty(AnnotationUtils.HISTORY)) {
             LOGGER.debug("Adding Modeller information");
             History hist = (History) petriNet.getProperty(AnnotationUtils.HISTORY);
 
-            if(hist != null) {
-                if(hist.getCreatorCount() > 0) {
+            if (hist != null) {
+                if (hist.getCreatorCount() > 0) {
                     Creator c;
-                    for(int i = 0; i < hist.getCreatorCount(); i++) {
+                    for (int i = 0; i < hist.getCreatorCount(); i++) {
                         c = hist.getCreator(i);
                         modellersModel.addElement(new ModellerWrapper(c.getGivenName(), c.getFamilyName(), c.getOrganisation(), c.getEmail()));
                     }
                 }
 
-                if(hist.getCreatedDate() != null) {
+                if (hist.getCreatedDate() != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(hist.getCreatedDate());
-                    datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH)+1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
+                    datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH) + 1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
 
-                    if(hist.getModifiedDateCount() > 0) {
-                        for(Date d : hist.getListOfModifiedDates()) {
+                    if (hist.getModifiedDateCount() > 0) {
+                        for (Date d : hist.getListOfModifiedDates()) {
                             cal.setTime(d);
-                            datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH)+1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
+                            datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH) + 1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
                         }
                     }
                 }
@@ -141,8 +140,8 @@ public class ModelInformationFrame extends javax.swing.JFrame {
     public void editMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Editing MIRIAM identifier for model");
         modelQualifier.setSelectedItem(mw.getCVTerm().getModelQualifierType());
-        uriModel.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1));
-        miriamRegistryModel.setSelectedIndex(ap.miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1)));
+        uriModel.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1));
+        miriamRegistryModel.setSelectedIndex(ap.miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1)));
         editMiriamIdentifierModel = true;
         addMiriamIdentifierModel.setText("Save");
         identifierInEditModel = mw;
@@ -151,7 +150,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     public void deleteMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Deleting MIRIAM identifier for model");
-        if(identifierInEditModel != null) {
+        if (identifierInEditModel != null) {
             uriModel.setText("");
             editMiriamIdentifierModel = false;
             addMiriamIdentifierModel.setText("Add");
@@ -164,31 +163,31 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void saveModelInformations() {
         LOGGER.info("Saving model informations");
-        if(!modelName.getText().isEmpty()) {
+        if (!modelName.getText().isEmpty()) {
             annUtils.addProperty(petriNet, AnnotationUtils.MODEL_NAME, modelName.getText());
         }
 
         History hist = null;
-        if(modellersModel.size() > 0 || datesModel.size() > 0) {
+        if (modellersModel.size() > 0 || datesModel.size() > 0) {
             LOGGER.debug("Creating new History");
             hist = new History();
         }
 
-        if(hist != null && modellersModel.size() > 0) {
+        if (hist != null && modellersModel.size() > 0) {
             LOGGER.debug("Filling history with Creators");
             ModellerWrapper mw;
-            for(int i = 0; i < modellersModel.size(); i++) {
+            for (int i = 0; i < modellersModel.size(); i++) {
                 mw = (ModellerWrapper) modellersModel.getElementAt(i);
                 hist.addCreator(new Creator(mw.getfName(), mw.getlName(), mw.getOrganisation(), mw.getEmail()));
             }
         }
 
-        if(hist != null && datesModel.size() > 0) {
+        if (hist != null && datesModel.size() > 0) {
             LOGGER.debug("Adding dates to history");
             DateWrapper dw;
-            for(int i = 0; i < datesModel.size(); i++) {
+            for (int i = 0; i < datesModel.size(); i++) {
                 dw = (DateWrapper) datesModel.getElementAt(i);
-                if(i == 0) {
+                if (i == 0) {
                     hist.setCreatedDate(dw.getDate());
                 } else {
                     hist.setModifiedDate(dw.getDate());
@@ -196,8 +195,9 @@ public class ModelInformationFrame extends javax.swing.JFrame {
             }
         }
 
-        if(hist != null)
+        if (hist != null) {
             annUtils.addProperty(petriNet, AnnotationUtils.HISTORY, hist);
+        }
         LOGGER.info("Finished saving model information");
     }
 
@@ -591,11 +591,11 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void saveModellerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveModellerActionPerformed
         LOGGER.info("Saving Modeller action for model");
-        if(!fName.getText().isEmpty() && !lName.getText().isEmpty() && !organisation.getText().isEmpty() && !email.getText().isEmpty()) {
+        if (!fName.getText().isEmpty() && !lName.getText().isEmpty() && !organisation.getText().isEmpty() && !email.getText().isEmpty()) {
 
-            if(selectedModellerIndex != -1) {
+            if (selectedModellerIndex != -1) {
                 modellersModel.add(selectedModellerIndex, new ModellerWrapper(fName.getText(), lName.getText(), organisation.getText(), email.getText()));
-                modellersModel.remove(selectedModellerIndex+1);
+                modellersModel.remove(selectedModellerIndex + 1);
             } else {
                 modellersModel.addElement(new ModellerWrapper(fName.getText(), lName.getText(), organisation.getText(), email.getText()));
             }
@@ -613,10 +613,10 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void saveDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDateActionPerformed
         LOGGER.info("Saving date action for model");
-        if(!month.getText().isEmpty() && !year.getText().isEmpty() && !day.getText().isEmpty()) {
-            if(selectedDateIndex != -1) {
+        if (!month.getText().isEmpty() && !year.getText().isEmpty() && !day.getText().isEmpty()) {
+            if (selectedDateIndex != -1) {
                 datesModel.add(selectedDateIndex, new DateWrapper(year.getText(), month.getText(), day.getText()));
-                datesModel.remove(selectedDateIndex+1);
+                datesModel.remove(selectedDateIndex + 1);
             } else {
                 datesModel.addElement(new DateWrapper(year.getText(), month.getText(), day.getText()));
             }
@@ -633,13 +633,13 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void addMiriamIdentifierModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMiriamIdentifierModelActionPerformed
         LOGGER.info("Adding MIRIAM identifier for model");
-        if(!uriModel.getText().isEmpty()) {
-            if(editMiriamIdentifierModel == true) {
+        if (!uriModel.getText().isEmpty()) {
+            if (editMiriamIdentifierModel == true) {
                 LOGGER.info("Editing a MIRIAM identifier for model");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryModel.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uriModel.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
@@ -647,25 +647,25 @@ public class ModelInformationFrame extends javax.swing.JFrame {
                 annUtils.editMiriamModel(petriNet, identifierInEditModel, mrw, uriModel.getText().trim(), modelQualifier.getSelectedItem());
 
                 identifierInEditModel.setQualifier((Qualifier) modelQualifier.getSelectedItem());
-                identifierInEditModel.setURI(mrw.getURL()+uriModel.getText().trim());
+                identifierInEditModel.setURI(mrw.getURL() + uriModel.getText().trim());
 
                 editMiriamIdentifierModel = false;
                 addMiriamIdentifierModel.setText("Add");
                 identifierInEditModel = null;
                 miriamIdentifiersModel.repaint();
                 LOGGER.info("Finished editing MIRIAM identifier for model");
-            } else if(editMiriamIdentifierModel == false) {
+            } else if (editMiriamIdentifierModel == false) {
                 LOGGER.info("Adding new MIRIAM identifier for model");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryModel.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uriModel.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
                 }
 
-                MiriamWrapper mw = new MiriamWrapper((Qualifier) modelQualifier.getSelectedItem(), mrw.getURL()+uriModel.getText().trim());
+                MiriamWrapper mw = new MiriamWrapper((Qualifier) modelQualifier.getSelectedItem(), mrw.getURL() + uriModel.getText().trim());
                 miModelModel.addElement(mw);
                 annUtils.addMiriamModel(petriNet, mw, uriModel.getText().trim());
             }

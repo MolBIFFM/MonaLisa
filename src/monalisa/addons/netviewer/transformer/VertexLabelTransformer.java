@@ -15,17 +15,18 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  * Renderer for the label text of a vertex
+ *
  * @author Jens Einloft
  */
-
 public class VertexLabelTransformer implements Transformer<NetViewerNode, String> {
 
     private Boolean showLabel = true;
 
     @Override
     public String transform(NetViewerNode i) {
-        if(i.getNodeType().equalsIgnoreCase(NetViewer.BEND) || !i.showLabel() || !showLabel)
+        if (i.getNodeType().equalsIgnoreCase(NetViewer.BEND) || !i.showLabel() || !showLabel) {
             return "";
+        }
 
         return i.getName();
 //        return new Integer(i.getId()).toString();

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import java.awt.Color;
@@ -123,7 +122,7 @@ public class ConverterDialog extends JDialog implements ActionListener {
         }
 
         double size[][] = {{10, TableLayout.PREFERRED, 20, TableLayout.PREFERRED, 10},
-                          {10, TableLayout.PREFERRED, 15, TableLayout.PREFERRED, 15, TableLayout.PREFERRED, 10}};
+        {10, TableLayout.PREFERRED, 15, TableLayout.PREFERRED, 15, TableLayout.PREFERRED, 10}};
 
         TableLayout tl = new TableLayout(size);
 
@@ -152,12 +151,12 @@ public class ConverterDialog extends JDialog implements ActionListener {
         OutputHandler oh = getOutputHandler((String) outputFormat.getSelectedValue());
         PetriNet pn;
         String outputFileName;
-        if(outputDirectory != null || inputDirectory != null) {
+        if (outputDirectory != null || inputDirectory != null) {
             inputFileList = inputDirectory.listFiles();
 
-            for(File f : inputFileList) {
-                if(ih.isKnownFile(f)) {
-                    outputFileName = outputDirectory.getAbsolutePath()+f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf(System.getProperty("file.separator")), f.getAbsolutePath().lastIndexOf(".")) + "." + oh.getExtension();
+            for (File f : inputFileList) {
+                if (ih.isKnownFile(f)) {
+                    outputFileName = outputDirectory.getAbsolutePath() + f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf(System.getProperty("file.separator")), f.getAbsolutePath().lastIndexOf(".")) + "." + oh.getExtension();
                     pn = ih.load(new FileInputStream(f));
                     oh.save(new FileOutputStream(new File(outputFileName)), pn);
                 }
@@ -172,8 +171,9 @@ public class ConverterDialog extends JDialog implements ActionListener {
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
+        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
+        }
 
         inputDirectory = fc.getSelectedFile();
         chooseInput.setForeground(Color.GREEN);
@@ -185,8 +185,9 @@ public class ConverterDialog extends JDialog implements ActionListener {
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
-        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION)
+        if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
+        }
 
         outputDirectory = fc.getSelectedFile();
         chooseOutput.setForeground(Color.GREEN);
@@ -198,11 +199,11 @@ public class ConverterDialog extends JDialog implements ActionListener {
         switch (action) {
             case ACTION_OK:
                 try {
-                    convert();
-                } catch (IOException ex) {
-                    LOGGER.error("Caught IOException while trying to convert Petri net", ex);
-                }
-                break;
+                convert();
+            } catch (IOException ex) {
+                LOGGER.error("Caught IOException while trying to convert Petri net", ex);
+            }
+            break;
             case ACTION_CANCEL:
                 setVisible(false);
                 break;
@@ -215,18 +216,17 @@ public class ConverterDialog extends JDialog implements ActionListener {
         }
     }
 
-
     private InputHandler getInputHandler(String name) {
         InputHandler ih = null;
         LOGGER.debug("Getting input handler for name '" + name + "'");
-        if(name.equalsIgnoreCase("MetaTool")) {
+        if (name.equalsIgnoreCase("MetaTool")) {
             ih = new MetaToolInputHandler();
         } else if (name.equals("Pipe2")) {
             ih = new Pipe2InputHandler();
         } else if (name.equals("Pipe3")) {
             ih = new Pipe3InputHandler();
         } else if (name.equals("Pipe4")) {
-           ih = new Pipe4InputHandler();
+            ih = new Pipe4InputHandler();
         } else if (name.equals("Sbml")) {
             ih = new SbmlInputHandler();
         } else if (name.equals("Spped")) {
@@ -241,16 +241,16 @@ public class ConverterDialog extends JDialog implements ActionListener {
     private OutputHandler getOutputHandler(String name) {
         OutputHandler oh = null;
         LOGGER.debug("Getting output handler for name '" + name + "'");
-        if(name.equalsIgnoreCase("MetaTool")) {
+        if (name.equalsIgnoreCase("MetaTool")) {
             oh = new MetaToolOutputHandler();
         } else if (name.equals("Pipe2")) {
             oh = new Pipe3OutputHandler();
         } else if (name.equals("Pipe3")) {
             oh = new Pipe3OutputHandler();
         } else if (name.equals("Pipe4")) {
-           oh = new Pipe4OutputHandler();
+            oh = new Pipe4OutputHandler();
         } else if (name.equals("Sbml")) {
-            oh = new SbmlOutputHandler(3,1);
+            oh = new SbmlOutputHandler(3, 1);
         } else if (name.equals("Apnn")) {
             oh = new ApnnOutputHandler();
         } else if (name.equals("Pnt")) {

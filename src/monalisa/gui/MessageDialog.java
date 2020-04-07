@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import java.awt.Component;
@@ -30,8 +29,10 @@ import monalisa.resources.StringResources;
 import monalisa.tools.ErrorLog;
 
 public final class MessageDialog extends JDialog implements ActionListener {
+
     @SuppressWarnings("serial")
     private static class LineControl extends Component {
+
         @Override
         public void paint(Graphics g) {
             g.setColor(SystemColor.controlShadow);
@@ -40,23 +41,23 @@ public final class MessageDialog extends JDialog implements ActionListener {
             g.drawLine(0, 1, getWidth(), 1);
         }
     }
-    
+
     private static final long serialVersionUID = 8901011954168823254L;
 
     public static final String OK = "OK";
-    
+
     private static final ResourceManager resources = ResourceManager.instance();
     private static final StringResources strings = resources.getDefaultStrings();
-    
+
     private final ErrorLog messages;
     private List<JLabel> messageLabels;
     private JPanel messagePanel;
     private JButton buttonOk;
-    
+
     public static void show(JFrame owner, ErrorLog messages) {
         new MessageDialog(owner, messages);
     }
-    
+
     public MessageDialog(JFrame owner, ErrorLog messages) {
         super(owner, true);
         this.messages = messages;
@@ -68,39 +69,39 @@ public final class MessageDialog extends JDialog implements ActionListener {
     private void initComponents() {
         List<String> errors = messages.getAll(ErrorLog.Severity.ERROR);
         List<String> warnings = messages.getAll(ErrorLog.Severity.WARNING);
-        
-        String titleResource =
-            errors.size() == 0 ? "WarningDialogTitle" : "ErrorDialogTitle";
+
+        String titleResource
+                = errors.size() == 0 ? "WarningDialogTitle" : "ErrorDialogTitle";
 
         messageLabels = new ArrayList<>();
-        
+
         Icon errorIcon = resources.getIcon("error.png");
         Icon warningIcon = resources.getIcon("warning.png");
-        
+
         for (String error : errors) {
             JLabel label = new JLabel(error, errorIcon, SwingConstants.LEFT);
             messageLabels.add(label);
         }
-        
-        for (String  warning : warnings) {
+
+        for (String warning : warnings) {
             JLabel label = new JLabel(warning, warningIcon, SwingConstants.LEFT);
             messageLabels.add(label);
         }
-        
+
         messagePanel = new JPanel();
         GroupLayout panelLayout = new GroupLayout(messagePanel);
         messagePanel.setLayout(panelLayout);
         panelLayout.setAutoCreateContainerGaps(true);
         panelLayout.setAutoCreateGaps(true);
-        
+
         ParallelGroup pg = panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
         SequentialGroup sg = panelLayout.createSequentialGroup();
-        
+
         boolean first = true;
         for (JLabel label : messageLabels) {
-            if (first)
+            if (first) {
                 first = false;
-            else {
+            } else {
                 LineControl filler = new LineControl();
                 filler.setPreferredSize(new Dimension(filler.getPreferredSize().width, 2));
                 pg.addComponent(filler);
@@ -109,30 +110,30 @@ public final class MessageDialog extends JDialog implements ActionListener {
             pg.addComponent(label);
             sg.addComponent(label);
         }
-        
+
         panelLayout.setHorizontalGroup(pg);
         panelLayout.setVerticalGroup(sg);
-        
+
         buttonOk = new JButton(strings.get("OK"));
         buttonOk.setActionCommand(OK);
         buttonOk.addActionListener(this);
-        
+
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 setVisible(false);
             }
         });
-        
+
         GroupLayout layout = new GroupLayout(getContentPane());
         layout.setAutoCreateGaps(true);
-        
+
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-            .addComponent(messagePanel)
-            .addComponent(buttonOk));
+                .addComponent(messagePanel)
+                .addComponent(buttonOk));
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(messagePanel)
-            .addComponent(buttonOk));
-        
+                .addComponent(messagePanel)
+                .addComponent(buttonOk));
+
         getContentPane().setLayout(layout);
         getRootPane().setDefaultButton(buttonOk);
         setTitle(strings.get(titleResource));
@@ -143,7 +144,8 @@ public final class MessageDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand() == OK)
+        if (e.getActionCommand() == OK) {
             setVisible(false);
+        }
     }
 }

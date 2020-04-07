@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer.transformer;
 
 import java.awt.Color;
@@ -19,17 +18,16 @@ import org.apache.commons.collections15.Transformer;
  *
  * @author stefan marchi
  */
-public class TreeViewerVertexPaintTransformer implements Transformer<TreeViewerNode, Paint>{
+public class TreeViewerVertexPaintTransformer implements Transformer<TreeViewerNode, Paint> {
 
-    private static final Color transparent = new Color(0,0,0,0);
+    private static final Color transparent = new Color(0, 0, 0, 0);
 
     @Override
     public Paint transform(TreeViewerNode n) {
-        if(n.getNodeType().equalsIgnoreCase(TreeViewerNode.BENDNODE)) {
+        if (n.getNodeType().equalsIgnoreCase(TreeViewerNode.BENDNODE)) {
             return transparent;
-        } else  {
+        } else {
             return Color.RED;
-        }        
+        }
     }
 }
-

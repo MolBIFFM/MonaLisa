@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.cluster;
 
 import de.molbi.mjcl.clustering.distancemeasure.DistanceFunction;
@@ -44,7 +43,7 @@ public final class ClusterTool extends AbstractTool {
         LOGGER.info("Running ClusterTool");
         ClusterConfiguration clusterConfig = (ClusterConfiguration) config;
         // Config
-        float percent = clusterConfig.getThreshold(); 
+        float percent = clusterConfig.getThreshold();
         String clusterAlgorithm = clusterConfig.getClusterAlgorithm();
         boolean includeTrivialTInvariants = clusterConfig.isIncludeTrivialTInvariants();
 
@@ -53,22 +52,22 @@ public final class ClusterTool extends AbstractTool {
         int nbrOfTransitions = project.getPNFacade().transitions().size();
         int nbrOfTInvs = 0;
         // Determine the number of TInvariants
-        for(TInvariant tinv : tinvs) {
-            if((tinv.isTrivial() && includeTrivialTInvariants) || !tinv.isTrivial()) {
+        for (TInvariant tinv : tinvs) {
+            if ((tinv.isTrivial() && includeTrivialTInvariants) || !tinv.isTrivial()) {
                 nbrOfTInvs++;
             }
         }
         double[][] data = new double[nbrOfTInvs][nbrOfTransitions];
         int[] iDs = new int[nbrOfTInvs];
         double[] tmp;
-        int j,i = 0;
+        int j, i = 0;
         // Fill the array
-        for(TInvariant tinv : tinvs) {
+        for (TInvariant tinv : tinvs) {
             iDs[i] = tinv.id();
-            if((tinv.isTrivial() && includeTrivialTInvariants) || !tinv.isTrivial()) {
+            if ((tinv.isTrivial() && includeTrivialTInvariants) || !tinv.isTrivial()) {
                 tmp = new double[nbrOfTransitions];
                 j = 0;
-                for(Transition t : project.getPNFacade().transitions()) {
+                for (Transition t : project.getPNFacade().transitions()) {
                     tmp[j] = tinv.factor(t);
                     j++;
                 }
@@ -83,13 +82,13 @@ public final class ClusterTool extends AbstractTool {
         // Create a Setting for the Cluster Library
         HierarchicSettings hs = null;
         // Which Algorithm should be used?
-        if(clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.UPGMA)) {
+        if (clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.UPGMA)) {
             hs = new AverageLinkageSettings(distance, false, true, null, null);
-        } else if(clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.WPGMA)) {
+        } else if (clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.WPGMA)) {
             hs = new AverageLinkageSettings(distance, true, true, null, null);
-        } else if(clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.SingleLinkage)) {
+        } else if (clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.SingleLinkage)) {
             hs = new SingleLinkageSettings(distance, true, null, null);
-        } else if(clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.CompleteLinkage)) {
+        } else if (clusterAlgorithm.equalsIgnoreCase(ClusterFunctions.CompleteLinkage)) {
             hs = new CompleteLinkageSettings(distance, true, null, null);
         }
 
@@ -97,13 +96,13 @@ public final class ClusterTool extends AbstractTool {
         HierarchicalClustering hc = new HierarchicalClustering(data, iDs, hs);
         ClusterTree<ClusterTreeNodeProperties, Properties> tree = hc.execute();
 
-        for(Cluster c : tree.getCluster()) {
-            if(c instanceof Leaf) {
+        for (Cluster c : tree.getCluster()) {
+            if (c instanceof Leaf) {
                 tree.addNodeProperty(c, new ClusterTreeNodeProperties(tinvs.getTInvariant(c.getID())));
             } else {
                 TInvariant[] t = new TInvariant[c.getLeavesCount()];
                 i = 0;
-                for(Leaf l : c.getLeaves()) {
+                for (Leaf l : c.getLeaves()) {
                     t[i] = tinvs.getTInvariant(l.getID());
                     i++;
                 }

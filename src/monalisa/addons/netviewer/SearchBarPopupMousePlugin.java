@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -29,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Context menu for SearchBar
+ *
  * @author Jens Einloft
  */
 public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin implements MouseListener {
@@ -60,15 +60,15 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
         String menuName = null;
 
         // Places + Tansitions
-        if(selectedValues.size() == 1) {
+        if (selectedValues.size() == 1) {
             final NetViewerNode nvNode = selectedValues.get(0);
 
             // Logical places
-            if(nvNode.getLogicalPlaces().size() > 1) {
+            if (nvNode.getLogicalPlaces().size() > 1) {
                 JMenu zoomAtChildMenu = new JMenu(strings.get("NVZoomAtVertex"));
                 int i = 1;
-                for(final NetViewerNode n : nvNode.getLogicalPlaces()) {
-                    zoomAtChildMenu.add(new AbstractAction(strings.get("NVZoomAtVertex")+" child "+(i++)) {
+                for (final NetViewerNode n : nvNode.getLogicalPlaces()) {
+                    zoomAtChildMenu.add(new AbstractAction(strings.get("NVZoomAtVertex") + " child " + (i++)) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Zooming to vertex from SearchBar for logical places");
@@ -77,8 +77,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     });
                 }
                 popup.add(zoomAtChildMenu);
-            }
-            // Non-logical place or transition
+            } // Non-logical place or transition
             else {
                 popup.add(new AbstractAction(strings.get("NVZoomAtVertex")) {
                     @Override
@@ -101,19 +100,20 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
         }
 
         // Only for places
-        if(type.equalsIgnoreCase(NetViewer.PLACE)) {
+        if (type.equalsIgnoreCase(NetViewer.PLACE)) {
 
-            if(selectedValues.size() == 1) {
+            if (selectedValues.size() == 1) {
                 NetViewerNode nvNode = selectedValues.get(0);
 
-                if(nvNode.getLogicalPlaces().size() > 1) {
+                if (nvNode.getLogicalPlaces().size() > 1) {
                     popup.add(new AbstractAction(strings.get("NVMeltAllLogicalPlaces")) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Melting all logical places");
                             List<NetViewerNode> pickedVerticesList = new ArrayList<>();
-                            for(NetViewerNode n : vv.getRenderContext().getPickedVertexState().getPicked())
+                            for (NetViewerNode n : vv.getRenderContext().getPickedVertexState().getPicked()) {
                                 pickedVerticesList.add(n);
+                            }
                             synchronizer.mergeLogicalPlaces(pickedVerticesList);
                             nv.nonModificationActionHappend();
                         }
@@ -141,11 +141,12 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
         }
 
         // Melting places / transitions
-        if(selectedValues.size() > 1) {
-            if(type.equalsIgnoreCase(NetViewer.TRANSITION))
+        if (selectedValues.size() > 1) {
+            if (type.equalsIgnoreCase(NetViewer.TRANSITION)) {
                 menuName = strings.get("NVMeltingTransitions");
-            else if(type.equalsIgnoreCase(NetViewer.PLACE))
+            } else if (type.equalsIgnoreCase(NetViewer.PLACE)) {
                 menuName = strings.get("NVMeltingPlaces");
+            }
 
             popup.add(new AbstractAction(menuName) {
                 @Override
@@ -161,8 +162,9 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                 public void actionPerformed(ActionEvent e) {
                     LOGGER.info("Entering vertex setup for several vertices");
                     List<NetViewerNode> selectedNodes = new ArrayList<>();
-                    for(Object o : selectedValues)
+                    for (Object o : selectedValues) {
                         selectedNodes.add((NetViewerNode) o);
+                    }
                     nv.showVertexSetup(selectedNodes, me.getX(), me.getY());
                     LOGGER.info("Leaving vertex setup for several vertices");
                 }

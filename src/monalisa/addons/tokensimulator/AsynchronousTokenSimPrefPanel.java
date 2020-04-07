@@ -16,7 +16,7 @@ package monalisa.addons.tokensimulator;
 public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     //BEGIN VARIABLES DECLARATION
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form AsynchronousTokenSimPrefPanel.
@@ -24,12 +24,12 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     private AsynchronousTokenSimPrefPanel() {
         initComponents();
     }
-    
+
     public AsynchronousTokenSimPrefPanel(AsynchronousTokenSim tsN) {
         initComponents();
     }
     //END CONSTRUCTORS
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

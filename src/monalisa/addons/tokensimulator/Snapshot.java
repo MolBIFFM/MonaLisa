@@ -19,9 +19,11 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Saves a state-snapshot of the Petri net.
+ *
  * @author Pavel Balazki.
  */
 public class Snapshot {
+
     //BEGIN VARIABLES DECLARATION
     //Number of step at which this snapshot was taken
     private final int stepNr;
@@ -32,45 +34,46 @@ public class Snapshot {
     //Current marking; links a number of tokens for each place-id for non-static places
     private final Map<Integer, Long> marking;
     /**
-     * Constant places have a MathematicalExpression defining their number of tokens.
+     * Constant places have a MathematicalExpression defining their number of
+     * tokens.
      */
-    private final Map<Integer, MathematicalExpression> constantPlaces;         
+    private final Map<Integer, MathematicalExpression> constantPlaces;
     //Statistic of current step
     private Statistic statistic;
     private static final Logger LOGGER = LogManager.getLogger(Snapshot.class);
 
     //END VARIABLES DECLARATION
-    
     //BEGIN CONSTRUCTORS
     /**
      * Constructor without parameters is not allowed.
      */
-    private Snapshot(){
+    private Snapshot() {
         stepNr = 0;
         historyListModel = null;
         historyArrayList = null;
         marking = null;
         constantPlaces = null;
     }
-    
+
     /**
      * Create a new snapshot
+     *
      * @param stepNrN number of the step at which this snapshot is created.
      * @param historyListModelN actual historyListModel
      * @param historyArrayListN actual historyArrayList
      * @param markingN actual marking
      */
-    Snapshot(int stepNrN, DefaultListModel historyListModelN, ArrayList<Transition[]> historyArrayListN, Map<Integer, Long> markingN, Map<Integer, MathematicalExpression> constantPlacesN){
+    Snapshot(int stepNrN, DefaultListModel historyListModelN, ArrayList<Transition[]> historyArrayListN, Map<Integer, Long> markingN, Map<Integer, MathematicalExpression> constantPlacesN) {
         LOGGER.info("Creating a new snapshot at stepnumber " + Integer.toString(stepNrN));
         this.stepNr = stepNrN;
         this.historyListModel = historyListModelN.toArray();
-        
+
         //deep copy of historyArrayList
         this.historyArrayList = new ArrayList<>();
-        for(Transition[] tt : historyArrayListN){
+        for (Transition[] tt : historyArrayListN) {
             Transition[] temp = new Transition[tt.length];
             int i = 0;
-            for (Transition t : tt){
+            for (Transition t : tt) {
                 temp[i++] = t;
             }
             historyArrayList.add(temp);
@@ -82,53 +85,58 @@ public class Snapshot {
         this.constantPlaces = new HashMap<>(constantPlacesN);
     }
     //END CONSTRUCTORS
-    
+
     /**
      * Get the number of step at which the snapshot was created.
+     *
      * @return Number of simulation step.
      */
-    public int getStepNr(){
+    public int getStepNr() {
         return this.stepNr;
     }
-    
-    public Object[] getHistoryListModel(){
+
+    public Object[] getHistoryListModel() {
         return this.historyListModel;
     }
-    
-    public ArrayList<Transition[]> getHistoryArrayList(){
+
+    public ArrayList<Transition[]> getHistoryArrayList() {
         return this.historyArrayList;
     }
-    
+
     /**
      * Get the marking which was present as the snapshot was created.
-     * @return Map with IDs of non-constant places as keys and numbers of markings on this places
-     * as value.
+     *
+     * @return Map with IDs of non-constant places as keys and numbers of
+     * markings on this places as value.
      */
-    public Map<Integer, Long> getMarking(){
+    public Map<Integer, Long> getMarking() {
         return this.marking;
     }
-    
+
     /**
      * Get the map of constant places and their mathematical expressions.
-     * @return 
+     *
+     * @return
      */
-    public Map<Integer, MathematicalExpression> getConstantPlaces(){
+    public Map<Integer, MathematicalExpression> getConstantPlaces() {
         return this.constantPlaces;
     }
-    
+
     /**
      * Set the statistic for this snapshot.
-     * @param statisticN 
+     *
+     * @param statisticN
      */
-    public void setStatistic(Statistic statisticN){
+    public void setStatistic(Statistic statisticN) {
         this.statistic = statisticN;
     }
-    
+
     /**
      * Get statistics of this snapshot.
-     * @return 
+     *
+     * @return
      */
-    public Statistic getStatistic(){
+    public Statistic getStatistic() {
         return this.statistic;
     }
 }

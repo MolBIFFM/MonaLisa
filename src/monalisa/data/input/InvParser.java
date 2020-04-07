@@ -5,7 +5,6 @@
  */
 package monalisa.data.input;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,41 +25,42 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class InvParser {
+
     private static Pattern transitionPattern;
-        
+
     private static Pattern newInvariantPattern;
     private static final Logger LOGGER = LogManager.getLogger(InvParser.class);
 
     private final List<MInvariant> minvariants = new ArrayList<>();
     private final List<TInvariant> tinvariants = new ArrayList<>();
     private final List<PInvariant> pinvariants = new ArrayList<>();
-    
+
     private final String InvType;
 
     public InvParser(InvariantBuilder invariantBuilder, InputStream input,
             Map<Integer, Integer> mapping, String InvType) throws IOException {
-        
+
         this.InvType = InvType;
-        if(InvType.equals("PI")){
-            transitionPattern =
-            Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?P(\\d+)");
-            newInvariantPattern =
-            Pattern.compile("^\\s*(\\d+).\\s*place invariant\\s*:");
-        }else if(InvType.equals("MI")){
-            transitionPattern =
-            Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
-            newInvariantPattern =
-            Pattern.compile("^\\s*(\\d+).\\s*manatee invariant\\s*:");
-        }else{
-            transitionPattern =
-            Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
-            newInvariantPattern =
-            Pattern.compile("^\\s*(\\d+).\\s*transition invariant\\s*:");
+        if (InvType.equals("PI")) {
+            transitionPattern
+                    = Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?P(\\d+)");
+            newInvariantPattern
+                    = Pattern.compile("^\\s*(\\d+).\\s*place invariant\\s*:");
+        } else if (InvType.equals("MI")) {
+            transitionPattern
+                    = Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
+            newInvariantPattern
+                    = Pattern.compile("^\\s*(\\d+).\\s*manatee invariant\\s*:");
+        } else {
+            transitionPattern
+                    = Pattern.compile("(?:(\\d+)\\s*\\*\\s*)?T(\\d+)");
+            newInvariantPattern
+                    = Pattern.compile("^\\s*(\\d+).\\s*transition invariant\\s*:");
         }
         LOGGER.info("Importing Invariants");
 
-        BufferedReader reader =
-            new BufferedReader(new InputStreamReader(input));
+        BufferedReader reader
+                = new BufferedReader(new InputStreamReader(input));
 
         String line = null;
         while ((line = reader.readLine()) != null) {
@@ -68,43 +68,47 @@ public final class InvParser {
             Matcher newInvariantMatcher = newInvariantPattern.matcher(line);
 
             if (newInvariantMatcher.find()) {
-                if (!invariantBuilder.isEmpty())
-                    if(InvType.equals("MI"))
+                if (!invariantBuilder.isEmpty()) {
+                    if (InvType.equals("MI")) {
                         minvariants.add(invariantBuilder.buildAndClear());
-                    else if(InvType.equals("PI"))
+                    } else if (InvType.equals("PI")) {
                         pinvariants.add(invariantBuilder.buildAndClear());
-                    else
+                    } else {
                         tinvariants.add(invariantBuilder.buildAndClear());
+                    }
+                }
 
                 int id = Integer.parseInt(newInvariantMatcher.group(1));
                 invariantBuilder.setId(id);
                 transitionScanStart = newInvariantMatcher.end();
             }
 
-            Matcher transitionsMatcher =
-                transitionPattern.matcher(line).region(transitionScanStart,
-                    line.length());
+            Matcher transitionsMatcher
+                    = transitionPattern.matcher(line).region(transitionScanStart,
+                            line.length());
 
             while (transitionsMatcher.find()) {
-                int factor =
-                    transitionsMatcher.group(1) == null ? 1 :
-                        Integer.parseInt(transitionsMatcher.group(1));
-                int transitionId =
-                    Integer.parseInt(transitionsMatcher.group(2));
-                if (mapping != null)
+                int factor
+                        = transitionsMatcher.group(1) == null ? 1
+                        : Integer.parseInt(transitionsMatcher.group(1));
+                int transitionId
+                        = Integer.parseInt(transitionsMatcher.group(2));
+                if (mapping != null) {
                     transitionId = mapping.get(transitionId);
+                }
                 invariantBuilder.add(transitionId, factor);
             }
         }
 
         if (!invariantBuilder.isEmpty()) {
-            
-            if(InvType.equals("MI"))
+
+            if (InvType.equals("MI")) {
                 minvariants.add(invariantBuilder.build());
-            else if(InvType.equals("PI"))
+            } else if (InvType.equals("PI")) {
                 pinvariants.add(invariantBuilder.build());
-            else
+            } else {
                 tinvariants.add(invariantBuilder.build());
+            }
         }
 
         LOGGER.info("Successfully imported Invariants");
@@ -126,12 +130,13 @@ public final class InvParser {
         this(invariantBuilder, new FileInputStream(input), mapping, InvType);
     }
 
-    public <T> T invariants() {       
-        if(InvType.equals("MI"))
-            return (T)minvariants;
-        else if(InvType.equals("PI"))
-            return (T)pinvariants;
-        else
-            return (T)tinvariants;
+    public <T> T invariants() {
+        if (InvType.equals("MI")) {
+            return (T) minvariants;
+        } else if (InvType.equals("PI")) {
+            return (T) pinvariants;
+        } else {
+            return (T) tinvariants;
+        }
     }
 }

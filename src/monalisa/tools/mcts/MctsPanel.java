@@ -52,9 +52,9 @@ public class MctsPanel extends AbstractToolPanel {
 
         combobox = new JComboBox();
         combobox.setModel(new DefaultComboBoxModel(
-            new String[] {
-                strings.get("MctsSupportOriented"),
-                strings.get("MctsOccurrenceOriented") }));
+                new String[]{
+                    strings.get("MctsSupportOriented"),
+                    strings.get("MctsOccurrenceOriented")}));
 
         includeTrivialTinvCheckbox = new JCheckBox(strings.get("IncludeTrivialTInvariants"));
         includeTrivialTinvCheckbox.setSelected(false);
@@ -74,7 +74,6 @@ public class MctsPanel extends AbstractToolPanel {
             }
         });
 
-
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
 
@@ -82,15 +81,15 @@ public class MctsPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(combobox)
-            .addComponent(includeTrivialTinvCheckbox)
-            .addComponent(calculateCheckbox));
+                .addComponent(combobox)
+                .addComponent(includeTrivialTinvCheckbox)
+                .addComponent(calculateCheckbox));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(combobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                GroupLayout.PREFERRED_SIZE)
-            .addComponent(includeTrivialTinvCheckbox)
-            .addComponent(calculateCheckbox));
+                .addComponent(combobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE)
+                .addComponent(includeTrivialTinvCheckbox)
+                .addComponent(calculateCheckbox));
     }
 
     /**
@@ -117,6 +116,7 @@ public class MctsPanel extends AbstractToolPanel {
     public boolean isActive() {
         return calculateCheckbox.isSelected();
     }
+
     @Override
     public void setActive(boolean active) {
         if (active != isActive()) {
@@ -133,11 +133,12 @@ public class MctsPanel extends AbstractToolPanel {
     @SuppressWarnings("unchecked")
     @Override
     public List<Pair<Class<? extends Tool>, Configuration>> getRequirements() {
-        if (isActive())
+        if (isActive()) {
             return Arrays.asList(new Pair<Class<? extends Tool>, Configuration>(
-                TInvariantTool.class, new TInvariantsConfiguration()));
-        else
+                    TInvariantTool.class, new TInvariantsConfiguration()));
+        } else {
             return Collections.emptyList();
+        }
     }
 
     @Override

@@ -68,12 +68,12 @@ public class TInvariantPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(calculate)
-            .addComponent(cti));
+                .addComponent(calculate)
+                .addComponent(cti));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(calculate)
-            .addComponent(cti));
+                .addComponent(calculate)
+                .addComponent(cti));
     }
 
     private void setCTILabelText() {
@@ -135,6 +135,7 @@ public class TInvariantPanel extends AbstractToolPanel {
     public Class<? extends Tool> getToolType() {
         return TOOLTYPE;
     }
+
     @Override
     public boolean finishedState(ToolManager toolMan) {
         if (toolMan.hasAllResults(tool, 2)) {
@@ -159,8 +160,9 @@ public class TInvariantPanel extends AbstractToolPanel {
 
     @Override
     public void setActive(Configuration... configs) {
-        if (!isActive())
+        if (!isActive()) {
             setActive(true);
+        }
     }
 
     @Override

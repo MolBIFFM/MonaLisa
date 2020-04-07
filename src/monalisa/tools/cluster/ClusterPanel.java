@@ -39,10 +39,10 @@ import monalisa.tools.tinv.TInvariantTool;
  * @author Marcel Gehrmann
  */
 public class ClusterPanel extends AbstractToolPanel {
-    
-    private static final String ACTION_CALCULATE = "CALCULATE";    
+
+    private static final String ACTION_CALCULATE = "CALCULATE";
     public static final Class<ClusterTool> TOOLTYPE = ClusterTool.class;
-    private static final StringResources strings = ResourceManager.instance().getDefaultStrings();    
+    private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
     private final JLabel distanceFctLabel;
     private final JComboBox distanceFctCombobox;
     private final JLabel clusterFctLabel;
@@ -53,17 +53,17 @@ public class ClusterPanel extends AbstractToolPanel {
     private final SpinnerModel model;
     private final Project project;
     private final ClusterTool tool;
-    
+
     public ClusterPanel(Project project) {
         this.project = project;
         this.tool = (ClusterTool) project.getToolManager().getTool(TOOLTYPE);
-        
+
         distanceFctLabel = new JLabel(strings.get("DistanceFunction"));
         distanceFctCombobox = new JComboBox();
 
         ComboBoxItem[] distItems = new ComboBoxItem[3];
         int itemIndex = 0;
-        for(String df : Distances.distances.keySet()) {
+        for (String df : Distances.distances.keySet()) {
             distItems[itemIndex++] = new ComboBoxItem(Distances.distances.get(df), df);
         }
 
@@ -74,22 +74,23 @@ public class ClusterPanel extends AbstractToolPanel {
 
         ComboBoxItem[] clusterItems = new ComboBoxItem[4];
         itemIndex = 0;
-        for (String cf : new String[] {
-               ClusterFunctions.UPGMA,
-               ClusterFunctions.WPGMA,
-               ClusterFunctions.SingleLinkage,
-               ClusterFunctions.CompleteLinkage})
+        for (String cf : new String[]{
+            ClusterFunctions.UPGMA,
+            ClusterFunctions.WPGMA,
+            ClusterFunctions.SingleLinkage,
+            ClusterFunctions.CompleteLinkage}) {
             clusterItems[itemIndex++] = new ComboBoxItem(cf, ClusterFunctions.getName(cf));
+        }
 
         clusterFctCombobox.setModel(new DefaultComboBoxModel(clusterItems));
 
         // (similarity of t-invariants grouped in a cluster [%])
         thresholdLabel = new JLabel(strings.get("Threshold"));
 
-        model = new SpinnerNumberModel(1,     //initial value
-                                       0,     //min
-                                       1,     //max
-                                       0.05); // step
+        model = new SpinnerNumberModel(1, //initial value
+                0, //min
+                1, //max
+                0.05); // step
         JSpinner spinner = new JSpinner(model);
         spinner.setEditor(new JSpinner.NumberEditor(spinner, "0.##%"));
 
@@ -98,8 +99,8 @@ public class ClusterPanel extends AbstractToolPanel {
 
         calculateButton = new JCheckBox(strings.get("Calculate"));
         calculateButton.setActionCommand("CALCULATE");
-        calculateButton.addActionListener( new ActionListener() {
-            
+        calculateButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String action = e.getActionCommand();
@@ -116,29 +117,29 @@ public class ClusterPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(distanceFctLabel)
-            .addComponent(distanceFctCombobox)
-            .addComponent(clusterFctLabel)
-            .addComponent(clusterFctCombobox)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(thresholdLabel)
-                .addComponent(spinner))
-            .addComponent(includeTrivialTinvCheckbox)
-            .addComponent(calculateButton));
+                .addComponent(distanceFctLabel)
+                .addComponent(distanceFctCombobox)
+                .addComponent(clusterFctLabel)
+                .addComponent(clusterFctCombobox)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(thresholdLabel)
+                        .addComponent(spinner))
+                .addComponent(includeTrivialTinvCheckbox)
+                .addComponent(calculateButton));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(distanceFctLabel)
-            .addComponent(distanceFctCombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                GroupLayout.PREFERRED_SIZE)
-            .addComponent(clusterFctLabel)
-            .addComponent(clusterFctCombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                GroupLayout.PREFERRED_SIZE)
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(thresholdLabel)
-                .addComponent(spinner,  GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-                    GroupLayout.PREFERRED_SIZE))
-            .addComponent(includeTrivialTinvCheckbox)
-            .addComponent(calculateButton));
+                .addComponent(distanceFctLabel)
+                .addComponent(distanceFctCombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE)
+                .addComponent(clusterFctLabel)
+                .addComponent(clusterFctCombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(thresholdLabel)
+                        .addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE))
+                .addComponent(includeTrivialTinvCheckbox)
+                .addComponent(calculateButton));
         layout.linkSize(SwingConstants.VERTICAL, thresholdLabel, spinner);
     }
 
@@ -164,6 +165,7 @@ public class ClusterPanel extends AbstractToolPanel {
                 ((SpinnerNumberModel) model).getNumber().floatValue() * 100,
                 includeTrivialTinvCheckbox.isSelected());
     }
+
     /**
      * @return the associated tool's class
      */

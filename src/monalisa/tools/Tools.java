@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools;
 
 import java.util.Arrays;
@@ -24,25 +23,26 @@ import monalisa.tools.minv.MInvariantTool;
 
 @SuppressWarnings("unchecked")
 public final class Tools {
-    private static final List<Class<? extends Tool>> toolTypes =
-        Arrays.<Class<? extends Tool>>asList(
-            TInvariantTool.class,
-            MInvariantTool.class,
-            PInvariantTool.class,
-            MctsTool.class,
-            ClusterTool.class,
-            KnockoutTool.class,
-            McsTool.class
-        );
+
+    private static final List<Class<? extends Tool>> toolTypes
+            = Arrays.<Class<? extends Tool>>asList(
+                    TInvariantTool.class,
+                    MInvariantTool.class,
+                    PInvariantTool.class,
+                    MctsTool.class,
+                    ClusterTool.class,
+                    KnockoutTool.class,
+                    McsTool.class
+            );
 
     public static List<Class<? extends Tool>> toolTypes() {
         return Collections.unmodifiableList(toolTypes);
     }
-        
+
     public static String name(Class<? extends Tool> toolType) {
         return toolType.getSimpleName();
     }
-    
+
     public static String name(Tool tool) {
         return name(tool.getClass());
     }

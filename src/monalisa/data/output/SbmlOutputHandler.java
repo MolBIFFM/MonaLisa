@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -44,7 +43,6 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.ext.layout.*;
 
-
 /**
  *
  * @author Jens Einloft
@@ -66,76 +64,77 @@ public class SbmlOutputHandler implements OutputHandler {
     @Override
     public void save(FileOutputStream fileOutputStream, PetriNet pn) {
         LOGGER.info("Exporting Petri net to SBML format - Level: " + this.level + " - Version: " + this.version);
-        SBMLDocument doc = new SBMLDocument(this.level,this.version);
+        SBMLDocument doc = new SBMLDocument(this.level, this.version);
         Model model = doc.createModel("MonaLisaExport");
 
-        if(pn.hasProperty(AnnotationUtils.MODEL_NAME)) {
+        if (pn.hasProperty(AnnotationUtils.MODEL_NAME)) {
             model.setName((String) pn.getProperty(AnnotationUtils.MODEL_NAME));
         }
 
-        if(pn.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
+        if (pn.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
             List<CVTerm> cvts = (List<CVTerm>) pn.getProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS);
-            for(CVTerm cvt : cvts) {
+            for (CVTerm cvt : cvts) {
                 model.addCVTerm(cvt);
             }
         }
 
-        if(pn.hasProperty(AnnotationUtils.HISTORY)) {
+        if (pn.hasProperty(AnnotationUtils.HISTORY)) {
             model.setHistory((History) pn.getProperty(AnnotationUtils.HISTORY));
         }
         LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
-        model.addExtension(LayoutConstants.getNamespaceURI(level, version),mplugin);
+        model.addExtension(LayoutConstants.getNamespaceURI(level, version), mplugin);
         //(LayoutModelPlugin) model.getPlugin(LayoutConstants.shortLabel);
         //Layout layout = new Layout();
         //mplugin.add(layout);
         Layout layout = mplugin.createLayout();
-        
+
         Compartment defaultCompartment = null;
         Map<monalisa.data.pn.Compartment, org.sbml.jsbml.Compartment> compartmentMap = new HashMap<>();
-        if(this.level > 2) {
+        if (this.level > 2) {
             boolean thereAreCompartments = false;
 
-            if(pn.getCompartments() != null) {
-                if(!pn.getCompartments().isEmpty()) {
+            if (pn.getCompartments() != null) {
+                if (!pn.getCompartments().isEmpty()) {
                     thereAreCompartments = true;
                     Integer i = 1;
-                    for(monalisa.data.pn.Compartment c : pn.getCompartments()) {
-                        Compartment compartment = model.createCompartment("C"+i.toString());
-                        
-                        CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG"+ c.toString());                        
+                    for (monalisa.data.pn.Compartment c : pn.getCompartments()) {
+                        Compartment compartment = model.createCompartment("C" + i.toString());
+
+                        CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG" + c.toString());
                         cglyph.setCompartment(compartment.getId());
                         cglyph.createBoundingBox(c.getProperty("spatialDimensions"));
-                        
-                        if(c == null)
+
+                        if (c == null) {
                             continue;
+                        }
 
                         compartment.setName(c.getName());
 
-                        if(c.hasProperty("spatialDimensions")) {
+                        if (c.hasProperty("spatialDimensions")) {
                             compartment.setSpatialDimensions((double) c.getProperty("spatialDimensions"));
                         } else {
                             compartment.setSpatialDimensions(1.0);
                         }
 
-                        if(c.hasProperty("size")) {
+                        if (c.hasProperty("size")) {
                             compartment.setSize((double) c.getProperty("size"));
                         } else {
                             compartment.setSize(1.0);
                         }
 
-                        if(c.hasProperty("constant")) {
+                        if (c.hasProperty("constant")) {
                             compartment.setConstant((boolean) c.getProperty("constant"));
                         } else {
                             compartment.setConstant(true);
                         }
 
-                        if(c.hasProperty(AnnotationUtils.SBO_TERM)) {
+                        if (c.hasProperty(AnnotationUtils.SBO_TERM)) {
                             compartment.setSBOTerm((String) c.getProperty(AnnotationUtils.SBO_TERM));
                         }
 
-                        if(c.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                        if (c.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
                             List<CVTerm> cvts = (List<CVTerm>) c.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
-                            for(CVTerm cvt : cvts) {
+                            for (CVTerm cvt : cvts) {
                                 compartment.addCVTerm(cvt);
                             }
                         }
@@ -144,7 +143,7 @@ public class SbmlOutputHandler implements OutputHandler {
                     }
                 }
             }
-            if(!thereAreCompartments) {
+            if (!thereAreCompartments) {
                 defaultCompartment = model.createCompartment("default_compartment");
                 defaultCompartment.setSize(1.0);
                 defaultCompartment.setConstant(true);
@@ -154,21 +153,21 @@ public class SbmlOutputHandler implements OutputHandler {
 
         Species species = null;
         SpeciesGlyph sglyph = null;
-        for(Place p : pn.places()) {
-            species = model.createSpecies("P"+p.id());
+        for (Place p : pn.places()) {
+            species = model.createSpecies("P" + p.id());
 
-            if(this.level > 2) {
-                if(p.getCompartment() != null) {
+            if (this.level > 2) {
+                if (p.getCompartment() != null) {
                     species.setCompartment(compartmentMap.get(p.getCompartment()));
-                    
+
                 } else {
-                    species.setCompartment(defaultCompartment);                   
+                    species.setCompartment(defaultCompartment);
                 }
-                
-                sglyph = layout.createSpeciesGlyph("SG"+species.getId());
+
+                sglyph = layout.createSpeciesGlyph("SG" + species.getId());
                 sglyph.setSpecies(species.getId());
                 BoundingBox bb = sglyph.createBoundingBox();
-                bb.createPosition(p.getProperty("posX"),p.getProperty("posY"),0);
+                bb.createPosition(p.getProperty("posX"), p.getProperty("posY"), 0);
             }
 
             species.setName((String) p.getProperty("name"));
@@ -176,14 +175,13 @@ public class SbmlOutputHandler implements OutputHandler {
             species.setBoundaryCondition(false);
             species.setConstant(false);
 
-            if(p.hasProperty("token")) {
+            if (p.hasProperty("token")) {
                 species.setInitialAmount((Double) p.getProperty("token"));
-            }
-            else {
+            } else {
                 species.setInitialAmount(0.0);
             }
 
-            if(p.hasProperty("toolTip")) {
+            if (p.hasProperty("toolTip")) {
                 try {
                     species.setNotes((String) p.getProperty("toolTip"));
                 } catch (XMLStreamException ex) {
@@ -193,43 +191,43 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             // MIRIAM Annotaions
-            if(p.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+            if (p.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
                 List<CVTerm> cvts = (List<CVTerm>) p.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
-                for(CVTerm cvt : cvts) {
+                for (CVTerm cvt : cvts) {
                     species.addCVTerm(cvt);
                 }
             }
 
             // SBO Term
-            if(p.hasProperty(AnnotationUtils.SBO_TERM)) {
+            if (p.hasProperty(AnnotationUtils.SBO_TERM)) {
                 species.setSBOTerm((String) p.getProperty(AnnotationUtils.SBO_TERM));
             }
         }
 
         Reaction reaction = null;
         ReactionGlyph rglyph = null;
-        for(Transition t : pn.transitions()) {
+        for (Transition t : pn.transitions()) {
             reaction = model.createReaction();
 
-            reaction.setId("T"+t.id());
+            reaction.setId("T" + t.id());
             reaction.setName((String) t.getProperty("name"));
             reaction.setReversible(false);
             reaction.setFast(false);
 
-            if(this.level > 2) {
-                if(t.getCompartment() != null) {
+            if (this.level > 2) {
+                if (t.getCompartment() != null) {
                     reaction.setCompartment(compartmentMap.get(t.getCompartment()));
                 } else {
                     reaction.setCompartment(defaultCompartment);
                 }
-           
-                rglyph = layout.createReactionGlyph("RG"+reaction.getId());
+
+                rglyph = layout.createReactionGlyph("RG" + reaction.getId());
                 rglyph.setReaction(reaction.getId());
                 BoundingBox bb = rglyph.createBoundingBox();
-                bb.createPosition(t.getProperty("posX"),t.getProperty("posY"),0);
+                bb.createPosition(t.getProperty("posX"), t.getProperty("posY"), 0);
             }
 
-            if(t.hasProperty("toolTip")) {
+            if (t.hasProperty("toolTip")) {
                 try {
                     reaction.setNotes((String) t.getProperty("toolTip"));
                 } catch (XMLStreamException ex) {
@@ -239,26 +237,26 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             // MIRIAM Annotaion
-            if(t.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+            if (t.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
                 List<CVTerm> cvts = (List<CVTerm>) t.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
-                for(CVTerm cvt : cvts) {
+                for (CVTerm cvt : cvts) {
                     reaction.addCVTerm(cvt);
                 }
             }
 
             // SBO Term
-            if(t.hasProperty(AnnotationUtils.SBO_TERM)) {
+            if (t.hasProperty(AnnotationUtils.SBO_TERM)) {
                 reaction.setSBOTerm((String) t.getProperty(AnnotationUtils.SBO_TERM));
             }
 
             SpeciesReference sr = null;
-            for(Place p : t.inputs()) {
-                sr = reaction.createReactant(model.getSpecies("P"+p.id()));
+            for (Place p : t.inputs()) {
+                sr = reaction.createReactant(model.getSpecies("P" + p.id()));
                 sr.setStoichiometry(pn.getArc(p, t).weight());
-                if(this.level > 2) {
+                if (this.level > 2) {
                     sr.setConstant(true);
                 }
-                if(pn.getArc(p, t).hasProperty("toolTip")) {
+                if (pn.getArc(p, t).hasProperty("toolTip")) {
                     try {
                         sr.setNotes((String) pn.getArc(p, t).getProperty("toolTip"));
                     } catch (XMLStreamException ex) {
@@ -268,18 +266,19 @@ public class SbmlOutputHandler implements OutputHandler {
                 }
             }
 
-            for(Place p : t.outputs()) {
-                sr = reaction.createProduct(model.getSpecies("P"+p.id()));
+            for (Place p : t.outputs()) {
+                sr = reaction.createProduct(model.getSpecies("P" + p.id()));
                 sr.setStoichiometry(pn.getArc(t, p).weight());
-                if(this.level > 2) {
+                if (this.level > 2) {
                     sr.setConstant(true);
                 }
-                if(pn.getArc(t, p).hasProperty("toolTip")) {
+                if (pn.getArc(t, p).hasProperty("toolTip")) {
                     try {
                         sr.setNotes((String) pn.getArc(t, p).getProperty("toolTip"));
                     } catch (XMLStreamException ex) {
                         LOGGER.error("XMLStreamException while saving tooltips for arc between transition '"
-                                + t.getProperty("name") + "' and place '" + p.getProperty("name") + "': ", ex);                    }
+                                + t.getProperty("name") + "' and place '" + p.getProperty("name") + "': ", ex);
+                    }
                 }
             }
         }
@@ -292,7 +291,7 @@ public class SbmlOutputHandler implements OutputHandler {
         } catch (XMLStreamException ex) {
             LOGGER.error("Caught XMLStreamException while exporting to SBML format - Level: "
                     + this.level + " - Version: " + this.version + ": ", ex);
-        } catch (SBMLException ex){
+        } catch (SBMLException ex) {
             LOGGER.error("Caught SBMLException while exporting to SBML format - Level: "
                     + this.level + " - Version: " + this.version + ": ", ex);
         }
@@ -301,10 +300,11 @@ public class SbmlOutputHandler implements OutputHandler {
     @Override
     public boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file is in SBML format");
-        if ("sbml".equalsIgnoreCase(FileUtils.getExtension(file)))
+        if ("sbml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             return true;
+        }
 
-        if("xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
+        if ("xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             SAXBuilder builder = new SAXBuilder();
             Document doc = null;
             try {
@@ -312,24 +312,26 @@ public class SbmlOutputHandler implements OutputHandler {
             } catch (JDOMException ex) {
                 LOGGER.error("Caught JDOMException while checking for SBML format: ", ex);
                 return false;
-            } catch (IOException ex){
+            } catch (IOException ex) {
                 LOGGER.error("Caught IOException while checking for SBML format: ", ex);
                 return false;
             }
 
             Element root = doc.getRootElement();
-            if (!root.getName().equals("sbml"))
+            if (!root.getName().equals("sbml")) {
                 return false;
-            else
+            } else {
                 return true;
+            }
         }
         return false;
     }
 
     @Override
     public File checkFileNameForExtension(File file) {
-        if(!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".xml");
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".xml");
+        }
         return file;
     }
 
@@ -340,6 +342,6 @@ public class SbmlOutputHandler implements OutputHandler {
 
     @Override
     public String getDescription() {
-        return "SBML Level "+this.level+" Version "+this.version;
+        return "SBML Level " + this.level + " Version " + this.version;
     }
 }

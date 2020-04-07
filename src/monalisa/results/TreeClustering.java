@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -19,13 +18,16 @@ import monalisa.Project;
  * @author Jens Einloft
  */
 public class TreeClustering implements Result {
+
     private static final long serialVersionUID = -8649514526288697494L;
 
     @Override
-    public String filenameExtension() { return ""; }
+    public String filenameExtension() {
+        return "";
+    }
 
     @Override
-    public void export(File path, Configuration config, Project project) throws IOException { }
-
+    public void export(File path, Configuration config, Project project) throws IOException {
+    }
 
 }

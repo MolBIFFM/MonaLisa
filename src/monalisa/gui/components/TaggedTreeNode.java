@@ -7,12 +7,12 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui.components;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TaggedTreeNode extends DefaultMutableTreeNode {
+
     private static final long serialVersionUID = -3349411122033846082L;
     private String displayTag;
 
@@ -23,7 +23,7 @@ public class TaggedTreeNode extends DefaultMutableTreeNode {
     public TaggedTreeNode(String displayTag) {
         this(null, displayTag);
     }
-    
+
     public TaggedTreeNode(Object userObject) {
         this(userObject, userObject.toString());
     }

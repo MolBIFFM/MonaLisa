@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Contains some utility function for topology independent from UI
+ *
  * @author Marcel Gehrmann
  */
 public class TopologyUtils {
@@ -31,25 +32,26 @@ public class TopologyUtils {
     private static final Logger LOGGER = LogManager.getLogger(TopologyUtils.class);
 
     private Map<Integer, Double> freqPlacesAll;
-    private Map<Integer, Double> freqPlacesIn;    
+    private Map<Integer, Double> freqPlacesIn;
     private Map<Integer, Double> freqPlacesOut;
-    private Map<Integer, Double> freqTransitionsAll;    
+    private Map<Integer, Double> freqTransitionsAll;
     private Map<Integer, Double> freqTransitionsIn;
     private Map<Integer, Double> freqTransitionsOut;
-    
+
     private Map<Integer, Integer> ndPlacesAll;
     private Map<Integer, Integer> ndPlacesIn;
     private Map<Integer, Integer> ndPlacesOut;
     private Map<Integer, Integer> ndTransitionsAll;
-    private Map<Integer, Integer> ndTransitionsIn;    
+    private Map<Integer, Integer> ndTransitionsIn;
     private Map<Integer, Integer> ndTransitionsOut;
 
-    public TopologyUtils(){
-        
+    public TopologyUtils() {
+
     }
 
     /**
      * Export of the node degree statistics.
+     *
      * @param freqMap frequency map to export
      * @param file name of export file
      */
@@ -80,6 +82,7 @@ public class TopologyUtils {
 
     /**
      * Returns a frequency map.
+     *
      * @param mapname which frequency map should be returned
      * @return
      */
@@ -104,6 +107,7 @@ public class TopologyUtils {
 
     /**
      * Returns an nd map.
+     *
      * @param mapname which nd map should be returned
      * @return
      */
@@ -129,7 +133,7 @@ public class TopologyUtils {
     /**
      * Resets all frequency maps.
      */
-    public void resetFreqMaps(){
+    public void resetFreqMaps() {
         freqPlacesAll = new HashMap<>();
         freqPlacesIn = new HashMap<>();
         freqPlacesOut = new HashMap<>();
@@ -141,7 +145,7 @@ public class TopologyUtils {
     /**
      * Resets all nd maps.
      */
-    public void resetNdMaps(){
+    public void resetNdMaps() {
         ndPlacesAll = new HashMap<>();
         ndPlacesIn = new HashMap<>();
         ndPlacesOut = new HashMap<>();
@@ -152,6 +156,7 @@ public class TopologyUtils {
 
     /**
      * Calculates the p(k) values
+     *
      * @param ndMap
      * @param freqMap
      * @param elementCounter
@@ -182,7 +187,7 @@ public class TopologyUtils {
             if (!ndPlacesAll.containsKey(all)) {
                 ndPlacesAll.put(all, 0);
             }
-           ndPlacesAll.put(all, ndPlacesAll.get(all) + 1);
+            ndPlacesAll.put(all, ndPlacesAll.get(all) + 1);
             if (!ndPlacesIn.containsKey(in)) {
                 ndPlacesIn.put(in, 0);
             }

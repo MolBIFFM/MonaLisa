@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
@@ -20,16 +19,17 @@ import java.awt.event.InputEvent;
 
 /**
  * GraphMouse with inverted zoom directions
+ *
  * @author JUNG Library, modified by Jens Einloft
  */
 public final class NetViewerModalGraphMouse<V, E> extends AbstractModalGraphMouse {
 
     private GraphPopupMousePlugin gpmp;
     private Boolean simulatorMode;
-    private NetViewer owner;    
+    private NetViewer owner;
 
     public NetViewerModalGraphMouse(GraphPopupMousePlugin gpmp, NetViewer owner) {
-        this(1.1F, 0.9090909F, gpmp, owner);        
+        this(1.1F, 0.9090909F, gpmp, owner);
     }
 
     public NetViewerModalGraphMouse(float in, float out, GraphPopupMousePlugin gpmp, NetViewer owner) {
@@ -38,12 +38,12 @@ public final class NetViewerModalGraphMouse<V, E> extends AbstractModalGraphMous
         this.gpmp = gpmp;
         loadPlugins();
         setModeKeyListener(new ModeKeyAdapter(this));
-        simulatorMode = false;        
+        simulatorMode = false;
     }
 
     @Override
     protected void loadPlugins() {
-        pickingPlugin = new NetViewerPickingGraphMousePlugin(this, this.gpmp);        
+        pickingPlugin = new NetViewerPickingGraphMousePlugin(this, this.gpmp);
         animatedPickingPlugin = new AnimatedPickingGraphMousePlugin();
         translatingPlugin = new TranslatingGraphMousePlugin(InputEvent.BUTTON1_MASK);
         scalingPlugin = new NetViewerScalingGraphMousePlugin(new NetViewerCrossoverScalingControl(), 0, 1 / 1.1f, 1.1f, this.owner);
@@ -55,9 +55,9 @@ public final class NetViewerModalGraphMouse<V, E> extends AbstractModalGraphMous
     }
 
     public NetViewerScalingGraphMousePlugin getScalingPlugin() {
-        return (NetViewerScalingGraphMousePlugin) scalingPlugin;        
-    }   
-               
+        return (NetViewerScalingGraphMousePlugin) scalingPlugin;
+    }
+
     public void enableSimulatorMode(Boolean value) {
         simulatorMode = value;
     }

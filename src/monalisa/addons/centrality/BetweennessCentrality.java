@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.centrality;
 
 import java.util.Collection;
@@ -19,9 +18,10 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Calculates the betweenness centrality of every node in a Petri net
+ *
  * @author Lilya Mirzoyan
  */
-public class BetweennessCentrality extends CentralityAbstract{
+public class BetweennessCentrality extends CentralityAbstract {
 
     Collection<Place> places;
     Collection<Transition> transitions;
@@ -32,11 +32,12 @@ public class BetweennessCentrality extends CentralityAbstract{
     private final NumberOfShortestPaths shortestPathsTransitions;
 
     /**
-     * Executes algorithms to compute the distance matrices and shortest-paths-number
-     * matrices for places and transitions
+     * Executes algorithms to compute the distance matrices and
+     * shortest-paths-number matrices for places and transitions
+     *
      * @param petriNet
      */
-    public BetweennessCentrality(PetriNetFacade petriNet){
+    public BetweennessCentrality(PetriNetFacade petriNet) {
         super(petriNet);
 
         LOGGER.info("Initializing for betweenness centrality");
@@ -51,42 +52,40 @@ public class BetweennessCentrality extends CentralityAbstract{
     }
 
     /**
-     * Calculates the ranking for every place and every transition in a Petri net
-     * on the basis of betweenness centrality
+     * Calculates the ranking for every place and every transition in a Petri
+     * net on the basis of betweenness centrality
      */
     @Override
-    public void calculate(){
+    public void calculate() {
         LOGGER.info("Beginning calculation of betweenness centrality");
         double spp = shortestPathsPlaces.getAllShortestPaths();
         double spt = shortestPathsTransitions.getAllShortestPaths();
         double betweenness;
-        double x,y;
+        double x, y;
 
         LOGGER.info("Calculating betweenness centrality for places");
-        for (Place p : places){
+        for (Place p : places) {
             x = shortestPathsPlaces.getCounter(adjMatrixPlaces.getIndexForId(p.id()));
-            if (spp == 0.0){
+            if (spp == 0.0) {
                 betweenness = 0.0;
-            }
-            else{
-            betweenness = x/spp;
+            } else {
+                betweenness = x / spp;
             }
 
             rankingPlaces.put(p.id(), betweenness);
         }
         LOGGER.info("Finished calculating betweenness centrality for places");
         LOGGER.info("Calculating betweenness centrality for transitions");
-        for (Transition t : transitions){
+        for (Transition t : transitions) {
             y = shortestPathsTransitions.getCounter(adjMatrixTransitions.getIndexForId(t.id()));
-            if (spt == 0.0){
+            if (spt == 0.0) {
                 betweenness = 0.0;
-            }
-            else {
-            betweenness = y/spt;
+            } else {
+                betweenness = y / spt;
             }
 
             rankingTransitions.put(t.id(), betweenness);
         }
         LOGGER.info("Finished calculating betweenness centrality for transitions");
     }
- }
+}

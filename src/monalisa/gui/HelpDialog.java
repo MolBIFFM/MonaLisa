@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import java.awt.Dimension;
@@ -36,7 +35,7 @@ public class HelpDialog extends JFrame implements ActionListener {
     private JEditorPane jep;
 
     public HelpDialog() {
-        setSize(new Dimension(350,200));
+        setSize(new Dimension(350, 200));
         setMinimumSize(getSize());
         setIconImage(resources.getImage("icon-16.png"));
         setTitle(strings.get("HelpTitle"));
@@ -45,9 +44,9 @@ public class HelpDialog extends JFrame implements ActionListener {
     }
 
     private void initComponent() {
-        double size[][] =
-        {{15, TableLayout.FILL, 5, TableLayout.PREFERRED, 5, TableLayout.FILL, 15,},
-        {15, TableLayout.FILL, 5, TableLayout.PREFERRED, 15}};
+        double size[][]
+                = {{15, TableLayout.FILL, 5, TableLayout.PREFERRED, 5, TableLayout.FILL, 15,},
+                {15, TableLayout.FILL, 5, TableLayout.PREFERRED, 15}};
 
         setLayout(new TableLayout(size));
 
@@ -68,8 +67,9 @@ public class HelpDialog extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         final String action = e.getActionCommand();
 
-        if(action == CLOSE_ACTION)
+        if (action == CLOSE_ACTION) {
             closeDialog();
+        }
     }
 
     private void closeDialog() {

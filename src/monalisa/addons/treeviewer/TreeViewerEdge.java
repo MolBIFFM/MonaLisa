@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer;
 
 import java.util.Objects;
@@ -19,6 +18,7 @@ import org.apache.logging.log4j.Logger;
  * @author Stefan Marchi
  */
 public class TreeViewerEdge {
+
     private static final long serialVersionUID = 8440480344225497981L;
     public static final String CLUSTEREDGE = "ce";
     public static final String BENDEDGE = "be";
@@ -63,6 +63,5 @@ public class TreeViewerEdge {
         }
         return true;
     }
-
 
 }

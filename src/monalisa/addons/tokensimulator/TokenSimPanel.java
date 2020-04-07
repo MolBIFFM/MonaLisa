@@ -49,32 +49,35 @@ public class TokenSimPanel extends AddonPanel {
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(TokenSimPanel.class);
 
     // START INNER CLASSES
-/**
-     * Handles navigation through the history. When a history entry in historyList is picked, all steps between the current state and picked state
-     * will be performed (if picked state is later than current state) or reverse-fired (if picked state is earlier than current state); i.e.
-     * the picked state will be the last performed state.
+    /**
+     * Handles navigation through the history. When a history entry in
+     * historyList is picked, all steps between the current state and picked
+     * state will be performed (if picked state is later than current state) or
+     * reverse-fired (if picked state is earlier than current state); i.e. the
+     * picked state will be the last performed state.
      */
-    public class HistorySelectionListener implements ListSelectionListener{
+    public class HistorySelectionListener implements ListSelectionListener {
+
         @Override
         public void valueChanged(ListSelectionEvent e) {
             LOGGER.info("New Entry chosen from history list");
-            if(e.getValueIsAdjusting() == false){
+            if (e.getValueIsAdjusting() == false) {
                 int selectedVar = historyJList.getSelectedIndex();
-                if(selectedVar > -1){
+                if (selectedVar > -1) {
                     historyJList.clearSelection();
                     //if the last step was performed later than the picked state, reverse-fire all steps between the last performer step and the picked
                     historyJList.setEnabled(false);
-                    while(selectedVar < ts.lastHistoryStep){
+                    while (selectedVar < ts.lastHistoryStep) {
                         ts.reverseFireTransitions(ts.historyArrayList.get(ts.lastHistoryStep--));
                     }
                     //if the selected step was performed after the curren step, perform steps between selected and lastHistoryStep and update the visual output after the last firing
-                    while(selectedVar > ts.lastHistoryStep){
+                    while (selectedVar > ts.lastHistoryStep) {
                         ts.fireTransitions(false, ts.historyArrayList.get(++ts.lastHistoryStep));
                     }
                     historyBackJButton.setEnabled(ts.lastHistoryStep > -1);
-                    historyForwardJButton.setEnabled(ts.lastHistoryStep < ts.historyArrayList.size()-1);
+                    historyForwardJButton.setEnabled(ts.lastHistoryStep < ts.historyArrayList.size() - 1);
                     ts.updateVisualOutput();
-                    
+
                     historyJList.repaint();
                     historyJList.ensureIndexIsVisible(ts.lastHistoryStep);
                     historyJList.setEnabled(true);
@@ -83,45 +86,50 @@ public class TokenSimPanel extends AddonPanel {
         }
     }
 
-     /**
-     * Handles the coloring of entries in historyList. The last performed step has red background.
+    /**
+     * Handles the coloring of entries in historyList. The last performed step
+     * has red background.
      */
-    public class HistoryCellRenderer implements ListCellRenderer{
+    public class HistoryCellRenderer implements ListCellRenderer {
+
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-            JLabel renderer = (JLabel)defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if(index == ts.lastHistoryStep){
+            JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (index == ts.lastHistoryStep) {
                 renderer.setBackground(Color.red);
-            }
-            else
+            } else {
                 renderer.setBackground(Color.white);
+            }
             return renderer;
         }
     }
-    
+
     /**
-     * Handles the navigation through snapshots. When a snapshot is picked, the snapshots marking and history are assigned to current state
+     * Handles the navigation through snapshots. When a snapshot is picked, the
+     * snapshots marking and history are assigned to current state
      */
-    public class SnapshotsListSelectionListener implements ListSelectionListener{
+    public class SnapshotsListSelectionListener implements ListSelectionListener {
+
         @Override
         public void valueChanged(ListSelectionEvent lse) {
-            if(lse.getValueIsAdjusting() == false){
+            if (lse.getValueIsAdjusting() == false) {
                 int selectedVar = snapshotsJList.getSelectedIndex();
-                if (selectedVar > -1){
+                if (selectedVar > -1) {
                     snapshotsJList.clearSelection();
                     ts.loadSnapshot(ts.snapshots.get(selectedVar));
                 }
             }
         }
-    }    
-    
+    }
+
     /**
      * Handles selection of a marking from the customMarkingsComboBox.
      */
-    public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener{
+    public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
+
         private boolean canceled = false;
-        
+
         @Override
         public void popupMenuWillBecomeVisible(PopupMenuEvent pme) {
             canceled = false;
@@ -130,12 +138,12 @@ public class TokenSimPanel extends AddonPanel {
         @Override
         public void popupMenuWillBecomeInvisible(PopupMenuEvent pme) {
             //only if the popup becomes invisible in the cause of selecting an item by user.
-            if(!canceled){
+            if (!canceled) {
                 //get the name of selected marking
-                String markingName = (String)customMarkingsJComboBox.getSelectedItem();
+                String markingName = (String) customMarkingsJComboBox.getSelectedItem();
                 /*
                 Put the values from the selected marking into current marking.
-                */
+                 */
                 ts.marking.putAll(ts.customMarkingsMap.get(markingName));
                 //re-compute active transitions
                 ts.tokenSim.addTransitionsToCheck(pnf.transitions().toArray(new Transition[0]));
@@ -150,7 +158,7 @@ public class TokenSimPanel extends AddonPanel {
                 //clear statistic
                 ts.totalStepNr = 0;
                 ts.currStatistic = new Statistic(ts);
-                for (Map.Entry<Place, XYSeries> entr : ts.seriesMap.entrySet()){
+                for (Map.Entry<Place, XYSeries> entr : ts.seriesMap.entrySet()) {
                     entr.getValue().clear();
                     entr.getValue().add(ts.tokenSim.getSimulatedTime(), ts.tokenSim.getTokens(entr.getKey().id()), false);
                 }
@@ -163,24 +171,23 @@ public class TokenSimPanel extends AddonPanel {
         public void popupMenuCanceled(PopupMenuEvent pme) {
             canceled = true;
         }
-    }    
-    
+    }
+
     // END INNER CLASSES
-    
     /**
      * Creates new form TopologcialPanel
      */
-    public TokenSimPanel(final NetViewer netViewer, PetriNetFacade petriNet) {      
-        super(netViewer, petriNet, "Simulator"); 
+    public TokenSimPanel(final NetViewer netViewer, PetriNetFacade petriNet) {
+        super(netViewer, petriNet, "Simulator");
         LOGGER.info("Initiating TokenSimPanel");
         initComponents();
-        
+
         this.ts = new TokenSimulator();
-        modifyComponents();                
-        this.ts.initTokenSimulator(netViewer, petriNet, this);       
-        
+        modifyComponents();
+        this.ts.initTokenSimulator(netViewer, petriNet, this);
+
         this.repaint();
-    }  
+    }
 
     private void modifyComponents() {
         simModeJComboBox.addItem(strings.get("ATSName"));
@@ -188,13 +195,13 @@ public class TokenSimPanel extends AddonPanel {
         simModeJComboBox.addItem(strings.get("StochTSName"));
         simModeJComboBox.addItem(strings.get("GilTSName"));
         simModeJComboBox.setSelectedIndex(3);
-        
+
         //history
         this.ts.historyListModel = new DefaultListModel();
         historyJList.setModel(this.ts.historyListModel);
         historyJList.setCellRenderer(new HistoryCellRenderer());
         historyJList.addListSelectionListener(new HistorySelectionListener());
-        
+
         //snapshots
         this.ts.snapshotsListModel = new DefaultListModel();
         snapshotsJList.setModel(this.ts.snapshotsListModel);
@@ -202,20 +209,20 @@ public class TokenSimPanel extends AddonPanel {
 
         //create new selection listener selecting custom markings. If an entry is selected in customMarkingsComboBox, load the marking
         customMarkingsJComboBox.addPopupMenuListener(new CustomMarkingsComboBoxPopupListener());
-        
+
         //Increase the size of vertices (places and transitions)
         iconSizeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                int newIconSize = ((Integer)ts.tokenSimPanel.iconSizeSpinner.getValue());
+                int newIconSize = ((Integer) ts.tokenSimPanel.iconSizeSpinner.getValue());
                 netViewer.getVisualizationViewer().getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(newIconSize));
                 ts.vertexIconTransformer.setVertexSize(newIconSize);
                 netViewer.getVisualizationViewer().repaint();
             }
-        }); 
-                
+        });
+
         //Go one step back in the history
-        historyBackJButton.addActionListener(new ActionListener(){
+        historyBackJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 LOGGER.info("Backwards button in the history has been pressed, going one step back");
@@ -225,15 +232,15 @@ public class TokenSimPanel extends AddonPanel {
                 historyJList.repaint();
                 historyJList.ensureIndexIsVisible(ts.lastHistoryStep);
                 //if no steps were performed before, disable stepBackButton
-                if(ts.lastHistoryStep < 0){
+                if (ts.lastHistoryStep < 0) {
                     historyBackJButton.setEnabled(false);
                 }
                 ts.updateVisualOutput();
             }
         });
-        
+
         //Perform next step in the history
-        historyForwardJButton.addActionListener(new ActionListener(){
+        historyForwardJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 LOGGER.info("Forwards button in the history has been pressed, going one step forward");
@@ -243,15 +250,15 @@ public class TokenSimPanel extends AddonPanel {
                 historyJList.repaint();
                 historyJList.ensureIndexIsVisible(ts.lastHistoryStep);
                 //if no steps in history left, disable stepForwardButton
-                if(ts.lastHistoryStep == ts.historyArrayList.size()-1){
+                if (ts.lastHistoryStep == ts.historyArrayList.size() - 1) {
                     historyForwardJButton.setEnabled(false);
                 }
                 ts.updateVisualOutput();
             }
         });
-        
+
         //Shows a frame with statistics for current state
-        showStatisticsJButton.addActionListener(new ActionListener(){
+        showStatisticsJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 //Create a new snapshot of current state
@@ -260,38 +267,37 @@ public class TokenSimPanel extends AddonPanel {
                 new StatisticFrame(ts);
             }
         });
-        
+
         //Button for saving current marking
-        saveMarkingJButton.addActionListener(new ActionListener(){
+        saveMarkingJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 //save current marking to a new entry in customMarkingsMap
                 //name of current marking
                 LOGGER.info("SaveMarkingButton has been pressed, saving the current Marking");
                 String markingName = JOptionPane.showInputDialog(TokenSimPanel.this, strings.get("TSNameOfMarkingOptionPane"), ("Marking " + (ts.customMarkingsMap.size() + 1)));
-                if(markingName != null){
+                if (markingName != null) {
                     //if a marking with given name already exists, promt to give a new name
-                    if(ts.customMarkingsMap.containsKey(markingName)){
+                    if (ts.customMarkingsMap.containsKey(markingName)) {
                         JOptionPane.showMessageDialog(null, strings.get("TSMarkingNameAlreadyExists"));
-                    }
-                    else{
+                    } else {
                         Map<Integer, Long> tmpMarking = new HashMap<>(pnf.places().size());
-                        for (Place place : pnf.places()){
+                        for (Place place : pnf.places()) {
                             tmpMarking.put(place.id(), ts.tokenSim.getTokens(place.id()));
                         }
                         ts.customMarkingsMap.put(markingName, tmpMarking);
                         //insert new marking entry to the top of the ComboBox
                         customMarkingsJComboBox.addItem(markingName);
-                        customMarkingsJComboBox.setSelectedIndex(customMarkingsJComboBox.getItemCount()-1);
+                        customMarkingsJComboBox.setSelectedIndex(customMarkingsJComboBox.getItemCount() - 1);
                         customMarkingsJComboBox.setEnabled(true);
                         deleteMarkingJButton.setEnabled(true);
                     }
                 }
             }
         });
-        
+
         //Button to delete selected marking
-        deleteMarkingJButton.addActionListener(new ActionListener(){
+        deleteMarkingJButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 LOGGER.info("Button to delete the currently selected marking has been pressed - deleting current marking");
@@ -300,14 +306,14 @@ public class TokenSimPanel extends AddonPanel {
                 ts.customMarkingsMap.remove(markingName);
                 customMarkingsJComboBox.removeItemAt(customMarkingsJComboBox.getSelectedIndex());
                 //disable custmMarkingsComboBox and the delete-button if no markings are saved
-                if(ts.customMarkingsMap.isEmpty()){
+                if (ts.customMarkingsMap.isEmpty()) {
                     customMarkingsJComboBox.setEnabled(false);
                     deleteMarkingJButton.setEnabled(false);
                 }
             }
-        });        
+        });
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -741,35 +747,39 @@ public class TokenSimPanel extends AddonPanel {
     private void endSimulationJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endSimulationJButtonActionPerformed
         this.ts.endSimulator();
     }//GEN-LAST:event_endSimulationJButtonActionPerformed
-    
+
     /**
-     * Is called from the Project class to get all data, which should be saved for the AddOn.
-     * All kind of objects can be stored here, if the class implements the "Serializable" interface. 
-     * The string is an identifier if more than one object should be saved.
+     * Is called from the Project class to get all data, which should be saved
+     * for the AddOn. All kind of objects can be stored here, if the class
+     * implements the "Serializable" interface. The string is an identifier if
+     * more than one object should be saved.
+     *
      * @return A map with the data to store.
      */
     @Override
     public Map<String, Object> getObjectsForStorage() {
         Map<String, Object> storage = new HashMap<>();
-        
+
         storage.put("customMarking", ts.customMarkingsMap);
-        
+
         return storage;
     }
-    
+
     /**
-     * Is called to send the stored data to the AddOn.
-     * It will get the map which is saved with getObjectsForStorage() method.
-     * @param storage 
+     * Is called to send the stored data to the AddOn. It will get the map which
+     * is saved with getObjectsForStorage() method.
+     *
+     * @param storage
      */
     @Override
     public void receiveStoredObjects(Map<String, Object> storage) {
         ts.customMarkingsMap = (Map<String, Map<Integer, Long>>) storage.get("customMarking");
-    }    
-    
+    }
+
     /**
      * Show the preferences-frame
-     * @param evt 
+     *
+     * @param evt
      */
     private void preferencesJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesJButtonActionPerformed
         this.ts.preferencesJFrame.logPathJTextField.setText((String) this.ts.preferences.get("LogPath"));

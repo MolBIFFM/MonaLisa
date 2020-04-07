@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -16,8 +15,8 @@ import monalisa.data.pn.PetriNetFacade;
  *
  * @author daniel
  */
+public class SubConservative extends NetPropertyAlgorithm<Boolean> {
 
-public class SubConservative extends NetPropertyAlgorithm<Boolean>{
     private final Conservative conservative;
 
     public SubConservative(PetriNetFacade pn) {

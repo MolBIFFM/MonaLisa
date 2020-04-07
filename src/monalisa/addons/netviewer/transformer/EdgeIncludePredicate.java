@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import edu.uci.ics.jung.graph.Graph;
@@ -18,9 +17,10 @@ import org.apache.commons.collections15.Predicate;
 
 /**
  * This class decides if an edge is rendered or not
+ *
  * @author Jens Einloft
  */
-public class EdgeIncludePredicate implements Predicate<Context<Graph<NetViewerNode, NetViewerEdge>, NetViewerEdge>>{
+public class EdgeIncludePredicate implements Predicate<Context<Graph<NetViewerNode, NetViewerEdge>, NetViewerEdge>> {
 
     @Override
     public boolean evaluate(Context<Graph<NetViewerNode, NetViewerEdge>, NetViewerEdge> t) {

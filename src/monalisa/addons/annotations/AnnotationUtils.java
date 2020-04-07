@@ -45,21 +45,21 @@ public class AnnotationUtils {
     }
 
     public void addMiriamModel(PetriNetFacade petriNet, MiriamWrapper mw, String resource) {
-        if(!petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
+        if (!petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
             addProperty(petriNet, MIRIAM_MODEL_QUALIFIERS, new ArrayList<CVTerm>());
         }
         List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
         boolean qualifierWasThere = false;
-        for(CVTerm cvt : cvts) {
-            if((mw.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
+        for (CVTerm cvt : cvts) {
+            if ((mw.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
                 qualifierWasThere = true;
                 cvt.addResource(resource);
             }
             addProperty(petriNet, MIRIAM_MODEL_QUALIFIERS, cvts);
         }
-        if(!qualifierWasThere) {
+        if (!qualifierWasThere) {
             ((List<CVTerm>) petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS)).add(mw.getCVTerm());
-        }    
+        }
     }
 
     public void editMiriam(AbstractPetriNetEntity ape, MiriamWrapper identifier, MiriamRegistryWrapper mrw, String resource, Object selectedItem) {
@@ -113,11 +113,11 @@ public class AnnotationUtils {
     public void editMiriamModel(PetriNetFacade petriNet, MiriamWrapper identifier, MiriamRegistryWrapper mrw, String uriTrimmed, Object selectedItem) {
         List<CVTerm> cvts = petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
         // Same identifier = update the uri
-        if(identifier.getCVTerm().getModelQualifierType().equals((CVTerm.Qualifier) selectedItem)) {
+        if (identifier.getCVTerm().getModelQualifierType().equals((CVTerm.Qualifier) selectedItem)) {
             LOGGER.info("Same identifier, updating the uri");
-            for(CVTerm cvt : cvts) {
-                if((identifier.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
-                    cvt.getResources().set(cvt.getResources().indexOf(identifier.getURI()), mrw.getURL()+uriTrimmed);
+            for (CVTerm cvt : cvts) {
+                if ((identifier.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
+                    cvt.getResources().set(cvt.getResources().indexOf(identifier.getURI()), mrw.getURL() + uriTrimmed);
                     break;
                 }
             }
@@ -125,16 +125,16 @@ public class AnnotationUtils {
             LOGGER.info("New identifier, updating identifier and uri");
             // first: delete the old one
             CVTerm toRemove = null;
-            for(CVTerm cvt : cvts) {
-                if((identifier.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
+            for (CVTerm cvt : cvts) {
+                if ((identifier.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
                     cvt.getResources().remove(cvt.getResources().indexOf(identifier.getURI()));
-                    if(cvt.getResourceCount() == 0) {
+                    if (cvt.getResourceCount() == 0) {
                         toRemove = cvt;
                     }
                     break;
                 }
             }
-            if(toRemove != null) {
+            if (toRemove != null) {
                 LOGGER.info("Remove the old one");
                 cvts.remove(toRemove);
                 addProperty(petriNet, MIRIAM_MODEL_QUALIFIERS, cvts);
@@ -143,34 +143,33 @@ public class AnnotationUtils {
             // now add the new ones
             LOGGER.info("Adding new ones");
             boolean qualifierWasThere = false;
-            for(CVTerm cvt : cvts) {
-                if(((CVTerm.Qualifier) selectedItem).equals(cvt.getModelQualifierType())) {
+            for (CVTerm cvt : cvts) {
+                if (((CVTerm.Qualifier) selectedItem).equals(cvt.getModelQualifierType())) {
                     qualifierWasThere = true;
                     cvt.addResource(uriTrimmed);
                 }
                 addProperty(petriNet, MIRIAM_MODEL_QUALIFIERS, cvts);
             }
 
-            if(!qualifierWasThere) {
-                MiriamWrapper mw = new MiriamWrapper((CVTerm.Qualifier) selectedItem, mrw.getURL()+uriTrimmed);
+            if (!qualifierWasThere) {
+                MiriamWrapper mw = new MiriamWrapper((CVTerm.Qualifier) selectedItem, mrw.getURL() + uriTrimmed);
                 updateCVTerms(petriNet, "add", MIRIAM_MODEL_QUALIFIERS, mw.getCVTerm());
             }
-        }    
+        }
     }
-    
-    public <T> void addProperty(AbstractPetriNetEntity ape, String propName, T value){
+
+    public <T> void addProperty(AbstractPetriNetEntity ape, String propName, T value) {
         ape.putProperty(propName, value);
     }
 
-    public void removeProperty(AbstractPetriNetEntity ape, String propName){
+    public void removeProperty(AbstractPetriNetEntity ape, String propName) {
         ape.removeProperty(propName);
     }
 
-    public void updateCVTerms(AbstractPetriNetEntity ape, String mode, String propName, CVTerm term){
-        if (mode.equals("add")){
+    public void updateCVTerms(AbstractPetriNetEntity ape, String mode, String propName, CVTerm term) {
+        if (mode.equals("add")) {
             ((List<CVTerm>) ape.getProperty(propName)).add(term);
-        }
-        else if (mode.equals("remove")){
+        } else if (mode.equals("remove")) {
             ((List<CVTerm>) ape.getProperty(propName)).remove(term);
         }
     }

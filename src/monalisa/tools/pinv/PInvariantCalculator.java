@@ -29,8 +29,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 public final class PInvariantCalculator {
+
     @SuppressWarnings("serial")
     private class ExtractResourceException extends Exception {
+
         public ExtractResourceException(Exception cause) {
             super(cause);
         }
@@ -38,6 +40,7 @@ public final class PInvariantCalculator {
 
     @SuppressWarnings("serial")
     private class InvokeProcessException extends Exception {
+
         public InvokeProcessException(Exception cause) {
             super(cause);
         }
@@ -67,16 +70,17 @@ public final class PInvariantCalculator {
         // it simply increments a counter for them, starting at zero. To
         // account for that, and to re-establish a mapping between the tinv
         // output and our Petri net, we perform a little bookkeeping ...
-
         placeIds = new HashMap<>();
         int pid = 0;
-        for (Place place : petriNet.places())
+        for (Place place : petriNet.places()) {
             placeIds.put(place.id(), pid++);
+        }
 
         Map<Integer, Integer> transitionIds = new HashMap<>();
         int tid = 0;
-        for (Transition transition : petriNet.transitions())
+        for (Transition transition : petriNet.transitions()) {
             transitionIds.put(transition.id(), tid++);
+        }
 
         InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "PI");
         try {
@@ -106,10 +110,10 @@ public final class PInvariantCalculator {
         if (pinvariants == null) {
             LOGGER.debug("Importing P-Invariants calculated by external tool");
             File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".pi"));
-            InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet,"PI");
+            InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet, "PI");
             InvParser invParser;
             try {
-                invParser = new InvParser(invariantBuilder, invFile, invertMap(placeIds),"PI");
+                invParser = new InvParser(invariantBuilder, invFile, invertMap(placeIds), "PI");
                 LOGGER.debug("Successfully imported P-Invariants calculated by external tool");
             } catch (IOException ex) {
                 log.log("#InvParserFailed", ErrorLog.Severity.ERROR);
@@ -130,16 +134,14 @@ public final class PInvariantCalculator {
         File toolFile = null;
         try {
             LOGGER.debug("Getting external tool location based on OS");
-            if( System.getProperty("os.name").toLowerCase().indexOf("nix") >= 0
-             || System.getProperty("os.name").toLowerCase().indexOf("nux") >= 0 ) {
+            if (System.getProperty("os.name").toLowerCase().indexOf("nix") >= 0
+                    || System.getProperty("os.name").toLowerCase().indexOf("nux") >= 0) {
                 LOGGER.debug("OS determined to be Unix");
                 toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
-            }
-            else if(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
+            } else if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
                 LOGGER.debug("OS determined to be Windows");
                 toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
-            }
-            else if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
+            } else if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
                 LOGGER.debug("OS determined to be MAC");
                 toolFile = FileUtils.extractResource("tinv_macos.exe", "monalisa", "bin");
             }
@@ -148,13 +150,13 @@ public final class PInvariantCalculator {
         }
         toolFile.deleteOnExit();
         toolFile.setExecutable(true);
-        
+
         String[] input_commands = new String[3];
-        
+
         input_commands[0] = toolFile.getAbsolutePath();
         input_commands[1] = input.getAbsolutePath();
         input_commands[2] = ("PI");
-        
+
         ProcessBuilder pb = new ProcessBuilder(input_commands).inheritIO();
         pb.directory(output);
 
@@ -165,17 +167,17 @@ public final class PInvariantCalculator {
             LOGGER.debug("Successfully computed P-Invariants");
         } catch (IOException e) {
             throw new InvokeProcessException(e);
-        }
-        finally {
+        } finally {
             LOGGER.debug("Marking output files for deletion");
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
-            String[] extensions = { ".pi" };
+            String[] extensions = {".pi"};
 
             for (String ext : extensions) {
                 File file = new File(baseName + ext);
-                if (file.exists())
+                if (file.exists()) {
                     file.deleteOnExit();
+                }
             }
             LOGGER.debug("Successfully marked output files for deletion");
         }
@@ -184,8 +186,9 @@ public final class PInvariantCalculator {
     private final <T> Map<T, T> invertMap(Map<T, T> source) {
         Map<T, T> inverted = new HashMap<>();
 
-        for (Map.Entry<T, T> entry : source.entrySet())
+        for (Map.Entry<T, T> entry : source.entrySet()) {
             inverted.put(entry.getValue(), entry.getKey());
+        }
 
         return inverted;
     }

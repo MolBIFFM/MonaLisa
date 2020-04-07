@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.awt.Dimension;
@@ -31,8 +30,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Variation of the JUNG Layout class.
- * Allows a simpler way to save and restore the layout without writing a file.
+ * Variation of the JUNG Layout class. Allows a simpler way to save and restore
+ * the layout without writing a file.
+ *
  *  * @author JUNG Library, modified by Jens Einloft
  * @param <V>
  * @param <E>
@@ -104,10 +104,12 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
     }
 
     /**
-     * Returns a list which contains the coordinates for every vertex in the graph
+     * Returns a list which contains the coordinates for every vertex in the
+     * graph
+     *
      * @return a map of the Point2D for every vertex
      */
-    public Map<V, Point> persist()  {
+    public Map<V, Point> persist() {
         for (V v : getGraph().getVertices()) {
             Point p = new Point(transform(v));
             map.put(v, p);
@@ -116,7 +118,9 @@ public class MonaLisaLayout<V, E> extends ObservableCachingLayout<V, E>
     }
 
     /**
-     * Set the map of points and initialize their location to the given coordinates
+     * Set the map of points and initialize their location to the given
+     * coordinates
+     *
      * @param map a map of the Point2D for every vertex
      */
     public void restore(Map<V, Point> map) {

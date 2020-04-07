@@ -71,13 +71,13 @@ public class KnockoutDialog extends JDialog implements ActionListener {
     private JLabel koLabel;
 
     private Map<String, UniquePetriNetEntity> name2Entity = new HashMap<>();
-    private List<UniquePetriNetEntity> koEntities= new ArrayList<>();
+    private List<UniquePetriNetEntity> koEntities = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger(KnockoutDialog.class);
 
     public KnockoutDialog(MainDialog owner, Collection<? extends UniquePetriNetEntity> entities) {
         super(owner, true);
         LOGGER.info("Initializing KnockoutDialog");
-        for(UniquePetriNetEntity e : entities){
+        for (UniquePetriNetEntity e : entities) {
             String name = e.<String>getProperty("name");
             allListModel.addElement(name);
             name2Entity.put(name, e);
@@ -117,14 +117,14 @@ public class KnockoutDialog extends JDialog implements ActionListener {
         allLabel = new JLabel("All");
         koLabel = new JLabel("Knockout");
 
-        allScrollPane =
-            new JScrollPane(allList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        allScrollPane
+                = new JScrollPane(allList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         allScrollPane.setPreferredSize(new Dimension(150, 200));
 
-        koScrollPane =
-            new JScrollPane(koList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        koScrollPane
+                = new JScrollPane(koList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         koScrollPane.setPreferredSize(new Dimension(150, 200));
 
         GroupLayout allKoLayout = new GroupLayout(allKoPanel);
@@ -133,27 +133,27 @@ public class KnockoutDialog extends JDialog implements ActionListener {
         allKoLayout.setAutoCreateContainerGaps(true);
 
         allKoLayout.setHorizontalGroup(allKoLayout.createSequentialGroup()
-            .addGroup(allKoLayout.createParallelGroup()
-                    .addComponent(allLabel)
-                    .addComponent(allScrollPane, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(allKoLayout.createParallelGroup()
-                .addComponent(inButton)
-                .addComponent(outButton))
-            .addGroup(allKoLayout.createParallelGroup()
-                    .addComponent(koLabel)
-                    .addComponent(koScrollPane, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                .addGroup(allKoLayout.createParallelGroup()
+                        .addComponent(allLabel)
+                        .addComponent(allScrollPane, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(allKoLayout.createParallelGroup()
+                        .addComponent(inButton)
+                        .addComponent(outButton))
+                .addGroup(allKoLayout.createParallelGroup()
+                        .addComponent(koLabel)
+                        .addComponent(koScrollPane, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         allKoLayout.setVerticalGroup(allKoLayout.createSequentialGroup()
-            .addGroup(allKoLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                .addGroup(allKoLayout.createSequentialGroup()
-                    .addComponent(allLabel)
-                    .addComponent(allScrollPane))
-                .addGroup(allKoLayout.createSequentialGroup()
-                    .addComponent(inButton)
-                    .addComponent(outButton))
-                .addGroup(allKoLayout.createSequentialGroup()
-                    .addComponent(koLabel)
-                    .addComponent(koScrollPane))));
+                .addGroup(allKoLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                        .addGroup(allKoLayout.createSequentialGroup()
+                                .addComponent(allLabel)
+                                .addComponent(allScrollPane))
+                        .addGroup(allKoLayout.createSequentialGroup()
+                                .addComponent(inButton)
+                                .addComponent(outButton))
+                        .addGroup(allKoLayout.createSequentialGroup()
+                                .addComponent(koLabel)
+                                .addComponent(koScrollPane))));
 
         GroupLayout layout = new GroupLayout(panel);
         panel.setLayout(layout);
@@ -190,13 +190,13 @@ public class KnockoutDialog extends JDialog implements ActionListener {
                 setVisible(false);
                 break;
             case IN:
-                for(Object o : allList.getSelectedValues()){
+                for (Object o : allList.getSelectedValues()) {
                     koListModel.addElement(o.toString());
                     allListModel.removeElement(o);
                 }
                 break;
             case OUT:
-                for(Object o : koList.getSelectedValues()){
+                for (Object o : koList.getSelectedValues()) {
                     allListModel.addElement(o.toString());
                     koListModel.removeElement(o);
                 }
@@ -204,15 +204,15 @@ public class KnockoutDialog extends JDialog implements ActionListener {
         }
     }
 
-    private void submit(){
-        for(int i = 0; i < koListModel.getSize(); i++){
+    private void submit() {
+        for (int i = 0; i < koListModel.getSize(); i++) {
             koEntities.add(name2Entity.get(koListModel.get(i).toString()));
         }
         setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends UniquePetriNetEntity> List<T> knockouts(){
+    public <T extends UniquePetriNetEntity> List<T> knockouts() {
         return (List<T>) this.koEntities;
     }
 

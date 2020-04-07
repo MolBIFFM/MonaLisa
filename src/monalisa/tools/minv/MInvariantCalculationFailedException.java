@@ -13,9 +13,9 @@ package monalisa.tools.minv;
  *
  * @author daniel
  */
-
 @SuppressWarnings("serial")
 public final class MInvariantCalculationFailedException extends Exception {
+
     public MInvariantCalculationFailedException(Exception cause) {
         super(cause);
     }

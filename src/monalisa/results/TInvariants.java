@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -28,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class TInvariants implements Result, Collection<TInvariant> {
+
     private static final long serialVersionUID = 8293263678484610772L;
     private final List<TInvariant> tinvariants;
     private static final Logger LOGGER = LogManager.getLogger(TInvariants.class);
@@ -46,7 +46,7 @@ public final class TInvariants implements Result, Collection<TInvariant> {
             sb.append("# reaction_id:name\n");
 
             int i = 1;
-            for(Transition t : project.getPetriNet().transitions()) {
+            for (Transition t : project.getPetriNet().transitions()) {
                 transitionMap.put(t, i);
                 sb.append(i++);
                 sb.append(":");
@@ -56,11 +56,11 @@ public final class TInvariants implements Result, Collection<TInvariant> {
 
             sb.append("\n# em_id:factor*reaction_id; ...\n");
 
-            for(TInvariant tinv : tinvariants) {
-                sb.append(tinv.id()+1);
+            for (TInvariant tinv : tinvariants) {
+                sb.append(tinv.id() + 1);
                 sb.append(":");
 
-                for(Transition t : tinv.transitions()) {
+                for (Transition t : tinv.transitions()) {
                     sb.append(tinv.factor(t));
                     sb.append("*");
                     sb.append(transitionMap.get(t));
@@ -86,17 +86,20 @@ public final class TInvariants implements Result, Collection<TInvariant> {
         boolean first = true;
 
         for (Transition transition : tinvariant) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 ret.append(" ");
-            if (tinvariant.factor(transition) != 1)
+            }
+            if (tinvariant.factor(transition) != 1) {
                 ret.append(String.format("%d*", tinvariant.factor(transition)));
+            }
 
-            if(printId)
-                ret.append(transition.id()+1);
-            else
+            if (printId) {
+                ret.append(transition.id() + 1);
+            } else {
                 ret.append(((String) transition.getProperty("name")).replace(" ", "_"));
+            }
         }
 
         return ret.toString();
@@ -112,12 +115,13 @@ public final class TInvariants implements Result, Collection<TInvariant> {
             // to the beginning of the current word.
             int prev = startPos;
             startPos += lineLength;
-            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev)
+            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev) {
                 startPos--;
+            }
             // Failsafe if the line has no spaces:
-            if (startPos == prev)
+            if (startPos == prev) {
                 startPos += lineLength; // Don't care: cut the word.
-
+            }
             ret.add(indent + text.substring(prev, startPos));
             startPos++; // Skip whitespace.
 
@@ -127,8 +131,9 @@ public final class TInvariants implements Result, Collection<TInvariant> {
         }
 
         // Add the dangling line.
-        if (startPos < text.length())
+        if (startPos < text.length()) {
             ret.add(indent + text.substring(startPos));
+        }
 
         return ret;
     }
@@ -140,9 +145,10 @@ public final class TInvariants implements Result, Collection<TInvariant> {
 
     public Collection<TInvariant> nonTrivialTInvariants() {
         List<TInvariant> nonTrivial = new ArrayList<>();
-        for(TInvariant tinvariant : this) {
-            if(!tinvariant.isTrivial())
+        for (TInvariant tinvariant : this) {
+            if (!tinvariant.isTrivial()) {
                 nonTrivial.add(tinvariant);
+            }
         }
         return nonTrivial;
     }

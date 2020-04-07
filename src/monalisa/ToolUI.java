@@ -51,7 +51,7 @@ import org.apache.logging.log4j.Logger;
  * @author Marcel Gehrmann
  */
 public class ToolUI implements BooleanChangeListener {
-    
+
     private final ToolManager toolMan;
     private final Project project;
     transient private Map<Class<? extends Tool>, CollapsiblePanel> collapsibleToolPanels;
@@ -59,26 +59,26 @@ public class ToolUI implements BooleanChangeListener {
     private final static Logger LOGGER = LogManager.getLogger(ToolUI.class);
     transient List<ToolStatusUpdateListener> toolStatusUpdateListeners;
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
- 
+
     private static final Color COMPLETE_COLOR = Settings.getAsColor("completeResult");
     private static final Color HAS_RESULT_COLOR = Settings.getAsColor("hasResults");
     private static final Color WARNING_COLOR = Settings.getAsColor("warning");
     private static final Color ERROR_COLOR = Settings.getAsColor("error");
     private static final Color NOT_FINISHED_COLOR = Settings.getAsColor("notFinished");
-    
+
     // Defines order of collapsible panels
-    private static final List<Class<? extends ToolPanel>> toolPanTypes =
-        Arrays.<Class<? extends ToolPanel>>asList(
-            TInvariantPanel.class,
-            MInvariantPanel.class,
-            PInvariantPanel.class,
-            MctsPanel.class,
-            ClusterPanel.class,
-            KnockoutPanel.class,
-            McsPanel.class
-        );
-    
-    public ToolUI(ToolManager toolMan, Project project){
+    private static final List<Class<? extends ToolPanel>> toolPanTypes
+            = Arrays.<Class<? extends ToolPanel>>asList(
+                    TInvariantPanel.class,
+                    MInvariantPanel.class,
+                    PInvariantPanel.class,
+                    MctsPanel.class,
+                    ClusterPanel.class,
+                    KnockoutPanel.class,
+                    McsPanel.class
+            );
+
+    public ToolUI(ToolManager toolMan, Project project) {
         this.toolMan = toolMan;
         this.project = project;
     }
@@ -86,8 +86,8 @@ public class ToolUI implements BooleanChangeListener {
     public List<Class<? extends ToolPanel>> getToolPanels() {
         return Collections.unmodifiableList(toolPanTypes);
     }
-    
-    public ToolPanel createPanel(Class <? extends ToolPanel> type) {
+
+    public ToolPanel createPanel(Class<? extends ToolPanel> type) {
         LOGGER.info("Creating new panel: " + type.getSimpleName());
         if (type.equals(ClusterPanel.class)) {
             return new ClusterPanel(project);
@@ -107,9 +107,10 @@ public class ToolUI implements BooleanChangeListener {
             return null;
         }
     }
-        
+
     /**
      * Creates the GUI for the Analyze Frame.
+     *
      * @param container
      * @param strings
      */
@@ -127,7 +128,7 @@ public class ToolUI implements BooleanChangeListener {
             int panelIndex = 0;
             boolean first = false;
             // Alternate Variant
-            for (Class <? extends ToolPanel> toolPanel : toolPanTypes){
+            for (Class<? extends ToolPanel> toolPanel : toolPanTypes) {
                 if (!first) {
                     first = true;
                 } else {
@@ -171,6 +172,7 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Run a single tool.
+     *
      * @param tool
      */
     private void runSingleTool(Tool tool) {
@@ -196,8 +198,10 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Checks if all requirements for a given tool are fulfilled.
+     *
      * @param tool The Tool to be checked
-     * @return <code> true </code> if all requirements are fulfilled, otherwise <code> false </code>
+     * @return <code> true </code> if all requirements are fulfilled, otherwise <code> false
+     * </code>
      */
     private boolean checkToolRequirements(Tool tool) { // UI
         LOGGER.info("Checking requirements for tool " + strings.get(Tools.name(tool)));
@@ -222,6 +226,7 @@ public class ToolUI implements BooleanChangeListener {
     // runGivenTools and runSelectedTools are somewhat problematic and definitely need testing.
     /**
      * Starts all given tools.
+     *
      * @param givenTool Tools to run.
      */
     public void runGivenTools(final List<String> givenTool) { // Called from NetViewer
@@ -268,6 +273,7 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Sets the reults of the toolManager to the given results
+     *
      * @param results
      */
     public void setResults(Map<Class<? extends Tool>, Map<Configuration, Result>> results) { // Calls UI (setHasResults, setHasNoResults)
@@ -284,7 +290,8 @@ public class ToolUI implements BooleanChangeListener {
     }
 
     /**
-     *  Marks a given tool with the "failed" tag
+     * Marks a given tool with the "failed" tag
+     *
      * @param tool The tool to be marked
      */
     private void setFailed(Tool tool, ErrorLog log) { // UI
@@ -296,6 +303,7 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Marks a given tool with the "has results" tag
+     *
      * @param tool The tool to be marked
      */
     private void setHasResults(Tool tool) { // UI
@@ -307,6 +315,7 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Marks a given tool with the "has no results" tag
+     *
      * @param tool The tool to be marked
      */
     private void setHasNoResults(Tool tool) { // UI
@@ -317,7 +326,8 @@ public class ToolUI implements BooleanChangeListener {
     }
 
     /**
-     *  Marks a given tool with the "complete" tag
+     * Marks a given tool with the "complete" tag
+     *
      * @param tool The tool to be marked
      */
     private void setComplete(Tool tool) {  // UI
@@ -328,7 +338,8 @@ public class ToolUI implements BooleanChangeListener {
     }
 
     /**
-     *  Marks a given tool with the "complete with warnings" tag
+     * Marks a given tool with the "complete with warnings" tag
+     *
      * @param tool The tool to be marked
      */
     private void setCompleteWithWarnings(Tool tool, ErrorLog log) { // UI
@@ -339,7 +350,9 @@ public class ToolUI implements BooleanChangeListener {
     }
 
     /**
-     * Load the given file and tries to construct given invariants and matches them to the Petri net.
+     * Load the given file and tries to construct given invariants and matches
+     * them to the Petri net.
+     *
      * @param TFile
      * @throws IOException
      * @throws InterruptedException
@@ -388,9 +401,10 @@ public class ToolUI implements BooleanChangeListener {
 
     /**
      * Returns the assoicated ToolManager
+     *
      * @return
      */
-    public ToolManager getToolManager(){
+    public ToolManager getToolManager() {
         return toolMan;
     }
 }

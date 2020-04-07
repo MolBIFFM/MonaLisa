@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -18,20 +17,23 @@ import monalisa.data.pn.PetriNet;
 /**
  * An interface representing export handlers for Petri nets in specific file
  * formats.
+ *
  * @author Konrad Rudolph
  */
 public interface OutputHandler {
+
     /**
-     * 
+     *
      * @param fileOutputStream
-     * @param pn 
+     * @param pn
      */
-     void save(FileOutputStream fileOutputStream, PetriNet pn);
+    void save(FileOutputStream fileOutputStream, PetriNet pn);
 
     /**
      * Determine whether the given {@code file} is in a known format and can be
      * read by this handler. A typical test may look at the file extension, or
      * at the XML schema used (if the file happens to be in XML format).
+     *
      * @param file The file.
      * @return <code>true</code>, if the file format is known to this handler,
      * else <code>false</code>.

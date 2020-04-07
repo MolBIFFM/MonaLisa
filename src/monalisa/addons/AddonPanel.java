@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons;
 
 import java.util.HashMap;
@@ -21,8 +20,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Basic Panel for AddOns. Provides some basic functions like the registration of the tab of the NetViewer ToolBar.
- * Also registers the AddOn in the data storage management.
+ * Basic Panel for AddOns. Provides some basic functions like the registration
+ * of the tab of the NetViewer ToolBar. Also registers the AddOn in the data
+ * storage management.
+ *
  * @author jens
  */
 public class AddonPanel extends javax.swing.JPanel implements NetChangedListener, AddonStorageManagment {
@@ -35,7 +36,7 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     protected PetriNetFacade pnf;
     protected String addonName;
 
-   /**
+    /**
      * Creates new form AddonPanel and add it to the ToolBar
      */
     public AddonPanel(NetViewer netViewer, PetriNetFacade pnf, String addonName) {
@@ -74,6 +75,7 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
 
     /**
      * Returns the name of the AddOn.
+     *
      * @return The name of the AddOn
      */
     public String getAddOnName() {
@@ -81,17 +83,19 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     }
 
     /**
-     * Is called from the NetViewer, if the Petri net is changed.
-     * Should be used to reset the AddOn.
+     * Is called from the NetViewer, if the Petri net is changed. Should be used
+     * to reset the AddOn.
      */
     @Override
     public void netChanged() {
     }
 
     /**
-     * Is called from the Project class to get all data, which should be saved for the AddOn.
-     * All kind of objects can be stored here, if the class implements the "Serializable" interface.
-     * The string is an identifier if more than one object should be saved.
+     * Is called from the Project class to get all data, which should be saved
+     * for the AddOn. All kind of objects can be stored here, if the class
+     * implements the "Serializable" interface. The string is an identifier if
+     * more than one object should be saved.
+     *
      * @return A map with the data to store.
      */
     @Override
@@ -100,8 +104,9 @@ public class AddonPanel extends javax.swing.JPanel implements NetChangedListener
     }
 
     /**
-     * Is called to send the stored data to the AddOn.
-     * It will get the map which is saved with getObjectsForStorage() method.
+     * Is called to send the stored data to the AddOn. It will get the map which
+     * is saved with getObjectsForStorage() method.
+     *
      * @param storage
      */
     @Override

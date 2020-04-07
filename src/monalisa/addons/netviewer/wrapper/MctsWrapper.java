@@ -7,23 +7,25 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.wrapper;
+
 import monalisa.data.pn.TInvariant;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Wrapper Class for Mcts Combobox Items
+ *
  * @author Jens Einloft
  */
 public class MctsWrapper {
+
     private final TInvariant tinv;
     private static final Logger LOGGER = LogManager.getLogger(MctsWrapper.class);
 
     public MctsWrapper(TInvariant input) {
         this.tinv = input;
-        LOGGER.debug("Created new MctsWrapper " + (this.tinv.id()+1)+" ("+this.tinv.size()+")");
+        LOGGER.debug("Created new MctsWrapper " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")");
     }
 
     public TInvariant getMcts() {
@@ -32,6 +34,6 @@ public class MctsWrapper {
 
     @Override
     public String toString() {
-        return "MCT-Set "+(this.tinv.id()+1)+" ("+this.tinv.size()+")";
+        return "MCT-Set " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")";
     }
 }

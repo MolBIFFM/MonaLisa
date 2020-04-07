@@ -18,11 +18,12 @@ import org.apache.logging.log4j.LogManager;
  * @author Pavel Balazki
  */
 public class GillespieTokenSimPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATION
     private GillespieTokenSim ts;
     private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSimPanel.class);
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form StochasticTokenSimPanel
@@ -30,8 +31,8 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
     private GillespieTokenSimPanel() {
         initComponents();
     }
-    
-    public GillespieTokenSimPanel(GillespieTokenSim tsN){
+
+    public GillespieTokenSimPanel(GillespieTokenSim tsN) {
         this.ts = tsN;
         initComponents();
     }
@@ -201,11 +202,11 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_inputDataButtonActionPerformed
 
     private void bgModeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgModeBActionPerformed
-       this.ts.fastSimFrame.addFastSim(new StochasticSimulator(this.ts, this.ts.deterministicReactionConstants, this.ts.tokenSim.getMarking(), this.ts.volume, this.ts.random));       
+        this.ts.fastSimFrame.addFastSim(new StochasticSimulator(this.ts, this.ts.deterministicReactionConstants, this.ts.tokenSim.getMarking(), this.ts.volume, this.ts.random));
     }//GEN-LAST:event_bgModeBActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"

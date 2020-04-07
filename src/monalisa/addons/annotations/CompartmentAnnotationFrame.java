@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.awt.Component;
@@ -61,7 +60,6 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
     private boolean editMiriamIdentifier;
     private MiriamWrapper identifierInEdit;
 
-
     /**
      * Creates new form CompartmentAnnotationFrame
      */
@@ -81,7 +79,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
         // START: MIRIAM
         LOGGER.debug("Starting MIRIAM part");
-        miModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiers.getModel();
+        miModel = (DefaultListModel<MiriamWrapper>) miriamIdentifiers.getModel();
         qualifier.addItem(CVTerm.Qualifier.BQB_ENCODES);
         qualifier.addItem(CVTerm.Qualifier.BQB_HAS_PART);
         qualifier.addItem(CVTerm.Qualifier.BQB_HAS_PROPERTY);
@@ -97,12 +95,12 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         qualifier.addItem(CVTerm.Qualifier.BQB_OCCURS_IN);
         qualifier.addItem(CVTerm.Qualifier.BQB_UNKNOWN);
 
-        if(compartment.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+        if (compartment.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
             int childCount;
-            for(CVTerm cvt : (List<CVTerm>)compartment.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
-                childCount =  cvt.getChildCount();
-                if(childCount > 1) {
-                    for(int i=0; i < cvt.getChildCount(); i++) {
+            for (CVTerm cvt : (List<CVTerm>) compartment.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                childCount = cvt.getChildCount();
+                if (childCount > 1) {
+                    for (int i = 0; i < cvt.getChildCount(); i++) {
                         miModel.addElement(new MiriamWrapper(cvt.getBiologicalQualifierType(), cvt.getChildAt(i).toString()));
                     }
                 } else {
@@ -124,8 +122,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
             URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        }
-        catch (IOException | JDOMException ex) {
+        } catch (IOException | JDOMException ex) {
             LOGGER.error(ex);
         }
         Element root = doc.getRootElement();
@@ -133,10 +130,10 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         sboCb.addItem("No Term set");
         sboToolTips.add("");
         LOGGER.debug("Adding SBO tooltips to compartment");
-        for(Object o : root.getChildren() ) {
+        for (Object o : root.getChildren()) {
             e = (Element) o;
-            sboCb.addItem(((Element)e.getContent().get(1)).getValue());
-            sboToolTips.add(((Element)e.getContent().get(3)).getValue()+" : "+((Element)e.getContent().get(7)).getValue().trim());
+            sboCb.addItem(((Element) e.getContent().get(1)).getValue());
+            sboToolTips.add(((Element) e.getContent().get(3)).getValue() + " : " + ((Element) e.getContent().get(7)).getValue().trim());
         }
         sboCbRenderer.setTooltips(sboToolTips);
         LOGGER.debug("Finished SBO part");
@@ -152,8 +149,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
             URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        }
-        catch (IOException | JDOMException ex) {
+        } catch (IOException | JDOMException ex) {
             LOGGER.error(ex);
         }
         root = doc.getRootElement();
@@ -162,13 +158,15 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         String name, comment, url = "";
         Pattern pattern;
         LOGGER.debug("Adding MIRIAM URLs to compartment");
-        for(Object o : root.getChildren() ) {
+        for (Object o : root.getChildren()) {
             e = (Element) o;
 
-            if(e.getAttribute("obsolete") != null)
+            if (e.getAttribute("obsolete") != null) {
                 continue;
-            if(e.getName().equals("listOfTags"))
+            }
+            if (e.getName().equals("listOfTags")) {
                 continue;
+            }
 
             pattern = Pattern.compile(e.getAttributeValue("pattern"));
 
@@ -176,10 +174,10 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
             comment = e.getChild("definition", e.getNamespace()).getValue();
 
             Element uri;
-            for(Object u : e.getChild("uris", e.getNamespace()).getChildren()) {
+            for (Object u : e.getChild("uris", e.getNamespace()).getChildren()) {
                 uri = (Element) u;
 
-                if(uri.getAttributeValue("type").equals("URL") && uri.getAttribute("deprecated") == null) {
+                if (uri.getAttributeValue("type").equals("URL") && uri.getAttribute("deprecated") == null) {
                     url = uri.getValue();
                     break;
                 }
@@ -195,7 +193,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
         LOGGER.debug("Finished MIRIAM registry part");
         LOGGER.debug("Setting SBO terms to compartments");
         sboCb.setSelectedIndex(0);
-        if(compartment.hasProperty(AnnotationUtils.SBO_TERM)) {
+        if (compartment.hasProperty(AnnotationUtils.SBO_TERM)) {
             sboCb.setSelectedItem(compartment.getProperty(AnnotationUtils.SBO_TERM));
         } else {
             sboCb.setSelectedIndex(0);
@@ -205,13 +203,13 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     public void deleteMiriamIdentifier(MiriamWrapper mw, JList owner) {
         LOGGER.info("Deleting MIRIAM identifier from compartment");
-        if(identifierInEdit != null) {
+        if (identifierInEdit != null) {
             uri.setText("");
             editMiriamIdentifier = false;
             addMiriamIdentifier.setText("Add");
             identifierInEdit = null;
         }
-        annUtils.updateCVTerms(compartment, "remove", AnnotationUtils.MIRIAM_BIO_QUALIFIERS , mw.getCVTerm());
+        annUtils.updateCVTerms(compartment, "remove", AnnotationUtils.MIRIAM_BIO_QUALIFIERS, mw.getCVTerm());
         miModel.removeElement(mw);
         LOGGER.info("Successfully deleted MIRIAM identifier from compartment");
     }
@@ -219,8 +217,8 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
     public void editMiriamIdentifier(MiriamWrapper mw, JList owner) {
         LOGGER.info("Editing MIRIAM identifier for compartment");
         qualifier.setSelectedItem(mw.getCVTerm().getBiologicalQualifierType());
-        uri.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1));
-        miriamRegistry.setSelectedIndex(miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1)));
+        uri.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1));
+        miriamRegistry.setSelectedIndex(miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1)));
         editMiriamIdentifier = true;
         addMiriamIdentifier.setText("Save");
         identifierInEdit = mw;
@@ -229,11 +227,10 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     public void goToMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Going to MIRIAM identifier for compartment");
-        if(Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI(mw.getCVTerm().getResourceURI(0)));
-            }
-            catch (IOException | URISyntaxException ex) {
+            } catch (IOException | URISyntaxException ex) {
                 LOGGER.error(ex);
             }
         }
@@ -463,13 +460,13 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     private void addMiriamIdentifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMiriamIdentifierActionPerformed
         LOGGER.info("Trying to add MIRIAM identifier entry to compartment");
-        if(!uri.getText().isEmpty()) {
+        if (!uri.getText().isEmpty()) {
             // Edit a entry
-            if(editMiriamIdentifier == true) {
+            if (editMiriamIdentifier == true) {
                 LOGGER.info("Editing an entry for a compartment");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistry.getSelectedItem();
                 Matcher m = mrw.getPattern().matcher(uri.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this, "Invalid accession number");
                     return;
@@ -477,26 +474,25 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
                 annUtils.editMiriam(compartment, identifierInEdit, mrw, uri.getText().trim(), qualifier.getSelectedItem());
 
                 identifierInEdit.setQualifier((Qualifier) qualifier.getSelectedItem());
-                identifierInEdit.setURI(mrw.getURL()+uri.getText().trim());
+                identifierInEdit.setURI(mrw.getURL() + uri.getText().trim());
 
                 editMiriamIdentifier = false;
                 addMiriamIdentifier.setText("Add");
                 identifierInEdit = null;
                 miriamIdentifiers.repaint();
                 LOGGER.info("Finished editing entry for a compartment");
-            }
-            else if(editMiriamIdentifier == false) {
+            } else if (editMiriamIdentifier == false) {
                 LOGGER.info("Adding new entry for a compartment");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistry.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uri.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this, "Invalid accession number");
                     return;
                 }
 
-                MiriamWrapper mw = new MiriamWrapper((Qualifier) qualifier.getSelectedItem(), mrw.getURL()+uri.getText().trim());
+                MiriamWrapper mw = new MiriamWrapper((Qualifier) qualifier.getSelectedItem(), mrw.getURL() + uri.getText().trim());
                 miModel.addElement(mw);
 
                 annUtils.addMiriam(compartment, mw, uri.getText().trim());
@@ -510,7 +506,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     private void saveSBOTermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSBOTermActionPerformed
         LOGGER.info("Adding SBO term to compartment");
-        if(sboCb.getSelectedItem() != null && sboCb.getSelectedIndex() > 0) {
+        if (sboCb.getSelectedItem() != null && sboCb.getSelectedIndex() > 0) {
             annUtils.addProperty(compartment, AnnotationUtils.SBO_TERM, (String) sboCb.getSelectedItem());
         }
         LOGGER.info("Succesfully added SBO term to compartment");
@@ -524,7 +520,7 @@ public class CompartmentAnnotationFrame extends javax.swing.JFrame {
 
     private void DeleteSBOTermButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteSBOTermButtonActionPerformed
         LOGGER.info("Removing SBO term");
-        if(sboCb.getSelectedItem() != null &&  sboCb.getSelectedIndex() > 0) {
+        if (sboCb.getSelectedItem() != null && sboCb.getSelectedIndex() > 0) {
             annUtils.removeProperty(compartment, AnnotationUtils.SBO_TERM);
         }
         LOGGER.info("Finished removing SBO term");    }//GEN-LAST:event_DeleteSBOTermButtonActionPerformed

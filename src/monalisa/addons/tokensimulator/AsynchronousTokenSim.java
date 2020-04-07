@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.tokensimulator;
 
 import java.io.File;
@@ -42,13 +41,15 @@ import org.w3c.dom.Element;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-
 /**
- * This simulation mode allows to fire selected amount of steps with selected delay between firings.
- * In each step only one active transition is fired, i.e. the firing of transitions is asynchronous.
+ * This simulation mode allows to fire selected amount of steps with selected
+ * delay between firings. In each step only one active transition is fired, i.e.
+ * the firing of transitions is asynchronous.
+ *
  * @author Pavel Balazki
  */
 public class AsynchronousTokenSim extends AbstractTokenSim {
+
     //BEGIN VARIABLES DECLARATION
     //GUI
     private AsynchronousTokenSimPanel tsPanel;
@@ -59,30 +60,33 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
     private SimulationSwingWorker simSwingWorker;
     private static final Logger LOGGER = LogManager.getLogger(AsynchronousTokenSim.class);
     //END VARIABLES DECLARATION
-    
+
     //BEGIN INNER CLASSES
     /**
      * Thread which performs the simulation sequence.
      */
-    private class SimulationSwingWorker extends SwingWorker{
+    private class SimulationSwingWorker extends SwingWorker {
+
         /**
          * Number of steps this thread should perform.
          */
         private int stepsLeft;
         /**
-         * Indicates whether the simulation is still running. Can be set to "false" upon termination call.
+         * Indicates whether the simulation is still running. Can be set to
+         * "false" upon termination call.
          */
         private boolean isRunning;
-        
-        public SimulationSwingWorker(int nrOfStepsN){
+
+        public SimulationSwingWorker(int nrOfStepsN) {
             this.stepsLeft = nrOfStepsN;
         }
+
         @Override
-        protected Void doInBackground(){
+        protected Void doInBackground() {
             //time delay between single firings
             int timeDelay = (Integer) tokenSim.preferences.get("Time delay");
             //how often visual output will be updated
-            final int updateInterval = (Integer) tokenSim.preferences.get("Update interval");                 
+            final int updateInterval = (Integer) tokenSim.preferences.get("Update interval");
             tsPanel.progressBar.setMaximum(stepsLeft);
             /*
              * Set the running state of this runnable to "true".
@@ -95,13 +99,13 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             /*
              * Perform firing until aborted.
              */
-            while(isRunning){
+            while (isRunning) {
                 try {
                     activeTransitions = tokenSim.getActiveTransitions();
                     /*
                      * If no transitions are active, abort simulation.
                      */
-                    if (activeTransitions.isEmpty() || this.isCancelled()){
+                    if (activeTransitions.isEmpty() || this.isCancelled()) {
                         LOGGER.info("Simulation stopped since no more transitions are active");
                         this.isRunning = false;
                         break;
@@ -109,28 +113,28 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                     /*
                      * Perform firing of transitions.
                      */
-                    SwingUtilities.invokeAndWait(new Runnable(){
+                    SwingUtilities.invokeAndWait(new Runnable() {
                         @Override
                         public void run() {
                             tokenSim.fireTransitions(getTransitionToFire());
                             //If updateInterval is positive, check whether visual output must be updated in current step.
-                            if (updateInterval > 0){
-                                if(tokenSim.getSimulatedSteps() % updateInterval == 0){
+                            if (updateInterval > 0) {
+                                if (tokenSim.getSimulatedSteps() % updateInterval == 0) {
                                     tokenSim.updateVisualOutput();
                                 }
                             }
                         }
                     });
-                    
+
                     /*
                      * If continuous mode is not selected, reduce the number of steps left by one.
                      */
-                    if (!tsPanel.continuousModeCheckBox.isSelected()){
+                    if (!tsPanel.continuousModeCheckBox.isSelected()) {
                         tsPanel.progressBar.setValue(tsPanel.progressBar.getMaximum() - --stepsLeft);
                         /*
                          * Abort simulation if no more steps are left.
                          */
-                        if (stepsLeft <= 0){
+                        if (stepsLeft <= 0) {
                             this.isRunning = false;
                         }
                     }
@@ -143,18 +147,18 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         }
 
         @Override
-        protected void done(){
+        protected void done() {
             /*
              * Reset the progress bar.
              */
             tsPanel.progressBar.setMaximum(0);
             tsPanel.progressBar.setValue(0);
- 
+
             //unlock GUI
             tsPanel.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
             tsPanel.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
- 
-            if(!tsPanel.continuousModeCheckBox.isSelected()){
+
+            if (!tsPanel.continuousModeCheckBox.isSelected()) {
                 tsPanel.stepField.setEnabled(true);
             }
             tsPanel.continuousModeCheckBox.setEnabled(true);
@@ -165,25 +169,25 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         /**
          * Signal to stop simulation.
          */
-        public void stopSequence(){
+        public void stopSequence() {
             this.isRunning = false;
             //update visual output
             tokenSim.updateVisualOutput();
         }
     }
     //END INNER CLASSES
-    
+
     //BEGIN CONSTRUCTORS    
-    public AsynchronousTokenSim(TokenSimulator tsN){
+    public AsynchronousTokenSim(TokenSimulator tsN) {
         super(tsN);
     }
     //END CONSTRUCTORS
-    
+
     /**
      * Create GUI and etc, so classes that extend this class can use it too.
      */
     @Override
-    protected void init(){
+    protected void init() {
         //START CREATING GUI ELEMENTS
         LOGGER.debug("GUI for Asynchronous Token Simulator initialized");
         this.tsPanel = new AsynchronousTokenSimPanel(this);
@@ -195,28 +199,29 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
     }
 
     @Override
-    protected JPanel getControlComponent() {        
+    protected JPanel getControlComponent() {
         return this.tsPanel;
     }
-    
+
     @Override
-    protected JPanel getPreferencesPanel(){
+    protected JPanel getPreferencesPanel() {
         return this.prefPanel;
     }
-    
+
     @Override
     protected void updatePreferences() {
         /*
          * Update time delay.
          */
         int timeDelay = Integer.parseInt(this.prefPanel.timeDelayJFormattedTextField.getText());
-        if (timeDelay >= 0)
+        if (timeDelay >= 0) {
             this.tokenSim.preferences.put("Time delay", timeDelay);
+        }
         /*
          * Update update interval
          */
         int updateInterval = Integer.parseInt(this.prefPanel.updateIntervalFormattedTextField.getText());
-        if (updateInterval >= 0){
+        if (updateInterval >= 0) {
             this.tokenSim.preferences.put("Update interval", updateInterval);
         }
     }
@@ -226,11 +231,11 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         this.prefPanel.timeDelayJFormattedTextField.setText(((Integer) this.tokenSim.preferences.get("Time delay")).toString());
         this.prefPanel.updateIntervalFormattedTextField.setText(((Integer) this.tokenSim.preferences.get("Update interval")).toString());
     }
-    
+
     /**
      * Start firing sequence.
      */
-    protected void startFiring(){
+    protected void startFiring() {
         //Lock GUI
         LOGGER.info("Firing of Asynchronous Token Simulator started");
         this.tsPanel.stepField.setEnabled(false);
@@ -238,35 +243,36 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         this.tokenSim.lockGUI(true);
 
         //Try to parse the number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing.
-        try{
+        try {
             //number of steps that will be performed
             int steps = Integer.parseInt(tsPanel.stepField.getText());
-            if (steps < 1){
+            if (steps < 1) {
                 steps = 1;
                 tsPanel.stepField.setText("1");
             }
             //Create new thread that will perform all firing steps.
             simSwingWorker = new SimulationSwingWorker(steps);
             simSwingWorker.execute();
-        } 
-        catch(NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             stopFiring();
             LOGGER.error("NumberFormatException while checking the number of firing steps in the asynchronous token simulator", nfe);
             JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
-    } 
-    
+    }
+
     /**
      * Stop actual firing sequence.
      */
-    protected void stopFiring(){
-        if (this.simSwingWorker != null){
+    protected void stopFiring() {
+        if (this.simSwingWorker != null) {
             this.simSwingWorker.stopSequence();
         }
     }
-    
+
     /**
-     * The transition to fire will be chosen randomly from all active transitions.
+     * The transition to fire will be chosen randomly from all active
+     * transitions.
+     *
      * @return randomly chosen active transition.
      */
     @Override
@@ -276,21 +282,20 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         LOGGER.debug("Random transition to fire has been chosen in asynchronous token simulator");
         return activeTransitions[transitionIndex];
     }
-    
+
     @Override
-    protected void startSim(){
+    protected void startSim() {
         LOGGER.info("Asynchronous token simulation started");
         this.tsPanel.stepField.setEnabled(true);
         this.tsPanel.fireTransitionsButton.setEnabled(true);
-        this.computeActiveTransitions();  
+        this.computeActiveTransitions();
     }
-    
+
     @Override
-    protected void endSim(){
-        try{
+    protected void endSim() {
+        try {
             this.simSwingWorker.cancel(true);
-        }
-        catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             LOGGER.error("Nullpointer exception while trying to cancel simSwingWorker in asynchronous token simulator", ex);
         }
         this.tsPanel.stepField.setEnabled(false);
@@ -312,7 +317,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if(fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
+        if (fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         outFile = fc.getSelectedFile();
@@ -325,13 +330,13 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             //Create root element and append it to the document.
             Element root = doc.createElement("SimulationSetup");
             doc.appendChild(root);
-            
+
             //Create element for places and append it to the root.
             Element placesEl = doc.createElement("places");
             root.appendChild(placesEl);
-            
+
             //Iterate through all places and create an element for each one.
-            for (Place place : this.petriNet.places()){
+            for (Place place : this.petriNet.places()) {
                 LOGGER.debug("New place is found and processed for export");
                 //Create place element and append it to places element
                 Element placeEl = doc.createElement("place");
@@ -342,11 +347,10 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                 placeEl.setAttribute("isConstant", String.valueOf(place.isConstant()));
                 //if the place is non-constant, store the number of tokens on this place. Otherwise, store the corresponding
                 //mathematical expression
-                if (!place.isConstant()){
+                if (!place.isConstant()) {
                     LOGGER.debug("Place is constant and gets the according properties");
                     placeEl.setAttribute("nrOfTokens", String.valueOf(this.tokenSim.getMarking().get(place.id())));
-                }
-                else{
+                } else {
                     LOGGER.debug("Creating a new mathematical expression element for this place since it is not constant");
                     //Create a mathematical expression element for the place
                     Element mathExpressionEl = doc.createElement("mathematicalExpression");
@@ -361,7 +365,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                      * Iterate through variables and create an element for each one.
                      */
                     Map<String, Integer> variables = placeMathExp.getVariables();
-                    for (String variable : variables.keySet()){
+                    for (String variable : variables.keySet()) {
                         Element varEl = doc.createElement("variable");
                         mathExpressionEl.appendChild(varEl);
                         varEl.setAttribute("name", variable);
@@ -381,7 +385,7 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             LOGGER.error("Parser or Transformer exception while handling the setupexport in the asynchronous token simulator", ex);
         }
     }
-    
+
     @Override
     protected void importSetup() {
         LOGGER.info("Import of setup initiated");
@@ -392,14 +396,14 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             File inFile;
             MonaLisaFileChooser fc = new MonaLisaFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if(fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+            if (fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             inFile = fc.getSelectedFile();
             LOGGER.info("File for import has been chosen, new factory and parser are initiated");
             //Create a SAX-parser.
             XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader parser = factory.createXMLStreamReader( new FileInputStream(inFile));
+            XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inFile));
 
             int id = 0;
             String name = "";
@@ -409,19 +413,19 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             Map<String, Integer> variables = new HashMap<>();
             StringBuilder sb = new StringBuilder();
 
-            while (parser.hasNext()){
-                switch ( parser.getEventType() ){
+            while (parser.hasNext()) {
+                switch (parser.getEventType()) {
                     case XMLStreamConstants.START_DOCUMENT:
                         break;
                     case XMLStreamConstants.END_DOCUMENT:
                         parser.close();
                         break;
                     case XMLStreamConstants.START_ELEMENT:
-                        switch (parser.getLocalName()){
+                        switch (parser.getLocalName()) {
                             case "place":
                                 //iterate through attributes
-                                for (int i = 0; i < parser.getAttributeCount(); i++){
-                                    switch (parser.getAttributeLocalName(i)){
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    switch (parser.getAttributeLocalName(i)) {
                                         case "id":
                                             id = Integer.parseInt(parser.getAttributeValue(i));
                                             break;
@@ -439,12 +443,12 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                                 //find a place with the id.
                                 Place p = petriNet.findPlace(id);
                                 //only proceed if the Petri net has a place with such an ID and the same name
-                                if (p == null){
+                                if (p == null) {
                                     break;
                                 }
                                 //set the properties of the place.
                                 tokenSim.setPlaceConstant(id, placeConstant);
-                                if (!placeConstant){
+                                if (!placeConstant) {
                                     tokenSim.setTokens(id, placeTokens);
                                 }
                                 break;
@@ -455,8 +459,8 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                             case "variable":
                                 String varName = "";
                                 String placeId = "";
-                                for (int i = 0; i < parser.getAttributeCount(); i++){
-                                    switch (parser.getAttributeLocalName(i)){
+                                for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                    switch (parser.getAttributeLocalName(i)) {
                                         case "name":
                                             varName = parser.getAttributeValue(i);
                                             break;
@@ -470,21 +474,21 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
                         }
                         break;
                     case XMLStreamConstants.CHARACTERS:
-                        if (!parser.isWhiteSpace()){
+                        if (!parser.isWhiteSpace()) {
                             sb.append(parser.getText());
                         }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
-                        switch (parser.getLocalName()){
+                        switch (parser.getLocalName()) {
                             case "mathematicalExpression":
                                 mathExp = new MathematicalExpression(sb.toString(), variables);
                                 sb = new StringBuilder();
                                 break;
                             case "place":
-                                if (petriNet.findPlace(id) == null){
+                                if (petriNet.findPlace(id) == null) {
                                     break;
                                 }
-                                if (placeConstant){
+                                if (placeConstant) {
                                     tokenSim.setMathExpression(id, mathExp);
                                 }
                                 break;
@@ -497,13 +501,13 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
             }
         } catch (FileNotFoundException | XMLStreamException ex) {
             JOptionPane.showMessageDialog(null, "Invalid XML file!",
-            TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
+                    TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
             LOGGER.error("File for import was not found or was invalid", ex);
         } catch (Exception ex) {
             LOGGER.error("General exception while trying to import .XML setup in the asynchronous token simulator", ex);
         }
     }
-    
+
     @Override
     public double getSimulatedTime() {
         return this.tokenSim.getSimulatedSteps();

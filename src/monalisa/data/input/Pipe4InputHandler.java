@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.File;
@@ -29,20 +28,24 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Input handler for the Pipe4 PNML format.
+ *
  * @author Jens Einloft
- * @see <a href="http://pipe2.sourceforge.net/">Platform Independent Petri net Editor 4</a>
- **/
+ * @see <a href="http://pipe2.sourceforge.net/">Platform Independent Petri net
+ * Editor 4</a>
+ *
+ */
 public class Pipe4InputHandler implements InputHandler {
+
     private final Map<String, Place> places = new HashMap<>();
     private final Map<String, Transition> transitions = new HashMap<>();
-    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(Pipe4InputHandler.class);
-
+    private static final Logger LOGGER = LogManager.getLogger(Pipe4InputHandler.class);
 
     @Override
     public boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file is in PIPE4 format");
-        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             return false;
+        }
 
         SAXBuilder builder = new SAXBuilder();
         Document doc;
@@ -56,17 +59,19 @@ public class Pipe4InputHandler implements InputHandler {
 
         // Pipe 4 uses PNML but doesn't a proper net type. We assume P/T
         // networks.
-
-        if (!root.getName().equals("pnml"))
+        if (!root.getName().equals("pnml")) {
             return false;
+        }
         Element netNode = root.getChild("net");
-        if (netNode == null)
+        if (netNode == null) {
             return false;
+        }
         // Pipe4?
-        if (!netNode.getChildren("token").isEmpty())
+        if (!netNode.getChildren("token").isEmpty()) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -89,27 +94,26 @@ public class Pipe4InputHandler implements InputHandler {
         // ---- place
         // ---- transition
         // ---- arc
-
         List<Element> pnmlChildren = doc.getRootElement().getChildren();
         List<Element> workspace = null;
 
         // The <page> tag is optional
         if (pnmlChildren.get(0).getChildren().size() == 1) {
             workspace = pnmlChildren.get(0).getChildren();
-        }  else {
+        } else {
             workspace = pnmlChildren;
         }
 
         // Net structure section
         int countPlaces = 0;
         int countTransitions = 0;
-        String id,name;
+        String id, name;
         Long tokens;
-        Double posX,posY;
+        Double posX, posY;
         Object from, to;
-        for(Element e : workspace){
+        for (Element e : workspace) {
             List<Element> elements = e.getChildren();
-            for(Element pe : elements){
+            for (Element pe : elements) {
                 // places
                 switch (pe.getName()) {
                     case "place":
@@ -118,8 +122,9 @@ public class Pipe4InputHandler implements InputHandler {
                         tokens = Long.parseLong(pe.getChild("initialMarking").getChild("value").getValue().split(",")[1]);
                         posX = new Double(pe.getChild("graphics").getChild("position").getAttributeValue("x"));
                         posY = new Double(pe.getChild("graphics").getChild("position").getAttributeValue("y"));
-                        if (name == null)
+                        if (name == null) {
                             name = id;
+                        }
                         Place place = findPlace(countPlaces, id, ret);
                         place.putProperty("name", name);
                         place.putProperty("posX", posX);
@@ -132,8 +137,9 @@ public class Pipe4InputHandler implements InputHandler {
                         name = pe.getChild("name").getChild("value").getValue();
                         posX = new Double(pe.getChild("graphics").getChild("position").getAttributeValue("x"));
                         posY = new Double(pe.getChild("graphics").getChild("position").getAttributeValue("y"));
-                        if (name == null)
+                        if (name == null) {
                             name = id;
+                        }
                         Transition transition = findTransition(countTransitions, id, ret);
                         transition.putProperty("name", name);
                         transition.putProperty("posX", posX);
@@ -147,11 +153,11 @@ public class Pipe4InputHandler implements InputHandler {
                         if (places.containsKey(source)) {
                             from = places.get(source);
                             to = transitions.get(target);
-                            ret.addArc((Place)from, (Transition)to, new Arc(from, to, weight));
-                        } else if (transitions.containsKey(source))  {
+                            ret.addArc((Place) from, (Transition) to, new Arc(from, to, weight));
+                        } else if (transitions.containsKey(source)) {
                             from = transitions.get(source);
                             to = places.get(target);
-                            ret.addArc((Transition)from, (Place)to, new Arc(from, to, weight));
+                            ret.addArc((Transition) from, (Place) to, new Arc(from, to, weight));
                         }
                         break;
                 }

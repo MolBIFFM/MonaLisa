@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa;
 
 import java.util.EventListener;
@@ -16,9 +15,11 @@ import monalisa.tools.Tool;
 
 /**
  * A listener for changes in the execution status of a {@link Tool}.
+ *
  * @author Konrad Rudolph
  */
 public interface ToolStatusUpdateListener extends EventListener {
+
     /**
      * Invoked to report a status update.
      */

@@ -7,16 +7,13 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
-import monalisa.addons.netviewer.listener.TinvSelectionListener;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
 import monalisa.addons.netviewer.wrapper.PinvWrapper;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
-import monalisa.addons.netviewer.wrapper.SISWrapper;
 import monalisa.addons.netviewer.wrapper.TinvWrapper;
 import monalisa.addons.netviewer.wrapper.MinvWrapper;
 import monalisa.addons.netviewer.gui.EdgeSetupFrame;
@@ -72,7 +69,6 @@ import monalisa.tools.mcts.MctsTool;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
-import monalisa.tools.tinv.TInvariantPanel;
 import monalisa.util.MonaLisaFileChooser;
 import monalisa.util.MonaLisaFileFilter;
 import monalisa.util.OutputFileFilter;
@@ -83,12 +79,13 @@ import org.apache.logging.log4j.Logger;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
-
 /**
  * Graphical Viewer for Petri nets and visualization of analysis results
+ *
  * @author Jens Einloft
  */
 public class NetViewer extends JFrame implements ActionListener {
+
     private static final long serialVersionUID = 1113813463292202573L;
 
     // Constants declaration
@@ -111,7 +108,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private static final String RESET_COLORING = "RESET_COLORING";
     private static final String SHOW_COLOR_OPTION = "SHOW_COLOR_OPTION";
 
-    private static final Color defaultPanelColor = new Color(238,238,238);
+    private static final Color defaultPanelColor = new Color(238, 238, 238);
 
     public static Color TINV_COLOR;
     public static Color PINV_COLOR;
@@ -153,7 +150,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu fileMenu, visualizationMenu, importantTransitonsMenu, optionsMenu, addonMenu;
     private JMenuItem exitItem, ctiItem, byOccurrenceItem, byFactorItem, centerItem,
-                      resetColoringItem, colorOptionsItem, colorItem, labelItem, saveAsPictureItem;
+            resetColoringItem, colorOptionsItem, colorItem, labelItem, saveAsPictureItem;
     private JLabel messageLabel, infoBarLabel;
     private DefaultListModel<NetViewerNode> neighborsListModel;
     private DefaultListModel allPlacesModel, allTransitionsModel;
@@ -174,7 +171,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private final Map<String, JScrollPane> spMap = new HashMap<>();
 
     private final List<NetChangedListener> netChangedListener;
-    
+
     private final Synchronizer synchronizer;
     private static final Logger LOGGER = LogManager.getLogger(NetViewer.class);
 
@@ -228,24 +225,24 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Initializing NetViewer frame");
         // --- Init Frame ---
         Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension nvDimension = new Dimension((int)(screenDimension.getWidth()*0.95), (int)(screenDimension.getHeight()*0.95));
+        Dimension nvDimension = new Dimension((int) (screenDimension.getWidth() * 0.95), (int) (screenDimension.getHeight() * 0.95));
 
         setSize(nvDimension);
         setMinimumSize(new Dimension(800, 600));
-        setTitle(strings.get("NVTitle")+" - "+project.getName());
+        setTitle(strings.get("NVTitle") + " - " + project.getName());
         setIconImage(resources.getImage("icon-16.png"));
         setLocation(0, 0);
 
         addComponentListener(new ComponentListener() {
             Dimension currentDimension;
-            double sizeOfRightSide,newSplitRatio;
+            double sizeOfRightSide, newSplitRatio;
 
             @Override
             public void componentResized(ComponentEvent e) {
-                currentDimension = ((JFrame)e.getSource()).getSize();
+                currentDimension = ((JFrame) e.getSource()).getSize();
                 sizeOfRightSide = currentDimension.getWidth() * 0.75;
 
-                if(sizeOfRightSide > 400.0) {
+                if (sizeOfRightSide > 400.0) {
                     newSplitRatio = 1 - (400 / currentDimension.getWidth());
                 } else {
                     newSplitRatio = 0.75;
@@ -255,12 +252,18 @@ public class NetViewer extends JFrame implements ActionListener {
                 mainSplitPane.setResizeWeight(newSplitRatio);
                 mainSplitPane.validate();
             }
+
             @Override
-            public void componentMoved(ComponentEvent e) { }
+            public void componentMoved(ComponentEvent e) {
+            }
+
             @Override
-            public void componentShown(ComponentEvent e) { }
+            public void componentShown(ComponentEvent e) {
+            }
+
             @Override
-            public void componentHidden(ComponentEvent e) { }
+            public void componentHidden(ComponentEvent e) {
+            }
         });
 
         addWindowListener(new NetViewerWindowsListener(this));
@@ -327,8 +330,8 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.getRenderContext().getPickedVertexState().addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                    gpmp.handlePicking((NetViewerNode)e.getItem());
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    gpmp.handlePicking((NetViewerNode) e.getItem());
                 }
             }
         });
@@ -337,8 +340,8 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.getRenderContext().getPickedEdgeState().addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED) {
-                    gpmp.handlePicking((NetViewerEdge)e.getItem());
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    gpmp.handlePicking((NetViewerEdge) e.getItem());
                 }
             }
         });
@@ -374,9 +377,9 @@ public class NetViewer extends JFrame implements ActionListener {
         mainSplitPane.setRightComponent(tb);
 
         Container contentPane = getContentPane();
-        double sizeOfMainLayout[][] =
-        {{TableLayout.FILL},
-        {TableLayout.FILL, TableLayout.PREFERRED}};
+        double sizeOfMainLayout[][]
+                = {{TableLayout.FILL},
+                {TableLayout.FILL, TableLayout.PREFERRED}};
 
         contentPane.setLayout(new TableLayout(sizeOfMainLayout));
         contentPane.setSize(nvDimension);
@@ -392,17 +395,17 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.debug("Finished initializing GUI");
         // END --- GUI building section
         // If the Petri net is imported and contains information about the layout use this informations
-        if(this.project.getPetriNet().hasProperty("new_imported")) {
+        if (this.project.getPetriNet().hasProperty("new_imported")) {
             LOGGER.info("Using imported layout information if available");
-            for(Place place : this.synchronizer.getPetriNet().places()) {
-                if(place.hasProperty("posX")) {
-                    layout.setLocation(this.synchronizer.getNodeFromVertex(place), new Point2D.Double((Double)place.getProperty("posX"), (Double)place.getProperty("posY")));
+            for (Place place : this.synchronizer.getPetriNet().places()) {
+                if (place.hasProperty("posX")) {
+                    layout.setLocation(this.synchronizer.getNodeFromVertex(place), new Point2D.Double((Double) place.getProperty("posX"), (Double) place.getProperty("posY")));
                 }
             }
 
-            for(Transition transition : this.synchronizer.getPetriNet().transitions()) {
-                if(transition.hasProperty("posX")) {
-                    layout.setLocation(this.synchronizer.getNodeFromVertex(transition), new Point2D.Double((Double)transition.getProperty("posX"), (Double)transition.getProperty("posY")));
+            for (Transition transition : this.synchronizer.getPetriNet().transitions()) {
+                if (transition.hasProperty("posX")) {
+                    layout.setLocation(this.synchronizer.getNodeFromVertex(transition), new Point2D.Double((Double) transition.getProperty("posX"), (Double) transition.getProperty("posY")));
                 }
             }
             this.project.getPetriNet().removeProperty("new_imported");
@@ -417,6 +420,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Which action is to perform?
+     *
      * @param e
      */
     @Override
@@ -429,11 +433,11 @@ public class NetViewer extends JFrame implements ActionListener {
                 break;
             case MAKE_PIC:
                 try {
-                    makePic();
-                } catch (IOException ex) {
-                    LOGGER.error("Issue while making picture: ", ex);
-                }
-                break;
+                makePic();
+            } catch (IOException ex) {
+                LOGGER.error("Issue while making picture: ", ex);
+            }
+            break;
             case CENTER_NET:
                 center();
                 break;
@@ -466,7 +470,7 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     private void fireNetChangedEvent() {
-        for(NetChangedListener ncl : netChangedListener) {
+        for (NetChangedListener ncl : netChangedListener) {
             ncl.netChanged();
         }
     }
@@ -481,7 +485,8 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Updates the InfoBar and the SearchBar and reset the PickedVertexState and PickedEdgeState.
+     * Updates the InfoBar and the SearchBar and reset the PickedVertexState and
+     * PickedEdgeState.
      */
     protected void nonModificationActionHappend() {
         LOGGER.info("Handling non-modification action");
@@ -494,8 +499,9 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Updates the InfoBar and the SearchBar and reset the PickedVertexState and PickedEdgeState.
-     * Clears all calculated results and shows a message regarding that.
+     * Updates the InfoBar and the SearchBar and reset the PickedVertexState and
+     * PickedEdgeState. Clears all calculated results and shows a message
+     * regarding that.
      *
      */
     public void modificationActionHappend() {
@@ -513,6 +519,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Save the current color settings
+     *
      * @throws FileNotFoundException
      * @throws IOException
      */
@@ -539,7 +546,7 @@ public class NetViewer extends JFrame implements ActionListener {
         Settings.setColorOption("mcsColor", colorMap.get("mcsColor"));
         MCS_COLOR = colorMap.get("mcsColor");
 
-        Settings.writeToFile(System.getProperty("user.home")+"/.monalisaSettings");
+        Settings.writeToFile(System.getProperty("user.home") + "/.monalisaSettings");
 
         vv.setBackground(BACKGROUND_COLOR);
         vv.repaint();
@@ -555,35 +562,37 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Checks if the Petri net is changed and disable / enable regarding gui elemets
+     * Checks if the Petri net is changed and disable / enable regarding gui
+     * elemets
      */
     public void netChanged() {
-        if(netChanged) {
+        if (netChanged) {
             LOGGER.debug("Petri net has changed");
-            if(project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
+            if (project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
             }
         }
-        if(netChanged && !lastChanged) {
+        if (netChanged && !lastChanged) {
             LOGGER.debug("netChanged && !lastChanged");
             lastChanged = netChanged;
 
-            if(project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
+            if (project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
 
                 tinvs = null;
-                
+
                 // clear all Display Lists and reset the Tab Titles
-                for(DefaultListModel dl : tinvModelMap.keySet())
+                for (DefaultListModel dl : tinvModelMap.keySet()) {
                     dl.clear();
-                
+                }
+
                 tb.allInvList.clear();
-                
+
                 tb.CTILabel.setText("");
-                
+
                 minvs = null;
                 tb.MinvList.clear();
-                
+
                 pinvs = null;
                 tb.PinvList.clear();
                 mctsResults = null;
@@ -592,22 +601,21 @@ public class NetViewer extends JFrame implements ActionListener {
                 tb.mcsCb.removeAllItems();
                 project.getToolManager().resetTools();
                 mainDialog.updateAnalyzeFrame();
-                
+
                 tb.InvTabbedPane.setTitleAt(0, "T - Invariants");
                 tb.InvTabbedPane.setTitleAt(1, "M - Invariants");
                 tb.InvTabbedPane.setTitleAt(2, "P - Invariants");
             }
             fireNetChangedEvent();
-        }
-        else if(!netChanged && lastChanged) {
+        } else if (!netChanged && lastChanged) {
             LOGGER.debug("!netChanged && lastChanged");
             lastChanged = netChanged;
 
             resetMessageLabel();
 
-            if(hasMcts()) {
+            if (hasMcts()) {
                 tb.mctsCb.setEnabled(true);
-                tb.allMctsButton.setEnabled(true); 
+                tb.allMctsButton.setEnabled(true);
             }
             importantTransitonsMenu.setEnabled(true);
         }
@@ -619,7 +627,9 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Shows the given String in the Message Label of the NetViewer in the given color.
+     * Shows the given String in the Message Label of the NetViewer in the given
+     * color.
+     *
      * @param text
      * @param color
      */
@@ -635,33 +645,35 @@ public class NetViewer extends JFrame implements ActionListener {
         displayMessage("", Color.BLACK);
     }
 
-   /**
-    * Sets the font size to a given value
-    * @param newFontSize
-    */
+    /**
+     * Sets the font size to a given value
+     *
+     * @param newFontSize
+     */
     public void setFontSize(int newFontSize) {
         LOGGER.info("Setting new font size");
-        if(this.tb != null) {
-            if((int) this.tb.fontSizeSpinner.getValue() != newFontSize) {
+        if (this.tb != null) {
+            if ((int) this.tb.fontSizeSpinner.getValue() != newFontSize) {
                 this.tb.fontSizeSpinner.setValue(newFontSize);
                 return;
             }
         }
 
-       ((VertexFontTransformer) vv.getRenderContext().getVertexFontTransformer()).setFontSize(newFontSize);
-       ((EdgeFontTransformer) vv.getRenderContext().getEdgeFontTransformer()).setFontSize(newFontSize);
+        ((VertexFontTransformer) vv.getRenderContext().getVertexFontTransformer()).setFontSize(newFontSize);
+        ((EdgeFontTransformer) vv.getRenderContext().getEdgeFontTransformer()).setFontSize(newFontSize);
         vv.repaint();
         LOGGER.info("Successfully set new font size");
     }
 
     /**
      * Sets the icon size to a given value
+     *
      * @param newVertexSize
      */
     public void setIconSize(int newVertexSize) {
         LOGGER.info("Setting new icon size");
-        if(this.tb != null) {
-            if((int) this.tb.iconSizeSpinner.getValue() != newVertexSize) {
+        if (this.tb != null) {
+            if ((int) this.tb.iconSizeSpinner.getValue() != newVertexSize) {
                 this.tb.iconSizeSpinner.setValue(newVertexSize);
                 return;
             }
@@ -674,12 +686,13 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Sets the arrow size to a given value
+     *
      * @param newArrowSize
      */
     public void setArrowSize(double newArrowSize) {
         LOGGER.info("Setting new arrow size");
-        if(this.tb != null) {
-            if((double) this.tb.arrowSizeSpinner.getValue() != newArrowSize) {
+        if (this.tb != null) {
+            if ((double) this.tb.arrowSizeSpinner.getValue() != newArrowSize) {
                 this.tb.arrowSizeSpinner.setValue(newArrowSize);
                 return;
             }
@@ -692,12 +705,13 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Sets the edge size to a given value
+     *
      * @param newEdgeSize
      */
     public void setEdgeSize(int newEdgeSize) {
         LOGGER.info("Setting new edge size");
-        if(this.tb != null) {
-            if((int) this.tb.edgeSizeSpinner.getValue() != newEdgeSize) {
+        if (this.tb != null) {
+            if ((int) this.tb.edgeSizeSpinner.getValue() != newEdgeSize) {
                 this.tb.edgeSizeSpinner.setValue(newEdgeSize);
                 return;
             }
@@ -726,35 +740,36 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Zooms in or out by a given value.
+     *
      * @param inOrOut
      * @param setSlider
      */
     protected void zommToValue(int inOrOut) {
         LOGGER.info("Changing zoom value");
-        Point2D center = new Point(vv.getSize().height/2, vv.getSize().width/2);
+        Point2D center = new Point(vv.getSize().height / 2, vv.getSize().width / 2);
 
-        if(inOrOut > 0) {
+        if (inOrOut > 0) {
             this.gm.getScalingPlugin().getScaler().scale(vv, 1.1F, center);
-        }
-        else if(inOrOut < 0) {
+        } else if (inOrOut < 0) {
             this.gm.getScalingPlugin().getScaler().scale(vv, 0.9090909F, center);
         }
 
         double viewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
         double layoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
-        setZoomScale((viewScale*layoutScale)*100);
+        setZoomScale((viewScale * layoutScale) * 100);
         LOGGER.info("Successfully changed zoom value");
     }
 
     /**
      * Zooms to a given NetViewerNode
+     *
      * @param nvNode
      */
     public void zoomToVertex(NetViewerNode nvNode) {
         LOGGER.info("Zooming to node");
         center();
         Dimension d = vv.getSize();
-        Point2D viewCenter = new Point2D.Float(d.width/2,d.height/2);
+        Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
         Point2D nodePosition = vv.getModel().getGraphLayout().transform(nvNode);
         viewCenter = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(viewCenter);
         double xdist = viewCenter.getX() - nodePosition.getX();
@@ -765,6 +780,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Set the value of the JSPinner in the ToolBarFrame
+     *
      * @param zoomScale
      */
     protected void setZoomScale(double zoomScale) {
@@ -773,14 +789,14 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Should the Invariants displayed as a heatmap?
+     *
      * @return
      */
     protected Boolean heatMap() {
-        if(heatMap) {
+        if (heatMap) {
             heatMap = false;
             return heatMap;
-        }
-        else {
+        } else {
             heatMap = true;
             return heatMap;
         }
@@ -788,6 +804,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * true = picking, false = transforming
+     *
      * @return
      */
     protected Boolean getMouseMode() {
@@ -823,24 +840,26 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the current project
+     *
      * @return
      */
     public Project getProject() {
         return this.project;
     }
-    
+
     /**
      * Runs all the given tools from the netviewer
+     *
      * @param tools
      */
-    public void calcTools(ArrayList<String> tools){
+    public void calcTools(ArrayList<String> tools) {
         toolUI.runGivenTools(tools);
     }
-    
+
     /**
      * Checks if the net is CTI and changes the Label in Toolbar correspondingly
      */
-    public void checkCTI(){
+    public void checkCTI() {
         tinvs = getTInvs();
         int status = ((TInvariantTool) project.getToolManager().getTool(TInvariantTool.class)).isCTI(tinvs, project);
         switch (status) {
@@ -859,19 +878,23 @@ public class NetViewer extends JFrame implements ActionListener {
                 break;
         }
     }
+
     /**
      * Returns all t-invariants form loaded Petri net
+     *
      * @return
      */
     private TInvariants getTInvs() {
         return project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());
     }
-    
+
     private MInvariants getMInvs() {
         return project.getToolManager().getResult(MInvariantTool.class, new MInvariantsConfiguration());
     }
+
     /**
      * Returns all p-invariants form loaded Petri net
+     *
      * @return
      */
     private PInvariants getPInvs() {
@@ -880,6 +903,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Return all MC-sets from loaded Petri net
+     *
      * @return
      */
     private Map<Configuration, Result> getMcsResults() {
@@ -888,6 +912,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Return all MCT-sets from loaded Petri net
+     *
      * @return
      */
     private Map<Configuration, Result> getMctsResults() {
@@ -896,6 +921,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Hide coloring of vertex
+     *
      * @return
      */
     protected Boolean hideColor() {
@@ -905,13 +931,12 @@ public class NetViewer extends JFrame implements ActionListener {
         EdgePaintTransformer edpt = ((EdgePaintTransformer) vv.getRenderContext().getEdgeDrawPaintTransformer());
         edpt.setHideColor(!(edpt.getHideColor()));
 
-        if(!vfpt.getHideColor()) {
+        if (!vfpt.getHideColor()) {
             colorItem.setText(strings.get("NVShowColorText"));
             vv.repaint();
             LOGGER.info("Hiding vertex color");
             return false;
-        }
-        else {
+        } else {
             colorItem.setText(strings.get("NVHideColorText"));
             vv.repaint();
             LOGGER.info("Showing vertex color");
@@ -919,21 +944,21 @@ public class NetViewer extends JFrame implements ActionListener {
         }
     }
 
-   /**
-    * Hide or show all Labels
-    * @return
-    */
+    /**
+     * Hide or show all Labels
+     *
+     * @return
+     */
     protected Boolean showLabels() {
         LOGGER.debug("Changing whether labels are shown or not");
-        if(((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).showLabel()) {
+        if (((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).showLabel()) {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(false);
             labelItem.setText(strings.get("NVShowAllLabels"));
 
             vv.repaint();
             LOGGER.info("Hiding all labels");
             return false;
-        }
-        else {
+        } else {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(true);
             labelItem.setText(strings.get("NVHideAllLabels"));
 
@@ -945,6 +970,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Save the current layout in a PNG or SVG file
+     *
      * @throws IOException
      */
     public void makePic() throws IOException {
@@ -966,19 +992,18 @@ public class NetViewer extends JFrame implements ActionListener {
 
         File imgFile = imgPathChooser.getSelectedFile();
 
-        if(imgFile != null) {
-            MonaLisaFileFilter selectedFileFilter = ((MonaLisaFileFilter)imgPathChooser.getFileFilter());
+        if (imgFile != null) {
+            MonaLisaFileFilter selectedFileFilter = ((MonaLisaFileFilter) imgPathChooser.getFileFilter());
 
             // Are an ".png" or ".svg" at the end of the filename?
             imgFile = selectedFileFilter.checkFileNameForExtension(imgFile);
 
-            if(selectedFileFilter.getExtension().equalsIgnoreCase("png")) {
+            if (selectedFileFilter.getExtension().equalsIgnoreCase("png")) {
                 BufferedImage img = new BufferedImage(vv.getSize().width, vv.getSize().height, BufferedImage.TYPE_INT_RGB);
                 vv.paintAll(img.getGraphics());
                 ImageIO.write(img, "png", imgFile);
                 LOGGER.info("Successfully saved current layout as .png");
-            }
-            else if(selectedFileFilter.getExtension().equalsIgnoreCase("svg")) {
+            } else if (selectedFileFilter.getExtension().equalsIgnoreCase("svg")) {
                 // Get a DOMImplementation
                 DOMImplementation domImpl = GenericDOMImplementation.getDOMImplementation();
                 // Create an instance of org.w3c.dom.Document
@@ -997,29 +1022,34 @@ public class NetViewer extends JFrame implements ActionListener {
      * Add the T-Invariants to the list display, if T-Invariants are there.
      */
     public void addTinvsToListDisplay() {
-        if(tinvs == null)
+        if (tinvs == null) {
             tinvs = getTInvs();
-        if(tinvs == null)
+        }
+        if (tinvs == null) {
             return;
+        }
         addTinvsToListDisplay(tinvs);
     }
 
     /**
      * Add the T-Invariants to the list display
+     *
      * @param tinvs
      */
     protected void addTinvsToListDisplay(TInvariants tinvs) {
-        if(tinvs == null)
+        if (tinvs == null) {
             return;
-        if(!tinvs.isEmpty()) {
+        }
+        if (!tinvs.isEmpty()) {
             LOGGER.info("Adding T-Invariants to List Display");
 
-            for(DefaultListModel dl : tinvModelMap.keySet())
+            for (DefaultListModel dl : tinvModelMap.keySet()) {
                 dl.clear();
+            }
             minvs = getMInvs();
             System.out.println(minvs);
             System.out.println(tinvs);
-            
+
             tb.allInvList.clear();
 
             Boolean input, output;
@@ -1028,9 +1058,9 @@ public class NetViewer extends JFrame implements ActionListener {
             Iterator<Transition> it1;
             Transition t1;
 
-            for(TInvariant tinv : tinvs) {
+            for (TInvariant tinv : tinvs) {
                 tinvSize = tinv.size();
-                if(tinvSize == 2) {
+                if (tinvSize == 2) {
                     tb.trivialInvList.addElement(new TinvWrapper(tinv));
                     continue;
                 }
@@ -1040,47 +1070,51 @@ public class NetViewer extends JFrame implements ActionListener {
 
                 NetViewerNode tmp;
                 it1 = tinv.transitions().iterator();
-                while(it1.hasNext()) {
+                while (it1.hasNext()) {
                     t1 = it1.next();
 
                     // Check for I/O TInvariant
                     tmp = this.synchronizer.getNodeFromVertex(t1);
-                    if(tmp != null) {
-                        if(this.synchronizer.getNodeFromVertex(t1).getInEdges().isEmpty())
+                    if (tmp != null) {
+                        if (this.synchronizer.getNodeFromVertex(t1).getInEdges().isEmpty()) {
                             input = true;
-                        if(this.synchronizer.getNodeFromVertex(t1).getOutEdges().isEmpty())
+                        }
+                        if (this.synchronizer.getNodeFromVertex(t1).getOutEdges().isEmpty()) {
                             output = true;
+                        }
                     }
                 }
 
-                if(!output && !input)
+                if (!output && !input) {
                     tb.cyclicInvList.addElement(new TinvWrapper(tinv));
-                else if(output && input)
+                } else if (output && input) {
                     tb.ioInvList.addElement(new TinvWrapper(tinv));
-                else if(output && !input)
+                } else if (output && !input) {
                     tb.outputInvList.addElement(new TinvWrapper(tinv));
-                else if(input && !output)
+                } else if (input && !output) {
                     tb.inputInvList.addElement(new TinvWrapper(tinv));
+                }
             }
-            
+
             LOGGER.info("Generating combination of all T-Invariants for a List Display");
             // Create a T-invariant out of all t-invariantzs of a single list
             int itemCount, oldValue, counter;
             counter = 0;
             TInvariant tinvariant;
             Map<Transition, Integer> transitions;
-            for(DefaultListModel dl : tinvModelMap.keySet()) {
+            for (DefaultListModel dl : tinvModelMap.keySet()) {
                 itemCount = dl.size();
-                if(itemCount > 0) {
+                if (itemCount > 0) {
                     transitions = new HashMap<>();
-                    for(i = 0; i < itemCount; i++) {
-                        tinvariant = ((TinvWrapper)dl.getElementAt(i)).getTinv();
-                        for(Transition transition : tinvariant) {
-                            if(tinvariant.factor(transition) > 0) {
-                                if(!transitions.containsKey(transition))
+                    for (i = 0; i < itemCount; i++) {
+                        tinvariant = ((TinvWrapper) dl.getElementAt(i)).getTinv();
+                        for (Transition transition : tinvariant) {
+                            if (tinvariant.factor(transition) > 0) {
+                                if (!transitions.containsKey(transition)) {
                                     transitions.put(transition, 0);
+                                }
                                 oldValue = transitions.get(transition);
-                                transitions.put(transition, tinvariant.factor(transition)+oldValue);
+                                transitions.put(transition, tinvariant.factor(transition) + oldValue);
                             }
                         }
                     }
@@ -1089,81 +1123,89 @@ public class NetViewer extends JFrame implements ActionListener {
                     counter++;
                 }
             }
-            if(!tb.ioInvList.isEmpty()){
+            if (!tb.ioInvList.isEmpty()) {
                 tb.allInvList.addElement(strings.get("NVSeperator"));
-                counter ++;
-                for(Object tw : tb.ioInvList.toArray())
+                counter++;
+                for (Object tw : tb.ioInvList.toArray()) {
                     tb.allInvList.addElement(tw);
-            }
-            
-            if(!tb.inputInvList.isEmpty()){
-                tb.allInvList.addElement(strings.get("NVSeperator"));
-                counter ++;
-                for(Object tw : tb.inputInvList.toArray())
-                    tb.allInvList.addElement(tw);
-            }
-            
-            if(!tb.outputInvList.isEmpty()){
-                tb.allInvList.addElement(strings.get("NVSeperator"));
-                counter ++;
-                for(Object tw : tb.outputInvList.toArray())
-                    tb.allInvList.addElement(tw);
-            }
-            
-            if(!tb.cyclicInvList.isEmpty()){
-                tb.allInvList.addElement(strings.get("NVSeperator"));
-                counter ++;
-                for(Object tw : tb.cyclicInvList.toArray())
-                    tb.allInvList.addElement(tw);
-            }
-            
-            if(!tb.trivialInvList.isEmpty()){
-                tb.allInvList.addElement(strings.get("NVSeperator"));
-                counter ++;
-                for(Object tw : tb.trivialInvList.toArray())
-                    tb.allInvList.addElement(tw);
-            }
-            
-            
-            itemCount = tb.allInvList.size();
-                if(itemCount > 0) {
-                    transitions = new HashMap<>();
-                    for(i = 0; i < itemCount; i++) {
-                        if(tb.allInvList.getElementAt(i).getClass().equals(TinvWrapper.class)){
-                            tinvariant = ((TinvWrapper)tb.allInvList.getElementAt(i)).getTinv();
-                            for(Transition transition : tinvariant) {
-                               if(tinvariant.factor(transition) > 0) {
-                                   if(!transitions.containsKey(transition))
-                                       transitions.put(transition, 0);
-                                   oldValue = transitions.get(transition);
-                                   transitions.put(transition, tinvariant.factor(transition)+oldValue);
-                                }
-                            }
-                        }    
-                    }
-                    String allTinv = strings.get("NVAllT", (tb.allInvList.size() == 0) ? 0 : tb.allInvList.size()-counter);
-                    tb.InvTabbedPane.setTitleAt(0, allTinv);
-
-                    TInvariant combined = new TInvariant(-1, transitions);
-                    String name = strings.get("NVCombinedT", (combined.isEmpty()) ? 0 : combined.size());
-                    tb.allInvList.insertElementAt(new TinvWrapper(combined, name), 0);
                 }
+            }
+
+            if (!tb.inputInvList.isEmpty()) {
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter++;
+                for (Object tw : tb.inputInvList.toArray()) {
+                    tb.allInvList.addElement(tw);
+                }
+            }
+
+            if (!tb.outputInvList.isEmpty()) {
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter++;
+                for (Object tw : tb.outputInvList.toArray()) {
+                    tb.allInvList.addElement(tw);
+                }
+            }
+
+            if (!tb.cyclicInvList.isEmpty()) {
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter++;
+                for (Object tw : tb.cyclicInvList.toArray()) {
+                    tb.allInvList.addElement(tw);
+                }
+            }
+
+            if (!tb.trivialInvList.isEmpty()) {
+                tb.allInvList.addElement(strings.get("NVSeperator"));
+                counter++;
+                for (Object tw : tb.trivialInvList.toArray()) {
+                    tb.allInvList.addElement(tw);
+                }
+            }
+
+            itemCount = tb.allInvList.size();
+            if (itemCount > 0) {
+                transitions = new HashMap<>();
+                for (i = 0; i < itemCount; i++) {
+                    if (tb.allInvList.getElementAt(i).getClass().equals(TinvWrapper.class)) {
+                        tinvariant = ((TinvWrapper) tb.allInvList.getElementAt(i)).getTinv();
+                        for (Transition transition : tinvariant) {
+                            if (tinvariant.factor(transition) > 0) {
+                                if (!transitions.containsKey(transition)) {
+                                    transitions.put(transition, 0);
+                                }
+                                oldValue = transitions.get(transition);
+                                transitions.put(transition, tinvariant.factor(transition) + oldValue);
+                            }
+                        }
+                    }
+                }
+                String allTinv = strings.get("NVAllT", (tb.allInvList.size() == 0) ? 0 : tb.allInvList.size() - counter);
+                tb.InvTabbedPane.setTitleAt(0, allTinv);
+
+                TInvariant combined = new TInvariant(-1, transitions);
+                String name = strings.get("NVCombinedT", (combined.isEmpty()) ? 0 : combined.size());
+                tb.allInvList.insertElementAt(new TinvWrapper(combined, name), 0);
+            }
 
             LOGGER.info("Successfully added T-Invariants to List Display");
         }
     }
-    
+
     public void addMinvsToListDisplay() {
-    LOGGER.info("Adding M-Invariants to List Display");
-        if(minvs == null)
+        LOGGER.info("Adding M-Invariants to List Display");
+        if (minvs == null) {
             minvs = getMInvs();
-        if(minvs == null)
+        }
+        if (minvs == null) {
             return;
-        if(!minvs.isEmpty()) {
+        }
+        if (!minvs.isEmpty()) {
             tb.MinvList.clear();
 
-            for(MInvariant minv : minvs)
+            for (MInvariant minv : minvs) {
                 tb.MinvList.addElement(new MinvWrapper(minv));
+            }
             /*
             // Create a M-invariant out of all m-invariants
             LOGGER.info("Generating combination of all M-Invariants");
@@ -1191,21 +1233,24 @@ public class NetViewer extends JFrame implements ActionListener {
         }
         LOGGER.info("Successfully added M-Invariants to List Display");
     }
-    
+
     /**
      * Add the P-Invariants to the combobox.
      */
     public void addPinvsToListDisplay() {
         LOGGER.info("Adding P-Invariants to List Display");
-        if(pinvs == null)
+        if (pinvs == null) {
             pinvs = getPInvs();
-        if(pinvs == null)
+        }
+        if (pinvs == null) {
             return;
-        if(!pinvs.isEmpty()) {
+        }
+        if (!pinvs.isEmpty()) {
             tb.PinvList.clear();
 
-            for(PInvariant pinv : pinvs)
+            for (PInvariant pinv : pinvs) {
                 tb.PinvList.addElement(new PinvWrapper(pinv));
+            }
 
             // Create a P-invariant out of all p-invariants
             LOGGER.info("Generating combination of all P-Invariants");
@@ -1213,36 +1258,37 @@ public class NetViewer extends JFrame implements ActionListener {
             PInvariant pinvariant;
             Map<Place, Integer> places;
             itemCount = tb.PinvList.size();
-            if(itemCount > 0) {
+            if (itemCount > 0) {
                 places = new HashMap<>();
-                for(int i = 0; i < itemCount; i++) {
-                    pinvariant = ((PinvWrapper)tb.PinvList.getElementAt(i)).getPinv();
-                    for(Place place : pinvariant) {
-                        if(pinvariant.factor(place) > 0) {
-                            if(!places.containsKey(place))
+                for (int i = 0; i < itemCount; i++) {
+                    pinvariant = ((PinvWrapper) tb.PinvList.getElementAt(i)).getPinv();
+                    for (Place place : pinvariant) {
+                        if (pinvariant.factor(place) > 0) {
+                            if (!places.containsKey(place)) {
                                 places.put(place, 0);
+                            }
                             oldValue = places.get(place);
-                            places.put(place, pinvariant.factor(place)+oldValue);
+                            places.put(place, pinvariant.factor(place) + oldValue);
                         }
                     }
                 }
                 tb.PinvList.insertElementAt(new PinvWrapper(new PInvariant(-1, places)), 0);
             }
 
-            tb.InvTabbedPane.setTitleAt(2, strings.get("NVAllP", tb.PinvList.getSize()-1));
+            tb.InvTabbedPane.setTitleAt(2, strings.get("NVAllP", tb.PinvList.getSize() - 1));
         }
         LOGGER.info("Successfully added P-Invariants to List Display");
     }
-
 
     /**
      * Adds the MC-Sets to the combobox.
      */
     public void addMcsToComboBox() {
         LOGGER.info("Adding MCS to ComboBox");
-        if(mcsResults == null)
+        if (mcsResults == null) {
             mcsResults = getMcsResults();
-        if(!mcsResults.isEmpty()) {
+        }
+        if (!mcsResults.isEmpty()) {
             tb.mcsCb.removeAllItems();
             tb.mcsCb.setEnabled(true);
 
@@ -1250,19 +1296,19 @@ public class NetViewer extends JFrame implements ActionListener {
             String configName;
             McsConfiguration config;
             Mcs result;
-            for(Entry<Configuration, Result> entry : mcsResults.entrySet()) {
+            for (Entry<Configuration, Result> entry : mcsResults.entrySet()) {
                 config = (McsConfiguration) entry.getKey();
                 result = project.getToolManager().getResult(new McsTool(), config);
-                if(result != null) {
+                if (result != null) {
                     configParts = config.toString().split("-");
-                    configName = configParts[2] + " with max size of "+configParts[5];
+                    configName = configParts[2] + " with max size of " + configParts[5];
                     tb.mcsCb.addItem(configName);
 
                     McsWrapper wrapper;
                     int i = 1;
-                    for(Set<Transition> mcs : result.getMCS()) {
+                    for (Set<Transition> mcs : result.getMCS()) {
                         wrapper = new McsWrapper(mcs, config.getObjective(), i++);
-                        if(!wrapper.getMcs().isEmpty()) {
+                        if (!wrapper.getMcs().isEmpty()) {
                             tb.mcsCb.addItem(wrapper);
                         }
                     }
@@ -1278,9 +1324,10 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void addMctsToComboBox() {
         LOGGER.info("Adding MCTS to ComboBox");
-        if(mctsResults == null)
+        if (mctsResults == null) {
             mctsResults = getMctsResults();
-        if(!mctsResults.isEmpty()) {
+        }
+        if (!mctsResults.isEmpty()) {
             tb.mctsCb.removeAllItems();
             tb.mctsCb.setEnabled(true);
             tb.allMctsButton.setEnabled(true);
@@ -1289,21 +1336,22 @@ public class NetViewer extends JFrame implements ActionListener {
             String withOutOrWith;
             Configuration config;
             Mcts results;
-            for(Map.Entry<Configuration, Result> entry : mctsResults.entrySet()) {
+            for (Map.Entry<Configuration, Result> entry : mctsResults.entrySet()) {
                 config = entry.getKey();
                 results = project.getToolManager().getResult(new MctsTool(), config);
-                if(results != null) {
+                if (results != null) {
                     configName = config.toString(strings).split(" ");
-                    if(configName[2].contains("with"))
+                    if (configName[2].contains("with")) {
                         withOutOrWith = configName[2];
-                    else
+                    } else {
                         withOutOrWith = configName[3];
-                    tb.mctsCb.addItem(configName[0].split("-")[0]+" ("+withOutOrWith+" trivial T-inv)"+" - Sum: "+results.size());
+                    }
+                    tb.mctsCb.addItem(configName[0].split("-")[0] + " (" + withOutOrWith + " trivial T-inv)" + " - Sum: " + results.size());
                     Iterator it = results.iterator();
                     MctsWrapper wrapper;
-                    while(it.hasNext()) {
-                        wrapper = new MctsWrapper((TInvariant)it.next());
-                        if(!wrapper.getMcts().isEmpty()) {
+                    while (it.hasNext()) {
+                        wrapper = new MctsWrapper((TInvariant) it.next());
+                        if (!wrapper.getMcts().isEmpty()) {
                             tb.mctsCb.addItem(wrapper);
                         }
                     }
@@ -1319,21 +1367,24 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void resetColor() {
         LOGGER.info("Resetting color of all vertices to default");
-        for(NetViewerNode n : g.getVertices()) {
-            if(n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION))
+        for (NetViewerNode n : g.getVertices()) {
+            if (n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
                 n.setColor(Color.BLACK);
-            if(n.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                if(n.isLogical())
+            }
+            if (n.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+                if (n.isLogical()) {
                     n.setColor(Color.LIGHT_GRAY);
-                else if(n.isMasterNode())
+                } else if (n.isMasterNode()) {
                     n.setColor(Color.DARK_GRAY);
-                else
+                } else {
                     n.setColor(Color.WHITE);
+                }
             }
         }
-        for(NetViewerEdge e : g.getEdges()) {
-            if(e.getVisible())
+        for (NetViewerEdge e : g.getEdges()) {
+            if (e.getVisible()) {
                 e.setColorForAllEdges(Color.BLACK);
+            }
         }
 
         vv.repaint();
@@ -1342,9 +1393,10 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Add or delete (or update) a node to the search bar
+     *
      * @param vertices
      */
-    protected void updateSearchBar(Collection <NetViewerNode> vertices) {
+    protected void updateSearchBar(Collection<NetViewerNode> vertices) {
         LOGGER.info("Updating search bar");
         List<NetViewerNode> places = new ArrayList<>();
         List<NetViewerNode> transitions = new ArrayList<>();
@@ -1354,21 +1406,22 @@ public class NetViewer extends JFrame implements ActionListener {
         List<String> allTransitionNames = new ArrayList<>();
         List<String> doubleTransitionNames = new ArrayList<>();
 
-        for(NetViewerNode nvNode : vertices) {
-            if(!nvNode.isLogical() && !nvNode.getNodeType().equals(BEND)) {
-                if(nvNode.getNodeType().equals(PLACE)) {
+        for (NetViewerNode nvNode : vertices) {
+            if (!nvNode.isLogical() && !nvNode.getNodeType().equals(BEND)) {
+                if (nvNode.getNodeType().equals(PLACE)) {
                     places.add(nvNode);
-                    if(!allPlaceNames.contains(nvNode.getName()))
+                    if (!allPlaceNames.contains(nvNode.getName())) {
                         allPlaceNames.add(nvNode.getName());
-                    else
+                    } else {
                         doublePlaceNames.add(nvNode.getName());
-                }
-                else {
+                    }
+                } else {
                     transitions.add(nvNode);
-                    if(!allTransitionNames.contains(nvNode.getName()))
+                    if (!allTransitionNames.contains(nvNode.getName())) {
                         allTransitionNames.add(nvNode.getName());
-                    else
+                    } else {
                         doubleTransitionNames.add(nvNode.getName());
+                    }
                 }
             }
         }
@@ -1381,44 +1434,42 @@ public class NetViewer extends JFrame implements ActionListener {
 
         Boolean doublePlaces = false, doubleTransitions = false;
 
-        for(NetViewerNode nvNode : places) {
+        for (NetViewerNode nvNode : places) {
             allPlacesModel.addElement(nvNode);
-            if(doublePlaceNames.contains(nvNode.getName())) {
+            if (doublePlaceNames.contains(nvNode.getName())) {
                 nvNode.setSearchBarColor(Color.RED);
                 doublePlaces = true;
-            }
-            else
+            } else {
                 nvNode.setSearchBarColor(Color.BLACK);
+            }
         }
 
-        if(doublePlaces) {
+        if (doublePlaces) {
             sb.doublePlacesWarning.setText(strings.get("NVWarningDoublePlaceNames"));
             displayMessage("There are places or transitions with the same name. The SearchBar provides more informationen", Color.RED);
-        }
-        else {
+        } else {
             sb.doublePlacesWarning.setText("");
         }
 
-        for(NetViewerNode nvNode : transitions) {
+        for (NetViewerNode nvNode : transitions) {
             allTransitionsModel.addElement(nvNode);
-            if(doubleTransitionNames.contains(nvNode.getName())) {
+            if (doubleTransitionNames.contains(nvNode.getName())) {
                 nvNode.setSearchBarColor(Color.RED);
                 doubleTransitions = true;
-            }
-            else
+            } else {
                 nvNode.setSearchBarColor(Color.BLACK);
+            }
         }
 
-        if(doubleTransitions) {
+        if (doubleTransitions) {
             sb.doubleTransitionsWarning.setText(strings.get("NVWarningDoubleTransitionNames"));
             displayMessage("There are places or transitions with the same name. The SearchBar provides more informationen", Color.RED);
-        }
-        else {
+        } else {
             sb.doubleTransitionsWarning.setText("");
         }
 
-        sb.placesLabel.setText(strings.get("NVPlaces")+" ("+allPlacesModel.getSize()+")");
-        sb.transitionsLabel.setText(strings.get("NVTransitions")+" ("+allTransitionsModel.getSize()+")");
+        sb.placesLabel.setText(strings.get("NVPlaces") + " (" + allPlacesModel.getSize() + ")");
+        sb.transitionsLabel.setText(strings.get("NVTransitions") + " (" + allTransitionsModel.getSize() + ")");
         LOGGER.info("Finished updating search bar");
     }
 
@@ -1431,17 +1482,17 @@ public class NetViewer extends JFrame implements ActionListener {
         int transitionCounter = synchronizer.getPetriNet().transitions().size();
         int edgeCounter = 0;
 
-        for(Transition transition : synchronizer.getPetriNet().transitions()) {
-            edgeCounter+=transition.inputs().size();
-            edgeCounter+=transition.outputs().size();
+        for (Transition transition : synchronizer.getPetriNet().transitions()) {
+            edgeCounter += transition.inputs().size();
+            edgeCounter += transition.outputs().size();
         }
-        infoBarLabel.setText(" Places: "+placeCounter+" | Transitions: "+transitionCounter+" | Edges: "+edgeCounter);
+        infoBarLabel.setText(" Places: " + placeCounter + " | Transitions: " + transitionCounter + " | Edges: " + edgeCounter);
         LOGGER.info("Successfully updated number of places, tranitions and edges in InfoBar");
     }
 
-
     /**
      * Are T-Invariants loaded?
+     *
      * @return
      */
     public boolean hasTinvs() {
@@ -1450,6 +1501,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Are MCT-Sets loaded?
+     *
      * @return
      */
     public boolean hasMcts() {
@@ -1457,7 +1509,10 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Write the given properties if the NetViewerNode and to the place/transition.This function is used, if a MultiSelection of vertices is edited.
+     * Write the given properties if the NetViewerNode and to the
+     * place/transition.This function is used, if a MultiSelection of vertices
+     * is edited.
+     *
      * @param nvNode
      * @param lablePosition
      * @param compartment
@@ -1470,14 +1525,13 @@ public class NetViewer extends JFrame implements ActionListener {
         nvNode.getMasterNode().setStrokeColorForAllNodes(strokeColor);
         nvNode.setLabelPosition(lablePosition);
 
-        if(compartment != null) {
+        if (compartment != null) {
             nvNode.putProperty("compartment", compartment);
 
-            if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+            if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
                 Place place = synchronizer.getPetriNet().findPlace(nvNode.getMasterNode().getId());
                 place.setCompartment(compartment);
-            }
-            else if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+            } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
                 Transition transition = synchronizer.getPetriNet().findTransition(nvNode.getId());
                 transition.setCompartment(compartment);
             }
@@ -1490,7 +1544,10 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Write the given properties the NetViewerNode and to the place/transition.This function is used, if only a single vertex is edited.
+     * Write the given properties the NetViewerNode and to the
+     * place/transition.This function is used, if only a single vertex is
+     * edited.
+     *
      * @param nvNode
      * @param color
      * @param strokeColor
@@ -1500,28 +1557,27 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param toolTip
      * @param lablePosition
      * @param compartment
-     * @return 
+     * @return
      */
     public boolean writeVertexSetup(NetViewerNode nvNode, Color color, Color strokeColor, int corners, String name, Long tokens, String toolTip, Position lablePosition, Compartment compartment) {
         LOGGER.info("Single vertex edited, updating setup");
-        if(!name.equals(nvNode.getName())) {
-            if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                for(Place p : this.project.getPetriNet().places()) {
-                    if(name.equals(p.getProperty("name"))) {
+        if (!name.equals(nvNode.getName())) {
+            if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+                for (Place p : this.project.getPetriNet().places()) {
+                    if (name.equals(p.getProperty("name"))) {
                         return false;
                     }
                 }
-            }
-            else if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                for(Transition t : this.project.getPetriNet().transitions()) {
-                    if(name.equals(t.getProperty("name"))) {
+            } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+                for (Transition t : this.project.getPetriNet().transitions()) {
+                    if (name.equals(t.getProperty("name"))) {
                         return false;
                     }
                 }
             }
         }
 
-        if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+        if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
             nvNode.getMasterNode().setTokensForAllNodes(tokens);
         }
 
@@ -1530,34 +1586,33 @@ public class NetViewer extends JFrame implements ActionListener {
         nvNode.getMasterNode().setCornersForAllNodes(corners);
         nvNode.getMasterNode().setNameForAllNodes(name);
 
-        if(compartment != null) {
+        if (compartment != null) {
             nvNode.putProperty("compartment", compartment);
         }
 
         nvNode.setLabelPosition(lablePosition);
 
-        if(!toolTip.isEmpty()) {
+        if (!toolTip.isEmpty()) {
             nvNode.putProperty("toolTip", toolTip);
         }
 
-        if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+        if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
             Place place = synchronizer.getPetriNet().findPlace(nvNode.getMasterNode().getId());
             place.putProperty("name", name);
             project.getPetriNet().setTokens(place, tokens);
-            if(compartment != null) {
+            if (compartment != null) {
                 place.setCompartment(compartment);
             }
-            if(!toolTip.isEmpty()) {
+            if (!toolTip.isEmpty()) {
                 place.putProperty("toolTip", toolTip);
             }
-        }
-        else if(nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+        } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
             Transition transition = synchronizer.getPetriNet().findTransition(nvNode.getId());
             transition.putProperty("name", name);
-            if(compartment != null) {
+            if (compartment != null) {
                 transition.setCompartment(compartment);
             }
-            if(!toolTip.isEmpty()) {
+            if (!toolTip.isEmpty()) {
                 transition.putProperty("toolTip", toolTip);
             }
         }
@@ -1571,6 +1626,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Write the given properties the NetViewerEdge and to the arc.
+     *
      * @param nvEdge
      * @param weight
      * @param color
@@ -1581,26 +1637,25 @@ public class NetViewer extends JFrame implements ActionListener {
         nvEdge.setWeightForAllEdges(weight);
         nvEdge.setColorForAllEdges(color);
 
-        if(nvEdge.getMasterEdge().getSource().getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+        if (nvEdge.getMasterEdge().getSource().getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
             Place from = synchronizer.getPetriNet().findPlace(nvEdge.getMasterEdge().getSource().getMasterNode().getId());
             Transition to = synchronizer.getPetriNet().findTransition(nvEdge.getMasterEdge().getAim().getId());
             synchronizer.getPetriNet().getArc(from, to).putProperty("weight", weight);
 
-            if(!toolTip.isEmpty()) {
-                 synchronizer.getPetriNet().getArc(from, to).putProperty("toolTip", toolTip);
+            if (!toolTip.isEmpty()) {
+                synchronizer.getPetriNet().getArc(from, to).putProperty("toolTip", toolTip);
             }
-        }
-        else if(nvEdge.getMasterEdge().getSource().getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+        } else if (nvEdge.getMasterEdge().getSource().getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
             Transition from = synchronizer.getPetriNet().findTransition(nvEdge.getMasterEdge().getSource().getId());
             Place to = synchronizer.getPetriNet().findPlace(nvEdge.getMasterEdge().getAim().getMasterNode().getId());
             synchronizer.getPetriNet().getArc(from, to).putProperty("weight", weight);
 
-            if(!toolTip.isEmpty()) {
-                 synchronizer.getPetriNet().getArc(from, to).putProperty("toolTip", toolTip);
+            if (!toolTip.isEmpty()) {
+                synchronizer.getPetriNet().getArc(from, to).putProperty("toolTip", toolTip);
             }
         }
 
-        if(!toolTip.isEmpty()) {
+        if (!toolTip.isEmpty()) {
             nvEdge.putProperty("toolTip", toolTip);
         }
 
@@ -1611,6 +1666,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Calculates a new point, 150 pixel around the given point
+     *
      * @param oldPoint
      * @return
      */
@@ -1626,14 +1682,14 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     private void colorCTITransitions() {
         LOGGER.info("Coloring CTI-Transitions");
-        if(tinvs != null) {
+        if (tinvs != null) {
             resetColor();
 
             Iterator<Transition> it;
-            for(TInvariant tinv: tinvs) {
+            for (TInvariant tinv : tinvs) {
                 it = tinv.transitions().iterator();
-                while(it.hasNext()) {
-                        this.synchronizer.getNodeFromVertex(it.next()).setColor(Color.YELLOW);
+                while (it.hasNext()) {
+                    this.synchronizer.getNodeFromVertex(it.next()).setColor(Color.YELLOW);
                 }
             }
         }
@@ -1645,8 +1701,8 @@ public class NetViewer extends JFrame implements ActionListener {
      * Counts occurrence of transitions in T-Invariants and generate a heatmap.
      */
     private void colorImportantTransitions(Boolean byOccurrence) {
-        if(tinvs != null) {
-        LOGGER.info("Coloring important transitions");
+        if (tinvs != null) {
+            LOGGER.info("Coloring important transitions");
             float min = 0, max = 0, maxmin;
             float[] hsbvals = Color.RGBtoHSB(HEATMAP_COLOR.getRed(), HEATMAP_COLOR.getGreen(), HEATMAP_COLOR.getBlue(), null);
             float norm;
@@ -1656,39 +1712,44 @@ public class NetViewer extends JFrame implements ActionListener {
 
             Iterator<Transition> it;
             Transition t;
-            for(TInvariant tinv : tinvs) {
+            for (TInvariant tinv : tinvs) {
                 it = tinv.transitions().iterator();
-                while(it.hasNext()) {
+                while (it.hasNext()) {
                     t = it.next();
-                    if(!allFactors.containsKey(t))
+                    if (!allFactors.containsKey(t)) {
                         allFactors.put(t, 0);
-                    if(byOccurrence)
+                    }
+                    if (byOccurrence) {
                         allFactors.put(t, allFactors.get(t) + 1);
-                    else
+                    } else {
                         allFactors.put(t, allFactors.get(t) + tinv.factor(t));
+                    }
                 }
             }
 
             Iterator<Integer> itInt = allFactors.values().iterator();
             int value;
-            while(itInt.hasNext()) {
+            while (itInt.hasNext()) {
                 value = itInt.next();
-                if(value < min)
+                if (value < min) {
                     min = value;
-                if(value > max)
+                }
+                if (value > max) {
                     max = value;
+                }
             }
-            maxmin = max-min;
+            maxmin = max - min;
 
-            displayMessage(strings.get("NVImportantTransitionMessage", (int)min, (int)max), Color.BLACK);
+            displayMessage(strings.get("NVImportantTransitionMessage", (int) min, (int) max), Color.BLACK);
 
             Iterator<Entry<Transition, Integer>> itEntry = allFactors.entrySet().iterator();
             Entry<Transition, Integer> entry;
-            while(itEntry.hasNext()) {
+            while (itEntry.hasNext()) {
                 entry = itEntry.next();
                 norm = (entry.getValue() - min) / maxmin;
-                if(norm < 0.05)
-                    norm = (float)0.05;
+                if (norm < 0.05) {
+                    norm = (float) 0.05;
+                }
                 this.synchronizer.getNodeFromVertex(entry.getKey()).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
             }
             vv.repaint();
@@ -1698,6 +1759,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Hide label from a given node
+     *
      * @param nvNode
      */
     protected void hideLabel(NetViewerNode nvNode) {
@@ -1707,9 +1769,10 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Knock out a transition and show the new Petri net
+     *
      * @param nvNodes
      * @param nvNode
-     * @param mode  0=Standart, 1=heatmap by occurrence
+     * @param mode 0=Standart, 1=heatmap by occurrence
      */
     public void knockOut(List<NetViewerNode> nvNodes, int mode) {
         LOGGER.info("Updating visualization to reflect knockouts");
@@ -1723,70 +1786,73 @@ public class NetViewer extends JFrame implements ActionListener {
         Boolean isKnockedOut;
 
         // Check which Invariants are knocked out
-        for(TInvariant inv : tinvs) {
+        for (TInvariant inv : tinvs) {
             isKnockedOut = false;
-            for(NetViewerNode nvNode : nvNodes) {
-                if(inv.factor(synchronizer.getPetriNet().findTransition(nvNode.getId())) > 0) {
+            for (NetViewerNode nvNode : nvNodes) {
+                if (inv.factor(synchronizer.getPetriNet().findTransition(nvNode.getId())) > 0) {
                     isKnockedOut = true;
                     break;
                 }
             }
-            if(!isKnockedOut)
+            if (!isKnockedOut) {
                 notKnockedOutTinvariants.add(inv);
+            }
         }
 
-        for(Transition t : synchronizer.getPetriNet().transitions())
+        for (Transition t : synchronizer.getPetriNet().transitions()) {
             factors.put(t, 0);
+        }
 
-        for(TInvariant inv : notKnockedOutTinvariants) {
-            for(Transition t : inv) {
+        for (TInvariant inv : notKnockedOutTinvariants) {
+            for (Transition t : inv) {
                 factor = inv.factor(t);
-                if(factor > 0) {
-                    if(!notKnockedOutTransitions.contains(t)) {
+                if (factor > 0) {
+                    if (!notKnockedOutTransitions.contains(t)) {
                         notKnockedOutTransitions.add(t);
                     }
 
-                    factors.put(t, factors.get(t)+1);
+                    factors.put(t, factors.get(t) + 1);
 
                 }
             }
         }
 
-        min = (float)Collections.min(factors.values());
-        max = (float)Collections.max(factors.values());
-        maxmin = max-min;
+        min = (float) Collections.min(factors.values());
+        max = (float) Collections.max(factors.values());
+        maxmin = max - min;
 
-        percentTransitions = Math.round(100.0 - Math.round( (((double)notKnockedOutTransitions.size() / (double)synchronizer.getPetriNet().transitions().size()) *100) *100)/100.0);
-        percentInvariants = Math.round(100.0 - Math.round( ((double)notKnockedOutTinvariants.size() / (double)tinvs.size()) *100 *100)/100.0);
+        percentTransitions = Math.round(100.0 - Math.round((((double) notKnockedOutTransitions.size() / (double) synchronizer.getPetriNet().transitions().size()) * 100) * 100) / 100.0);
+        percentInvariants = Math.round(100.0 - Math.round(((double) notKnockedOutTinvariants.size() / (double) tinvs.size()) * 100 * 100) / 100.0);
 
         resetColor();
 
-        for(Transition t : synchronizer.getPetriNet().transitions()) {
-            if(notKnockedOutTransitions.contains(t)) {
-                if(mode != 0) {
+        for (Transition t : synchronizer.getPetriNet().transitions()) {
+            if (notKnockedOutTransitions.contains(t)) {
+                if (mode != 0) {
                     norm = (factors.get(t) - min) / maxmin;
-                    if(norm < 0.05)
-                        norm = (float)0.05;
+                    if (norm < 0.05) {
+                        norm = (float) 0.05;
+                    }
                     this.synchronizer.getNodeFromVertex(t).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
+                } else {
+                    this.synchronizer.getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
                 }
-                else
-                   this.synchronizer.getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
-            }
-            else
+            } else {
                 this.synchronizer.getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
+            }
         }
 
         String knockOutString = strings.get("NVKnockOutMessage", percentInvariants, percentTransitions);
-        String heatMapString = (mode != 0) ? "<br>" + strings.get("NVImportantTransitionMessage", (int)min, (int)max) : "";
-        displayMessage("<html>"+knockOutString +"<br />"+ heatMapString+"</html>", Color.BLACK);
+        String heatMapString = (mode != 0) ? "<br>" + strings.get("NVImportantTransitionMessage", (int) min, (int) max) : "";
+        displayMessage("<html>" + knockOutString + "<br />" + heatMapString + "</html>", Color.BLACK);
 
-        for(NetViewerNode nvNode : nvNodes)
+        for (NetViewerNode nvNode : nvNodes) {
             this.synchronizer.getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
+        }
 
         vv.repaint();
         LOGGER.info("Successfully updated visualization to reflect knockouts");
     }
-
 
     /**
      * For Manatees
@@ -1803,54 +1869,57 @@ public class NetViewer extends JFrame implements ActionListener {
         Boolean isKnockedOut;
 
         // Check which Invariants are knocked out
-        for(TInvariant inv : tinvs) {
+        for (TInvariant inv : tinvs) {
             isKnockedOut = false;
-            for(NetViewerNode nvNode : nvNodes) {
-                if(inv.factor(synchronizer.getPetriNet().findTransition(nvNode.getId())) > 0) {
+            for (NetViewerNode nvNode : nvNodes) {
+                if (inv.factor(synchronizer.getPetriNet().findTransition(nvNode.getId())) > 0) {
                     isKnockedOut = true;
                     break;
                 }
             }
-            if(!isKnockedOut)
+            if (!isKnockedOut) {
                 notKnockedOutTinvariants.add(inv);
+            }
         }
 
-        for(Transition t : synchronizer.getPetriNet().transitions())
+        for (Transition t : synchronizer.getPetriNet().transitions()) {
             factors.put(t, 0);
+        }
 
-        for(TInvariant inv : notKnockedOutTinvariants) {
-            for(Transition t : inv) {
+        for (TInvariant inv : notKnockedOutTinvariants) {
+            for (Transition t : inv) {
                 factor = inv.factor(t);
-                if(factor > 0) {
-                    if(!notKnockedOutTransitions.contains(t)) {
+                if (factor > 0) {
+                    if (!notKnockedOutTransitions.contains(t)) {
                         notKnockedOutTransitions.add(t);
                     }
 
-                    factors.put(t, factors.get(t)+1);
+                    factors.put(t, factors.get(t) + 1);
 
                 }
             }
         }
 
-        min = (float)Collections.min(factors.values());
-        max = (float)Collections.max(factors.values());
-        maxmin = max-min;
+        min = (float) Collections.min(factors.values());
+        max = (float) Collections.max(factors.values());
+        maxmin = max - min;
 
-        percentTransitions = Math.round(100.0 - Math.round( (((double)notKnockedOutTransitions.size() / (double)synchronizer.getPetriNet().transitions().size()) *100) *100)/100.0);
-        percentInvariants = Math.round(100.0 - Math.round( ((double)notKnockedOutTinvariants.size() / (double)tinvs.size()) *100 *100)/100.0);
+        percentTransitions = Math.round(100.0 - Math.round((((double) notKnockedOutTransitions.size() / (double) synchronizer.getPetriNet().transitions().size()) * 100) * 100) / 100.0);
+        percentInvariants = Math.round(100.0 - Math.round(((double) notKnockedOutTinvariants.size() / (double) tinvs.size()) * 100 * 100) / 100.0);
 
         resetColor();
 
-        for(Transition t : synchronizer.getPetriNet().transitions()) {
-            if(notKnockedOutTransitions.contains(t)) {
+        for (Transition t : synchronizer.getPetriNet().transitions()) {
+            if (notKnockedOutTransitions.contains(t)) {
                 this.synchronizer.getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
-            }
-            else
+            } else {
                 this.synchronizer.getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
+            }
         }
 
-        for(NetViewerNode nvNode : nvNodes)
+        for (NetViewerNode nvNode : nvNodes) {
             this.synchronizer.getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
+        }
 
         vv.repaint();
         LOGGER.info("Successfully updated visualization to reflect knockouts - manatee variant");
@@ -1894,11 +1963,10 @@ public class NetViewer extends JFrame implements ActionListener {
     protected void edgeMouseAction() {
         vv.getPickedVertexState().clear();
         // Adding only one edge
-        if(gpmp.getMouseMode().equalsIgnoreCase(GraphPopupMousePlugin.SINGLE_EDGE)) {
+        if (gpmp.getMouseMode().equalsIgnoreCase(GraphPopupMousePlugin.SINGLE_EDGE)) {
             LOGGER.info("Adding new edge");
             cancelMouseAction();
-        }
-        // or more edges?
+        } // or more edges?
         else {
             LOGGER.info("Adding new edges");
             changeMouseModeToPicking();
@@ -1922,10 +1990,10 @@ public class NetViewer extends JFrame implements ActionListener {
         mouseMode = false;
     }
 
-   /**
-    * Action on adding a new transition.
-    */
-   protected void transitionMouseAction() {
+    /**
+     * Action on adding a new transition.
+     */
+    protected void transitionMouseAction() {
         LOGGER.info("Adding new transition");
         changeMouseModeToPicking();
         vv.getPickedVertexState().clear();
@@ -2003,6 +2071,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Exports a selected sub-graph to a file.
+     *
      * @throws FileNotFoundException
      */
     protected void exportSelectedSubGraphMouseAction() throws FileNotFoundException {
@@ -2016,34 +2085,33 @@ public class NetViewer extends JFrame implements ActionListener {
             petriNetFileChooser.addChoosableFileFilter(new OutputFileFilter(handler));
         }
 
-        if (petriNetFileChooser.showDialog(this, "Export") != JFileChooser.APPROVE_OPTION)
+        if (petriNetFileChooser.showDialog(this, "Export") != JFileChooser.APPROVE_OPTION) {
             return;
+        }
 
         File petriNetFile = petriNetFileChooser.getSelectedFile();
-        OutputFileFilter selectedFileFilter = ((OutputFileFilter)petriNetFileChooser.getFileFilter());
+        OutputFileFilter selectedFileFilter = ((OutputFileFilter) petriNetFileChooser.getFileFilter());
         petriNetFile = selectedFileFilter.checkFileNameForExtension(petriNetFile);
         LOGGER.info("Exporting selected sub-graph to file: " + petriNetFile.getAbsolutePath());
         exportSubGraph(petriNetFile, selectedFileFilter.getHandler(), synchronizer, vv.getRenderContext().getPickedVertexState().getPicked());
         LOGGER.info("Successfully exported selected sub-graph to file: " + petriNetFile.getAbsolutePath());
     }
-    
-    
+
     private void exportSubGraph(File petriNetFile, OutputHandler handler, Synchronizer sync, Set<NetViewerNode> picked) throws FileNotFoundException {
         Set<Place> places = new HashSet<>();
         Set<Transition> transitions = new HashSet<>();
         Set<Arc> arcs = new HashSet<>();
-        for(NetViewerNode n : picked) {
-            if(n.getNodeType().equalsIgnoreCase("PLACE")) {
+        for (NetViewerNode n : picked) {
+            if (n.getNodeType().equalsIgnoreCase("PLACE")) {
                 places.add(sync.getPetriNet().findPlace(n.getMasterNode().getId()));
-            }
-            else if(n.getNodeType().equalsIgnoreCase("TRANSITION")) {
+            } else if (n.getNodeType().equalsIgnoreCase("TRANSITION")) {
                 transitions.add(sync.getPetriNet().findTransition(n.getMasterNode().getId()));
             }
         }
         for (Place p : places) {
             for (Transition t : transitions) {
-                if (sync.getPetriNet().getArc(p, t) != null){
-                    arcs.add(sync.getPetriNet().getArc(p,t));
+                if (sync.getPetriNet().getArc(p, t) != null) {
+                    arcs.add(sync.getPetriNet().getArc(p, t));
                 }
             }
         }
@@ -2054,9 +2122,9 @@ public class NetViewer extends JFrame implements ActionListener {
                 }
             }
         }
-        handler.save(new FileOutputStream(petriNetFile), sync.getSubNetwork(places, transitions, arcs));   
+        handler.save(new FileOutputStream(petriNetFile), sync.getSubNetwork(places, transitions, arcs));
     }
-        
+
     /**
      * Cancel mouse action and set mouse to picking mode.
      */
@@ -2072,15 +2140,15 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Marks the button of the current MouseMode
+     *
      * @param activatedPanel
      */
     private void markSelectedMouseMode(JPanel activatedPanel) {
         LOGGER.debug("Marking button of current MouseMode");
-        for(JPanel p : mouseModePanels) {
-            if(p.equals(activatedPanel)) {
+        for (JPanel p : mouseModePanels) {
+            if (p.equals(activatedPanel)) {
                 p.setBackground(Color.RED);
-            }
-            else {
+            } else {
                 p.setBackground(defaultPanelColor);
             }
         }
@@ -2092,11 +2160,13 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     private void saveSelectedVertices() {
         LOGGER.info("Saving properties of selected vertices");
-        if(vv.getRenderContext().getPickedVertexState().getPicked().isEmpty())
+        if (vv.getRenderContext().getPickedVertexState().getPicked().isEmpty()) {
             return;
+        }
         alignmentList.clear();
-        for(NetViewerNode nvNode : vv.getRenderContext().getPickedVertexState().getPicked())
+        for (NetViewerNode nvNode : vv.getRenderContext().getPickedVertexState().getPicked()) {
             alignmentList.add(nvNode);
+        }
 
         vv.getRenderContext().getPickedVertexState().clear();
         LOGGER.info("Successfully saved properties of selected vertices");
@@ -2104,6 +2174,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Aligns vertices to a given vertex
+     *
      * @param pos x or y axis
      * @param nodeToAlign
      */
@@ -2112,13 +2183,14 @@ public class NetViewer extends JFrame implements ActionListener {
         int newX = (int) layout.transform(nodeToAlign).getX();
         int newY = (int) layout.transform(nodeToAlign).getY();
 
-        if(pos.equalsIgnoreCase("X")) {
-            for(NetViewerNode nvNode : alignmentList)
+        if (pos.equalsIgnoreCase("X")) {
+            for (NetViewerNode nvNode : alignmentList) {
                 layout.setLocation(nvNode, new Point(newX, (int) layout.transform(nvNode).getY()));
-        }
-        else if(pos.equalsIgnoreCase("Y")) {
-            for(NetViewerNode nvNode : alignmentList)
+            }
+        } else if (pos.equalsIgnoreCase("Y")) {
+            for (NetViewerNode nvNode : alignmentList) {
                 layout.setLocation(nvNode, new Point((int) layout.transform(nvNode).getX(), newY));
+            }
         }
         cancelMouseAction();
         resetMessageLabel();
@@ -2134,11 +2206,11 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Removing set of vertices");
         cancelMouseAction();
 
-        for(NetViewerNode nvNode : vv.getRenderContext().getPickedVertexState().getPicked()) {
+        for (NetViewerNode nvNode : vv.getRenderContext().getPickedVertexState().getPicked()) {
             this.synchronizer.removeNode(nvNode);
         }
 
-        for(NetViewerEdge nvEdge : vv.getRenderContext().getPickedEdgeState().getPicked()) {
+        for (NetViewerEdge nvEdge : vv.getRenderContext().getPickedEdgeState().getPicked()) {
             this.synchronizer.removeEdge(nvEdge);
         }
 
@@ -2156,14 +2228,15 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Colors a given set of transitions with a given color
+     *
      * @param mcts
      * @param color
      */
     public void colorTransitions(Set<Transition> transitions, Color color) {
         LOGGER.info("Coloring transitions of a given set");
         Iterator<Transition> it = transitions.iterator();
-        while(it.hasNext()) {
-           this.synchronizer.getNodeFromVertex(it.next()).setColor(color);
+        while (it.hasNext()) {
+            this.synchronizer.getNodeFromVertex(it.next()).setColor(color);
         }
         vv.repaint();
         LOGGER.info("Successfully colored transitions of a given set");
@@ -2171,8 +2244,8 @@ public class NetViewer extends JFrame implements ActionListener {
 
     public void colorTransitions(Color color, Transition... transitions) {
         LOGGER.info("Coloring a number of transitions");
-        for(Transition t : transitions) {
-           this.synchronizer.getNodeFromVertex(t).setColor(color);
+        for (Transition t : transitions) {
+            this.synchronizer.getNodeFromVertex(t).setColor(color);
         }
         vv.repaint();
         LOGGER.info("Successfully colored a number of transitions");
@@ -2184,13 +2257,13 @@ public class NetViewer extends JFrame implements ActionListener {
     private void checkForSppedImport() {
         LOGGER.info("Checking for Spped Import");
         // If the Petri net is imported from Snoopy we must check for logical places
-        if(synchronizer.getPetriNet().hasProperty("importtype")) {
-            if(((String)synchronizer.getPetriNet().getProperty("importtype")).equals("speed")) {
+        if (synchronizer.getPetriNet().hasProperty("importtype")) {
+            if (((String) synchronizer.getPetriNet().getProperty("importtype")).equals("speed")) {
                 LOGGER.info("Spped Import detected");
                 Map<String, Place> graphicalId2Place = new HashMap<>();
-                Map<String,Place> internalId2Place = new HashMap<>();
-                Map<String,Transition> internalId2Transition = new HashMap<>();
-                Map<String,String> internalId2Pos = new HashMap<>();
+                Map<String, Place> internalId2Place = new HashMap<>();
+                Map<String, Transition> internalId2Transition = new HashMap<>();
+                Map<String, String> internalId2Pos = new HashMap<>();
                 Map<String, List<NetViewerNode>> newLogicalPlaces = new HashMap<>();
                 Map<Integer, List<Place>> net2Place = new HashMap<>();
                 Map<Integer, List<Transition>> net2Transition = new HashMap<>();
@@ -2200,43 +2273,44 @@ public class NetViewer extends JFrame implements ActionListener {
                 List<String> graphicalRepresentations;
                 String[] lineParts;
                 Integer net;
-                for(Place p : synchronizer.getPetriNet().places()) {
-                    graphicalRepresentations = (List<String>)p.getProperty("graphicalRepresentations");
-                    for(String s : graphicalRepresentations) {
+                for (Place p : synchronizer.getPetriNet().places()) {
+                    graphicalRepresentations = (List<String>) p.getProperty("graphicalRepresentations");
+                    for (String s : graphicalRepresentations) {
                         lineParts = s.split("\\|");
                         graphicalId2Place.put(lineParts[2], p);
-                        internalId2Pos.put(lineParts[2], lineParts[0]+"|"+lineParts[1]);
+                        internalId2Pos.put(lineParts[2], lineParts[0] + "|" + lineParts[1]);
                         net = new Integer(lineParts[3]);
-                        if(!net2Place.containsKey(net)) {
+                        if (!net2Place.containsKey(net)) {
                             net2Place.put(net, new ArrayList<Place>());
                         }
                         net2Place.get(net).add(p);
                     }
-                    internalId2Place.put(((Integer)p.getProperty("internalId")).toString(), p);
+                    internalId2Place.put(((Integer) p.getProperty("internalId")).toString(), p);
                 }
                 LOGGER.debug("Filling map for transitions");
                 // Fill the maps for transitions
-                for(Transition t : synchronizer.getPetriNet().transitions()) {
-                    internalId2Transition.put(((Integer)t.getProperty("internalId")).toString(), t);
+                for (Transition t : synchronizer.getPetriNet().transitions()) {
+                    internalId2Transition.put(((Integer) t.getProperty("internalId")).toString(), t);
 
                     net = t.getProperty("net");
-                    if(!net2Transition.containsKey(net)) {
+                    if (!net2Transition.containsKey(net)) {
                         net2Transition.put(net, new ArrayList<Transition>());
                     }
                     net2Transition.get(net).add(t);
                 }
                 LOGGER.debug("Relocating hierarchical transitions");
                 // Relocate the hierachical transitions
-                if(net2Transition.size() > 1) {
-                    double minXa,minYa,x,y;
-                    double minXb , minYb, maxXa, maxYa, maxXb, maxYb, lastX = 0, lastY = 0, distX, distY;
+                if (net2Transition.size() > 1) {
+                    double minXa, minYa, x, y;
+                    double minXb, minYb, maxXa, maxYa, maxXb, maxYb, lastX = 0, lastY = 0, distX, distY;
                     boolean sameX, sameY;
                     int counter;
                     Point2D pos, newPos;
 
-                    for(Integer i : net2Transition.keySet()) {
-                        if(i == 1 || i == 0)
+                    for (Integer i : net2Transition.keySet()) {
+                        if (i == 1 || i == 0) {
                             continue;
+                        }
 
                         minXa = Double.MAX_VALUE;
                         minYa = Double.MAX_VALUE;
@@ -2251,48 +2325,58 @@ public class NetViewer extends JFrame implements ActionListener {
                         sameX = true;
                         sameY = true;
 
-                        if(net2Place.containsKey(i)) {
-                            for(Place p : net2Place.get(i)) {
+                        if (net2Place.containsKey(i)) {
+                            for (Place p : net2Place.get(i)) {
                                 pos = layout.transform(this.synchronizer.getNodeFromVertex(p));
                                 x = pos.getX();
                                 y = pos.getY();
 
-                                if(x < minXa)
+                                if (x < minXa) {
                                     minXa = x;
-                                if(x > maxXa)
+                                }
+                                if (x > maxXa) {
                                     maxXa = x;
-                                if(y < minYa)
+                                }
+                                if (y < minYa) {
                                     minYa = y;
-                                if(y > maxYa)
+                                }
+                                if (y > maxYa) {
                                     maxYa = y;
+                                }
                             }
                         }
 
-                        if(net2Transition.containsKey(i)) {
+                        if (net2Transition.containsKey(i)) {
                             counter = 0;
-                            for(Transition t : net2Transition.get(i)) {
+                            for (Transition t : net2Transition.get(i)) {
                                 pos = layout.transform(this.synchronizer.getNodeFromVertex(t));
                                 x = pos.getX();
                                 y = pos.getY();
 
-                                if(counter == 0) {
+                                if (counter == 0) {
                                     lastX = x;
                                     lastY = y;
                                 }
 
-                                if(x < minXb)
+                                if (x < minXb) {
                                     minXb = x;
-                                if(x > maxXb)
+                                }
+                                if (x > maxXb) {
                                     maxXb = x;
-                                if(y < minYb)
+                                }
+                                if (y < minYb) {
                                     minYb = y;
-                                if(y > maxYb)
+                                }
+                                if (y > maxYb) {
                                     maxYb = y;
+                                }
 
-                                if(lastX != x)
+                                if (lastX != x) {
                                     sameX = false;
-                                if(lastY != y)
+                                }
+                                if (lastY != y) {
                                     sameY = false;
+                                }
 
                                 lastX = x;
                                 lastY = y;
@@ -2300,29 +2384,28 @@ public class NetViewer extends JFrame implements ActionListener {
                                 counter++;
                             }
 
-
-                            for(Transition t : net2Transition.get(i)) {
+                            for (Transition t : net2Transition.get(i)) {
                                 pos = layout.transform(this.synchronizer.getNodeFromVertex(t));
 
-                                if(sameY) {
-                                    distX = 0.0 - ((maxXb - minXb) / 2.0 ) + (pos.getX() - minXb);
+                                if (sameY) {
+                                    distX = 0.0 - ((maxXb - minXb) / 2.0) + (pos.getX() - minXb);
                                     distY = (maxYa - minYa) / 2.0;
-                                }
-                                else if(sameX) {
+                                } else if (sameX) {
                                     distX = (maxXa - minXa) / 2.0;
-                                    distY = 0.0 - (  (maxYb- minYb) / 2.0  ) + (pos.getY() - minYb);
-                                }
-                                else {
+                                    distY = 0.0 - ((maxYb - minYb) / 2.0) + (pos.getY() - minYb);
+                                } else {
                                     distX = pos.getX() - minXb;
                                     distY = pos.getY() - minYb;
                                 }
 
-                                if(distX == 0.0)
+                                if (distX == 0.0) {
                                     distX = 20.0;
-                                if(distY == 0.0)
+                                }
+                                if (distY == 0.0) {
                                     distY = 20.0;
+                                }
 
-                                newPos = new Point2D.Double(minXa + distX , distY + minYa);
+                                newPos = new Point2D.Double(minXa + distX, distY + minYa);
                                 layout.setLocation(this.synchronizer.getNodeFromVertex(t), vv.getRenderContext().getMultiLayerTransformer().inverseTransform(newPos));
                             }
                         }
@@ -2333,22 +2416,24 @@ public class NetViewer extends JFrame implements ActionListener {
                 Arc a;
                 List<NetViewerNode> selectedNodes = new ArrayList<>();
                 String internalID;
-                for(Transition t : synchronizer.getPetriNet().transitions()) {
-                    for(Place p : t.outputs()) {
+                for (Transition t : synchronizer.getPetriNet().transitions()) {
+                    for (Place p : t.outputs()) {
                         a = synchronizer.getPetriNet().getArc(t, p);
-                        internalID = (String)a.getProperty("target_graphic");
-                        if(graphicalId2Place.containsKey(internalID)) {
-                            if(!newLogicalPlaces.containsKey(internalID))
+                        internalID = (String) a.getProperty("target_graphic");
+                        if (graphicalId2Place.containsKey(internalID)) {
+                            if (!newLogicalPlaces.containsKey(internalID)) {
                                 newLogicalPlaces.put(internalID, new ArrayList<NetViewerNode>());
+                            }
                             newLogicalPlaces.get(internalID).add(this.synchronizer.getNodeFromVertex(t));
                         }
                     }
-                    for(Place p : t.inputs()) {
+                    for (Place p : t.inputs()) {
                         a = synchronizer.getPetriNet().getArc(p, t);
-                        internalID = (String)a.getProperty("source_graphic");
-                        if(graphicalId2Place.containsKey(internalID)) {
-                            if(!newLogicalPlaces.containsKey(internalID))
+                        internalID = (String) a.getProperty("source_graphic");
+                        if (graphicalId2Place.containsKey(internalID)) {
+                            if (!newLogicalPlaces.containsKey(internalID)) {
                                 newLogicalPlaces.put(internalID, new ArrayList<NetViewerNode>());
+                            }
                             newLogicalPlaces.get(internalID).add(this.synchronizer.getNodeFromVertex(t));
                         }
                     }
@@ -2357,7 +2442,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 LOGGER.debug("Generating logical places");
                 // Generate the logical places
                 String[] pointParts;
-                for(String k : newLogicalPlaces.keySet()) {
+                for (String k : newLogicalPlaces.keySet()) {
                     pointParts = internalId2Pos.get(k).split("\\|");
                     Point.Double newPoint = new Point.Double();
                     newPoint.x = new Double(pointParts[0]);
@@ -2371,14 +2456,13 @@ public class NetViewer extends JFrame implements ActionListener {
                 List<String> points;
                 Arc arc;
                 NetViewerEdge lastEdge;
-                for(NetViewerEdge e : g.getEdges()) {
+                for (NetViewerEdge e : g.getEdges()) {
                     lastEdge = null;
-                    if(e.getSource().getNodeType().equals(NetViewer.PLACE)) {
+                    if (e.getSource().getNodeType().equals(NetViewer.PLACE)) {
                         Place from = synchronizer.getPetriNet().findPlace(e.getSource().getMasterNode().getId());
                         Transition to = synchronizer.getPetriNet().findTransition(e.getAim().getId());
                         arc = synchronizer.getPetriNet().getArc(from, to);
-                    }
-                    else {
+                    } else {
                         Transition from = synchronizer.getPetriNet().findTransition(e.getSource().getId());
                         Place to = synchronizer.getPetriNet().findPlace(e.getAim().getMasterNode().getId());
                         arc = synchronizer.getPetriNet().getArc(from, to);
@@ -2386,13 +2470,13 @@ public class NetViewer extends JFrame implements ActionListener {
 
                     points = arc.getProperty("points");
                     int length = points.size();
-                    if(length > 2) {
-                        for(int i = 1; i < length-1; i++) {
+                    if (length > 2) {
+                        for (int i = 1; i < length - 1; i++) {
                             pointParts = points.get(i).split("\\|");
-                            if(lastEdge == null) {
-                                lastEdge = this.synchronizer.addBend(e, Double.parseDouble(pointParts[0])-40.0, Double.parseDouble(pointParts[1])-30.0);
+                            if (lastEdge == null) {
+                                lastEdge = this.synchronizer.addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
                             } else {
-                                lastEdge = this.synchronizer.addBend(lastEdge, Double.parseDouble(pointParts[0])-40.0, Double.parseDouble(pointParts[1])-30.0);
+                                lastEdge = this.synchronizer.addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
 
                             }
                         }
@@ -2406,6 +2490,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Update all properties of the Petri net with new names etc.
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -2415,6 +2500,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Update all properties of the Petri net with new names etc.
+     *
      * @param saveLayout
      * @throws IOException
      * @throws ClassNotFoundException
@@ -2423,13 +2509,13 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Updating properties of Petri net with new names etc.");
         PetriNet pn = this.synchronizer.getPetriNet();
         NetViewerNode nvNode;
-        for(Transition t : pn.transitions()) {
+        for (Transition t : pn.transitions()) {
             nvNode = this.synchronizer.getNodeFromVertex(t);
             t.putProperty("name", nvNode.getName());
             t.putProperty("posX", layout.transform(nvNode).getX());
             t.putProperty("posY", layout.transform(nvNode).getY());
         }
-        for(Place p : pn.places()) {
+        for (Place p : pn.places()) {
             nvNode = this.synchronizer.getNodeFromVertex(p);
             p.putProperty("name", nvNode.getName());
             p.putProperty("posX", layout.transform(nvNode).getX());
@@ -2438,18 +2524,20 @@ public class NetViewer extends JFrame implements ActionListener {
 
         String aimType, sourceType;
         Arc arc = null;
-        for(NetViewerEdge nvEdge : g.getEdges()) {
+        for (NetViewerEdge nvEdge : g.getEdges()) {
             aimType = nvEdge.getMasterEdge().getAim().getNodeType();
             sourceType = nvEdge.getMasterEdge().getSource().getNodeType();
 
-            if(!aimType.equalsIgnoreCase(NetViewer.BEND) && !sourceType.equalsIgnoreCase(NetViewer.BEND)) {
-                if(sourceType.equalsIgnoreCase(NetViewer.PLACE))
+            if (!aimType.equalsIgnoreCase(NetViewer.BEND) && !sourceType.equalsIgnoreCase(NetViewer.BEND)) {
+                if (sourceType.equalsIgnoreCase(NetViewer.PLACE)) {
                     arc = pn.getArc(pn.findPlace(nvEdge.getMasterEdge().getSource().getMasterNode().getId()), pn.findTransition(nvEdge.getMasterEdge().getAim().getMasterNode().getId()));
-                else if(sourceType.equalsIgnoreCase(NetViewer.TRANSITION))
+                } else if (sourceType.equalsIgnoreCase(NetViewer.TRANSITION)) {
                     arc = pn.getArc(pn.findTransition(nvEdge.getMasterEdge().getSource().getMasterNode().getId()), pn.findPlace(nvEdge.getMasterEdge().getAim().getMasterNode().getId()));
+                }
 
-                if(arc == null)
+                if (arc == null) {
                     continue;
+                }
                 arc.setWeight(nvEdge.getWeight());
             }
         }
@@ -2458,7 +2546,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     public void closeAllFrames() {
         LOGGER.info("Closing all frames");
-        for(JFrame frame : framesList) {
+        for (JFrame frame : framesList) {
             frame.setVisible(false);
             frame.dispose();
         }
@@ -2473,17 +2561,17 @@ public class NetViewer extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-
-     /**
+    /**
      * Shows the properties menu for a vertex
+     *
      * @param nvNode
      * @param x
      * @param y
      */
     protected void showVertexSetup(NetViewerNode nvNode, int x, int y) {
         LOGGER.info("Opening properties menu for a vertex");
-        if(nvNode != null) {
-            if(!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
+        if (nvNode != null) {
+            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                 VertexSetupFrame setupFrame = new VertexSetupFrame(this, Arrays.asList(nvNode));
 
                 setupFrame.setLocation(x, y);
@@ -2494,15 +2582,16 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Successfully opened properties menu for a vertex");
     }
 
-     /**
+    /**
      * Shows the properties menu for a set of vertices
+     *
      * @param selectedNodes
      * @param nvNode
      * @param x
      * @param y
      */
     protected void showVertexSetup(List<NetViewerNode> selectedNodes, int x, int y) {
-        if(selectedNodes != null) {
+        if (selectedNodes != null) {
             LOGGER.info("Opening properties menu for several vertices");
             VertexSetupFrame setupFrame = new VertexSetupFrame(this, selectedNodes);
 
@@ -2516,6 +2605,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Shows the properties menu of a edge
+     *
      * @param nvEdge
      * @param x
      * @param y
@@ -2531,6 +2621,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Shows the logical place menu
+     *
      * @param nvNode
      * @param x
      * @param y
@@ -2540,8 +2631,8 @@ public class NetViewer extends JFrame implements ActionListener {
         lpf.setLocation(x, y);
 
         neighborsListModel.removeAllElements();
-        for(NetViewerNode n : g.getNeighbors(nvNode)) {
-            if(!n.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
+        for (NetViewerNode n : g.getNeighbors(nvNode)) {
+            if (!n.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                 neighborsListModel.addElement(n);
             }
         }
@@ -2594,20 +2685,21 @@ public class NetViewer extends JFrame implements ActionListener {
         // Are T-invariants available? If so, add these to the Lists
         LOGGER.debug("Filling with T-Invariants, if available");
         tinvs = getTInvs();
-        if(tinvs == null) 
+        if (tinvs == null) {
             addTinvsToListDisplay();
-        
+        }
+
         // Are M-invariants available? If so, add these to the List
         LOGGER.debug("Filling with M-Invariants, if available");
         minvs = getMInvs();
-        if(minvs != null)
-            addMinvsToListDisplay(); 
-        
-        
+        if (minvs != null) {
+            addMinvsToListDisplay();
+        }
+
         // Are MCTS available? If so, add these to the ComboBox
         LOGGER.debug("Filling with MCTS, if available");
         mctsResults = getMctsResults();
-        if(mctsResults == null) {
+        if (mctsResults == null) {
             tb.mctsCb.setEnabled(false);
             tb.allMctsButton.setEnabled(false);
         } else {
@@ -2617,7 +2709,7 @@ public class NetViewer extends JFrame implements ActionListener {
         // Are MC-Sets available? If so, add these to the ComboBox
         LOGGER.debug("Filling with MCS, if available");
         mcsResults = getMcsResults();
-        if(mcsResults == null) {
+        if (mcsResults == null) {
             tb.mcsCb.setEnabled(false);
         } else {
             addMcsToComboBox();
@@ -2626,8 +2718,9 @@ public class NetViewer extends JFrame implements ActionListener {
         // Are P-invariants available? If so, add these to the List
         LOGGER.debug("Filling with P-Invariants, if available");
         pinvs = getPInvs();
-        if(pinvs != null)
+        if (pinvs != null) {
             addPinvsToListDisplay();
+        }
 
         // Add all MouseMode Buttons to a list
         LOGGER.debug("Adding MouseMode buttons to list");
@@ -2745,7 +2838,6 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     // ------- START: Communication and controll with / for other addons -----------
-
     /**
      * Saves the current state of the project to the project file.
      */
@@ -2761,6 +2853,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Replaces the actual GraphMousePlugin with popupMouse
+     *
      * @param popupMouse
      */
     public void setGraphMousePlugin(AbstractPopupGraphMousePlugin popupMouse) {
@@ -2770,6 +2863,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Remove the given GraphMousePlugin and set the NetViewer GraphMousePlugin
+     *
      * @param popupMouse
      */
     public void removeGraphMousePlugin(AbstractPopupGraphMousePlugin popupMouse) {
@@ -2780,20 +2874,22 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Add a new Tab to the Menu Bar of the NetViewer
+     *
      * @param name The name of the tab, shown in the header of the tab
-     * @param tab The Component which is shown in the Tab. (Panel or ToolBar). Please use a TableLayout.
+     * @param tab The Component which is shown in the Tab. (Panel or ToolBar).
+     * Please use a TableLayout.
      */
     public void addTabToMenuBar(String name, Component tab) {
         LOGGER.info("Adding new tab to MenuBar of NetViewer");
         Boolean showTab;
-        if(Settings.contains(name)) {
+        if (Settings.contains(name)) {
             showTab = Settings.getBoolean(name);
         } else {
             showTab = true;
             Settings.set(name, showTab.toString());
         }
 
-        if(showTab) {
+        if (showTab) {
             tb.addTabToMenuBar(name, tab);
         }
 
@@ -2806,6 +2902,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the actual VisualizationViewer
+     *
      * @return VisualizationViewer
      */
     public VisualizationViewer getVisualizationViewer() {
@@ -2822,6 +2919,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns all vertices of the Graph (Places, Transitions, and Bends)
+     *
      * @return
      */
     public Collection<NetViewerNode> getAllVertices() {
@@ -2829,9 +2927,12 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Returns the corresponding NetViewerNode to a place or transition. If the given UPNE is neither a Place or Transition, the function returns NULL.
+     * Returns the corresponding NetViewerNode to a place or transition. If the
+     * given UPNE is neither a Place or Transition, the function returns NULL.
+     *
      * @param upne Either a Place or a Transition
-     * @return If the given UPNE is neither a Place or Transition, the function returns NULL otherwise the reference of a NetViewerNode.
+     * @return If the given UPNE is neither a Place or Transition, the function
+     * returns NULL otherwise the reference of a NetViewerNode.
      */
     public NetViewerNode getNodeFromVertex(UniquePetriNetEntity upne) {
         return this.synchronizer.getNodeFromVertex(upne);
@@ -2839,8 +2940,10 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the corresponding NetViewerNode to ID of a transition.
+     *
      * @param id
-     * @return The corresponding transition, if for the given ID exist a Transition, NULL otherwise.
+     * @return The corresponding transition, if for the given ID exist a
+     * Transition, NULL otherwise.
      */
     public NetViewerNode getNodeFromTransitionId(Integer id) {
         return this.synchronizer.getNodeFromTransitionId(id);
@@ -2848,8 +2951,10 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the corresponding NetViewerNode to ID of a place.
+     *
      * @param id
-     * @return The corresponding place, if for the given ID exist a place, NULL otherwise.
+     * @return The corresponding place, if for the given ID exist a place, NULL
+     * otherwise.
      */
     public NetViewerNode getNodeFromPlaceId(Integer id) {
         return this.synchronizer.getNodeFromPlaceId(id);
@@ -2857,17 +2962,18 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Displays a component at the place of the NetViewer
+     *
      * @param c
      * @param name
      */
     public void displayMenu(Component c, String name) {
         LOGGER.info("Opening pane for plugin menu");
-        if(!spMap.containsKey(name)) {
+        if (!spMap.containsKey(name)) {
             JScrollPane sp = new JScrollPane(c);
             spMap.put(name, sp);
             mainPanel.add(sp, name);
         } else {
-            if(!c.equals(spMap.get(name).getComponents()[0])) {
+            if (!c.equals(spMap.get(name).getComponents()[0])) {
                 removeMenu(name);
                 JScrollPane sp = new JScrollPane(c);
                 spMap.put(name, sp);
@@ -2892,12 +2998,13 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Removes a component from the CardLayout
+     *
      * @param name
      * @param c
      */
     public void removeMenu(String name) {
         LOGGER.debug("Removing component from CardLayout");
-        if(spMap.containsKey(name)) {
+        if (spMap.containsKey(name)) {
             mainPanel.remove(spMap.get(name));
             spMap.remove(name);
         }
@@ -2906,33 +3013,33 @@ public class NetViewer extends JFrame implements ActionListener {
 
     /**
      * Returns the edge that connects the outNode with the inNode
+     *
      * @param outNode Source node of the edge
      * @param inNode Sink node of the edge
      * @return Edge connecting outNode with inNode
      */
-    public NetViewerEdge getEdge(NetViewerNode outNode, NetViewerNode inNode){
+    public NetViewerEdge getEdge(NetViewerNode outNode, NetViewerNode inNode) {
         LOGGER.info("Getting Edge. This function should not even be called anywhere. FATAL");
         // If outNode or inNode are a logical place, we have to find the correct edge.
         NetViewerEdge nvEdge;
-        if(outNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-            if(outNode.isMasterNode() || outNode.isLogical()) {
-                for(NetViewerNode nvNode : outNode.getMasterNode().getLogicalPlaces()) {
+        if (outNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+            if (outNode.isMasterNode() || outNode.isLogical()) {
+                for (NetViewerNode nvNode : outNode.getMasterNode().getLogicalPlaces()) {
                     nvEdge = this.g.findEdge(nvNode, inNode);
-                    if(nvEdge != null) {
-                       return nvEdge;
-                   }
+                    if (nvEdge != null) {
+                        return nvEdge;
+                    }
                 }
             } else {
                 return this.g.findEdge(outNode, inNode);
             }
-        }
-        else if(inNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-            if(inNode.isMasterNode() || inNode.isLogical()) {
-                for(NetViewerNode nvNode : inNode.getMasterNode().getLogicalPlaces()) {
+        } else if (inNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+            if (inNode.isMasterNode() || inNode.isLogical()) {
+                for (NetViewerNode nvNode : inNode.getMasterNode().getLogicalPlaces()) {
                     nvEdge = this.g.findEdge(outNode, nvNode);
-                    if(nvEdge != null) {
-                       return nvEdge;
-                   }
+                    if (nvEdge != null) {
+                        return nvEdge;
+                    }
                 }
             } else {
                 return this.g.findEdge(outNode, inNode);
@@ -2943,7 +3050,9 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Displays the VisualizationViewer of the TokenSimulator and deactivate some NetViewer options
+     * Displays the VisualizationViewer of the TokenSimulator and deactivate
+     * some NetViewer options
+     *
      * @param popupMouse
      */
     public void startTokenSimulator(AbstractPopupGraphMousePlugin popupMouse) {
@@ -2957,7 +3066,9 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
-     * Hide the VisualizationViewer of the TokenSimulator and enable some NetViewer options
+     * Hide the VisualizationViewer of the TokenSimulator and enable some
+     * NetViewer options
+     *
      * @param popupMouse
      */
     public void endTokenSimulator(AbstractPopupGraphMousePlugin popupMouse) {

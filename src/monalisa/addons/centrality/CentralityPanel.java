@@ -58,38 +58,38 @@ public class CentralityPanel extends AddonPanel {
         LOGGER.info("Initializing CentralityPanel");
         initComponents();
 
-        placesTable.addMouseListener(new MouseAdapter(){
+        placesTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 LOGGER.debug("Place selected in CentralityPanel");
                 //get the selected column
                 int col = placesTable.columnAtPoint(e.getPoint());
                 int row = placesTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
-                if (col == 0){
-                    if(e.getClickCount() == 1) {
+                if (col == 0) {
+                    if (e.getClickCount() == 1) {
                         LOGGER.debug("Reflecting place selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode() , true);
+                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode(), true);
                     }
                 }
                 LOGGER.debug("Handled place selection in CentralityPanel");
             }
         });
 
-        transitionsTable.addMouseListener(new MouseAdapter(){
+        transitionsTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 LOGGER.debug("Transition selected in CentralityPanel");
                 //get the selected column
                 int col = transitionsTable.columnAtPoint(e.getPoint());
                 int row = transitionsTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
-                if (col == 0){
-                    if(e.getClickCount() == 1) {
+                if (col == 0) {
+                    if (e.getClickCount() == 1) {
                         LOGGER.debug("Reflecting transition selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode() , true);
+                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode(), true);
                     }
                 }
                 LOGGER.debug("Handled transition selection in CentralityPanel");
@@ -470,13 +470,13 @@ public class CentralityPanel extends AddonPanel {
         modelPlaces = (DefaultTableModel) placesTable.getModel();
         modelTransitions = (DefaultTableModel) transitionsTable.getModel();
 
-        if(modelPlaces.getRowCount() > 0) {
+        if (modelPlaces.getRowCount() > 0) {
             for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                 modelPlaces.removeRow(i);
             }
         }
 
-        if(modelTransitions.getRowCount() > 0) {
+        if (modelTransitions.getRowCount() > 0) {
             for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                 modelTransitions.removeRow(i);
             }
@@ -608,15 +608,15 @@ public class CentralityPanel extends AddonPanel {
     @Override
     public void netChanged() {
         LOGGER.debug("Handling net change for CentralityPanel");
-        if(cc != null) {
+        if (cc != null) {
             LOGGER.debug("Resetting model because of net change");
-            if(modelPlaces.getRowCount() > 0) {
+            if (modelPlaces.getRowCount() > 0) {
                 for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                     modelPlaces.removeRow(i);
                 }
             }
 
-            if(modelTransitions.getRowCount() > 0) {
+            if (modelTransitions.getRowCount() > 0) {
                 for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                     modelTransitions.removeRow(i);
                 }

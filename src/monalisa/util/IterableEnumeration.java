@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.util.Enumeration;
@@ -15,21 +14,23 @@ import java.util.Iterator;
 
 /**
  * An adaptor to make {@link Enumeration}&lt;T&gt; an iterable type.
+ *
  * @author Konrad Rudolph
  *
  * @param <T> The enumeration type.
  */
 public final class IterableEnumeration<T> implements Iterable<T>, Iterator<T> {
+
     private final Enumeration<T> enumeration;
-    
+
     public IterableEnumeration(Enumeration<T> enumeration) {
         this.enumeration = enumeration;
     }
-    
+
     public static <T> IterableEnumeration<T> from(Enumeration<T> enumeration) {
         return new IterableEnumeration<>(enumeration);
     }
-    
+
     @Override
     public Iterator<T> iterator() {
         return this;

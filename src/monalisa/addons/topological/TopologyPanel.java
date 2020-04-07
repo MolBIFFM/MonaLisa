@@ -7,20 +7,13 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.topological;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JFileChooser;
@@ -42,8 +35,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
- * @author jens
- * Addon to display the different node degrees of the Petri net
+ * @author jens Addon to display the different node degrees of the Petri net
  */
 public class TopologyPanel extends AddonPanel {
 
@@ -57,27 +49,27 @@ public class TopologyPanel extends AddonPanel {
     /**
      * Creates new form TopologcialPanel
      */
-    public TopologyPanel(final NetViewer netViewer, PetriNetFacade pnf){
+    public TopologyPanel(final NetViewer netViewer, PetriNetFacade pnf) {
         super(netViewer, pnf, "Topology");
         LOGGER.info("Initializing TopologyPanel");
         initComponents();
 
         topologyUtils = new TopologyUtils();
         modelPlaces = (DefaultTableModel) placesTable.getModel();
-        placesTable.addMouseListener(new MouseAdapter(){
+        placesTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
-                if(placesTable.getRowCount() > 0) {
+            public void mouseClicked(MouseEvent e) {
+                if (placesTable.getRowCount() > 0) {
                     //get the selected column
                     LOGGER.debug("Place selected in TopologyPanel");
                     int col = placesTable.columnAtPoint(e.getPoint());
                     int row = placesTable.rowAtPoint(e.getPoint());
                     //respond only if fist column is selected + double click
                     if (col == 0) {
-                        if(e.getClickCount() == 1) {
+                        if (e.getClickCount() == 1) {
                             LOGGER.debug("Reflecting place selection in NetViewer");
                             netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode() , true);
+                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode(), true);
                         }
                     }
                     LOGGER.debug("Handled place selection in TopologyPanel");
@@ -86,20 +78,20 @@ public class TopologyPanel extends AddonPanel {
         });
 
         modelTransitions = (DefaultTableModel) transitionsTable.getModel();
-        transitionsTable.addMouseListener(new MouseAdapter(){
+        transitionsTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
-                if(transitionsTable.getRowCount() > 0) {
+            public void mouseClicked(MouseEvent e) {
+                if (transitionsTable.getRowCount() > 0) {
                     LOGGER.debug("Transition selected in TopologyPanel");
                     //get the selected column
                     int col = transitionsTable.columnAtPoint(e.getPoint());
                     int row = transitionsTable.rowAtPoint(e.getPoint());
                     //respond only if fist column is selected + double click
-                    if (col == 0){
-                        if(e.getClickCount() == 1) {
+                    if (col == 0) {
+                        if (e.getClickCount() == 1) {
                             LOGGER.debug("Reflecting transition selection in NetViewer");
                             netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode() , true);
+                            netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode(), true);
                         }
                     }
                     LOGGER.debug("Handled transition selection in TopologyPanel");
@@ -345,6 +337,7 @@ public class TopologyPanel extends AddonPanel {
 
     /**
      * Create a chart for a node degree distribution
+     *
      * @param mapOfDegrees
      * @param elementCounter
      * @param fraqMap
@@ -358,49 +351,52 @@ public class TopologyPanel extends AddonPanel {
         Integer lastValue = listOfDegrees.get(0);
         for (Integer i : listOfDegrees) {
             // fill gaps
-            if(i != lastValue+1)
-                for(Integer j = 0; j < i-lastValue; j++)
-                    datasetPlaces.setValue(0 , "p(k)", Integer.toString(lastValue+j+1));
-            datasetPlaces.setValue(fraqMap.get(i) , "p(k)", i.toString());
+            if (i != lastValue + 1) {
+                for (Integer j = 0; j < i - lastValue; j++) {
+                    datasetPlaces.setValue(0, "p(k)", Integer.toString(lastValue + j + 1));
+                }
+            }
+            datasetPlaces.setValue(fraqMap.get(i), "p(k)", i.toString());
             lastValue = i;
         }
         JFreeChart chart = ChartFactory.createBarChart("", "k", "p(k)", datasetPlaces, PlotOrientation.VERTICAL, false, true, false);
         LOGGER.debug("Successfully created chart for a degree distribution");
         return chart;
-        }
+    }
 
     /**
      * Calls function to compute the degrees
+     *
      * @param evt
      */
     private void calcDegreesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcDegreesActionPerformed
         LOGGER.info("Calculating vertex degrees");
-        if(modelPlaces.getRowCount() > 0) {
+        if (modelPlaces.getRowCount() > 0) {
             for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                 modelPlaces.removeRow(i);
             }
         }
 
-        if(modelTransitions.getRowCount() > 0) {
+        if (modelTransitions.getRowCount() > 0) {
             for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                 modelTransitions.removeRow(i);
             }
-        } 
+        }
         topologyUtils.computeDegrees(pnf);
         Integer all, in, out;
-        for(Place p : pnf.places()) {
+        for (Place p : pnf.places()) {
             in = p.inputs().size();
             out = p.outputs().size();
             all = p.inputs().size() + p.outputs().size();
-            modelPlaces.addRow(new Object[]{netViewer.getNodeFromPlaceId(p.id()),all,in,out});
+            modelPlaces.addRow(new Object[]{netViewer.getNodeFromPlaceId(p.id()), all, in, out});
         }
-        for(Transition t : pnf.transitions()) {
+        for (Transition t : pnf.transitions()) {
             in = t.inputs().size();
             out = t.outputs().size();
             all = t.inputs().size() + t.outputs().size();
-            modelTransitions.addRow(new Object[]{netViewer.getNodeFromTransitionId(t.id()),all,in,out});            
+            modelTransitions.addRow(new Object[]{netViewer.getNodeFromTransitionId(t.id()), all, in, out});
         }
-        if(pnf.transitions().size() > 0 && pnf.places().size() > 0) {
+        if (pnf.transitions().size() > 0 && pnf.places().size() > 0) {
             showPlotsButton.setEnabled(true);
             exportButton.setEnabled(true);
         }
@@ -416,12 +412,12 @@ public class TopologyPanel extends AddonPanel {
         fc.setApproveButtonText("Export here");
 
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesAll"), new File(fc.getSelectedFile()+"/places_in_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesIn"), new File(fc.getSelectedFile().getAbsolutePath()+"/places_in.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesOut"), new File(fc.getSelectedFile().getAbsolutePath()+"/places_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsAll"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsIn"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_in.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsOut"), new File(fc.getSelectedFile().getAbsolutePath()+"/transitions_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesAll"), new File(fc.getSelectedFile() + "/places_in_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_in.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsAll"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in_out.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in.csv"));
+            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_out.csv"));
         }
         LOGGER.info("Successfully exported vertex degree distributions");
     }//GEN-LAST:event_exportButtonActionPerformed
@@ -447,7 +443,7 @@ public class TopologyPanel extends AddonPanel {
     @Override
     public void netChanged() {
         LOGGER.debug("Handling net change for TopologyPanel");
-        if(topologyUtils.getNdMap("PlacesAll") != null) {
+        if (topologyUtils.getNdMap("PlacesAll") != null) {
 
             topologyUtils.resetNdMaps();
             topologyUtils.resetFreqMaps();
@@ -455,13 +451,13 @@ public class TopologyPanel extends AddonPanel {
             showPlotsButton.setEnabled(false);
             exportButton.setEnabled(false);
 
-            if(modelPlaces.getRowCount() > 0) {
+            if (modelPlaces.getRowCount() > 0) {
                 for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                     modelPlaces.removeRow(i);
                 }
             }
 
-            if(modelTransitions.getRowCount() > 0) {
+            if (modelTransitions.getRowCount() > 0) {
                 for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                     modelTransitions.removeRow(i);
                 }

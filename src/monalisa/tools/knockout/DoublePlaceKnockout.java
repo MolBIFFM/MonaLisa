@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.knockout;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class DoublePlaceKnockout extends KnockoutAlgorithm {
+
     private final List<Pair<Place, Place>> pairs;
     private final Iterator<Pair<Place, Place>> pairIterator;
     private List<UniquePetriNetEntity> currentKnockouts;
@@ -35,11 +35,14 @@ public class DoublePlaceKnockout extends KnockoutAlgorithm {
         this.pairs = new ArrayList<>();
 
         List<Place> places = new ArrayList<>();
-        for (Place p : pn.places())
+        for (Place p : pn.places()) {
             places.add(p);
-        for (int i = 0; i < places.size(); i++)
-            for(int j = i + 1; j < places.size(); j++)
+        }
+        for (int i = 0; i < places.size(); i++) {
+            for (int j = i + 1; j < places.size(); j++) {
                 pairs.add(Pair.of(places.get(i), places.get(j)));
+            }
+        }
 
         pairIterator = pairs.iterator();
         LOGGER.info("Successfully initialized DoublePlaceKnockout algorithm");
@@ -55,17 +58,21 @@ public class DoublePlaceKnockout extends KnockoutAlgorithm {
         currentKnockouts.add(p.first());
         currentKnockouts.add(p.second());
 
-        for (Transition t : p.first().outputs())
+        for (Transition t : p.first().outputs()) {
             copy.removeTransition(t);
+        }
 
-        for (Transition t : p.first().inputs())
+        for (Transition t : p.first().inputs()) {
             copy.removeTransition(t);
+        }
 
-        for (Transition t : p.second().outputs())
+        for (Transition t : p.second().outputs()) {
             copy.removeTransition(t);
+        }
 
-        for (Transition t : p.second().inputs())
+        for (Transition t : p.second().inputs()) {
             copy.removeTransition(t);
+        }
 
         copy.removePlace(p.first());
         copy.removePlace(p.second());

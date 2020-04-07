@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.tinv;
 
 import java.io.File;
@@ -31,8 +30,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class TInvariantCalculator {
+
     @SuppressWarnings("serial")
     private class ExtractResourceException extends Exception {
+
         public ExtractResourceException(Exception cause) {
             super(cause);
         }
@@ -40,6 +41,7 @@ public final class TInvariantCalculator {
 
     @SuppressWarnings("serial")
     private class InvokeProcessException extends Exception {
+
         public InvokeProcessException(Exception cause) {
             super(cause);
         }
@@ -54,7 +56,7 @@ public final class TInvariantCalculator {
     private static final Logger LOGGER = LogManager.getLogger(TInvariantCalculator.class);
 
     public TInvariantCalculator(PetriNetFacade petriNet) {
-       this.petriNet = petriNet;
+        this.petriNet = petriNet;
     }
 
     public TInvariantCalculator(PetriNetFacade petriNet, ErrorLog log) throws InterruptedException, TInvariantCalculationFailedException {
@@ -75,16 +77,17 @@ public final class TInvariantCalculator {
         // it simply increments a counter for them, starting at zero. To
         // account for that, and to re-establish a mapping between the tinv
         // output and our Petri net, we perform a little bookkeeping ...
-
         Map<Integer, Integer> placeIds = new HashMap<>();
         int pid = 0;
-        for (Place place : petriNet.places())
+        for (Place place : petriNet.places()) {
             placeIds.put(place.id(), pid++);
+        }
 
         transitionIds = new HashMap<>();
         int tid = 0;
-        for (Transition transition : petriNet.transitions())
+        for (Transition transition : petriNet.transitions()) {
             transitionIds.put(transition.id(), tid++);
+        }
 
         InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "TI");
         try {
@@ -143,8 +146,9 @@ public final class TInvariantCalculator {
                 LOGGER.error("Caught FileNotFoundException while trying to get postScriptSoure for MauritiusMap");
             }
 
-            if (psCode != null)
+            if (psCode != null) {
                 postScriptSource = new MauritiusMap(psCode);
+            }
             hasPostScriptSource = true;
             LOGGER.debug("Successfully got postScriptSource for MauritiusMap");
         }
@@ -156,19 +160,16 @@ public final class TInvariantCalculator {
         File toolFile = null;
         try {
             String os = System.getProperty("os.name").toLowerCase();
-            if(os.contains("nix") || os.contains("nux")) {
+            if (os.contains("nix") || os.contains("nux")) {
                 LOGGER.debug("OS determined to be Unix");
                 toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
-            }
-            else if(os.contains("win")) {
+            } else if (os.contains("win")) {
                 LOGGER.debug("OS determined to be Windows");
                 toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
-            }
-            else if(os.contains("mac")) {
+            } else if (os.contains("mac")) {
                 LOGGER.debug("OS determined to be MAC");
                 toolFile = FileUtils.extractResource("tinv_macos.exe", "monalisa", "bin");
-            }
-            else{
+            } else {
                 LOGGER.warn("No valid operating system found. Starting linux version!");
                 toolFile = FileUtils.extractResource("manatee", "monalisa", "bin");
             }
@@ -177,13 +178,13 @@ public final class TInvariantCalculator {
         }
         toolFile.deleteOnExit();
         toolFile.setExecutable(true);
-        
+
         String[] input_commands = new String[3];
-        
+
         input_commands[0] = toolFile.getAbsolutePath();
         input_commands[1] = input.getAbsolutePath();
         input_commands[2] = ("TI");
-        
+
         ProcessBuilder pb = new ProcessBuilder(input_commands).inheritIO();
         pb.directory(output);
 
@@ -194,17 +195,17 @@ public final class TInvariantCalculator {
             LOGGER.debug("Successfully computed T-Invariants");
         } catch (IOException e) {
             throw new InvokeProcessException(e);
-        }
-        finally {
+        } finally {
             LOGGER.debug("Marking output files for deletion");
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
-            String[] extensions = { ".inv" };
+            String[] extensions = {".inv"};
 
             for (String ext : extensions) {
                 File file = new File(baseName + ext);
-                if (file.exists())
+                if (file.exists()) {
                     file.deleteOnExit();
+                }
             }
             LOGGER.debug("Successfully marked output files for deletion");
         }
@@ -213,8 +214,9 @@ public final class TInvariantCalculator {
     private final <T> Map<T, T> invertMap(Map<T, T> source) {
         Map<T, T> inverted = new HashMap<>();
 
-        for (Map.Entry<T, T> entry : source.entrySet())
+        for (Map.Entry<T, T> entry : source.entrySet()) {
             inverted.put(entry.getValue(), entry.getKey());
+        }
 
         return inverted;
     }

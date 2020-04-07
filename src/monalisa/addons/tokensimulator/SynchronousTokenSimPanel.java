@@ -16,10 +16,11 @@ import java.awt.event.KeyEvent;
  * @author Pavel Balazki.
  */
 public class SynchronousTokenSimPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATION
     private AsynchronousTokenSim ts;
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form AsynchronousTokenSimPanel
@@ -27,8 +28,8 @@ public class SynchronousTokenSimPanel extends javax.swing.JPanel {
     private SynchronousTokenSimPanel() {
         initComponents();
     }
-    
-    public SynchronousTokenSimPanel(AsynchronousTokenSim tsN){
+
+    public SynchronousTokenSimPanel(AsynchronousTokenSim tsN) {
         this.ts = tsN;
         initComponents();
     }
@@ -127,16 +128,15 @@ public class SynchronousTokenSimPanel extends javax.swing.JPanel {
 
     private void fireTransitionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fireTransitionsButtonActionPerformed
         //if no firing takes place, start new sequence of firing
-        if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))){
+        if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))) {
             //at this point, user can no more enable or disable the continuous mode
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
             this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
             this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
             this.ts.startFiring();
-        }
-        //if a firing sequence is being executed, stop it
-        else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))){
+        } //if a firing sequence is being executed, stop it
+        else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))) {
             this.ts.stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed
@@ -150,7 +150,7 @@ public class SynchronousTokenSimPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"

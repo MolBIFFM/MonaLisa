@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -20,7 +19,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author daniel
  */
-public class Conservative extends NetPropertyAlgorithm<Boolean>{
+public class Conservative extends NetPropertyAlgorithm<Boolean> {
 
     private boolean subConservative;
     private static final Logger LOGGER = LogManager.getLogger(Conservative.class);
@@ -41,19 +40,19 @@ public class Conservative extends NetPropertyAlgorithm<Boolean>{
         subConservative = true;
         int tokenSumInput;
         int tokenSumOutput;
-        for(Transition t : petriNet.transitions()) { //checks all Transitions.
+        for (Transition t : petriNet.transitions()) { //checks all Transitions.
             tokenSumInput = 0;
             tokenSumOutput = 0;
-            for(Place p : t.inputs()) { //checks all input Places of the Transition t.
+            for (Place p : t.inputs()) { //checks all input Places of the Transition t.
                 tokenSumInput += petriNet.getArc(p, t).weight();
             }
-            for(Place p : t.outputs()){
+            for (Place p : t.outputs()) {
                 tokenSumOutput += petriNet.getArc(t, p).weight();
             }
-            if(tokenSumInput != tokenSumOutput){
+            if (tokenSumInput != tokenSumOutput) {
                 algorithmValue = false;
             }
-            if(tokenSumOutput > tokenSumInput){
+            if (tokenSumOutput > tokenSumInput) {
                 subConservative = false;
                 break;
             }
@@ -67,9 +66,8 @@ public class Conservative extends NetPropertyAlgorithm<Boolean>{
      *
      * @return true, if the net is sub-conservative.
      */
-    public boolean getSubConservativeValue(){
+    public boolean getSubConservativeValue() {
         return subConservative;
     }
-
 
 }

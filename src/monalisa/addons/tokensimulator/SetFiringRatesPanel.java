@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.tokensimulator;
 
 import java.util.Map;
@@ -21,11 +20,11 @@ import monalisa.data.pn.Transition;
  * @author jens
  */
 public class SetFiringRatesPanel extends javax.swing.JPanel {
-        
+
     private AbstractTableModel tableModel;
     private NetViewer netViewer;
     final String[] columnNames = {TokenSimulator.strings.get("StochTSFiringRatesTableTransition"), TokenSimulator.strings.get("StochTSFiringRatesTableRate")};   //names of columns of the firingRatesTable    
-    
+
     /**
      * Creates new form SetFiringRatesPanel
      */
@@ -75,11 +74,9 @@ public class SetFiringRatesPanel extends javax.swing.JPanel {
                 }
             }
         };
-        
+
         initComponents();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -132,9 +129,9 @@ public class SetFiringRatesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if(firingRatesTable.isEditing()){
+        if (firingRatesTable.isEditing()) {
             firingRatesTable.getCellEditor().stopCellEditing();
-        }        
+        }
         this.netViewer.hideMenu();
     }//GEN-LAST:event_saveButtonActionPerformed
 

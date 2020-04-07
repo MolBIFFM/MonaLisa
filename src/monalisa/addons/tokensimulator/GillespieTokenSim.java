@@ -61,6 +61,7 @@ import org.apache.logging.log4j.LogManager;
  * @author Pavel Balazki.
  */
 public class GillespieTokenSim extends AbstractTokenSim {
+
     //BEGIN VARIABLES DECLARATION
     //GUI
     //JPanel with custom controls of the simulator.
@@ -99,9 +100,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     protected Map<Integer, long[]> reactionOrder = new HashMap<>();
     /**
-     * Number of distinct molecular reactant combinations
-     * available in current state for the chemical reaction represented by
-     * transition with a key-id.
+     * Number of distinct molecular reactant combinations available in current
+     * state for the chemical reaction represented by transition with a key-id.
      */
     private Map<Integer, Long> distinctCombinations = new HashMap<>();
     /**
@@ -125,20 +125,21 @@ public class GillespieTokenSim extends AbstractTokenSim {
      * Number of total simulation threads in all fast modes together.
      */
     private int nrOfRunningThreads = 0;
-    
+
     /**
      * Frame that groups all instances of FastSimulationMode.
      */
     protected FastSimulationModes fastSimFrame;
-    
+
     private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSim.class);
     //END VARIABLES DECLARATION
-    
+
     //BEGIN INNER CLASSES    
     /**
      * Thread which performs the simulation sequence.
      */
     private class SimulationSwingWorker extends SwingWorker {
+
         /**
          * Number of steps this thread should perform.
          */
@@ -232,8 +233,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
             tsPanel.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
             tsPanel.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
             tsPanel.bgModeB.setEnabled(true);
-            
-            if(!tsPanel.continuousModeCheckBox.isSelected()){
+
+            if (!tsPanel.continuousModeCheckBox.isSelected()) {
                 tsPanel.stepField.setEnabled(true);
             }
             tsPanel.continuousModeCheckBox.setEnabled(true);
@@ -254,7 +255,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         }
     }
     //END INNER CLASSES
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates a new instance of the stochastic token simulator.
@@ -283,12 +284,12 @@ public class GillespieTokenSim extends AbstractTokenSim {
             for (Place p : this.petriNet.getInputPlacesFor(t)) {
                 weight = this.petriNet.getArc(p, t).weight();
                 try {
-                    multiplier *= Utilities.factorial((long) weight);                                        
+                    multiplier *= Utilities.factorial((long) weight);
                 } catch (Utilities.FactorialTooBigException ex) {
                     LOGGER.error("Factorial too big while trying to determine the order of the reaction in the gillespie simulation", ex);
                     try {
-                        multiplier *= Utilities.factorial(20L);             
-                    } catch(Utilities.FactorialTooBigException ex2) { 
+                        multiplier *= Utilities.factorial(20L);
+                    } catch (Utilities.FactorialTooBigException ex2) {
                         LOGGER.error("Factorial too big while trying to determine the order of the reaction in the gillespie simulation, even after trying to fix it internally", ex2);
                     }
                 }
@@ -305,7 +306,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         }
     }
     //END CONSTRUCTORS
-    
+
     /**
      * Convert the deterministic rate constant k into the stochastic reaction
      * rate constant c for the given transition t. If the chemical reaction
@@ -346,20 +347,20 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * third or greater order reaction
          */
         double volMolPow = 1;
-        for (int i = 0; i < order-1; i++){
+        for (int i = 0; i < order - 1; i++) {
             volMolPow *= volMol;
         }
         return (k * multiplier) / volMolPow;
     }
-    
+
     /**
-     * Convert the deterministic the stochastic reaction
-     * rate constant c into the rate constant k for the given transition t. 
+     * Convert the deterministic the stochastic reaction rate constant c into
+     * the rate constant k for the given transition t.
      *
      * @param t Transition with a deterministic reaction rate constant.
-     * @param  Stochastic reaction rate constant
+     * @param Stochastic reaction rate constant
      * @return Deterministic rate constant for the transition t
-     */    
+     */
     protected double convertCToK(Transition t, double c) {
         LOGGER.debug("Converting the stochastic rate constant c into the deterministic reaction rate constanc k for transtition " + Integer.toString(t.id()));
         long order = this.reactionOrder.get(t.id())[0];
@@ -370,7 +371,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
          */
         if (order == 0) {
             return c / volMol;
-        }        
+        }
         /*
          * first order reaction
          */
@@ -382,18 +383,18 @@ public class GillespieTokenSim extends AbstractTokenSim {
          */
         if (order == 2) {
             return (c * volMol) / multiplier;
-        }        
-        
+        }
+
         /*
          * third or greater order reaction
          */
         double volMolPow = 1;
-        for (int i = 0; i < order-1; i++){
+        for (int i = 0; i < order - 1; i++) {
             volMolPow *= volMol;
         }
-        return (c * volMolPow) / multiplier;       
+        return (c * volMolPow) / multiplier;
     }
-    
+
     /**
      * Calculates the number of distinct molecular reactant combinations
      * available in current state for the chemical reaction represented by
@@ -450,7 +451,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.tokenSim.preferences.put("Update interval", 1);
         this.tokenSim.preferences.put("LimitMaxThreads", false);
         this.tokenSim.preferences.put("MaxThreadsNr", Runtime.getRuntime().availableProcessors());
-        
+
         this.fastSimFrame = new FastSimulationModes(this);
     }
 
@@ -476,42 +477,39 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * Update time delay.
          */
         LOGGER.debug("Updating the time delay preferences in the gillespie simulation");
-        try{
+        try {
             int timeDelay = Integer.parseInt(this.prefPanel.timeDelayJFormattedTextField.getText());
             if (timeDelay >= 0) {
                 this.tokenSim.preferences.put("Time delay", timeDelay);
             }
-        }
-        catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             LOGGER.error("NumberFormatException while updating the time delay in the preferences in the gillespie simulation", ex);
         }
         /*
          * Update update interval
          */
         LOGGER.debug("Updating the update interval preferences in the gillespie simulation");
-        try{
+        try {
             int updateInterval = Integer.parseInt(this.prefPanel.updateIntervalFormattedTextField.getText());
             if (updateInterval >= 0) {
                 this.tokenSim.preferences.put("Update interval", updateInterval);
             }
-        }
-        catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             LOGGER.error("NumberFormatException while updating the update interval in the preferences in the gillespie simulation", ex);
         }
         /*
         Update the limit of parallel simulation threads.
-        */
+         */
         LOGGER.debug("Updating the preference for the limit of parallel simulation threads in the gillespie simulation");
         this.tokenSim.preferences.put("LimitMaxThreads", this.prefPanel.limitThreadsCB.isSelected());
         int nrOfThreads = (int) this.tokenSim.preferences.get("MaxThreadsNr");
-        try{
+        try {
             nrOfThreads = Integer.parseInt(this.prefPanel.nrOfMaxThreadsField.getText());
-        }
-        catch(NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation");
             JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
         }
-        if (nrOfThreads < 1){
+        if (nrOfThreads < 1) {
             LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation, defaulted back to 1");
             JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
             nrOfThreads = 1;
@@ -538,19 +536,19 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.tsPanel.inputDataButton.setEnabled(true);
         LOGGER.info("Gillespie simulation started");
         this.computeActiveTransitions();
-        
+
     }
 
     @Override
     protected void endSim() {
-        if (this.simSwingWorker != null){
+        if (this.simSwingWorker != null) {
             this.simSwingWorker.cancel(true);
         }
         //Try to stop running fast modes.
-        for (StochasticSimulator sim : this.fastModes){
+        for (StochasticSimulator sim : this.fastModes) {
             this.fastSimFrame.removeFastSim(sim);
         }
-        
+
         this.tsPanel.stepField.setEnabled(false);
         this.tsPanel.fireTransitionsButton.setEnabled(false);
         this.tsPanel.bgModeB.setEnabled(false);
@@ -795,8 +793,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
             }
             /*
             Calculate number of distinct combinations for all transitions.
-            */
-            for (Transition t : this.tokenSim.getPetriNet().transitions()){
+             */
+            for (Transition t : this.tokenSim.getPetriNet().transitions()) {
                 this.distinctCombinations.put(t.id(), this.calculateH(t));
             }
             //Create new thread that will perform all firing steps.
@@ -812,7 +810,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
      * Stop actual firing sequence.
      */
     protected void stopFiring() {
-        if (this.simSwingWorker != null){
+        if (this.simSwingWorker != null) {
             this.simSwingWorker.stopSequence();
         }
     }
@@ -827,7 +825,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if(fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION){
+        if (fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
             return;
         }
         outFile = fc.getSelectedFile();
@@ -893,7 +891,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             root.appendChild(transitionsEl);
 
             //Iterate through all transitions and create an element for each one.
-            Element transitionEl,detReactionConst,detExpTextEl,varEl;
+            Element transitionEl, detReactionConst, detExpTextEl, varEl;
             MathematicalExpression detConstMathExp;
             String detExpText;
             Map<String, Integer> variables = null;
@@ -949,7 +947,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             File inFile;
             MonaLisaFileChooser fc = new MonaLisaFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if(fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION){
+            if (fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             inFile = fc.getSelectedFile();
@@ -1065,7 +1063,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                                 sb = new StringBuilder();
                                 break;
                             case "detReactionRateConstant":
-                                if (petriNet.findTransition(id) == null){
+                                if (petriNet.findTransition(id) == null) {
                                     sb = new StringBuilder();
                                     break;
                                 }
@@ -1074,7 +1072,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                                 deterministicReactionConstants.put(id, mathExp);
                                 break;
                             case "mathematicalExpression":
-                                if (petriNet.findPlace(id) == null){
+                                if (petriNet.findPlace(id) == null) {
                                     sb = new StringBuilder();
                                     break;
                                 }
@@ -1082,7 +1080,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                                 sb = new StringBuilder();
                                 break;
                             case "place":
-                                if (petriNet.findPlace(id) == null){
+                                if (petriNet.findPlace(id) == null) {
                                     break;
                                 }
                                 if (placeConstant) {
@@ -1104,18 +1102,18 @@ public class GillespieTokenSim extends AbstractTokenSim {
             LOGGER.error("General error while parsing the input setup for the gillespie simulator", ex);
         }
     }
-    
+
     /**
      * Calculate number of distinct combinations of molecules first and perform
      * standard active transitions determinations then.
      */
     @Override
-    protected void computeActiveTransitions(){
+    protected void computeActiveTransitions() {
         /*
         Update distinct molecular reactant combinations for transitions which pre-places marking has changed.
-        */
+         */
         LOGGER.info("Calculating the active transitions according to their distinct molecular reactant combinations ");
-        for (Transition t : this.transitionsToCheck){
+        for (Transition t : this.transitionsToCheck) {
             this.distinctCombinations.put(t.id(), this.calculateH(t));
         }
         super.computeActiveTransitions();
@@ -1123,9 +1121,11 @@ public class GillespieTokenSim extends AbstractTokenSim {
 
     /**
      * Return the number of tokens on the place.
+     *
      * @param id ID of the place.
-     * @return Number of tokens. For constant places mathematical expression is evaluated first, using current marking
-     * of non-constant places, converted to concentrations, and current simulated time.
+     * @return Number of tokens. For constant places mathematical expression is
+     * evaluated first, using current marking of non-constant places, converted
+     * to concentrations, and current simulated time.
      */
     @Override
     public long getTokens(int id) {
@@ -1150,39 +1150,42 @@ public class GillespieTokenSim extends AbstractTokenSim {
     public double getSimulatedTime() {
         return this.time;
     }
-    
+
     /**
      * Set the time which was simulated.
-     * @param time 
+     *
+     * @param time
      */
-    public void setSimulatedTime(double time){
+    public void setSimulatedTime(double time) {
         this.time = time;
     }
-    
+
     /**
      * Check whether a fast simulation mode can start a new thread right now.
-     * @return true if no limit to the number of parallel threads is set or the number of running threads is below the limit, false otherwise.
+     *
+     * @return true if no limit to the number of parallel threads is set or the
+     * number of running threads is below the limit, false otherwise.
      */
-    public boolean isNewThreadAllowed(){
-        if ((boolean) this.tokenSim.preferences.get("LimitMaxThreads")){
-            if(this.nrOfRunningThreads >= (int) this.tokenSim.preferences.get("MaxThreadsNr")){
+    public boolean isNewThreadAllowed() {
+        if ((boolean) this.tokenSim.preferences.get("LimitMaxThreads")) {
+            if (this.nrOfRunningThreads >= (int) this.tokenSim.preferences.get("MaxThreadsNr")) {
                 return false;
             }
         }
         return true;
     }
-    
+
     /**
      * Signalize that the new simulation thread of the fast mode has started.
      */
-    public void registerNewThread(){
+    public void registerNewThread() {
         this.nrOfRunningThreads++;
     }
-    
+
     /**
      * Signalize that a simulation thread of the fast mode has stopped.
      */
-    public void checkOutRunningThread(){
+    public void checkOutRunningThread() {
         this.nrOfRunningThreads--;
     }
 }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import java.awt.BasicStroke;
@@ -19,7 +18,7 @@ import org.apache.commons.collections15.Transformer;
  *
  * @author Jens Einloft
  */
-public class VertexStrokeTransformer implements Transformer<NetViewerNode, Stroke>{
+public class VertexStrokeTransformer implements Transformer<NetViewerNode, Stroke> {
 
     @Override
     public Stroke transform(NetViewerNode i) {

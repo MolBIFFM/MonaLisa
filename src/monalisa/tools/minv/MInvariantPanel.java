@@ -62,10 +62,10 @@ public class MInvariantPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(calculate));
+                .addComponent(calculate));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(calculate));
+                .addComponent(calculate));
     }
 
     /**
@@ -101,8 +101,9 @@ public class MInvariantPanel extends AbstractToolPanel {
 
     @Override
     public void setActive(Configuration... configs) {
-        if (!isActive())
+        if (!isActive()) {
             setActive(true);
+        }
     }
 
     @Override

@@ -8,7 +8,7 @@
  *
  */
 
-/*
+ /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,8 +37,7 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
-
+ */
 package monalisa.addons.tokensimulator;
 
 import javax.swing.*;
@@ -47,11 +46,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Component to be used as tabComponent;
- * Contains a JLabel to show the text and 
- * a JButton to close the tab it belongs to 
- */ 
+ * Component to be used as tabComponent; Contains a JLabel to show the text and
+ * a JButton to close the tab it belongs to
+ */
 public class FastSimulationTabComponent extends JPanel {
+
     private final JTabbedPane pane;
     private final StochasticSimulator stochSim;
 
@@ -64,7 +63,7 @@ public class FastSimulationTabComponent extends JPanel {
         }
         this.pane = pane;
         setOpaque(false);
-        
+
         //make JLabel read titles from JTabbedPane
         JLabel label = new JLabel() {
             @Override
@@ -76,7 +75,7 @@ public class FastSimulationTabComponent extends JPanel {
                 return null;
             }
         };
-        
+
         add(label);
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
@@ -88,6 +87,7 @@ public class FastSimulationTabComponent extends JPanel {
     }
 
     private class TabButton extends JButton implements ActionListener {
+
         public TabButton() {
             int size = 17;
             setPreferredSize(new Dimension(size, size));
@@ -163,5 +163,3 @@ public class FastSimulationTabComponent extends JPanel {
         }
     };
 }
-
-

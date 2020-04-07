@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -17,9 +16,10 @@ import java.io.PrintWriter;
 import monalisa.Project;
 
 public final class MauritiusMap implements Result {
+
     private static final long serialVersionUID = -8260517639800715422L;
     private final String sourceCode;
-    
+
     public MauritiusMap(String sourceCode) {
         this.sourceCode = sourceCode;
     }

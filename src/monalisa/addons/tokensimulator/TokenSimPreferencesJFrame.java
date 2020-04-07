@@ -30,11 +30,12 @@ import monalisa.util.MonaLisaFileChooser;
  * @author Pavel Balazki.
  */
 public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
+
     //BEGIN VARIABLES DECLARATION
     private TokenSimulator ts;
     /**
-     * Maps a place of PN to the checkbox which represents whether the number of tokens on this
-     * place should be plotted.
+     * Maps a place of PN to the checkbox which represents whether the number of
+     * tokens on this place should be plotted.
      */
     Map<Place, JCheckBox> placesToPlot = new HashMap<>();
     //END VARIABLES DECLARATION
@@ -46,6 +47,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form TokenSimPreferencesJFrame
+     *
      * @param tsN
      */
     public TokenSimPreferencesJFrame(TokenSimulator tsN) {
@@ -72,7 +74,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
             }
         });
 
-        for (Place p : ts.getPetriNet().places()){
+        for (Place p : ts.getPetriNet().places()) {
             JCheckBox cb = new JCheckBox((String) p.getProperty("name"), true);
             this.placesToPlot.put(p, cb);
         }
@@ -261,14 +263,14 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
 
     /**
      * If checked, allow to choose log-file path.
+     *
      * @param evt
      */
     private void createLogJCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createLogJCheckBoxActionPerformed
-        if (this.createLogJCheckBox.isSelected()){
+        if (this.createLogJCheckBox.isSelected()) {
             this.logPathJTextField.setEnabled(true);
             this.logPathBrowseJButton.setEnabled(true);
-        }
-        else{
+        } else {
             this.logPathJTextField.setEnabled(false);
             this.logPathBrowseJButton.setEnabled(false);
         }
@@ -276,6 +278,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
 
     /**
      * Hide the frame without saving any changes
+     *
      * @param evt
      */
     private void cancelJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJButtonActionPerformed
@@ -283,6 +286,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelJButtonActionPerformed
     /**
      * Accept all changes and write them to the preferences-map
+     *
      * @param evt
      */
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
@@ -291,7 +295,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
         this.ts.preferences.put("SaveSnapshots", this.snapshotsCB.isSelected());
         this.ts.preferences.put("EnablePlotting", this.chartPlottingCB.isSelected());
         Map<Place, Boolean> plotPlaces = new HashMap<>();
-        for (Entry<Place, JCheckBox> entr : placesToPlot.entrySet()){
+        for (Entry<Place, JCheckBox> entr : placesToPlot.entrySet()) {
             plotPlaces.put(entr.getKey(), entr.getValue().isSelected());
         }
         this.ts.preferences.put("PlacesToPlot", plotPlaces);
@@ -306,7 +310,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
     private void placesToPlotBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placesToPlotBActionPerformed
         final JFrame frame = new JFrame("Select the places to plot");
         frame.setLayout(new FlowLayout());
-        for (Entry<Place, JCheckBox> entr : this.placesToPlot.entrySet()){
+        for (Entry<Place, JCheckBox> entr : this.placesToPlot.entrySet()) {
             frame.add(entr.getValue());
         }
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -348,7 +352,6 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(TokenSimPreferencesJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

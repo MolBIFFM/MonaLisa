@@ -17,10 +17,11 @@ import monalisa.util.HighQualityRandom;
  * @author Pavel Balazki.
  */
 public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
+
     //BEGIN VARIABLES DECLARATION
     private StochasticTokenSim ts;
     //END VARIABLES DECLARATION
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form StochasticTokenSimPrefPanel
@@ -28,7 +29,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
     private StochasticTokenSimPrefPanel() {
         initComponents();
     }
-    
+
     public StochasticTokenSimPrefPanel(StochasticTokenSim tsN) {
         this.ts = tsN;
         initComponents();

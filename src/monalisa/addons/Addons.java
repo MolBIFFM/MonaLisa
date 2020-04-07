@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons;
 
 import java.util.ArrayList;
@@ -20,6 +19,7 @@ import monalisa.addons.netproperties.NetPropertiesPanel;
 
 /**
  * A list of all available Addons for MonaLisa
+ *
  * @author Jens Einloft
  */
 public class Addons {

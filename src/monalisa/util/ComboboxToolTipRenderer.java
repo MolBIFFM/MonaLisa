@@ -20,6 +20,7 @@ import javax.swing.JList;
  * @author Jens Einloft
  */
 public class ComboboxToolTipRenderer extends DefaultListCellRenderer {
+
     ArrayList tooltips;
 
     @Override

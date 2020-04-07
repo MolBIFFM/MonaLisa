@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.centrality;
 
 import java.io.BufferedWriter;
@@ -23,9 +22,9 @@ import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * Saves all calculated centrality values for places and transitions
+ *
  * @author Lilya Mirzoyan
  */
 public class SaveResults {
@@ -51,7 +50,7 @@ public class SaveResults {
 
         sb.append("\"name\",\"closeness\",\"teccentricity\",\"betweenness\",\"eigenvector\"");
         sb.append(System.getProperty("line.separator"));
-        
+
         // Centralities for places, need to be adjusted for new export
         Collection<Place> places = pnf.places();
         for (Place p : places) {
@@ -65,7 +64,7 @@ public class SaveResults {
         // Removed "if(placeTable.getValueAt(row, column)!= null)" functionality, prefer controlled error over erroneous output
 
         // Centralities for transitions, need to be adjusted for new export
-        Collection<Transition> transitions = pnf.transitions();        
+        Collection<Transition> transitions = pnf.transitions();
         for (Transition t : transitions) {
             sb.append(t.toString()).append(","); // Name
             sb.append(cc.rankingTransitions.get(t.id()).toString()).append(",");
@@ -84,7 +83,8 @@ public class SaveResults {
             try {
                 if (writer != null) {
                     writer.close();
-                }            } catch (IOException ex) {
+                }
+            } catch (IOException ex) {
                 LOGGER.error("Issue while closing writer", ex);
             }
         }

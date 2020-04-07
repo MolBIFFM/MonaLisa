@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -37,47 +36,50 @@ public class PntOutputHandler implements OutputHandler {
     public void save(FileOutputStream fileOutputStream, PetriNet petriNet) {
         LOGGER.info("Exporting Petri net to pnt format");
         int pid = 0;
-        for (Place place : petriNet.places())
+        for (Place place : petriNet.places()) {
             this.placeIds.put(place.id(), pid++);
+        }
 
         int tid = 0;
-        for (Transition transition : petriNet.transitions())
+        for (Transition transition : petriNet.transitions()) {
             this.transitionIds.put(transition.id(), tid++);
+        }
         try (PrintStream formatter = new PrintStream(fileOutputStream)) {
             formatter.printf("P   M   PRE,POST  NETZ %s",
-                petriNet.getValueOrDefault("id", 0));
-            if (petriNet.hasProperty("name"))
+                    petriNet.getValueOrDefault("id", 0));
+            if (petriNet.hasProperty("name")) {
                 formatter.printf(":%s", petriNet.getProperty("name"));
+            }
             formatter.println();
 
             // Net structure section.
-
             for (Entry<Place, Long> mark : petriNet.marking().entrySet()) {
                 Place place = mark.getKey();
                 formatter.printf(" %d %d ", placeId(place), mark.getValue());
 
                 // List of output arcs.
-
                 int transitionCounter = 0;
                 for (Transition transition : place.inputs()) {
                     formatter.print(transitionId(transition));
                     int weight = petriNet.getArc(transition, place).weight();
-                    if (weight != 1)
+                    if (weight != 1) {
                         formatter.printf(": %d", weight);
-                    if(transitionCounter+1 < place.inputs().size())
+                    }
+                    if (transitionCounter + 1 < place.inputs().size()) {
                         formatter.print(' ');
+                    }
                     transitionCounter++;
                 }
 
                 // List of input arcs.
-
                 formatter.print(", ");
 
                 for (Transition transition : place.outputs()) {
                     formatter.print(transitionId(transition));
                     int weight = petriNet.getArc(place, transition).weight();
-                    if (weight != 1)
+                    if (weight != 1) {
                         formatter.printf(": %d", weight);
+                    }
                     formatter.print(' ');
                 }
 
@@ -87,7 +89,6 @@ public class PntOutputHandler implements OutputHandler {
             formatter.println("@");
 
             // Place data section.
-
             formatter.println("place nr.             name capacity time");
 
             String name;
@@ -96,36 +97,39 @@ public class PntOutputHandler implements OutputHandler {
                 formatter.printf("       %d: %s", placeId(place), sanitize(name));
 
                 int capacity = place.getValueOrDefault("capacity", -1);
-                if (capacity == -1)
+                if (capacity == -1) {
                     formatter.print(" oo");
-                else
+                } else {
                     formatter.printf(" %d", capacity);
+                }
 
-                if (place.hasProperty("time"))
+                if (place.hasProperty("time")) {
                     formatter.printf(" %d", place.getValueOrDefault("time", 0));
-                else
+                } else {
                     formatter.print(" 0");
+                }
                 formatter.println();
             }
 
             formatter.println("@");
 
             // Transition data section.
-
             formatter.println("trans nr.             name priority time");
 
             for (Transition transition : petriNet.transitions()) {
                 name = transition.getValueOrDefault("name", "");
                 formatter.printf("       %d: %s", transitionId(transition),
-                    sanitize(name));
-                if (transition.hasProperty("priority"))
+                        sanitize(name));
+                if (transition.hasProperty("priority")) {
                     formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
-                else
+                } else {
                     formatter.print(" 0");
-                if (transition.hasProperty("time"))
+                }
+                if (transition.hasProperty("time")) {
                     formatter.printf(" %d", transition.getValueOrDefault("time", 0));
-                else
+                } else {
                     formatter.print(" 0");
+                }
                 formatter.println();
             }
 
@@ -140,8 +144,9 @@ public class PntOutputHandler implements OutputHandler {
     }
 
     public File checkFileNameForExtension(File file) {
-        if(!"pnt".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".pnt");
+        if (!"pnt".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".pnt");
+        }
         return file;
     }
 

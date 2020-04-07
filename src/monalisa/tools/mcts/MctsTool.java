@@ -7,14 +7,11 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.mcts;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.swing.*;
 
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
@@ -59,18 +56,18 @@ public final class MctsTool extends AbstractTool {
         boolean includeTrivialInvariants = config.hasTrivialTInvariants();
         boolean supportOriented = !config.isStrong();
         TInvariants allTinvariants = project.getToolManager().getResult(
-            TInvariantTool.class, new TInvariantsConfiguration());
+                TInvariantTool.class, new TInvariantsConfiguration());
         List<TInvariant> tinvariants = new ArrayList<>(
-            includeTrivialInvariants ? allTinvariants :
-                allTinvariants.nonTrivialTInvariants());
+                includeTrivialInvariants ? allTinvariants
+                        : allTinvariants.nonTrivialTInvariants());
         List<Transition> transitions = sortedTransitions(project.getPNFacade());
 
         int[][] matrix = InvariantStatistics.calculateMatrixTInvariant2TransitionOccurrence(
-            tinvariants, transitions);
-        List<TInvariant> mcts = supportOriented ?
-            InvariantStatistics.getSupportMCTset(matrix, transitions, tinvariants, project.getPNFacade()) :
-            InvariantStatistics.getStrongMCTset(matrix, transitions, tinvariants, project.getPNFacade());
-        if(mcts != null) {
+                tinvariants, transitions);
+        List<TInvariant> mcts = supportOriented
+                ? InvariantStatistics.getSupportMCTset(matrix, transitions, tinvariants, project.getPNFacade())
+                : InvariantStatistics.getStrongMCTset(matrix, transitions, tinvariants, project.getPNFacade());
+        if (mcts != null) {
             addResult(config, new Mcts(mcts));
         }
         LOGGER.info("Successfully computed MCTSets");
@@ -78,6 +75,7 @@ public final class MctsTool extends AbstractTool {
 
     /**
      * For Manatees
+     *
      * @param includeTrivialInvariants
      * @param supportOriented
      * @return
@@ -85,14 +83,14 @@ public final class MctsTool extends AbstractTool {
     public List<TInvariant> computeMCTSets(TInvariants allTinvariants, PetriNetFacade pnf, boolean includeTrivialInvariants) {
         LOGGER.info("Computing MCTSets for Manatees");
         List<TInvariant> tinvariants = new ArrayList<>(
-            includeTrivialInvariants ? allTinvariants :
-                allTinvariants.nonTrivialTInvariants());
+                includeTrivialInvariants ? allTinvariants
+                        : allTinvariants.nonTrivialTInvariants());
         List<Transition> transitions = sortedTransitions(pnf);
 
         int[][] matrix = InvariantStatistics.calculateMatrixTInvariant2TransitionOccurrence(tinvariants, transitions);
         List<TInvariant> mcts = InvariantStatistics.getSupportMCTset(matrix, transitions, tinvariants, pnf);
         LOGGER.info("Successfully computed MCTSets for Manatess");
-        if(mcts != null) {
+        if (mcts != null) {
             return mcts;
         }
 

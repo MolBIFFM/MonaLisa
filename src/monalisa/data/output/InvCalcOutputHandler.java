@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -26,9 +24,11 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 public final class InvCalcOutputHandler {
+
     private final Map<Integer, Integer> placeIds;
     private final Map<Integer, Integer> transitionIds;
     private static final Logger LOGGER = LogManager.getLogger(InvCalcOutputHandler.class);
+
     /**
      * For internal use only.
      */
@@ -44,36 +44,38 @@ public final class InvCalcOutputHandler {
         PrintStream formatter = new PrintStream(out);
 
         formatter.printf("P   M   PRE,POST  NETZ %s",
-            petriNet.getValueOrDefault("id", 0));
-        if (petriNet.hasProperty("name"))
+                petriNet.getValueOrDefault("id", 0));
+        if (petriNet.hasProperty("name")) {
             formatter.printf(":%s", petriNet.getProperty("name"));
+        }
         formatter.println();
 
         // Net structure section.
-
         for (Entry<Place, Long> mark : petriNet.marking().entrySet()) {
             Place place = mark.getKey();
             formatter.printf("  %d %d ", placeId(place), mark.getValue());
 
             // List of output arcs.
-            for(Transition transition : place.inputs()) {
+            for (Transition transition : place.inputs()) {
                 formatter.print(transitionId(transition));
                 int weight = petriNet.getArc(transition, place).weight();
-                if (weight != 1)
+                if (weight != 1) {
                     formatter.printf(": %d", weight);
+                }
                 formatter.print(' ');
             }
 
             // List of input arcs.
-
-            if (!place.outputs().isEmpty())
+            if (!place.outputs().isEmpty()) {
                 formatter.print(", ");
+            }
 
             for (Transition transition : place.outputs()) {
                 formatter.print(transitionId(transition));
                 int weight = petriNet.getArc(place, transition).weight();
-                if (weight != 1)
+                if (weight != 1) {
                     formatter.printf(": %d", weight);
+                }
                 formatter.print(' ');
             }
 
@@ -83,43 +85,45 @@ public final class InvCalcOutputHandler {
         formatter.println("@");
 
         // Place data section.
-
         formatter.println("place nr.             name capacity time");
 
         for (Place place : petriNet.places()) {
             formatter.printf("       %d: %s", placeId(place),
-                sanitize(place.getValueOrDefault("name", "")));
+                    sanitize(place.getValueOrDefault("name", "")));
 
             int capacity = place.getValueOrDefault("capacity", -1);
-            if (capacity == -1)
+            if (capacity == -1) {
                 formatter.print(" oo");
-            else
+            } else {
                 formatter.printf(" %d", capacity);
+            }
 
-            if (place.hasProperty("time")){
-                formatter.printf(" %d", place.getValueOrDefault("time", 0));}
-            else
+            if (place.hasProperty("time")) {
+                formatter.printf(" %d", place.getValueOrDefault("time", 0));
+            } else {
                 formatter.print(" 0");
+            }
             formatter.println();
         }
 
         formatter.println("@");
 
         // Transition data section.
-
         formatter.println("trans nr.             name priority time");
 
         for (Transition transition : petriNet.transitions()) {
             formatter.printf("       %d: %s", transitionId(transition),
-                sanitize(transition.<String>getValueOrDefault("name", "")));
-            if (transition.hasProperty("priority"))
+                    sanitize(transition.<String>getValueOrDefault("name", "")));
+            if (transition.hasProperty("priority")) {
                 formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
-            else
+            } else {
                 formatter.print(" 0");
-            if (transition.hasProperty("time"))
+            }
+            if (transition.hasProperty("time")) {
                 formatter.printf(" %d", transition.getValueOrDefault("time", 0));
-            else
+            } else {
                 formatter.print(" 0");
+            }
             formatter.println();
         }
 
@@ -145,8 +149,9 @@ public final class InvCalcOutputHandler {
     }
 
     public File checkFileNameForExtension(File file) {
-        if(!"pnt".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".pnt");
+        if (!"pnt".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".pnt");
+        }
         return file;
     }
 }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import java.awt.Shape;
@@ -17,9 +16,9 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  * control's the shape of vertices
+ *
  * @author Jens Einloft
  */
-
 public class VertexShapeTransformer implements Transformer<NetViewerNode, Shape> {
 
     private NetViewerVertexShapeFactory nodesFactory;
@@ -27,35 +26,34 @@ public class VertexShapeTransformer implements Transformer<NetViewerNode, Shape>
     public VertexShapeTransformer(int size) {
         this.nodesFactory = new NetViewerVertexShapeFactory(size);
     }
-    
+
     public int getSize() {
         return this.nodesFactory.getShapeSize();
     }
-    
-    public void setSize(int size) {        
+
+    public void setSize(int size) {
         this.nodesFactory = new NetViewerVertexShapeFactory(size);
     }
-    
+
     @Override
     public Shape transform(NetViewerNode n) {
         String nodeType = n.getNodeType();
         Shape shape;
 
-        if(nodeType.equalsIgnoreCase(NetViewer.PLACE) || nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
+        if (nodeType.equalsIgnoreCase(NetViewer.PLACE) || nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
             int corners = n.getCorners();
-            if(corners == 0)
+            if (corners == 0) {
                 shape = this.nodesFactory.getEllipse(n);
-            else if(corners >= 3 && corners <= 4)
+            } else if (corners >= 3 && corners <= 4) {
                 shape = this.nodesFactory.getRegularPolygon(n, corners);
-            else if(corners >= 5)
+            } else if (corners >= 5) {
                 shape = this.nodesFactory.getRegularStar(n, corners);
-            else
+            } else {
                 shape = this.nodesFactory.getRegularPolygon(n, 4);
-        }
-        else if(nodeType.equalsIgnoreCase(NetViewer.BEND)) {
+            }
+        } else if (nodeType.equalsIgnoreCase(NetViewer.BEND)) {
             shape = this.nodesFactory.getRegularPolygon(n, 4);
-        }
-        else {
+        } else {
             shape = this.nodesFactory.getRegularPolygon(n, 4);
         }
 

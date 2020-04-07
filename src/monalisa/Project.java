@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa;
 
 import java.io.File;
@@ -32,14 +31,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * A MonaLisa project folder. This saves all the information, configurations
- * and calculated results belonging to a project.
+ * A MonaLisa project folder. This saves all the information, configurations and
+ * calculated results belonging to a project.
  *
  * @author Konrad Rudolph
  * @author Anja Thormann
  * @author Jens Einloft
  */
 public final class Project implements Serializable {
+
     private static final long serialVersionUID = -7900422748294040894L;
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
 
@@ -58,12 +58,14 @@ public final class Project implements Serializable {
 
     private Synchronizer synchronizer;
 
-    private Map<String , Map<String, Object>> addonStorage;
+    private Map<String, Map<String, Object>> addonStorage;
     private ToolManager toolMan;
 
     /**
-     * Create a new Project out of a external file. For the given file the correct file handler is searched.
-     * If no file handler is found an IOException is thrown.
+     * Create a new Project out of a external file. For the given file the
+     * correct file handler is searched. If no file handler is found an
+     * IOException is thrown.
+     *
      * @param petriNetFile The external file that should be loaded
      * @throws IOException
      */
@@ -102,13 +104,14 @@ public final class Project implements Serializable {
 
     /**
      * Create a new Project out of a given Petri net.
+     *
      * @param pn
      */
     private Project(PetriNet pn) {
         LOGGER.info("Creating new project from Petri net.");
         this.petriNet = pn;
         this.addonStorage = new HashMap<>();
-        
+
         this.toolMan = new ToolManager();
 
         this.projectChanged = false;
@@ -119,6 +122,7 @@ public final class Project implements Serializable {
 
     /**
      * Clones a given project. Used for the "Save project as..." function
+     *
      * @param oldProject
      * @param newProjectFile
      */
@@ -135,6 +139,7 @@ public final class Project implements Serializable {
 
     /**
      * Returns the instance of the Synchronizer of the project.
+     *
      * @return
      */
     public Synchronizer getSynchronizer() {
@@ -143,6 +148,7 @@ public final class Project implements Serializable {
 
     /**
      * Returns the Petri net of the project.
+     *
      * @return The instance of the PetriNet class of the project.
      */
     public PetriNet getPetriNet() {
@@ -151,6 +157,7 @@ public final class Project implements Serializable {
 
     /**
      * Returns the path of the file of the project.
+     *
      * @return
      */
     public File getPath() {
@@ -159,6 +166,7 @@ public final class Project implements Serializable {
 
     /**
      * Changes projectPath
+     *
      * @param projectFile new project path.
      */
     public void setPath(File projectFile) {
@@ -166,21 +174,25 @@ public final class Project implements Serializable {
     }
 
     /**
-     * Returns the name of the file of the project. Cuts out the path and the extension of the path.
+     * Returns the name of the file of the project. Cuts out the path and the
+     * extension of the path.
+     *
      * @return
      */
     public String getName() {
-         String dirName;
-        if(projectPath == null)
+        String dirName;
+        if (projectPath == null) {
             dirName = "Empty Project";
-        else
+        } else {
             dirName = projectPath.getName();
+        }
         // Cut file extension.
         return dirName.replace("\\..*$", "");
     }
 
     /**
      * Create a new Project from a Petri net file
+     *
      * @param petriNetFile
      * @return
      * @throws IOException
@@ -192,6 +204,7 @@ public final class Project implements Serializable {
 
     /**
      * Create a new Project from a given Project (Save as...)
+     *
      * @param newProjectFile
      * @param oldProject
      * @return
@@ -204,6 +217,7 @@ public final class Project implements Serializable {
 
     /**
      * Create a new Project Object
+     *
      * @param pn
      * @return
      */
@@ -214,6 +228,7 @@ public final class Project implements Serializable {
 
     /**
      * Saves the whole Project to a given File
+     *
      * @throws IOException
      */
     public void save() throws IOException { // Called on exitApplication, Save as.. and save
@@ -226,6 +241,7 @@ public final class Project implements Serializable {
 
     /**
      * Load a Project from a given File
+     *
      * @param location
      * @return
      * @throws IOException
@@ -255,12 +271,15 @@ public final class Project implements Serializable {
     }
 
     /**
-     * Returns if the project has changed since loading. Changes are events like manipulating the Petri net.
-     * @return Returns <code> true </code> if the projected has changed, otherwise <code> false </code>
+     * Returns if the project has changed since loading. Changes are events like
+     * manipulating the Petri net.
+     *
+     * @return Returns <code> true </code> if the projected has changed,
+     * otherwise <code> false </code>
      */
     public Boolean isProjectChanged() {
         LOGGER.info("Checking whether project has changed");
-        if(projectChanged == null){
+        if (projectChanged == null) {
             LOGGER.info("projectChanged is null, defaulting to true");
             return true;
         }
@@ -270,6 +289,7 @@ public final class Project implements Serializable {
 
     /**
      * Set the "changed" flag of the project.
+     *
      * @param projectChanged
      */
     public void setProjectChanged(Boolean projectChanged) {
@@ -279,8 +299,10 @@ public final class Project implements Serializable {
 
     /**
      * Test whether the entity has a given property.
+     *
      * @param key The key to look for.
-     * @return <code>true</code>, if the key is present, otherwise <code>false</code>.
+     * @return <code>true</code>, if the key is present, otherwise
+     * <code>false</code>.
      */
     public boolean hasProperty(String key) {
         return properties.has(key);
@@ -288,6 +310,7 @@ public final class Project implements Serializable {
 
     /**
      * Retrieve a strongly typed property, based on its key.
+     *
      * @param <T> The type of the property to retrieve.
      * @param key The key of the property.
      * @return The property, cast to type <code>T</code>.
@@ -299,11 +322,12 @@ public final class Project implements Serializable {
 
     /**
      * Removes a property from the properties list
+     *
      * @param key
      */
     public void removeProperty(String key) {
         LOGGER.info("Removing property for key " + key + "if it exists");
-        if(properties.has(key)) {
+        if (properties.has(key)) {
             LOGGER.info(key + "property exists, removing");
             properties.remove(key);
         }
@@ -311,6 +335,7 @@ public final class Project implements Serializable {
 
     /**
      * Retrieve the whole PropertyList
+     *
      * @return The PropertyList of the PetriNetEntity
      */
     public PropertyList getPropertyList() {
@@ -319,6 +344,7 @@ public final class Project implements Serializable {
 
     /**
      * Set a new PropertyList
+     *
      * @param pl
      */
     public void setPropertyList(PropertyList pl) {
@@ -326,19 +352,20 @@ public final class Project implements Serializable {
     }
 
     /**
-     * Retrieve a strongly typed property, based on its key.
-     * If the property key doesn't exist, return a default value instead.
+     * Retrieve a strongly typed property, based on its key. If the property key
+     * doesn't exist, return a default value instead.
+     *
      * @param <T> The type of the property to retrieve.
      * @param key The key of the property.
      * @param defaultValue The default value.
-     * @return The property value, if {@code key} exists, else {@code defaultValue}.
+     * @return The property value, if {@code key} exists, else
+     * {@code defaultValue}.
      */
     public <T> T getValueOrDefault(String key, T defaultValue) {
         if (hasProperty(key)) {
             LOGGER.info("Getting property for " + key);
-            return (T)getProperty(key);
-        }
-        else {
+            return (T) getProperty(key);
+        } else {
             LOGGER.warn("No property for " + key + "found, returning default value");
             return defaultValue;
         }
@@ -346,19 +373,22 @@ public final class Project implements Serializable {
 
     /**
      * Add a property to the Petri net entity.
+     *
      * @param <T> The type of the property.
      * @param key The key of the property.
      * @param value The property.
      */
     public <T> void putProperty(String key, T value) {
-        if(key.equals("name"))
-            value = (T)((String)value).replace(" ", "_");
+        if (key.equals("name")) {
+            value = (T) ((String) value).replace(" ", "_");
+        }
         LOGGER.info("Adding value for " + key);
         properties.put(key, value);
     }
 
     /**
      * Returns a facade for the current PetriNet object.
+     *
      * @return The Facade object
      */
     public PetriNetFacade getPNFacade() {
@@ -367,13 +397,14 @@ public final class Project implements Serializable {
 
     /**
      * Getter for project's ToolManager.
+     *
      * @return the project's ToolManager.
      */
-    public ToolManager getToolManager(){
+    public ToolManager getToolManager() {
         return toolMan;
     }
 
-    public Map<String , Map<String, Object>> getStorage() {
+    public Map<String, Map<String, Object>> getStorage() {
         return addonStorage;
     }
 
@@ -383,6 +414,7 @@ public final class Project implements Serializable {
 
     /**
      * Function is called, if a project is loaded.
+     *
      * @param objectInput
      * @throws IOException
      * @throws ClassNotFoundException
@@ -392,13 +424,13 @@ public final class Project implements Serializable {
         objectInput.defaultReadObject();
 
         // Short workaround for older versions.
-        if(addonStorage == null) {
+        if (addonStorage == null) {
             LOGGER.warn("Workaround for older versions, creating new HashMap");
             addonStorage = new HashMap<>();
         }
 
         // Workaround for older projects
-        if(synchronizer == null) {
+        if (synchronizer == null) {
             LOGGER.warn("Workaround for older projects, creating new Synchronizer");
             synchronizer = new Synchronizer(petriNet);
         }

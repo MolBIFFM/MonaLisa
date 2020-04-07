@@ -14,20 +14,20 @@ import org.apache.logging.log4j.Logger;
  * @author daniel
  */
 public class MinvWrapper {
+
     private final MInvariant minv;
     private String name;
     private static final Logger LOGGER = LogManager.getLogger(TinvWrapper.class);
 
-    
     public MinvWrapper(MInvariant input, String TinvType) {
         this.minv = input;
         this.name = TinvType;
-        LOGGER.debug("Created new MinvWrapper " + (this.minv.id()+1)+" ("+this.minv.size()+")");
+        LOGGER.debug("Created new MinvWrapper " + (this.minv.id() + 1) + " (" + this.minv.size() + ")");
     }
-    
+
     public MinvWrapper(MInvariant input) {
         this.minv = input;
-        LOGGER.debug("Created new MinvWrapper " + (this.minv.id()+1)+" ("+this.minv.size()+")");
+        LOGGER.debug("Created new MinvWrapper " + (this.minv.id() + 1) + " (" + this.minv.size() + ")");
     }
 
     public MInvariant getMinv() {
@@ -36,10 +36,10 @@ public class MinvWrapper {
 
     @Override
     public String toString() {
-        if(this.minv.id() >= 0)
-            return "Manatee Invariant "+(this.minv.id()+1)+" ("+this.minv.size()+")";
-        else
+        if (this.minv.id() >= 0) {
+            return "Manatee Invariant " + (this.minv.id() + 1) + " (" + this.minv.size() + ")";
+        } else {
             return name;
+        }
     }
 }
-

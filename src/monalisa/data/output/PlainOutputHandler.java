@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -34,20 +33,22 @@ public class PlainOutputHandler implements OutputHandler {
         try (PrintStream ps = new PrintStream(fos)) {
             int i, weight, nbr;
             String name;
-            for(Transition t : pn.transitions()) {
+            for (Transition t : pn.transitions()) {
                 name = (String) t.getProperty("name");
-                ps.print(name+": ");
+                ps.print(name + ": ");
 
                 i = 1;
                 nbr = t.inputs().size();
-                for(Place p : t.inputs()) {
+                for (Place p : t.inputs()) {
                     name = (String) p.getProperty("name");
                     weight = pn.getArc(p, t).weight();
-                    if(weight > 1)
-                        ps.print(weight+"*");
+                    if (weight > 1) {
+                        ps.print(weight + "*");
+                    }
                     ps.print(name);
-                    if(i < nbr)
+                    if (i < nbr) {
                         ps.print(" + ");
+                    }
                     i++;
                 }
 
@@ -55,20 +56,22 @@ public class PlainOutputHandler implements OutputHandler {
 
                 i = 1;
                 nbr = t.outputs().size();
-                for(Place p : t.outputs()) {
+                for (Place p : t.outputs()) {
                     name = (String) p.getProperty("name");
                     weight = pn.getArc(t, p).weight();
-                    if(weight > 1)
-                        ps.print(weight+"*");
+                    if (weight > 1) {
+                        ps.print(weight + "*");
+                    }
                     ps.print(name);
-                    if(i < nbr)
+                    if (i < nbr) {
                         ps.print(" + ");
+                    }
                     i++;
                 }
 
                 ps.print("\n");
             }
-        LOGGER.info("Successfully exported Petri net in plain format");
+            LOGGER.info("Successfully exported Petri net in plain format");
         }
     }
 
@@ -78,11 +81,11 @@ public class PlainOutputHandler implements OutputHandler {
     }
 
     public File checkFileNameForExtension(File file) {
-        if(!"txt".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".txt");
+        if (!"txt".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".txt");
+        }
         return file;
     }
-
 
     public String getExtension() {
         return "txt";

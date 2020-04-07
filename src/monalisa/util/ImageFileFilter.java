@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.io.File;
@@ -15,35 +14,39 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * File filter for image export
+ *
  * @author Jens Einloft
  */
 public class ImageFileFilter extends FileFilter {
-        private final String extension;
 
-        public ImageFileFilter(String extension) {
-            this.extension = extension;
-        }
+    private final String extension;
 
-        public File checkFileNameForExtension(File file) {
-            if(!extension.equalsIgnoreCase(FileUtils.getExtension(file)))
-                file = new File(file.getAbsolutePath()+"."+extension);
-            return file;
-        }
+    public ImageFileFilter(String extension) {
+        this.extension = extension;
+    }
 
-        public String getExtension() {
-            return extension;
+    public File checkFileNameForExtension(File file) {
+        if (!extension.equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + "." + extension);
         }
+        return file;
+    }
 
-        @Override
-        public String getDescription() {
-            return "*."+extension;
-        }
+    public String getExtension() {
+        return extension;
+    }
 
-        @Override
-        public boolean accept(File f) {
-            if(f.isDirectory() || extension.equalsIgnoreCase(FileUtils.getExtension(f)))
-                return true;
-            else
-                return false;
+    @Override
+    public String getDescription() {
+        return "*." + extension;
+    }
+
+    @Override
+    public boolean accept(File f) {
+        if (f.isDirectory() || extension.equalsIgnoreCase(FileUtils.getExtension(f))) {
+            return true;
+        } else {
+            return false;
         }
+    }
 }

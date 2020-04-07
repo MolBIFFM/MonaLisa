@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import monalisa.data.pn.Transition;
@@ -17,21 +16,22 @@ import monalisa.resources.StringResources;
  *
  * @author Jens Einloft
  */
-public class McsConfiguration implements Configuration {    
+public class McsConfiguration implements Configuration {
+
     private static final long serialVersionUID = 3532262047201708171L;
-    
+
     private final Transition objective;
     private final int maxCutSetSize;
-    
+
     public McsConfiguration(Transition objective, int maxCutSetSize) {
-        this.objective = objective;        
+        this.objective = objective;
         this.maxCutSetSize = maxCutSetSize;
     }
-    
+
     public Transition getObjective() {
         return this.objective;
     }
-    
+
     @Override
     public Boolean isExportable() {
         return true;
@@ -45,7 +45,7 @@ public class McsConfiguration implements Configuration {
     @Override
     public String toString(StringResources strings) {
         return strings.get(toString());
-    }   
+    }
 
     @Override
     public int hashCode() {
@@ -60,10 +60,10 @@ public class McsConfiguration implements Configuration {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        
-        final McsConfiguration other = (McsConfiguration) obj;        
-        return this.getMaxCutSetSize() == other.getMaxCutSetSize() && this.objective.equals(other.objective);                
-    }           
+
+        final McsConfiguration other = (McsConfiguration) obj;
+        return this.getMaxCutSetSize() == other.getMaxCutSetSize() && this.objective.equals(other.objective);
+    }
 
     /**
      * @return the maxCutSetSize

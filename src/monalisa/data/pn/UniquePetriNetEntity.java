@@ -7,34 +7,34 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.pn;
 
 /**
  * A Petri net entity that is identifiable by some unique identifier.
- * 
- * Unique entities may be used meaningfully in equality comparisons, and as
- * keys in mapping relations.
- * Notice that the object <em>must</em> have a unique identifier, or else using
- * it may result in undefined behavior.
+ *
+ * Unique entities may be used meaningfully in equality comparisons, and as keys
+ * in mapping relations. Notice that the object <em>must</em> have a unique
+ * identifier, or else using it may result in undefined behavior.
+ *
  * @author Konrad Rudolph
  */
 public abstract class UniquePetriNetEntity extends AbstractPetriNetEntity {
+
     private static final long serialVersionUID = 2189444289799672226L;
 
     protected UniquePetriNetEntity(int id) {
         putProperty("id", id);
     }
-    
+
     protected UniquePetriNetEntity(UniquePetriNetEntity other) {
         super(other);
         putProperty("id", other.id());
     }
-    
+
     public int id() {
-        return ((Integer)getProperty("id"));
+        return ((Integer) getProperty("id"));
     }
-    
+
     @Override
     public int hashCode() {
         return id();
@@ -49,8 +49,9 @@ public abstract class UniquePetriNetEntity extends AbstractPetriNetEntity {
             return false;
         }
         final UniquePetriNetEntity other = (UniquePetriNetEntity) obj;
-        if (id() != ((UniquePetriNetEntity) obj).id())
+        if (id() != ((UniquePetriNetEntity) obj).id()) {
             return false;
+        }
         return true;
     }
 }

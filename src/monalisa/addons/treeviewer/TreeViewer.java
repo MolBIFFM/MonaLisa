@@ -70,6 +70,7 @@ public final class TreeViewer extends MonaLisaFrame {
 
     /**
      * Creates new form TreeViewer
+     *
      * @param project
      */
     public TreeViewer(Project project) {
@@ -85,7 +86,7 @@ public final class TreeViewer extends MonaLisaFrame {
         for (Map.Entry<Configuration, Result> entry : this.project.getToolManager().getResults(ClusterTool.class).entrySet()) {
             config = (ClusterConfiguration) entry.getKey();
             try {
-                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)),  config));
+                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)), config));
             } catch (ClassCastException e) {
                 LOGGER.error("Issue while initializing TreeViewer: ", e);
             }
@@ -372,8 +373,8 @@ public final class TreeViewer extends MonaLisaFrame {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * redraw changes the look of the tree, without changing the structure or the
-     * order of the tree
+     * redraw changes the look of the tree, without changing the structure or
+     * the order of the tree
      *
      * @param layout
      * @param clusterTreeImpl

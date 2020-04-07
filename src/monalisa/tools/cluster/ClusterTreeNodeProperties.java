@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.cluster;
 
 import de.molbi.mjcl.clustering.ds.Properties;
@@ -22,15 +21,15 @@ import monalisa.data.pn.TInvariant;
 public class ClusterTreeNodeProperties extends Properties {
 
     List<TInvariant> tinvs;
-    
+
     public ClusterTreeNodeProperties(TInvariant... tinvs) {
-        super();       
-        
+        super();
+
         this.tinvs = Arrays.asList(tinvs);
-    }       
-    
+    }
+
     public List<TInvariant> getTinvs() {
         return this.tinvs;
     }
-    
+
 }

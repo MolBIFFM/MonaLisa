@@ -14,37 +14,41 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * File filter
+ *
  * @author Jens Einloft
  */
 public class MonaLisaFileFilter extends FileFilter {
-        private final String extension;
-        private final String description;
 
-        public MonaLisaFileFilter(String extension, String description) {
-            this.extension = extension;
-            this.description = description;
-        }
+    private final String extension;
+    private final String description;
 
-        public File checkFileNameForExtension(File file) {
-            if(!extension.equalsIgnoreCase(FileUtils.getExtension(file)))
-                file = new File(file.getAbsolutePath()+"."+extension);
-            return file;
-        }
+    public MonaLisaFileFilter(String extension, String description) {
+        this.extension = extension;
+        this.description = description;
+    }
 
-        public String getExtension() {
-            return extension;
+    public File checkFileNameForExtension(File file) {
+        if (!extension.equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + "." + extension);
         }
+        return file;
+    }
 
-        @Override
-        public String getDescription() {
-            return "*."+extension+" ("+description+")";
-        }
+    public String getExtension() {
+        return extension;
+    }
 
-        @Override
-        public boolean accept(File f) {
-            if(f.isDirectory() || extension.equalsIgnoreCase(FileUtils.getExtension(f)))
-                return true;
-            else
-                return false;
+    @Override
+    public String getDescription() {
+        return "*." + extension + " (" + description + ")";
+    }
+
+    @Override
+    public boolean accept(File f) {
+        if (f.isDirectory() || extension.equalsIgnoreCase(FileUtils.getExtension(f))) {
+            return true;
+        } else {
+            return false;
         }
+    }
 }

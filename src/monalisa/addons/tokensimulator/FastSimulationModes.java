@@ -36,7 +36,7 @@ import org.apache.logging.log4j.LogManager;
  * @author jens
  */
 public class FastSimulationModes extends MonaLisaFrame {
-    
+
     private GillespieTokenSim ts;
     private final ArrayList<StochasticSimulator> fastSimModes;
     private static final Logger LOGGER = LogManager.getLogger(FastSimulationModes.class);
@@ -50,7 +50,7 @@ public class FastSimulationModes extends MonaLisaFrame {
         this.setTitle("Fast Simulation Mode");
         initComponents();
     }
-    
+
     public FastSimulationModes(GillespieTokenSim tsN) {
         super();
         this.setTitle("Fast Simulation Mode");
@@ -58,7 +58,7 @@ public class FastSimulationModes extends MonaLisaFrame {
         initComponents();
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.ts = tsN;
-        
+
         this.simulationPane.addTab("", null);
         FlowLayout f = new FlowLayout(FlowLayout.CENTER, 5, 0);
 
@@ -71,17 +71,17 @@ public class FastSimulationModes extends MonaLisaFrame {
         addTabButton.setBorder(null);
         addTabButton.setContentAreaFilled(false);
         addTabButton.setFocusPainted(false);
-        
+
         addTabButton.setFocusable(false);
-        
+
         addTabbPane.add(addTabButton);
-        
+
         this.simulationPane.setTabComponentAt(this.simulationPane.getTabCount() - 1, addTabbPane);
-        
+
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ts.fastSimFrame.addFastSim(new StochasticSimulator(ts, ts.deterministicReactionConstants, ts.tokenSim.getMarking(), ts.volume, ts.random));                
+                ts.fastSimFrame.addFastSim(new StochasticSimulator(ts, ts.deterministicReactionConstants, ts.tokenSim.getMarking(), ts.volume, ts.random));
             }
         };
         addTabButton.setFocusable(false);
@@ -90,7 +90,7 @@ public class FastSimulationModes extends MonaLisaFrame {
 
         /*
          * Add listener for close operation - all running threads should be ended before exiting
-         */        
+         */
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

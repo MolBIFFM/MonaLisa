@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa;
 
 import java.awt.Color;
@@ -17,12 +16,12 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  *
  * This file is part of MonaLisa.
  *
- * Implements a static class that manages program settings. It supports loading them from and saving them to a text file in 'key = value' format.
+ * Implements a static class that manages program settings. It supports loading
+ * them from and saving them to a text file in 'key = value' format.
  *
  * @author Tim Schaefer
  * @author Jens Einloft
@@ -30,14 +29,18 @@ import org.apache.logging.log4j.Logger;
 public class Settings {
 
     private static final Logger LOGGER = LogManager.getLogger(Settings.class);
-    /** The settings which are currently in use. */
+    /**
+     * The settings which are currently in use.
+     */
     static private Properties cfg;
 
-    /** The default settings. */
+    /**
+     * The default settings.
+     */
     static private Properties def;
 
-    private static final String defaultFile = System.getProperty("user.home")+"/.monalisaSettings";
-    private static final String configFile = System.getProperty("user.home")+"/.monalisaSettings";
+    private static final String defaultFile = System.getProperty("user.home") + "/.monalisaSettings";
+    private static final String configFile = System.getProperty("user.home") + "/.monalisaSettings";
 
     public static void init() {
         LOGGER.info("Initializing settings");
@@ -48,8 +51,10 @@ public class Settings {
     }
 
     /**
-     * Loads the properties from the file 'file'. Should be called at the start of main to init the settings. These default
-     * values could then be overwritten by command line arguments.
+     * Loads the properties from the file 'file'. Should be called at the start
+     * of main to init the settings. These default values could then be
+     * overwritten by command line arguments.
+     *
      * @param file the configuration file to load
      * @return whether the settings could be loaded from the specified file
      */
@@ -67,18 +72,18 @@ public class Settings {
             }
             res = true;
         } catch (Exception e) {
-            LOGGER.warn("Could not load settings from properties file '" + configFile + "'." );
+            LOGGER.warn("Could not load settings from properties file '" + configFile + "'.");
             res = false;
         }
 
-        LOGGER.info("Loaded " + cfg.size() + " settings from properties file '" + configFile + "'." );
+        LOGGER.info("Loaded " + cfg.size() + " settings from properties file '" + configFile + "'.");
 
-        return(res);
+        return (res);
     }
 
-
     /**
-     * Deletes all currently loaded properties. Note that the settings file is NOT deleted or emptied (unless you call writeToFile() afterwards).
+     * Deletes all currently loaded properties. Note that the settings file is
+     * NOT deleted or emptied (unless you call writeToFile() afterwards).
      */
     public static void empty() {
         LOGGER.warn("Deleting currently loaded properties");
@@ -86,7 +91,8 @@ public class Settings {
     }
 
     /**
-     * Deletes all default properties. Note that the settings file is NOT deleted or emptied (unless you call writeToFile() afterwards).
+     * Deletes all default properties. Note that the settings file is NOT
+     * deleted or emptied (unless you call writeToFile() afterwards).
      */
     public static void defEmpty() {
         LOGGER.warn("Deleting default properties");
@@ -95,6 +101,7 @@ public class Settings {
 
     /**
      * Reloads the settings from the default settings.
+     *
      * @return always true
      */
     public static Boolean resetAll() {
@@ -104,17 +111,17 @@ public class Settings {
         LOGGER.info("Creating deep copy of default to assign to settings");
         // make a deep copy of the default settings and assign it to cfg
         for (Map.Entry<Object, Object> entry : def.entrySet()) {
-            String key = (String)entry.getKey();
-            String value = (String)entry.getValue();
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
             cfg.setProperty(key, value);
         }
         LOGGER.info("Successfully reset all properties to default");
-        return(true);
+        return (true);
     }
-
 
     /**
      * Resets all properties to the default values.
+     *
      * @return always true
      */
     public static Boolean setDefaults() {
@@ -197,53 +204,58 @@ public class Settings {
 
         defSet("latestDirectory", "");
         LOGGER.info("Finished setting properties to default values");
-        return(true);
+        return (true);
     }
 
-
     /**
-     * Tries to set the key 'key' in the currently used settings to the default value.
+     * Tries to set the key 'key' in the currently used settings to the default
+     * value.
+     *
      * @param key the key to set from the defaults
-     * @return true if it worked out, i.e., such a key exists in the default settings and it was used. False if no such key exists in the default settings hashmap.
+     * @return true if it worked out, i.e., such a key exists in the default
+     * settings and it was used. False if no such key exists in the default
+     * settings hashmap.
      */
     public static Boolean initSingleSettingFromDefault(String key) {
-        if(defContains(key)) {
+        if (defContains(key)) {
             LOGGER.info("Setting property for " + key + "to default value");
             cfg.setProperty(key, def.getProperty(key));
-            return(true);
-        }
-        else {
+            return (true);
+        } else {
             LOGGER.error("No default value found for key " + key);
-            return(false);
+            return (false);
         }
     }
 
     public static void setColorOption(String key, Color value) throws FileNotFoundException, IOException {
         LOGGER.info("Setting color properties for RGB");
-        cfg.setProperty(key+"R", (new Integer(value.getRed())).toString());
-        cfg.setProperty(key+"G", (new Integer(value.getGreen())).toString());
-        cfg.setProperty(key+"B", (new Integer(value.getBlue())).toString());
+        cfg.setProperty(key + "R", (new Integer(value.getRed())).toString());
+        cfg.setProperty(key + "G", (new Integer(value.getGreen())).toString());
+        cfg.setProperty(key + "B", (new Integer(value.getBlue())).toString());
     }
 
     /**
-     * Creates a new config file in the default location and fills it with the default values defined in the resetAll() function.
+     * Creates a new config file in the default location and fills it with the
+     * default values defined in the resetAll() function.
+     *
      * @return true if it worked out, false otherwise
      */
     public static Boolean createDefaultConfigFile() {
         LOGGER.info("Trying to create new config file with default values");
-        if(resetAll()) {
-            if(writeToFile(defaultFile)) {
+        if (resetAll()) {
+            if (writeToFile(defaultFile)) {
                 LOGGER.info("Successfully created new config file with default values");
-                return(true);
+                return (true);
             }
         }
         LOGGER.error("Failed to create new config file with default values");
-        return(false);
+        return (false);
     }
 
-
     /**
-     * Tries to cast the value of the property key 'key' to Integer and return it. If this fails it is considered a fatal error.
+     * Tries to cast the value of the property key 'key' to Integer and return
+     * it. If this fails it is considered a fatal error.
+     *
      * @param key the key of the properties hashmap
      * @return the value of the key as an Integer
      */
@@ -254,34 +266,35 @@ public class Settings {
 
         try {
             i = Integer.valueOf(s);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.fatal("Could not load setting '" + key + "' from settings as an Integer, invalid format.");
             System.exit(1);
         }
         LOGGER.debug("Successfully cast '" + key + "' to Integer");
-        return(i);
+        return (i);
     }
 
-
-
     /**
-     * Determines whether the key 'key' in the currently used settings is at the default setting.
-     * @return true if it is in default setting, false if this setting has been changed by the user (via command line or config file)
+     * Determines whether the key 'key' in the currently used settings is at the
+     * default setting.
+     *
+     * @return true if it is in default setting, false if this setting has been
+     * changed by the user (via command line or config file)
      */
     public static Boolean isAtDefaultSetting(String key) {
         LOGGER.info("Checking whether value for '" + key + "' equals default value");
-        if(get(key).equals(defGet(key))) {
+        if (get(key).equals(defGet(key))) {
             LOGGER.info("Value for " + key + " matches default value");
-            return(true);
+            return (true);
         }
         LOGGER.info("Value for '" + key + "' doesn't match default value");
-        return(false);
+        return (false);
     }
 
-
     /**
-     * Tries to cast the value of the property key 'key' to Float and return it. If this fails it is considered a fatal error.
+     * Tries to cast the value of the property key 'key' to Float and return it.
+     * If this fails it is considered a fatal error.
+     *
      * @param key the key of the properties hashmap
      * @return the value of the key as a Float
      */
@@ -292,19 +305,19 @@ public class Settings {
 
         try {
             f = Float.valueOf(s);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.fatal("Could not load setting '" + key + "' from settings as a float, invalid format.");
             System.exit(1);
         }
         LOGGER.debug("Successfully cast '" + key + "' to Float");
-        return(f);
+        return (f);
     }
 
-
     /**
-     * Tries to extract the value of the property key 'key' as a Boolean and return it. If this fails it is considered a fatal error.
-     * The only accepted string representations of Booleans are "true" and "false".
+     * Tries to extract the value of the property key 'key' as a Boolean and
+     * return it. If this fails it is considered a fatal error. The only
+     * accepted string representations of Booleans are "true" and "false".
+     *
      * @param key the key of the properties hashmap
      * @return the value of the key as a Boolean
      */
@@ -317,40 +330,42 @@ public class Settings {
         switch (s.toLowerCase()) {
             case "true":
                 LOGGER.debug("Successfully cast '" + key + "' to Boolean");
-                return(true);
+                return (true);
             case "false":
                 LOGGER.debug("Successfully cast '" + key + "' to Boolean");
-                return(false);
+                return (false);
             default:
                 LOGGER.fatal("Could not load setting '" + key + "' from settings as a boolean, invalid format.");
                 System.exit(1);
-                return(false);
+                return (false);
         }
     }
 
     /**
-     * Tries to extract the value of the property key 'key' as a Color and return it. If this fails it is considered a fatal error.
+     * Tries to extract the value of the property key 'key' as a Color and
+     * return it. If this fails it is considered a fatal error.
+     *
      * @param key the key of the properties hashmap
      * @return the value of the key as a Color
      */
     public static Color getAsColor(String key) {
         LOGGER.debug("Casting '" + key + "' to Color");
         try {
-            return new Color( Integer.parseInt((String) get(key+"R")) , Integer.parseInt((String) get(key+"G")), Integer.parseInt((String) get(key+"B")));
-        }
-        catch(NullPointerException e) {
+            return new Color(Integer.parseInt((String) get(key + "R")), Integer.parseInt((String) get(key + "G")), Integer.parseInt((String) get(key + "B")));
+        } catch (NullPointerException e) {
             LOGGER.fatal("Could not load setting '" + key + "' from settings as a Color, invalid format.");
             System.exit(1);
             return Color.BLACK; // Never reached because of System.exit(1), compiler needs it
         }
-     }
+    }
 
     /**
      * Returns the path to the currently used config file as a String.
+     *
      * @return The config file path.
      */
     public static String getConfigFile() {
-        return(configFile);
+        return (configFile);
     }
 
     /**
@@ -360,12 +375,11 @@ public class Settings {
         LOGGER.debug("Printing all " + cfg.size() + " settings");
 
         for (Object key : cfg.keySet()) {
-            LOGGER.info((String)key + "=" + cfg.get(key));
+            LOGGER.info((String) key + "=" + cfg.get(key));
         }
 
         LOGGER.debug("Printing of all " + cfg.size() + " settings done.");
     }
-
 
     /**
      * Prints all settings to STDOUT.
@@ -374,65 +388,68 @@ public class Settings {
         LOGGER.debug("Printing all " + def.size() + " default settings.");
 
         for (Object key : def.keySet()) {
-            LOGGER.info((String)key + "=" + def.get(key));
+            LOGGER.info((String) key + "=" + def.get(key));
         }
 
         LOGGER.debug("Printing of all " + def.size() + " default settings done.");
     }
 
-
-
     /**
-     * Retrieves the setting with key 'key' from the settings and returns it as a String. Note that it is considered a fatal error if no such key exists. Ask first using 'contains()' if you're not sure. :)
+     * Retrieves the setting with key 'key' from the settings and returns it as
+     * a String. Note that it is considered a fatal error if no such key exists.
+     * Ask first using 'contains()' if you're not sure. :)
+     *
      * @param key the key to get
      * @return the value of the specified key
      */
     public static String get(String key) {
         LOGGER.debug("Trying to return key '" + key + "' as String");
-        if(cfg.containsKey(key)) {
+        if (cfg.containsKey(key)) {
             LOGGER.debug("Key '" + key + "' found, returning as String.");
-            return((String)cfg.getProperty(key));
-        }
-        else {
+            return ((String) cfg.getProperty(key));
+        } else {
             LOGGER.warn("Setting '" + key + "' not defined in config file. Trying internal default.");
 
-            if(initSingleSettingFromDefault(key)) {
+            if (initSingleSettingFromDefault(key)) {
                 String s = defGet(key);
                 cfg.put(key, s);
                 writeToFile(configFile);
                 LOGGER.warn("Using internal default value '" + s + "' for setting '" + key + "'. Edit config file to override.");
-                return(s);
+                return (s);
             } else {
                 LOGGER.fatal("No config file or default value for setting '" + key + "' exists, setting invalid.");
                 System.exit(1);
-                return("ERROR");    // Never reached because of System.exit(1), compiler needs it
+                return ("ERROR");    // Never reached because of System.exit(1), compiler needs it
             }
         }
 
     }
 
     /**
-     * Retrieves the setting with key 'key' from the default settings and returns it as a String. Note that it is considered a fatal error if no such key exists. Ask first using 'contains()' if you're not sure. :)
+     * Retrieves the setting with key 'key' from the default settings and
+     * returns it as a String. Note that it is considered a fatal error if no
+     * such key exists. Ask first using 'contains()' if you're not sure. :)
+     *
      * @param key the key to get
      * @return the value of the specified key
      */
     public static String defGet(String key) {
         LOGGER.debug("Trying to return default value for key '" + key + "' as a String");
-        if(def.containsKey(key)) {
+        if (def.containsKey(key)) {
             LOGGER.debug("Default value found, returning as a String");
-            return((String)def.getProperty(key));
-        }
-        else {
+            return ((String) def.getProperty(key));
+        } else {
             LOGGER.error("Could not load default setting '" + key + "' from default settings, no such setting.");
             System.exit(1);
-            return(null);        // never reached, for the IDE
+            return (null);        // never reached, for the IDE
         }
 
     }
 
-
     /**
-     * Adds a setting 'key' with value 'value' to the properties object. If a settings with key 'key' already exists, its value gets overwritten.
+     * Adds a setting 'key' with value 'value' to the properties object. If a
+     * settings with key 'key' already exists, its value gets overwritten.
+     *
      * @param key the key which should be set
      * @param value the value for the entry with the given key
      */
@@ -441,7 +458,9 @@ public class Settings {
     }
 
     /**
-     * Adds a setting 'key' with value 'value' to the default properties object. If a settings with key 'key' already exists, its value gets overwritten.
+     * Adds a setting 'key' with value 'value' to the default properties object.
+     * If a settings with key 'key' already exists, its value gets overwritten.
+     *
      * @param key the key which should be set
      * @param value the value for the entry with the given key
      */
@@ -451,32 +470,38 @@ public class Settings {
 
     /**
      * Determines whether the properties object contains the key 'key'.
+     *
      * @param key the key to check for
      * @return true if it contains such a key, false otherwise
      */
     public static Boolean contains(String key) {
-        return(cfg.containsKey(key));
+        return (cfg.containsKey(key));
     }
 
     /**
      * Determines whether the default properties object contains the key 'key'.
+     *
      * @param key the key to check for
      * @return true if it contains such a key, false otherwise
      */
     public static Boolean defContains(String key) {
-        return(def.containsKey(key));
+        return (def.containsKey(key));
     }
 
     /**
-     * Saves the current properties to the file 'file' or the default file if 'file' is the empty string ("").
-     * @param file the file to write to. If this is the empty String (""), the default file is used instead.
-     * @return True if the file was written successfully, false if an error occurred.
+     * Saves the current properties to the file 'file' or the default file if
+     * 'file' is the empty string ("").
+     *
+     * @param file the file to write to. If this is the empty String (""), the
+     * default file is used instead.
+     * @return True if the file was written successfully, false if an error
+     * occurred.
      */
     public static Boolean writeToFile(String file) {
         LOGGER.info("Writing current properties to file '" + file + "'");
         Boolean res = false;
 
-        if(file.equals("")) {
+        if (file.equals("")) {
             LOGGER.info("Empty filepath, using default path");
             file = defaultFile;
         }
@@ -484,11 +509,11 @@ public class Settings {
         try {
             cfg.store(new FileOutputStream(file), "These are the settings for MonaLisa.");
             res = true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Could not write current properties to file '" + file + "'.");
             res = false;
         }
 
-        return(res);
+        return (res);
     }
 }

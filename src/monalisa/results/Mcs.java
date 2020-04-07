@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jens Einloft
  */
 public class Mcs implements Result {
+
     static final long serialVersionUID = 7539023529715751381L;
 
     private final List<Set<Transition>> mcs;
@@ -45,13 +45,13 @@ public class Mcs implements Result {
     public void export(File path, Configuration config, Project project) throws IOException {
         try (PrintWriter printer = new PrintWriter(path)) {
             LOGGER.info("Exporting MCS results");
-            Map<Transition,Integer> transitionMap = new HashMap<>();
+            Map<Transition, Integer> transitionMap = new HashMap<>();
             StringBuilder sb = new StringBuilder();
 
             // List of all transitions
             sb.append("# reaction_id:name\n");
             int i = 1;
-            for(Transition t : project.getPetriNet().transitions()) {
+            for (Transition t : project.getPetriNet().transitions()) {
                 transitionMap.put(t, i);
                 sb.append(i++);
                 sb.append(":");
@@ -62,11 +62,11 @@ public class Mcs implements Result {
             sb.append("\n# mcs_id:reaction_id; ...\n");
 
             i = 1;
-            for(Set<Transition> mc : mcs) {
+            for (Set<Transition> mc : mcs) {
                 sb.append(i++);
                 sb.append(":");
 
-                for(Transition t : mc) {
+                for (Transition t : mc) {
                     sb.append(transitionMap.get(t));
                     sb.append(";");
                 }
@@ -81,6 +81,7 @@ public class Mcs implements Result {
 
     /**
      * Return the number of stored minimal cut sets
+     *
      * @return
      */
     public int size() {
@@ -89,6 +90,7 @@ public class Mcs implements Result {
 
     /**
      * Returns the List of stored minimal cut sets
+     *
      * @return
      */
     public List<Set<Transition>> getMCS() {

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.*;
@@ -25,10 +24,14 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Input handler for the MetaTool format.
+ *
  * @author Jens Einloft
- * @see <a href="http://pinguin.biologie.uni-jena.de/bioinformatik/networks/metatool/metatool5.0/ecoli_networks.html">http://pinguin.biologie.uni-jena.de/bioinformatik/networks/metatool/metatool5.0/ecoli_networks.html</a>
- **/
+ * @see
+ * <a href="http://pinguin.biologie.uni-jena.de/bioinformatik/networks/metatool/metatool5.0/ecoli_networks.html">http://pinguin.biologie.uni-jena.de/bioinformatik/networks/metatool/metatool5.0/ecoli_networks.html</a>
+ *
+ */
 public class MetaToolInputHandler implements InputHandler {
+
     private Map<String, Place> places;
     private Map<String, Transition> transitions;
     private List<Transition> reversible;
@@ -55,92 +58,98 @@ public class MetaToolInputHandler implements InputHandler {
         Place place = null;
         Boolean isReversible;
 
-        while(true) {
+        while (true) {
             line = reader.readLine();
-            if(line == null)
+            if (line == null) {
                 break;
-            if(line.startsWith("-")) {
+            }
+            if (line.startsWith("-")) {
                 flag = line.substring(1);
                 continue;
-            }
-            else if((!line.startsWith("-") && flag == null) || line.isEmpty())
+            } else if ((!line.startsWith("-") && flag == null) || line.isEmpty()) {
                 continue;
-            if(flag.equalsIgnoreCase("ENZREV")) {
+            }
+            if (flag.equalsIgnoreCase("ENZREV")) {
                 lineParts = line.split("\\s+");
                 lenLineParts = lineParts.length;
-                for(i = 0; i < lenLineParts; i++) {
+                for (i = 0; i < lenLineParts; i++) {
                     reversible.add(findTransition(lineParts[i], ret));
                 }
-            }
-            else if(flag.equalsIgnoreCase("METEXT")) {
+            } else if (flag.equalsIgnoreCase("METEXT")) {
                 lineParts = line.split("\\s+");
                 lenLineParts = lineParts.length;
-                for(i = 0; i < lenLineParts; i++) {
+                for (i = 0; i < lenLineParts; i++) {
                     external.add(lineParts[i]);
                 }
-            }
-            else if(flag.equalsIgnoreCase("CAT")) {
+            } else if (flag.equalsIgnoreCase("CAT")) {
                 lineParts = line.split("\\s+:\\s+");
                 transition = findTransition(lineParts[0], ret);
                 isReversible = false;
 
-                if(reversible.contains(transition)) {
-                    revTransition = findTransition(transition.getProperty("name")+"_rev", ret);
+                if (reversible.contains(transition)) {
+                    revTransition = findTransition(transition.getProperty("name") + "_rev", ret);
                     isReversible = true;
                 }
 
                 reactionPlaces = lineParts[1].split("\\s+=\\s+");
-                if(line.contains("="))
+                if (line.contains("=")) {
                     prePlaces = reactionPlaces[0].split("\\s+\\+\\s+");
-                else
+                } else {
                     prePlaces = null;
-                if(reactionPlaces.length > 1)
+                }
+                if (reactionPlaces.length > 1) {
                     postPlaces = reactionPlaces[1].split("\\s+\\+\\s+");
-                else if(prePlaces == null)
+                } else if (prePlaces == null) {
                     postPlaces = reactionPlaces[0].split("\\s+\\+\\s+");
-                else
+                } else {
                     postPlaces = null;
+                }
 
-                if(prePlaces != null) {
+                if (prePlaces != null) {
                     lenPlaces = prePlaces.length;
-                    for(i = 0; i < lenPlaces; i++) {
+                    for (i = 0; i < lenPlaces; i++) {
                         placeParts = prePlaces[i].split("\\s+");
-                        if(placeParts.length == 2) {
-                            if(external.contains(placeParts[1]))
+                        if (placeParts.length == 2) {
+                            if (external.contains(placeParts[1])) {
                                 continue;
+                            }
                             weight = new Integer(placeParts[0]);
                             place = findPlace(placeParts[1], ret);
-                        }
-                        else {
-                            if(external.contains(placeParts[0]))
+                        } else {
+                            if (external.contains(placeParts[0])) {
                                 continue;
+                            }
                             weight = 1;
                             place = findPlace(placeParts[0], ret);
                         }
                         ret.addArc(place, transition, new Arc(transition, place, weight));
-                        if(isReversible)
+                        if (isReversible) {
                             ret.addArc(revTransition, place, new Arc(transition, place, weight));
+                        }
                     }
                 }
 
-                if(postPlaces != null) {
+                if (postPlaces != null) {
                     lenPlaces = postPlaces.length;
-                    for(i = 0; i < lenPlaces; i++) {
+                    for (i = 0; i < lenPlaces; i++) {
                         placeParts = postPlaces[i].split("\\s+");
-                        if(placeParts.length == 1 || (placeParts.length == 2 && placeParts[placeParts.length-1].equals("."))) {
-                            if(external.contains(placeParts[0]))
+                        if (placeParts.length == 1 || (placeParts.length == 2 && placeParts[placeParts.length - 1].equals("."))) {
+                            if (external.contains(placeParts[0])) {
                                 continue;
+                            }
                             weight = 1;
                             place = findPlace(placeParts[0], ret);
                         } else {
-                            if(external.contains(placeParts[1]))
+                            if (external.contains(placeParts[1])) {
                                 continue;
+                            }
                             weight = new Integer(placeParts[0]);
                             place = findPlace(placeParts[1], ret);
                         }
                         ret.addArc(transition, place, new Arc(transition, place, weight));
-                        if(isReversible)
+                        if (isReversible) {
                             ret.addArc(place, revTransition, new Arc(transition, place, weight));
+                        }
                     }
                 }
             }

@@ -16,6 +16,7 @@ import monalisa.tools.ErrorLog;
 import monalisa.Project;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author daniel
@@ -23,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 public final class MInvariantTool extends AbstractTool {
 
     private static final Logger LOGGER = LogManager.getLogger(MInvariantTool.class);
-    
+
     @Override
     public void run(Project project, ErrorLog log, Configuration config) throws InterruptedException {
         MInvariantCalculator calculator = null;

@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class PInvariantPanel extends AbstractToolPanel {
 
-    public static final Class<PInvariantTool> TOOLTYPE = PInvariantTool.class;    
+    public static final Class<PInvariantTool> TOOLTYPE = PInvariantTool.class;
     private static final String ACTION_CALCULATE = "CALCULATE";
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
     private final JCheckBox calculate;
@@ -40,7 +40,7 @@ public class PInvariantPanel extends AbstractToolPanel {
     private final Project project;
     private final PInvariantTool tool;
     private static final Logger LOGGER = LogManager.getLogger(PInvariantPanel.class);
-    
+
     public PInvariantPanel(Project project) {
         this.project = project;
         this.tool = (PInvariantTool) project.getToolManager().getTool(TOOLTYPE);
@@ -68,13 +68,13 @@ public class PInvariantPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(calculate)
-            .addComponent(cpi));
+                .addComponent(calculate)
+                .addComponent(cpi));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(calculate)
-            .addComponent(cpi));
-    }    
+                .addComponent(calculate)
+                .addComponent(cpi));
+    }
 
     private void setCPILabelText() {
         int status = tool.isCPI(project);
@@ -160,8 +160,9 @@ public class PInvariantPanel extends AbstractToolPanel {
 
     @Override
     public void setActive(Configuration... configs) {
-        if (!isActive())
+        if (!isActive()) {
             setActive(true);
+        }
     }
 
     @Override

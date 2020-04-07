@@ -33,13 +33,17 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
- * Creates and shows a frame for input of a mathematical expression. Places of the Petri net can be used as variables.
+ * Creates and shows a frame for input of a mathematical expression. Places of
+ * the Petri net can be used as variables.
+ *
  * @author Pavel Balazki.
  */
 public class MathExpFrame extends javax.swing.JFrame {
+
     //BEGIN VARIABLES DECLARATION
     /**
-     * Map of the listeners. Keys are listeners, values can be some information the listener can give with while registering.
+     * Map of the listeners. Keys are listeners, values can be some information
+     * the listener can give with while registering.
      */
     private final Map<ChangeListener, Object> listeners = new HashMap<>();
     /*
@@ -55,25 +59,28 @@ public class MathExpFrame extends javax.swing.JFrame {
      */
     private final Map<String, Integer> variables = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(MathExpFrame.class);
-    
+
     //END VARIABLES DECLARATION
-    
     //BEGIN INNER CLASSES
-    private class PlaceCheckBox extends JCheckBox{
+    private class PlaceCheckBox extends JCheckBox {
+
         Place place;
-        PlaceCheckBox(Place p){
+
+        PlaceCheckBox(Place p) {
             super((String) p.getProperty("name"));
             this.place = p;
         }
-        public Integer getID(){
+
+        public Integer getID() {
             return place.id();
         }
-        public String getPlaceName(){
+
+        public String getPlaceName() {
             return place.getProperty("name");
         }
     }
     //END INNER CLASSES
-    
+
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form MathExpFrame.
@@ -81,11 +88,13 @@ public class MathExpFrame extends javax.swing.JFrame {
     private MathExpFrame() {
         initComponents();
     }
-    
+
     /**
      * Creates a new frame for editing a mathematical expression.
+     *
      * @param places List of places which can be used as variables.
-     * @param exp Mathematical expression which will be edited. If no old math exp exists, create new one with a "0" string.
+     * @param exp Mathematical expression which will be edited. If no old math
+     * exp exists, create new one with a "0" string.
      */
     public MathExpFrame(Collection<Place> places, MathematicalExpression exp) {
         LOGGER.info("Creating a new frame to edit a mathematical expression");
@@ -100,11 +109,11 @@ public class MathExpFrame extends javax.swing.JFrame {
         DefaultListModel allPlacesListModel = new DefaultListModel();
         DefaultListModel varSelectListModel = new DefaultListModel();
         //Put the places in the list. Only non-constant places can be used as variables.
-        for (Place place : places){
-            if (!place.isConstant()){
+        for (Place place : places) {
+            if (!place.isConstant()) {
                 allPlacesListModel.addElement(place);
                 PlaceCheckBox pcb = new PlaceCheckBox(place);
-                if (variables.containsKey((String) place.getProperty("name"))){
+                if (variables.containsKey((String) place.getProperty("name"))) {
                     pcb.setSelected(true);
                 }
                 varSelectListModel.addElement(pcb);
@@ -113,21 +122,20 @@ public class MathExpFrame extends javax.swing.JFrame {
         allPlacesListModel.addElement(MathematicalExpression.TIME_VAR);
         allPlacesList.setModel(allPlacesListModel);
         // If a place in the search bar is selected, it will be pasted to the expTextArea.
-        allPlacesList.addMouseListener(new MouseAdapter(){
+        allPlacesList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 //get the selected object. If it is a place, put it to the variables list.
                 Object value = allPlacesList.getSelectedValue();
                 String name;
-                if (value instanceof Place){
+                if (value instanceof Place) {
                     Place p = (Place) allPlacesList.getSelectedValue();
                     name = p.getProperty("name");
                     //Add the id of picked place to the variables map.
                     variables.put(name, p.id());
                     PlaceCheckBox pcb = ((PlaceCheckBox) varSelectList.getModel().getElementAt(allPlacesList.getSelectedIndex()));
                     pcb.setSelected(true);
-                }
-                else{
+                } else {
                     name = value.toString();
                 }
                 expTextArea.insert(name, expTextArea.getCaretPosition());
@@ -136,7 +144,7 @@ public class MathExpFrame extends javax.swing.JFrame {
             }
         });
         varSelectList.setModel(varSelectListModel);
-        varSelectList.setCellRenderer(new ListCellRenderer(){
+        varSelectList.setCellRenderer(new ListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JCheckBox checkbox = (JCheckBox) value;
@@ -144,32 +152,30 @@ public class MathExpFrame extends javax.swing.JFrame {
                 return checkbox;
             }
         });
-        varSelectList.addMouseListener(new MouseAdapter(){
+        varSelectList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 //get the selected object. If it is a place, put it to the variables list.
                 PlaceCheckBox value = (PlaceCheckBox) varSelectList.getSelectedValue();
                 String name = value.getPlaceName();
                 int id = value.getID();
-                
+
                 /*
                 If the checkbox is already selected, deselect it and remove the place from the variables list.
-                */
-                if (value.isSelected()){
+                 */
+                if (value.isSelected()) {
                     value.setSelected(false);
                     variables.remove(name);
-                }
-                /*
+                } /*
                 If the checkbox is not selected, select it and add the place to the variables list.
-                */
-                else{
+                 */ else {
                     value.setSelected(true);
                     variables.put(name, id);
                 }
                 expTextArea.requestFocusInWindow();
             }
         });
-        
+
         /*
          * Make frame disappear when ESC pressed and save settings when ENTER pressed.
          */
@@ -182,41 +188,45 @@ public class MathExpFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 MathExpFrame.this.dispose();
             }
-        });       
+        });
     }
     //END CONSTRUCTORS
-    
+
     /**
      * Register a listener. It can provide some additional information.
+     *
      * @param l
-     * @param information 
+     * @param information
      */
-    public void addListener(ChangeListener l, Object information){
+    public void addListener(ChangeListener l, Object information) {
         this.listeners.put(l, information);
     }
-    
+
     /**
      * Get the mathematical expression which was produced by this input frame.
-     * @return 
+     *
+     * @return
      */
-    public MathematicalExpression getMathematicalExpression(){
+    public MathematicalExpression getMathematicalExpression() {
         return this.mathExp;
     }
-    
+
     /**
      * Get the information from the listener, if it was provided.
+     *
      * @param l
-     * @return 
+     * @return
      */
-    public Object getInformation(ChangeListener l){
+    public Object getInformation(ChangeListener l) {
         return this.listeners.get(l);
     }
-    
+
     /**
      * Add a string to existing title of the frame.
-     * @param str 
+     *
+     * @param str
      */
-    public void addToTitle(String str){
+    public void addToTitle(String str) {
         String title = this.getTitle().concat("; ");
         this.setTitle(title.concat(str));
     }
@@ -358,7 +368,7 @@ public class MathExpFrame extends javax.swing.JFrame {
          */
         try {
             this.mathExp = new MathematicalExpression(text, variables);
-            for (ChangeListener l : this.listeners.keySet()){
+            for (ChangeListener l : this.listeners.keySet()) {
                 l.stateChanged(new ChangeEvent(this));
             }
         } catch (RuntimeException ex) {

@@ -12,7 +12,6 @@ package monalisa.tools.mcs;
 import java.util.List;
 import java.util.Set;
 
-
 import monalisa.Project;
 import monalisa.data.pn.Transition;
 import monalisa.results.Configuration;

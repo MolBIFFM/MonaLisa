@@ -42,7 +42,7 @@ public class KnockoutPanel extends AbstractToolPanel {
     private static final String ACTION_CALCULATE = "CALCULATE";
     private static final String SELECT = "SELECT";
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
-    
+
     private final JCheckBox calculate;
     private final JPanel koPanel;
     private final JRadioButton singleKoPlace;
@@ -54,27 +54,27 @@ public class KnockoutPanel extends AbstractToolPanel {
     private final Project project;
     private final KnockoutTool tool;
     private static final Logger LOGGER = LogManager.getLogger(KnockoutPanel.class);
-    
-    public KnockoutPanel (Project project) {
+
+    public KnockoutPanel(Project project) {
         this.project = project;
         this.tool = (KnockoutTool) project.getToolManager().getTool(KnockoutTool.class);
 
         ActionListener al = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            final String action = e.getActionCommand();
-            switch (action) {
-                case ACTION_CALCULATE:
-                    fireActivityChanged(isActive());
-                    break;
-                case SELECT:
-                    calculate.setSelected(true);
-                    break;
-            }
+                final String action = e.getActionCommand();
+                switch (action) {
+                    case ACTION_CALCULATE:
+                        fireActivityChanged(isActive());
+                        break;
+                    case SELECT:
+                        calculate.setSelected(true);
+                        break;
+                }
             }
         };
 
-        singleKoPlace = new JRadioButton(strings.get("SinglePlaceKnockout"));       
+        singleKoPlace = new JRadioButton(strings.get("SinglePlaceKnockout"));
         singleKoPlace.setActionCommand(SELECT);
         singleKoTransition = new JRadioButton(strings.get("SingleTransitionKnockout"));
         singleKoTransition.setActionCommand(SELECT);
@@ -106,27 +106,27 @@ public class KnockoutPanel extends AbstractToolPanel {
 
         koPanel = new JPanel();
         koPanel.setBorder(BorderFactory.createTitledBorder(
-            null, "",
-            TitledBorder.DEFAULT_JUSTIFICATION,
-            TitledBorder.DEFAULT_POSITION));
+                null, "",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION));
         GroupLayout koLayout = new GroupLayout(koPanel);
         koPanel.setLayout(koLayout);
 
         koLayout.setHorizontalGroup(koLayout.createParallelGroup()
-            .addComponent(singleKoPlace)
-            .addComponent(singleKoTransition)
-            .addComponent(doubleKoPlace)
-            .addComponent(doubleKoTransition)
-            .addComponent(selectKoPlace)
-            .addComponent(selectKoTransition));
+                .addComponent(singleKoPlace)
+                .addComponent(singleKoTransition)
+                .addComponent(doubleKoPlace)
+                .addComponent(doubleKoTransition)
+                .addComponent(selectKoPlace)
+                .addComponent(selectKoTransition));
 
         koLayout.setVerticalGroup(koLayout.createSequentialGroup()
-            .addComponent(singleKoPlace)
-            .addComponent(singleKoTransition)
-            .addComponent(doubleKoPlace)
-            .addComponent(doubleKoTransition)
-            .addComponent(selectKoPlace)
-            .addComponent(selectKoTransition));
+                .addComponent(singleKoPlace)
+                .addComponent(singleKoTransition)
+                .addComponent(doubleKoPlace)
+                .addComponent(doubleKoTransition)
+                .addComponent(selectKoPlace)
+                .addComponent(selectKoTransition));
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -134,19 +134,19 @@ public class KnockoutPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addComponent(koPanel)
-            .addComponent(calculate));
+                .addComponent(koPanel)
+                .addComponent(calculate));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(koPanel)
-            .addComponent(calculate));
+                .addComponent(koPanel)
+                .addComponent(calculate));
     }
 
     private KnockoutAlgorithm getAlgorithm() {
         KnockoutAlgorithm algorithm = null;
         PetriNetFacade pnf = project.getPNFacade();
         if (singleKoPlace.isSelected()) {
-           algorithm = new SinglePlaceKnockout(pnf);
+            algorithm = new SinglePlaceKnockout(pnf);
         } else if (singleKoTransition.isSelected()) {
             algorithm = new SingleTransitionKnockout(pnf);
         } else if (doubleKoPlace.isSelected()) {
@@ -161,14 +161,14 @@ public class KnockoutPanel extends AbstractToolPanel {
             algorithm = new MultiTransitionKnockout(pnf, dialog.<Transition>knockouts());
         }
         return algorithm;
-     }
-    
+    }
+
     /**
      *
      * @return new KnockoutConfiguration
      */
     @Override
-    public KnockoutConfiguration getConfig () {
+    public KnockoutConfiguration getConfig() {
         KnockoutAlgorithm algorithm = getAlgorithm();
         if (algorithm.getClass().equals(MultiPlaceKnockout.class) || algorithm.getClass().equals(MultiTransitionKnockout.class)) {
             return new KnockoutConfiguration(algorithm, algorithm.getKnockoutEntities(), algorithm.getClass().getSimpleName());

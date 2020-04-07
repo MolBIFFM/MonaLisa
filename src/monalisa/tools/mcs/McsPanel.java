@@ -57,7 +57,7 @@ public class McsPanel extends AbstractToolPanel {
         this.tool = (McsTool) project.getToolManager().getTool(TOOLTYPE);
         transitionCb = new JComboBox<>();
         List<Transition> transitionList = new ArrayList<>(project.getPetriNet().transitions());
-        for(Transition t : transitionList) {
+        for (Transition t : transitionList) {
             transitionCb.addItem(t);
         }
         transitionLabel = new JLabel(strings.get("ObjectiveTransition"));
@@ -89,26 +89,26 @@ public class McsPanel extends AbstractToolPanel {
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createParallelGroup()
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(transitionLabel)
-                .addComponent(transitionCb))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(cutSetSizeLabel)
-                .addComponent(spinnerSetSize))
-            .addComponent(calculateButton));
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(transitionLabel)
+                        .addComponent(transitionCb))
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(cutSetSizeLabel)
+                        .addComponent(spinnerSetSize))
+                .addComponent(calculateButton));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addGroup(layout.createBaselineGroup(false, false)
-                .addComponent(transitionLabel)
-                  .addComponent(transitionCb))
-            .addGroup(layout.createParallelGroup()
-                .addComponent(cutSetSizeLabel)
-                .addComponent(spinnerSetSize))
-            .addComponent(calculateButton));
+                .addGroup(layout.createBaselineGroup(false, false)
+                        .addComponent(transitionLabel)
+                        .addComponent(transitionCb))
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(cutSetSizeLabel)
+                        .addComponent(spinnerSetSize))
+                .addComponent(calculateButton));
 
         layout.linkSize(SwingConstants.VERTICAL, cutSetSizeLabel, spinnerSetSize);
     }
-    
+
     /**
      *
      * @return new McsConfiguration
@@ -127,14 +127,16 @@ public class McsPanel extends AbstractToolPanel {
     public Class<? extends Tool> getToolType() {
         return TOOLTYPE;
     }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<Pair<Class<? extends Tool>, Configuration>> getRequirements() {
-        if (isActive())
+        if (isActive()) {
             return Arrays.asList(
-                new Pair<Class<? extends Tool>, Configuration>(TInvariantTool.class, new TInvariantsConfiguration()));
-        else
+                    new Pair<Class<? extends Tool>, Configuration>(TInvariantTool.class, new TInvariantsConfiguration()));
+        } else {
             return Collections.emptyList();
+        }
     }
 
     @Override

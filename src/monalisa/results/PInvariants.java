@@ -27,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class PInvariants implements Result, Collection<PInvariant> {
+
     private static final long serialVersionUID = 8293263678484610772L;
     private final List<PInvariant> pinvariants;
     private static final Logger LOGGER = LogManager.getLogger(PInvariants.class);
@@ -45,7 +46,7 @@ public final class PInvariants implements Result, Collection<PInvariant> {
             sb.append("# species_id:name\n");
 
             int i = 1;
-            for(Place p : project.getPetriNet().places()) {
+            for (Place p : project.getPetriNet().places()) {
                 placeMap.put(p, i);
                 sb.append(i++);
                 sb.append(":");
@@ -55,11 +56,11 @@ public final class PInvariants implements Result, Collection<PInvariant> {
 
             sb.append("\n# pinvariant_id:factor*species_id; ...\n");
 
-            for(PInvariant pinv : pinvariants) {
-                sb.append(pinv.id()+1);
+            for (PInvariant pinv : pinvariants) {
+                sb.append(pinv.id() + 1);
                 sb.append(":");
 
-                for(Place p : pinv.places()) {
+                for (Place p : pinv.places()) {
                     sb.append(pinv.factor(p));
                     sb.append("*");
                     sb.append(placeMap.get(p));
@@ -85,17 +86,20 @@ public final class PInvariants implements Result, Collection<PInvariant> {
         boolean first = true;
 
         for (Place place : pinvariant) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 ret.append(" ");
-            if (pinvariant.factor(place) != 1)
+            }
+            if (pinvariant.factor(place) != 1) {
                 ret.append(String.format("%d*", pinvariant.factor(place)));
+            }
 
-            if(printId)
-                ret.append(place.id()+1);
-            else
+            if (printId) {
+                ret.append(place.id() + 1);
+            } else {
                 ret.append(((String) place.getProperty("name")).replace(" ", "_"));
+            }
         }
 
         return ret.toString();
@@ -111,12 +115,13 @@ public final class PInvariants implements Result, Collection<PInvariant> {
             // to the beginning of the current word.
             int prev = startPos;
             startPos += lineLength;
-            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev)
+            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev) {
                 startPos--;
+            }
             // Failsafe if the line has no spaces:
-            if (startPos == prev)
+            if (startPos == prev) {
                 startPos += lineLength; // Don't care: cut the word.
-
+            }
             ret.add(indent + text.substring(prev, startPos));
             startPos++; // Skip whitespace.
 
@@ -126,8 +131,9 @@ public final class PInvariants implements Result, Collection<PInvariant> {
         }
 
         // Add the dangling line.
-        if (startPos < text.length())
+        if (startPos < text.length()) {
             ret.add(indent + text.substring(startPos));
+        }
 
         return ret;
     }
@@ -145,7 +151,6 @@ public final class PInvariants implements Result, Collection<PInvariant> {
 //        }
 //        return nonTrivial;
 //    }
-
     @Override
     public Iterator<PInvariant> iterator() {
         return pinvariants.iterator();

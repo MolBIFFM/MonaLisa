@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer.transformer;
 
 import java.awt.Shape;
@@ -22,19 +21,18 @@ import org.apache.commons.collections15.Transformer;
 public class TreeViewerVertexShapeTransformer implements Transformer<TreeViewerNode, Shape> {
 
     private NetViewerVertexShapeFactory nodesFactory;
-        
+
     public TreeViewerVertexShapeTransformer() {
         this.nodesFactory = new NetViewerVertexShapeFactory(12);
     }
-    
+
     @Override
     public Shape transform(TreeViewerNode i) {
-        Shape shape;                               
+        Shape shape;
 
-        shape = this.nodesFactory.getEllipse(i);        
+        shape = this.nodesFactory.getEllipse(i);
 
         return shape;
     }
-
 
 }

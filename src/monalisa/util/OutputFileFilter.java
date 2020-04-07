@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.io.File;
@@ -17,43 +16,47 @@ import monalisa.data.output.OutputHandler;
 
 /**
  * File filter
+ *
  * @author Jens Einloft
  */
 public class OutputFileFilter extends FileFilter {
-        private final OutputHandler handler;
 
-        public OutputFileFilter(OutputHandler handler) {
-            this.handler = handler;
+    private final OutputHandler handler;
+
+    public OutputFileFilter(OutputHandler handler) {
+        this.handler = handler;
+    }
+
+    public File checkFileNameForExtension(File file) {
+        if (!handler.getExtension().equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + "." + handler.getExtension());
         }
+        return file;
+    }
 
-        public File checkFileNameForExtension(File file) {
-            if(!handler.getExtension().equalsIgnoreCase(FileUtils.getExtension(file)))
-                file = new File(file.getAbsolutePath()+"."+handler.getExtension());
-            return file;
-        }
+    public String getExtension() {
+        return handler.getExtension();
+    }
 
-        public String getExtension() {
-            return handler.getExtension();
-        }
+    public OutputHandler getHandler() {
+        return handler;
+    }
 
-        public OutputHandler getHandler() {
-            return handler;
-        }
+    @Override
+    public String getDescription() {
+        return "*." + handler.getExtension() + " (" + handler.getDescription() + ")";
+    }
 
-        @Override
-        public String getDescription() {
-            return "*."+handler.getExtension()+" ("+handler.getDescription()+")";
-        }
-
-        @Override
-        public boolean accept(File f) {
-            try {
-                if (f.isDirectory() || handler.isKnownFile(f))
-                    return true;
-                else 
-                    return false;               
-            } catch (IOException ex) {
+    @Override
+    public boolean accept(File f) {
+        try {
+            if (f.isDirectory() || handler.isKnownFile(f)) {
+                return true;
+            } else {
                 return false;
             }
+        } catch (IOException ex) {
+            return false;
         }
+    }
 }

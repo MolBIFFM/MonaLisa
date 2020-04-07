@@ -9,7 +9,6 @@
  */
 package monalisa.addons.tokensimulator;
 
-
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -35,13 +34,15 @@ import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-
 /**
- * A frame which is used to enter biologically relevant data such as molecule concentrations, volume of the solution
- * and reaction rate constants and transforming them to petri net data.
+ * A frame which is used to enter biologically relevant data such as molecule
+ * concentrations, volume of the solution and reaction rate constants and
+ * transforming them to petri net data.
+ *
  * @author Pavel Balazki
  */
-public class GillespieInputDataFrame extends javax.swing.JFrame implements ChangeListener{
+public class GillespieInputDataFrame extends javax.swing.JFrame implements ChangeListener {
+
     //BEGIN VARIABLES DECLARATION
     private static final String TRANSITION = "TRANSITION";
     private static final String PLACE = "PLACE";
@@ -51,10 +52,10 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
     private static final String STOCHASTIC = "C";
     //table model variables
     //classes of data in columns
-    private Class[] reactantTypes = new Class [] {Place.class, java.lang.String.class};
-    private Class[] reactionTypes = new Class [] {Transition.class, java.lang.String.class};
+    private Class[] reactantTypes = new Class[]{Place.class, java.lang.String.class};
+    private Class[] reactionTypes = new Class[]{Transition.class, java.lang.String.class};
     //columns namens    
-    private String[] reactionColumnNames = new String [] {"Reaction", "Reaction rate constant[M][s]"};
+    private String[] reactionColumnNames = new String[]{"Reaction", "Reaction rate constant[M][s]"};
     private GillespieTokenSim tokenSim;
     /**
      * Gives the user number of tokens or concentrations.
@@ -63,9 +64,10 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
     /**
      * Gives the user number of tokens or concentrations.
      */
-    private String inputModeTransitions = DETERMINISTIC;    
+    private String inputModeTransitions = DETERMINISTIC;
     /**
-     * This HashMap links the given concentration of chemical compounds to the correspondent place. Unit: M
+     * This HashMap links the given concentration of chemical compounds to the
+     * correspondent place. Unit: M
      */
     private HashMap<Place, Double> concentrations = new HashMap<>();
     /**
@@ -73,90 +75,86 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
      */
     private HashMap<Place, MathematicalExpression> constantPlaces = new HashMap<>();
     /**
-     * This HashMap links the equation of reaction rate constant of chemical reaction to the correspondent transition.
-     * == k
-     * Unit: M, sec.
+     * This HashMap links the equation of reaction rate constant of chemical
+     * reaction to the correspondent transition. == k Unit: M, sec.
      */
     private HashMap<Transition, MathematicalExpression> reactionRates = new HashMap<>();
     /*
      * Volume of the reaction environment, in liter.
      */
-    private double volume;     
+    private double volume;
     /**
      * Volume multiplied with the Avogadro constant.
      */
-    private double volMol = volume * 6E23;    
+    private double volMol = volume * 6E23;
     private static final Logger LOGGER = LogManager.getLogger(GillespieInputDataFrame.class);
     //END VARIABLES DECLARATION
-    
+
     //BEGIN INNER CLASSES
     //custom table model for the reactant tabel
-    private class ReactantTableModel extends DefaultTableModel{              
+    private class ReactantTableModel extends DefaultTableModel {
+
         @Override
-        public void setValueAt(Object value, int row, int col){
+        public void setValueAt(Object value, int row, int col) {
             double molVol = volume * 6E23;
             double conecentration = 0;
-            
-            if (col == 1){
+
+            if (col == 1) {
                 //non-constant places
-                if (row < concentrations.size()){
+                if (row < concentrations.size()) {
                     //put the given concentration of the compound to the concentrations-map.
-                    try{                                                                                                          
-                        if(inputModePlaces.equals(CONCENTRATION)) {
+                    try {
+                        if (inputModePlaces.equals(CONCENTRATION)) {
                             conecentration = Double.parseDouble(value.toString());
-                        } else if(inputModePlaces.equals(TOKENS)) {
-                            conecentration = Double.parseDouble(value.toString()) / molVol;      
+                        } else if (inputModePlaces.equals(TOKENS)) {
+                            conecentration = Double.parseDouble(value.toString()) / molVol;
                         }
                         concentrations.put(concentrations.keySet().toArray(new Place[0])[row], conecentration);
-                    }
-                    catch (NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         LOGGER.error("NumberFormatException while creating the reactant table", ex);
                     }
-                }
-                //constant places.
-                else{
+                } //constant places.
+                else {
                     int index = row - concentrations.size();
-                    try{
+                    try {
                         constantPlaces.put(constantPlaces.keySet().toArray(new Place[0])[index], (MathematicalExpression) value);
-                    }
-                    catch(Exception ex){
+                    } catch (Exception ex) {
                         LOGGER.error("General exception while mapping constant places in the reactant table", ex);
                     }
                 }
-            }            
+            }
         }
-                
+
         @Override
         public int getRowCount() {
             //This table lists non-constant places first, followed by the constant.
             return concentrations.size() + constantPlaces.size();
-        }       
-        
+        }
+
         @Override
         public int getColumnCount() {
             return 2;
         }
-        
+
         @Override
         public Object getValueAt(int row, int col) {
             double molVol = volume * 6E23;
             //the second column represents the concentrations of corresponding reactant
             //non-constant places
-            if (row < concentrations.size()){
+            if (row < concentrations.size()) {
                 //the first column represents the names of reactants (places)
-                if (col == 0){
+                if (col == 0) {
                     return concentrations.keySet().toArray(new Place[0])[row].getProperty("name");
                 }
-                if(inputModePlaces.equals(CONCENTRATION)) {
+                if (inputModePlaces.equals(CONCENTRATION)) {
                     return concentrations.values().toArray(new Double[concentrations.size()])[row];
                 } else {
                     return Math.round(concentrations.values().toArray(new Double[concentrations.size()])[row] * molVol);
-                }                
-            }
-            //constant places
-            else{
+                }
+            } //constant places
+            else {
                 int index = row - concentrations.size();
-                if (col == 0){
+                if (col == 0) {
                     return constantPlaces.keySet().toArray(new Place[0])[index].getProperty("name");
                 }
                 return constantPlaces.values().toArray(new MathematicalExpression[constantPlaces.size()])[index];
@@ -165,7 +163,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
 
         @Override
         public Class getColumnClass(int columnIndex) {
-            return reactantTypes [columnIndex];
+            return reactantTypes[columnIndex];
         }
 
         @Override
@@ -173,20 +171,20 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             return columnIndex == 1 && rowIndex < concentrations.size();
         }
     }
-    
+
     //custom table model for the reaction tabel
-    private class ReactionTableModel extends DefaultTableModel{
+    private class ReactionTableModel extends DefaultTableModel {
+
         @Override
-        public void setValueAt(Object value, int row, int col){
-            if (col == 1){
+        public void setValueAt(Object value, int row, int col) {
+            if (col == 1) {
                 Transition t = reactionRates.keySet().toArray(new Transition[0])[row];
-                if (value instanceof MathematicalExpression){                    
+                if (value instanceof MathematicalExpression) {
                     reactionRates.put(t, (MathematicalExpression) value);
-                }
-                else{
+                } else {
                     try {
                         MathematicalExpression exp;
-                        if(inputModeTransitionSelection.equals(DETERMINISTIC)) {
+                        if (inputModeTransitionSelection.equals(DETERMINISTIC)) {
                             exp = new MathematicalExpression((String) value);
                         } else {
                             exp = new MathematicalExpression(Double.toString(tokenSim.convertCToK(t, Double.valueOf((String) value))));
@@ -196,51 +194,52 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         LOGGER.error("Unknown function or unparsable Expression has been encountered while creating the reaction table model", ex);
                     }
                 }
-            }       
+            }
         }
-        
+
         @Override
         public String getColumnName(int col) {
             return reactionColumnNames[col];
         }
-        
+
         @Override
         public int getRowCount() {
             return tokenSim.petriNet.transitions().size();
         }
-        
+
         @Override
         public int getColumnCount() {
             return reactionColumnNames.length;
         }
-        
+
         @Override
         public Object getValueAt(int row, int col) {
             Transition t = reactionRates.keySet().toArray(new Transition[0])[row];
             //the first column represents the names of reactants (places)
-            if (col == 0)
+            if (col == 0) {
                 return t.getProperty("name");
+            }
             //the second column represents the concentrations of corresponding reactant
-            if(inputModeTransitions.equals(DETERMINISTIC)) {
+            if (inputModeTransitions.equals(DETERMINISTIC)) {
                 return reactionRates.values().toArray(new MathematicalExpression[0])[row].toString();
             } else {
                 try {
                     return tokenSim.convertKToC(t, new Double(reactionRates.values().toArray(new MathematicalExpression[0])[row].toString()));
-                } catch (NumberFormatException e) {                                      
+                } catch (NumberFormatException e) {
                     return Double.NaN;
                 }
-            }            
+            }
         }
 
         @Override
         public Class getColumnClass(int columnIndex) {
-            return reactionTypes [columnIndex];
+            return reactionTypes[columnIndex];
         }
 
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            if(inputModeTransitions.equals(STOCHASTIC)) {
-                if(((Double)getValueAt(rowIndex, columnIndex)).isNaN()) {
+            if (inputModeTransitions.equals(STOCHASTIC)) {
+                if (((Double) getValueAt(rowIndex, columnIndex)).isNaN()) {
                     return false;
                 } else {
                     return true;
@@ -250,13 +249,14 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         }
     }
     //END INNER CLASSES
-    
+
     //BEGIN CONSTRUCTORS
-    private GillespieInputDataFrame(){
+    private GillespieInputDataFrame() {
     }
-    
+
     /**
      * Creates new form GillespieInputDataFrame
+     *
      * @param tokenSimN
      */
     public GillespieInputDataFrame(GillespieTokenSim tokenSimN) {
@@ -269,108 +269,107 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
          * Put every place of the petri net in the concentrations-HashMap
          */
         LOGGER.info("Creating the concentrations-HashMap and filling it with data");
-        for (Place p : this.tokenSim.petriNet.places()){
-            if (!p.isConstant()){
+        for (Place p : this.tokenSim.petriNet.places()) {
+            if (!p.isConstant()) {
                 /*
                  * The number of tokens (number of molecules) must be converted to concentration in M first.
                  */
-                this.concentrations.put(p, this.tokenSim.getTokens(p.id())/this.tokenSim.volMol);
-            }
-            else{
+                this.concentrations.put(p, this.tokenSim.getTokens(p.id()) / this.tokenSim.volMol);
+            } else {
                 /*
                  * The mathematical expression should describe concentrations in M.
                  */
                 this.constantPlaces.put(p, this.tokenSim.tokenSim.getMathematicalExpression(p.id()));
             }
         }
-        
+
         /*
          * Put every transition of the petri net in the reactionRates-HashMap and initialize with the reaction rate which is stored in
          * simulator.
          */
         LOGGER.info("Filling the reactionRates-HashMap with data");
-        for (Transition t : this.tokenSim.petriNet.transitions()){
+        for (Transition t : this.tokenSim.petriNet.transitions()) {
             this.reactionRates.put(t, this.tokenSim.deterministicReactionConstants.get(t.id()));
         }
         initComponents();
-        
+
         reactantTable.getTableHeader().setReorderingAllowed(false);
         reactantTable.getTableHeader().getColumnModel().getColumn(0).setHeaderValue("Reaction compound");
         reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Concentration [M]");
-        
+
         reactantTable.getTableHeader().setReorderingAllowed(false);
         reactantTable.getTableHeader().getColumnModel().getColumn(0).setHeaderValue("Reaction");
-        reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Reaction rate constant [M][s]");        
-                
+        reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Reaction rate constant [M][s]");
+
         this.concentrationMode.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
                     LOGGER.info("Mode has been changed to concentration");
-                    inputModePlaces = CONCENTRATION;        
+                    inputModePlaces = CONCENTRATION;
                     reactantTable.repaint();
                     reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Concentration [M]");
                     reactantTable.getTableHeader().repaint();
-                    
-                }    
-            }            
+
+                }
+            }
         });
-        
+
         this.tokenMode.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
                     LOGGER.info("Mode has been changed to token");
-                    inputModePlaces = TOKENS;                                                        
+                    inputModePlaces = TOKENS;
                     reactantTable.repaint();
                     reactantTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Number of Tokens");
-                    reactantTable.getTableHeader().repaint();                    
+                    reactantTable.getTableHeader().repaint();
                 }
             }
         });
-        
+
         this.kMode.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
                     LOGGER.info("Mode has been changed to deterministic");
-                    inputModeTransitions = DETERMINISTIC;                                                        
+                    inputModeTransitions = DETERMINISTIC;
                     reactionTable.repaint();
                     reactionTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Reaction rate constant [M][s]");
-                    reactionTable.getTableHeader().repaint();                    
+                    reactionTable.getTableHeader().repaint();
                 }
             }
         });
-        
+
         this.cMode.addItemListener(new ItemListener() {
-            
+
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 if (ie.getStateChange() == ItemEvent.SELECTED) {
                     LOGGER.info("Mode has been changed to stochastic");
-                    inputModeTransitions = STOCHASTIC;                                                        
+                    inputModeTransitions = STOCHASTIC;
                     reactionTable.repaint();
                     reactionTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Stocastic rate constant 1/[s]");
-                    reactionTable.getTableHeader().repaint();     
-                    
-                    String message = "Mathematical expression can not be converted to stochastic rate constants. All reactions with amathematical expressions are blocked to edit.";            
-                    JOptionPane.showMessageDialog(GillespieInputDataFrame.this, message, "Error", JOptionPane.WARNING_MESSAGE);                        
+                    reactionTable.getTableHeader().repaint();
+
+                    String message = "Mathematical expression can not be converted to stochastic rate constants. All reactions with amathematical expressions are blocked to edit.";
+                    JOptionPane.showMessageDialog(GillespieInputDataFrame.this, message, "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }
-        });        
+        });
 
-        this.volumeTextField.setText(Double.toString(this.volume));                      
-        this.reactantTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer(){
+        this.volumeTextField.setText(Double.toString(this.volume));
+        this.reactantTable.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
             private final DecimalFormat formatter = new DecimalFormat("0.###E0");
+
             @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
-                if (row < concentrations.size()){
-                    try{
-                        if(inputModePlaces.equals(CONCENTRATION)) {
-                            value = formatter.format((Number)value);
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (row < concentrations.size()) {
+                    try {
+                        if (inputModePlaces.equals(CONCENTRATION)) {
+                            value = formatter.format((Number) value);
                         }
-                    }
-                    catch(Exception ex){
+                    } catch (Exception ex) {
                         LOGGER.error("General exception while trying to format the concentration value of the table", ex);
                     }
                 }
@@ -381,29 +380,28 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
          * Assign a mouse listener to the reactionTable. When a cell is double clicked, a window is opened where user can input
          * the reaction rate constant (also as a mathematical expression) for the selected reaction.
          */
-        this.reactionTable.addMouseListener(new MouseAdapter(){
+        this.reactionTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 //get the selected column
                 LOGGER.info("New position in the reaction-table has been chosen via mouse click");
-                int col = reactionTable.getSelectedColumn();               
+                int col = reactionTable.getSelectedColumn();
                 //Process double-clicks                
-                if (e.getClickCount() == 2){                                     
+                if (e.getClickCount() == 2) {
                     //respond only of second column is selected
-                    if (col == 1){
+                    if (col == 1) {
                         //get the selected row
                         int row = reactionTable.getSelectedRow();
                         int rowModel = reactionTable.convertRowIndexToModel(row);
-                        
-                        if(inputModeTransitions.equals(DETERMINISTIC)) {
-                            MathExpFrame  frame = new MathExpFrame(tokenSim.petriNet.places(), reactionRates.values().toArray(new MathematicalExpression[reactionRates.size()])[rowModel]);
+
+                        if (inputModeTransitions.equals(DETERMINISTIC)) {
+                            MathExpFrame frame = new MathExpFrame(tokenSim.petriNet.places(), reactionRates.values().toArray(new MathematicalExpression[reactionRates.size()])[rowModel]);
                             frame.addToTitle(reactionTable.getValueAt(row, 0).toString());
-                            
+
                             Object[] information = {row, col, TRANSITION};
                             frame.addListener(GillespieInputDataFrame.this, information);
-                            frame.setVisible(true);                            
+                            frame.setVisible(true);
                         }
-                        
 
                     }
                 }
@@ -411,12 +409,12 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         });
         /*
         Create a sorter which sorts rows according to their string-values.
-        */
+         */
         TableRowSorter<TableModel> reactionRowSorter = new TableRowSorter<>(this.reactionTable.getModel());
         this.reactionTable.setRowSorter(reactionRowSorter);
         List reactionSortKeys = new ArrayList();
-        reactionSortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));        
-        reactionRowSorter.setComparator(0, new Comparator<String>(){
+        reactionSortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        reactionRowSorter.setComparator(0, new Comparator<String>() {
             @Override
             public int compare(String t, String t1) {
                 return (t.compareTo(t1));
@@ -428,22 +426,22 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
          * Assign a mouse listener to the reactantTable. When a cell is double clicked, a window is opened where user can input
          * the concentration (also as a mathematical expression) for the selected reaction.
          */
-        this.reactantTable.addMouseListener(new MouseAdapter(){
+        this.reactantTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 //get the selected row
                 LOGGER.info("New position in the reactant-table has been chosen via mouse click");
                 int row = reactantTable.getSelectedRow();
                 int rowModel = reactantTable.convertRowIndexToModel(row);
                 //proceed only for constant places.
-                if (rowModel >= concentrations.size()){
-                    if (e.getClickCount() == 2){
+                if (rowModel >= concentrations.size()) {
+                    if (e.getClickCount() == 2) {
                         //respond only if second column is selected
                         int col = reactantTable.getSelectedColumn();
                         int index = rowModel - concentrations.size();
                         if (col == 1) {
-                            MathExpFrame  frame = new MathExpFrame(tokenSim.petriNet.places(), 
-                            constantPlaces.values().toArray(new MathematicalExpression[constantPlaces.size()])[index]);
+                            MathExpFrame frame = new MathExpFrame(tokenSim.petriNet.places(),
+                                    constantPlaces.values().toArray(new MathematicalExpression[constantPlaces.size()])[index]);
                             frame.addToTitle(reactantTable.getValueAt(row, 0).toString());
                             Object[] information = {row, col, PLACE};
                             frame.addListener(GillespieInputDataFrame.this, information);
@@ -455,48 +453,50 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         });
         /*
         Create a sorter which sorts rows according to their string-values.
-        */
+         */
         TableRowSorter<TableModel> reactantRowSorter = new TableRowSorter<>(this.reactantTable.getModel());
         this.reactantTable.setRowSorter(reactantRowSorter);
-        reactionSortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));        
+        reactionSortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         List reactantSortKeys = new ArrayList();
-        reactantRowSorter.setComparator(0, new Comparator<String>(){
+        reactantRowSorter.setComparator(0, new Comparator<String>() {
             @Override
             public int compare(String t, String t1) {
                 return (t.compareTo(t1));
             }
         });
-        reactantRowSorter.setComparator(1, new Comparator<Object>(){
+        reactantRowSorter.setComparator(1, new Comparator<Object>() {
             @Override
             public int compare(Object t, Object t1) {
                 return (t.toString().compareTo(t1.toString()));
             }
         });
-        reactantRowSorter.setSortKeys(reactantSortKeys); 
+        reactantRowSorter.setSortKeys(reactantSortKeys);
         LOGGER.info("Rows in the reactant table have been sorted according to their string value");
     }
     //END CONSTRUCTORS
-    
+
     /**
-     * This method is called from the MathExpFrame, when the "Save"-button has been activated.
-     * @param e 
+     * This method is called from the MathExpFrame, when the "Save"-button has
+     * been activated.
+     *
+     * @param e
      */
     @Override
     public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
-        if (source instanceof MathExpFrame){
+        if (source instanceof MathExpFrame) {
             //Get the new mathematical expression.
             MathematicalExpression exp = ((MathExpFrame) source).getMathematicalExpression();
             Object[] inf = (Object[]) ((MathExpFrame) source).getInformation(this);
-            if (inf[2].toString().equalsIgnoreCase(TRANSITION)){
+            if (inf[2].toString().equalsIgnoreCase(TRANSITION)) {
                 this.reactionTable.setValueAt(exp, Integer.parseInt(inf[0].toString()), Integer.parseInt(inf[1].toString()));
-            }
-            else if (inf[2].toString().equalsIgnoreCase(PLACE)){
+            } else if (inf[2].toString().equalsIgnoreCase(PLACE)) {
                 this.reactantTable.setValueAt(exp, Integer.parseInt(inf[0].toString()), Integer.parseInt(inf[1].toString()));
             }
             ((MathExpFrame) source).dispose();
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -647,16 +647,16 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
      * Convert input data to PN-data and save it in GillespieTokenSim
      */
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        
-        if(reactantTable.isEditing()) {
+
+        if (reactantTable.isEditing()) {
             reactantTable.getCellEditor().stopCellEditing();
         }
-        
-        if(reactionTable.isEditing()) {
+
+        if (reactionTable.isEditing()) {
             reactionTable.getCellEditor().stopCellEditing();
         }
-                
-        try{
+
+        try {
             //Parse the volume.
             this.volume = Double.parseDouble(this.volumeTextField.getText());
             this.tokenSim.volume = volume;
@@ -665,15 +665,15 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
             /*
              * Convert concentrations to molecule numbers
              */
-            for (Place p : this.tokenSim.petriNet.places()){
+            for (Place p : this.tokenSim.petriNet.places()) {
                 /*
                  * If the place is non-constant, get the entered concentration and convert it to molecule (token) number.
                  */
-                if (!p.isConstant()){
+                if (!p.isConstant()) {
                     long tokens = Math.round(this.concentrations.get(p) * molVol);
-                    if (tokens == Long.MAX_VALUE){
+                    if (tokens == Long.MAX_VALUE) {
                         String error = "Concentration for " + p.getProperty("name") + " is too high,possible loss of information,  please enter smaller concentration or lower"
-                            + " the volume.";
+                                + " the volume.";
                         JOptionPane.showMessageDialog(null, error);
                     }
                     try {
@@ -681,11 +681,9 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     } catch (TokenSimulator.PlaceConstantException ex) {
                         LOGGER.error("Problem while trying to set a token value to a constant place, which should not have been constant in the first place", ex);
                     }
-                }
-                /*
+                } /*
                  * If the place is constant, assign a mathematical expression to it. The unit stays M and sec, no conversion needed.
-                 */
-                else{
+                 */ else {
                     MathematicalExpression exp = this.constantPlaces.get(p);
                     try {
                         this.tokenSim.tokenSim.setMathExpression(p.id(), exp);
@@ -694,16 +692,15 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     }
                 }
             }
-            
+
             /*
              * Store deterministic reaction rate constants. Do not perform conversion to stochastic reaction rate constant!.
              */
-            for (Transition t : this.reactionRates.keySet()){
+            for (Transition t : this.reactionRates.keySet()) {
                 this.tokenSim.deterministicReactionConstants.put(t.id(), this.reactionRates.get(t));
             }
             tokenSim.tokenSim.netViewer.hideMenu();
-        }
-        catch(NumberFormatException E){
+        } catch (NumberFormatException E) {
             LOGGER.error("NumberFormatException while trying to parse the textfield for gillespie input", E);
             JOptionPane.showMessageDialog(null, "Invalid volume! Allowed are real numbers, separated by a '.'");
         }

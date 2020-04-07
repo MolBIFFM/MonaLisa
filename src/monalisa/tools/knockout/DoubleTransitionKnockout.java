@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class DoubleTransitionKnockout extends KnockoutAlgorithm {
+
     private final List<Pair<Transition, Transition>> pairs;
     private final Iterator<Pair<Transition, Transition>> pairIterator;
     private List<UniquePetriNetEntity> currentKnockouts;
@@ -32,11 +33,14 @@ public class DoubleTransitionKnockout extends KnockoutAlgorithm {
         LOGGER.info("Initializing DoubleTransitionKnockout algorithm");
         this.pairs = new ArrayList<>();
         List<Transition> transitions = new ArrayList<>();
-        for (Transition t : pn.transitions())
+        for (Transition t : pn.transitions()) {
             transitions.add(t);
-        for (int i = 0; i < transitions.size(); i++)
-            for (int j = i + 1; j < transitions.size(); j++)
+        }
+        for (int i = 0; i < transitions.size(); i++) {
+            for (int j = i + 1; j < transitions.size(); j++) {
                 pairs.add(Pair.of(transitions.get(i), transitions.get(j)));
+            }
+        }
 
         pairIterator = pairs.iterator();
         LOGGER.info("Successfully initialized DoubleTransitionKnockout algorithm");

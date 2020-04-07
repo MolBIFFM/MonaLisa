@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.tinv;
 
 import java.util.ArrayList;
@@ -51,6 +50,7 @@ public final class TInvariantTool extends AbstractTool {
     public void saveSettings(Project p) {
         // TODO Auto-generated method stub
     }
+
     public int isCTI(Project project) {
         LOGGER.info("Checking whether Petri net is CTI");
         TInvariants tinv = project.getToolManager().getResult(TInvariantTool.class, new TInvariantsConfiguration());

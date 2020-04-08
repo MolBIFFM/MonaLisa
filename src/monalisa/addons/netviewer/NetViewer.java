@@ -9,6 +9,7 @@
  */
 package monalisa.addons.netviewer;
 
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
@@ -19,6 +20,8 @@ import monalisa.addons.netviewer.wrapper.MinvWrapper;
 import monalisa.addons.netviewer.gui.EdgeSetupFrame;
 import monalisa.addons.netviewer.gui.VertexSetupFrame;
 import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -133,6 +136,10 @@ public class NetViewer extends JFrame implements ActionListener {
     private Map<Configuration, Result> mcsResults;
     public Graph<NetViewerNode, NetViewerEdge> g;
     private MonaLisaLayout<NetViewerNode, NetViewerEdge> layout;
+    public final Map<Integer, NetViewerNode> placeMap;
+    public final Map<Integer, NetViewerNode> transitionMap;
+    private int latestEdgeID;
+    private int latestVertexID;
     protected VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
     private NetViewerModalGraphMouse gm;
     private Boolean mouseMode;                                                  // true = picking ; false = transforming
@@ -173,6 +180,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private final List<NetChangedListener> netChangedListener;
 
     private final Synchronizer synchronizer;
+    private final NetViewerStorage nvs;
     private static final Logger LOGGER = LogManager.getLogger(NetViewer.class);
 
     /**
@@ -191,6 +199,16 @@ public class NetViewer extends JFrame implements ActionListener {
         this.project = project;
         this.mainDialog = owner;
         this.synchronizer = project.getSynchronizer();
+        this.nvs = project.getNvs();
+
+        // Load NVS values
+        this.latestVertexID = nvs.getLatestVertexID();
+        this.latestEdgeID = nvs.getLatestEdgeID();
+        this.placeMap = nvs.getPlaceMap();
+        this.transitionMap = nvs.getTransitionMap();
+        this.g = nvs.getGraph();
+        this.layout = nvs.getLayout();
+
         setLocationRelativeTo(owner);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -280,9 +298,14 @@ public class NetViewer extends JFrame implements ActionListener {
         });
 
         // --- Graph Section ---
-        g = this.synchronizer.getGraph(); // Should move that function here probably
+        if (g == null) {
+            LOGGER.warn("Graph is null, initializing new graph");
+            g = translatePNtoGraph();
+            layout = new MonaLisaLayout<>(new FRLayout<>(g));
+        } else {
+            LOGGER.info("Using imported Graph and Layout");
+        }
 
-        layout = this.synchronizer.getLayout();
         LOGGER.debug("Initializing VisualizationViewer");
         // Init the VisualizationViewer and set all Renderer ect.
         vv = new VisualizationViewer<>(layout);//, gridSize, oo);
@@ -399,13 +422,13 @@ public class NetViewer extends JFrame implements ActionListener {
             LOGGER.info("Using imported layout information if available");
             for (Place place : this.synchronizer.getPetriNet().places()) {
                 if (place.hasProperty("posX")) {
-                    layout.setLocation(this.synchronizer.getNodeFromVertex(place), new Point2D.Double((Double) place.getProperty("posX"), (Double) place.getProperty("posY")));
+                    layout.setLocation(getNodeFromVertex(place), new Point2D.Double((Double) place.getProperty("posX"), (Double) place.getProperty("posY")));
                 }
             }
 
             for (Transition transition : this.synchronizer.getPetriNet().transitions()) {
                 if (transition.hasProperty("posX")) {
-                    layout.setLocation(this.synchronizer.getNodeFromVertex(transition), new Point2D.Double((Double) transition.getProperty("posX"), (Double) transition.getProperty("posY")));
+                    layout.setLocation(getNodeFromVertex(transition), new Point2D.Double((Double) transition.getProperty("posX"), (Double) transition.getProperty("posY")));
                 }
             }
             this.project.getPetriNet().removeProperty("new_imported");
@@ -1074,12 +1097,12 @@ public class NetViewer extends JFrame implements ActionListener {
                     t1 = it1.next();
 
                     // Check for I/O TInvariant
-                    tmp = this.synchronizer.getNodeFromVertex(t1);
+                    tmp = getNodeFromVertex(t1);
                     if (tmp != null) {
-                        if (this.synchronizer.getNodeFromVertex(t1).getInEdges().isEmpty()) {
+                        if (getNodeFromVertex(t1).getInEdges().isEmpty()) {
                             input = true;
                         }
-                        if (this.synchronizer.getNodeFromVertex(t1).getOutEdges().isEmpty()) {
+                        if (getNodeFromVertex(t1).getOutEdges().isEmpty()) {
                             output = true;
                         }
                     }
@@ -1689,7 +1712,7 @@ public class NetViewer extends JFrame implements ActionListener {
             for (TInvariant tinv : tinvs) {
                 it = tinv.transitions().iterator();
                 while (it.hasNext()) {
-                    this.synchronizer.getNodeFromVertex(it.next()).setColor(Color.YELLOW);
+                    getNodeFromVertex(it.next()).setColor(Color.YELLOW);
                 }
             }
         }
@@ -1750,7 +1773,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 if (norm < 0.05) {
                     norm = (float) 0.05;
                 }
-                this.synchronizer.getNodeFromVertex(entry.getKey()).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
+                getNodeFromVertex(entry.getKey()).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
             }
             vv.repaint();
             LOGGER.info("Successfully colored important transitions");
@@ -1833,12 +1856,12 @@ public class NetViewer extends JFrame implements ActionListener {
                     if (norm < 0.05) {
                         norm = (float) 0.05;
                     }
-                    this.synchronizer.getNodeFromVertex(t).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
+                    getNodeFromVertex(t).setColor(new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2])));
                 } else {
-                    this.synchronizer.getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
+                    getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
                 }
             } else {
-                this.synchronizer.getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
+                getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
             }
         }
 
@@ -1847,7 +1870,7 @@ public class NetViewer extends JFrame implements ActionListener {
         displayMessage("<html>" + knockOutString + "<br />" + heatMapString + "</html>", Color.BLACK);
 
         for (NetViewerNode nvNode : nvNodes) {
-            this.synchronizer.getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
+            getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
         }
 
         vv.repaint();
@@ -1911,14 +1934,14 @@ public class NetViewer extends JFrame implements ActionListener {
 
         for (Transition t : synchronizer.getPetriNet().transitions()) {
             if (notKnockedOutTransitions.contains(t)) {
-                this.synchronizer.getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
+                getNodeFromVertex(t).setColor(NOTKNOCKEDOUTCOLOR);
             } else {
-                this.synchronizer.getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
+                getNodeFromVertex(t).setColor(ALSOKNOCKEDOUT_COLOR);
             }
         }
 
         for (NetViewerNode nvNode : nvNodes) {
-            this.synchronizer.getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
+            getTransitionMap().get(nvNode.getId()).setColor(KNOCKEDOUT_COLOR);
         }
 
         vv.repaint();
@@ -2207,11 +2230,11 @@ public class NetViewer extends JFrame implements ActionListener {
         cancelMouseAction();
 
         for (NetViewerNode nvNode : vv.getRenderContext().getPickedVertexState().getPicked()) {
-            this.synchronizer.removeNode(nvNode);
+            removeNode(nvNode);
         }
 
         for (NetViewerEdge nvEdge : vv.getRenderContext().getPickedEdgeState().getPicked()) {
-            this.synchronizer.removeEdge(nvEdge);
+            removeEdge(nvEdge);
         }
 
         netChanged = true;
@@ -2236,7 +2259,7 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Coloring transitions of a given set");
         Iterator<Transition> it = transitions.iterator();
         while (it.hasNext()) {
-            this.synchronizer.getNodeFromVertex(it.next()).setColor(color);
+            getNodeFromVertex(it.next()).setColor(color);
         }
         vv.repaint();
         LOGGER.info("Successfully colored transitions of a given set");
@@ -2245,7 +2268,7 @@ public class NetViewer extends JFrame implements ActionListener {
     public void colorTransitions(Color color, Transition... transitions) {
         LOGGER.info("Coloring a number of transitions");
         for (Transition t : transitions) {
-            this.synchronizer.getNodeFromVertex(t).setColor(color);
+            getNodeFromVertex(t).setColor(color);
         }
         vv.repaint();
         LOGGER.info("Successfully colored a number of transitions");
@@ -2327,7 +2350,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
                         if (net2Place.containsKey(i)) {
                             for (Place p : net2Place.get(i)) {
-                                pos = layout.transform(this.synchronizer.getNodeFromVertex(p));
+                                pos = layout.transform(getNodeFromVertex(p));
                                 x = pos.getX();
                                 y = pos.getY();
 
@@ -2349,7 +2372,7 @@ public class NetViewer extends JFrame implements ActionListener {
                         if (net2Transition.containsKey(i)) {
                             counter = 0;
                             for (Transition t : net2Transition.get(i)) {
-                                pos = layout.transform(this.synchronizer.getNodeFromVertex(t));
+                                pos = layout.transform(getNodeFromVertex(t));
                                 x = pos.getX();
                                 y = pos.getY();
 
@@ -2385,7 +2408,7 @@ public class NetViewer extends JFrame implements ActionListener {
                             }
 
                             for (Transition t : net2Transition.get(i)) {
-                                pos = layout.transform(this.synchronizer.getNodeFromVertex(t));
+                                pos = layout.transform(getNodeFromVertex(t));
 
                                 if (sameY) {
                                     distX = 0.0 - ((maxXb - minXb) / 2.0) + (pos.getX() - minXb);
@@ -2406,7 +2429,7 @@ public class NetViewer extends JFrame implements ActionListener {
                                 }
 
                                 newPos = new Point2D.Double(minXa + distX, distY + minYa);
-                                layout.setLocation(this.synchronizer.getNodeFromVertex(t), vv.getRenderContext().getMultiLayerTransformer().inverseTransform(newPos));
+                                layout.setLocation(getNodeFromVertex(t), vv.getRenderContext().getMultiLayerTransformer().inverseTransform(newPos));
                             }
                         }
                     }
@@ -2424,7 +2447,7 @@ public class NetViewer extends JFrame implements ActionListener {
                             if (!newLogicalPlaces.containsKey(internalID)) {
                                 newLogicalPlaces.put(internalID, new ArrayList<NetViewerNode>());
                             }
-                            newLogicalPlaces.get(internalID).add(this.synchronizer.getNodeFromVertex(t));
+                            newLogicalPlaces.get(internalID).add(getNodeFromVertex(t));
                         }
                     }
                     for (Place p : t.inputs()) {
@@ -2434,7 +2457,7 @@ public class NetViewer extends JFrame implements ActionListener {
                             if (!newLogicalPlaces.containsKey(internalID)) {
                                 newLogicalPlaces.put(internalID, new ArrayList<NetViewerNode>());
                             }
-                            newLogicalPlaces.get(internalID).add(this.synchronizer.getNodeFromVertex(t));
+                            newLogicalPlaces.get(internalID).add(getNodeFromVertex(t));
                         }
                     }
 
@@ -2449,7 +2472,7 @@ public class NetViewer extends JFrame implements ActionListener {
                     newPoint.y = new Double(pointParts[1]);
                     selectedNodes.clear();
                     selectedNodes.addAll(newLogicalPlaces.get(k));
-                    this.synchronizer.addLogicalPlace(this.synchronizer.getNodeFromVertex(graphicalId2Place.get(k)), selectedNodes, newPoint);
+                    addLogicalPlace(getNodeFromVertex(graphicalId2Place.get(k)), selectedNodes, newPoint);
                 }
                 LOGGER.debug("Detecting bends in arcs");
                 //detect bends in arcs
@@ -2474,9 +2497,9 @@ public class NetViewer extends JFrame implements ActionListener {
                         for (int i = 1; i < length - 1; i++) {
                             pointParts = points.get(i).split("\\|");
                             if (lastEdge == null) {
-                                lastEdge = this.synchronizer.addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                lastEdge = addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
                             } else {
-                                lastEdge = this.synchronizer.addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                lastEdge = addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
 
                             }
                         }
@@ -2510,13 +2533,13 @@ public class NetViewer extends JFrame implements ActionListener {
         PetriNet pn = this.synchronizer.getPetriNet();
         NetViewerNode nvNode;
         for (Transition t : pn.transitions()) {
-            nvNode = this.synchronizer.getNodeFromVertex(t);
+            nvNode = getNodeFromVertex(t);
             t.putProperty("name", nvNode.getName());
             t.putProperty("posX", layout.transform(nvNode).getX());
             t.putProperty("posY", layout.transform(nvNode).getY());
         }
         for (Place p : pn.places()) {
-            nvNode = this.synchronizer.getNodeFromVertex(p);
+            nvNode = getNodeFromVertex(p);
             p.putProperty("name", nvNode.getName());
             p.putProperty("posX", layout.transform(nvNode).getX());
             p.putProperty("posY", layout.transform(nvNode).getY());
@@ -2852,6 +2875,14 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
+     * Updates the associated instance of NetViewerStorage with the current
+     * values.
+     */
+    public void updateNVS() {
+        nvs.updateStorage(latestVertexID, latestEdgeID, this);
+    }
+
+    /**
      * Replaces the actual GraphMousePlugin with popupMouse
      *
      * @param popupMouse
@@ -2924,40 +2955,6 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public Collection<NetViewerNode> getAllVertices() {
         return g.getVertices();
-    }
-
-    /**
-     * Returns the corresponding NetViewerNode to a place or transition. If the
-     * given UPNE is neither a Place or Transition, the function returns NULL.
-     *
-     * @param upne Either a Place or a Transition
-     * @return If the given UPNE is neither a Place or Transition, the function
-     * returns NULL otherwise the reference of a NetViewerNode.
-     */
-    public NetViewerNode getNodeFromVertex(UniquePetriNetEntity upne) {
-        return this.synchronizer.getNodeFromVertex(upne);
-    }
-
-    /**
-     * Returns the corresponding NetViewerNode to ID of a transition.
-     *
-     * @param id
-     * @return The corresponding transition, if for the given ID exist a
-     * Transition, NULL otherwise.
-     */
-    public NetViewerNode getNodeFromTransitionId(Integer id) {
-        return this.synchronizer.getNodeFromTransitionId(id);
-    }
-
-    /**
-     * Returns the corresponding NetViewerNode to ID of a place.
-     *
-     * @param id
-     * @return The corresponding place, if for the given ID exist a place, NULL
-     * otherwise.
-     */
-    public NetViewerNode getNodeFromPlaceId(Integer id) {
-        return this.synchronizer.getNodeFromPlaceId(id);
     }
 
     /**
@@ -3081,5 +3078,709 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.repaint();
         LOGGER.info("Successfully closed TokenSimulator");
     }
-    // ------- END: Communication and controll with / for other addons -----------
+    // ------- END: Communication and control with / for other addons -----------
+
+    // ------- START: Graph modification in NetViewer -------
+    /**
+     * Return a map to get the corresponding NetViewerNode of a place.
+     *
+     * @return
+     */
+    public Map<Integer, NetViewerNode> getPlaceMap() {
+        return Collections.unmodifiableMap(placeMap);
+    }
+
+    /**
+     * Generates the graph class for the NetViewer out of the PetriNet.
+     */
+    public Graph<NetViewerNode, NetViewerEdge> translatePNtoGraph() {
+        Graph<NetViewerNode, NetViewerEdge> graph = new SparseGraph<>();
+        LOGGER.info("Translating Petri net to graph for NetViewer");
+        PetriNet pn = synchronizer.getPetriNet();
+        int edgeCount = 0;
+        NetViewerNode nvNode;
+        // generate Places
+        String labelName;
+        String propertyName;
+        for (Place place : pn.places()) {
+            labelName = place.<String>getProperty("name");
+            nvNode = new NetViewerNode(place.id(), PLACE, labelName);
+            placeMap.put(place.id(), nvNode); // this map is needed to synchrone the PN with ne Netviewer graph and for coloring of the nodes
+            graph.addVertex(nvNode);
+            // has the place a compartment?
+            if (place.getCompartment() != null) {
+                nvNode.putProperty("compartment", place.getCompartment());
+            }
+            // save all properties from place to nvNode
+            Iterator it = place.getPropertyList().iterator();
+            while (it.hasNext()) {
+                propertyName = (String) it.next();
+                nvNode.putProperty(propertyName, place.getProperty(propertyName));
+            }
+            // serach for highest id, to get no conflict by creating new nodes
+            if (place.id() > latestVertexID) {
+                latestVertexID = place.id();
+            }
+        }
+        // generate Transitions
+        for (Transition transition : pn.transitions()) {
+            labelName = (String) transition.getProperty("name");
+            nvNode = new NetViewerNode(transition.id(), TRANSITION, labelName);
+            transitionMap.put(transition.id(), nvNode);
+            graph.addVertex(nvNode);
+            // has the transition a compartment?
+            if (transition.getCompartment() != null) {
+                nvNode.putProperty("compartment", transition.getCompartment());
+            }
+            // save all properties from place to nvNode
+            Iterator it = transition.getPropertyList().iterator();
+            while (it.hasNext()) {
+                propertyName = (String) it.next();
+                nvNode.putProperty(propertyName, transition.getProperty(propertyName));
+            }
+            // serach for highest id, to get no conflict by creating new nodes
+            if (transition.id() > latestVertexID) {
+                latestVertexID = transition.id();
+            }
+        }
+        // generate Edges
+        int weight;
+        NetViewerEdge edge;
+        for (Place place : pn.places()) {
+            // inputs
+            for (Transition transition : place.inputs()) {
+                weight = pn.getArc(pn.findTransition(transition.id()), pn.findPlace(place.id())).weight();
+                edge = new NetViewerEdge("e" + edgeCount, weight, transitionMap.get(transition.id()), placeMap.get(place.id()));
+                graph.addEdge(edge, edge.getSource(), edge.getAim(), EdgeType.DIRECTED);
+                edgeCount++;
+            }
+            // outputs
+            for (Transition transition : place.outputs()) {
+                weight = pn.getArc(pn.findPlace(place.id()), pn.findTransition(transition.id())).weight();
+                edge = new NetViewerEdge("e" + edgeCount, weight, placeMap.get(place.id()), transitionMap.get(transition.id()));
+                graph.addEdge(edge, edge.getSource(), edge.getAim(), EdgeType.DIRECTED);
+                edgeCount++;
+            }
+        }
+        LOGGER.info("Successfully translated Petri net to graph for NetViewer");
+        return graph;
+    }
+
+    /**
+     * Return the Graph which is used by the NetViewer.
+     *
+     * @return The graph which is synchronized
+     */
+    public Graph<NetViewerNode, NetViewerEdge> getGraph() {
+        return g;
+    }
+
+    /**
+     * Returns the layout, corresponding to this NetViewer's graph.
+     *
+     * @return
+     */
+    public MonaLisaLayout<NetViewerNode, NetViewerEdge> getMLLayout() {
+        return layout;
+    }
+
+    /**
+     * Returns the corresponding Place of a NetViewerNode.
+     *
+     * @param nvNode
+     * @return The corresponding Place or NULL, if nvNode is not a Place
+     */
+    public Place getPlaceFromNode(NetViewerNode nvNode) {
+        return synchronizer.getPlaceFromId(nvNode.getMasterNode().getId());
+    }
+
+    /**
+     * Return a map to get the corresponding NetViewerNode of a transition.
+     *
+     * @return
+     */
+    public Map<Integer, NetViewerNode> getTransitionMap() {
+        return Collections.unmodifiableMap(transitionMap);
+    }
+
+    /**
+     * Returns the corresponding Transition of a NetViewerNode.
+     *
+     * @param nvNode
+     * @return The corresponding Transition or NULL, if nvNode is not a
+     * Transition
+     */
+    public Transition getTransitionFromNode(NetViewerNode nvNode) {
+        return synchronizer.getTransitionFromId(nvNode.getId());
+    }
+
+    /**
+     * Returns the corresponding NetViewerNode to a place or transition. If the
+     * given UPNE is neither a Place or Transition, the function returns NULL.
+     *
+     * @param upne Either a Place or a Transition
+     * @return If the given UPNE is neither a Place or Transition, the function
+     * returns NULL otherwise the reference of a NetViewerNode.
+     */
+    public NetViewerNode getNodeFromVertex(UniquePetriNetEntity upne) {
+        NetViewerNode ret = null;
+        if (upne == null) {
+            return null;
+        }
+        if (upne.getClass().equals(Transition.class)) {
+            ret = transitionMap.get(upne.id());
+        }
+        if (upne.getClass().equals(Place.class)) {
+            ret = placeMap.get(upne.id());
+        }
+        return ret;
+    }
+
+    /**
+     * Returns the corresponding NetViewerNode to ID of a transition.
+     *
+     * @param id
+     * @return The corresponding transition, if for the given ID exist a
+     * Transition, NULL otherwise.
+     */
+    public NetViewerNode getNodeFromTransitionId(Integer id) {
+        NetViewerNode ret = null;
+        if (transitionMap.containsKey(id)) {
+            ret = transitionMap.get(id);
+        }
+        return ret;
+    }
+
+    /**
+     * Returns the corresponding NetViewerNode to ID of a place.
+     *
+     * @param id
+     * @return The corresponding place, if for the given ID exist a place, NULL
+     * otherwise.
+     */
+    public NetViewerNode getNodeFromPlaceId(Integer id) {
+        NetViewerNode ret = null;
+        if (placeMap.containsKey(id)) {
+            ret = placeMap.get(id);
+        }
+        return ret;
+    }
+
+    /**
+     * Return a new node id. This ID is higher than any other, older, ID.
+     *
+     * @return
+     */
+    public int getNewNodeId() {
+        return ++this.latestVertexID;
+    }
+
+    /**
+     * Return a new edge id. This ID is higher than any other, older, ID.
+     *
+     * @return
+     */
+    public int getNewEdgeId() {
+        return ++this.latestEdgeID;
+    }
+
+    // START: Section for manipulating the Net
+    /**
+     * Creates a new node and add him to the Graph and the PetriNet.
+     *
+     * @param type NetViewer.PLACE or NetViewer.TRANSITION
+     * @param labelName String which is displayed in the NetViewer
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return the created NetViewerNode
+     */
+    public NetViewerNode addNode(String type, String labelName, double x, double y) {
+        LOGGER.debug("Adding new node to NetViewer and Petri net");
+        NetViewerNode ret = new NetViewerNode(getNewNodeId(), type, labelName);
+        g.addVertex(ret);
+
+        Point.Double point = new Point.Double(x, y);
+        layout.setLocation(ret, point);
+
+        if (ret.getNodeType().equalsIgnoreCase(PLACE)) {
+            Place p = synchronizer.addPlace(ret.getId(), ret.getName(), x, y);
+            placeMap.put(p.id(), ret);
+        } else if (ret.getNodeType().equalsIgnoreCase(TRANSITION)) {
+            Transition t = synchronizer.addTransition(ret.getId(), ret.getName(), x, y);
+            transitionMap.put(t.id(), ret);
+        }
+        LOGGER.debug("Successfully added new node to NetViewer and Petri net");
+        return ret;
+    }
+
+    /**
+     * Add a new node in dependence to another node
+     *
+     * @param nvNode
+     * @param direction 0 = input ; 1 = output
+     */
+    public NetViewerNode addNode(NetViewerNode nvNode, Boolean direction) {
+        LOGGER.debug("Adding new node to NetViewer in dependence from another node");
+        NetViewerNode ret;
+        Point2D coordinates = layout.transform(nvNode);
+        if (nvNode.getNodeType().equalsIgnoreCase(TRANSITION)) {
+            ret = addNode(PLACE, "Created_from_" + nvNode.getName(), (int) coordinates.getX() + 50, (int) coordinates.getY() + 50);
+        } else {
+            ret = addNode(TRANSITION, "Created_from_" + nvNode.getName(), (int) coordinates.getX() + 50, (int) coordinates.getY() + 50);
+        }
+        if (direction) {
+            addEdge(1, ret, nvNode);
+        } else {
+            addEdge(1, nvNode, ret);
+        }
+        LOGGER.debug("Successfully added new node to NetViewer in dependence from another node");
+        return ret;
+    }
+
+    /**
+     * Create a new logical place
+     *
+     * @param sourceNode
+     * @param selectedNodes
+     * @param nodePosition
+     */
+    public void addLogicalPlace(NetViewerNode sourceNode, List<NetViewerNode> selectedNodes, Point2D nodePosition) {
+        if (!selectedNodes.isEmpty()) {
+            LOGGER.debug("Adding new logical place to NetViewer");
+            NetViewerNode newNode = sourceNode.getMasterNode().generateLocicalPlace(getNewNodeId());
+            sourceNode.getMasterNode().setColor(Color.GRAY);
+            g.addVertex(newNode);
+            if (!(sourceNode.getMasterNode().getColor().equals(Color.WHITE) || sourceNode.getMasterNode().getColor().equals(Color.GRAY))) {
+                newNode.setColor(sourceNode.getColor());
+            }
+            if (!sourceNode.getMasterNode().getStrokeColor().equals(Color.BLACK)) {
+                newNode.setStrokeColor(sourceNode.getMasterNode().getStrokeColor());
+            } else {
+                newNode.setStrokeColor(Color.BLACK);
+            }
+            if (sourceNode.getCorners() != 0) {
+                newNode.setCorners(sourceNode.getCorners());
+            }
+            NetViewerEdge oldEdge;
+            NetViewerEdge newEdge;
+            for (Object n : selectedNodes) {
+                // in which direction are the edge?
+                oldEdge = g.findEdge(sourceNode, (NetViewerNode) n);
+                if (oldEdge != null) {
+                    newEdge = new NetViewerEdge("L" + getNewEdgeId(), oldEdge.getWeight(), newNode, (NetViewerNode) n);
+                    removeAllBends(oldEdge);
+                    g.removeEdge(oldEdge);
+                    g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
+                    sourceNode.removeOutEdge(oldEdge);
+                } else {
+                    oldEdge = g.findEdge((NetViewerNode) n, sourceNode);
+                    newEdge = new NetViewerEdge("L" + getNewEdgeId(), oldEdge.getWeight(), (NetViewerNode) n, newNode);
+                    removeAllBends(oldEdge);
+                    g.removeEdge(oldEdge);
+                    g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
+                    sourceNode.removeInEdge(oldEdge);
+                }
+                oldEdge.getAim().removeInEdge(oldEdge);
+                oldEdge.getSource().removeOutEdge(oldEdge);
+            }
+            if (nodePosition == null) {
+                Point2D coordinates = layout.transform(sourceNode);
+                layout.setLocation(newNode, new Point.Double(coordinates.getX() + 50.0, coordinates.getY() + 50.0));
+            } else {
+                layout.setLocation(newNode, nodePosition);
+            }
+            LOGGER.debug("Successfully added new logical place to NetViewer");
+        }
+    }
+
+    /**
+     * Add a bend to a given edge at a given point (x,y)
+     *
+     * @param nvEdge
+     * @param x
+     * @param y
+     */
+    public NetViewerEdge addBend(NetViewerEdge nvEdge, double x, double y) {
+        LOGGER.debug("Adding bend to edge in NetViewer");
+        NetViewerEdge newEdge;
+        NetViewerEdge masterEdge = nvEdge.getMasterEdge();
+        NetViewerNode newNode = addNode(BEND, "B", x + 30.0, y + 30.0);
+        addBendEdge(nvEdge.getSource(), newNode, masterEdge);
+        newEdge = new NetViewerEdge("n" + getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge);
+        if (newEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
+            g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.UNDIRECTED);
+        } else {
+            g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
+        }
+        if (!nvEdge.getSource().getNodeType().equalsIgnoreCase(BEND) && !nvEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
+            nvEdge.setVisible(false);
+        } else {
+            g.removeEdge(nvEdge);
+            masterEdge.removeBendEdge(nvEdge);
+            nvEdge.getAim().removeInEdge(nvEdge);
+            nvEdge.getSource().removeOutEdge(nvEdge);
+        }
+        LOGGER.debug("Successfully added bend to edge in NetViewer");
+        return newEdge;
+    }
+
+    /**
+     * Add a new bend edge to the Graph
+     *
+     * @param weight
+     * @param source
+     * @param aim
+     * @param masterEdge
+     * @return
+     */
+    public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
+        LOGGER.debug("Adding new bended edge to NetViewer");
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge);
+        g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
+        LOGGER.debug("Successfully added new bended edge to NetViewer");
+        return ret;
+    }
+
+    /**
+     * Add a edge to the Graph and the PetriNet.
+     *
+     * @param weight Weight of the edge
+     * @param source Source of the edge
+     * @param aim Aim of the edge
+     * @return The new created NetViewerEdge
+     */
+    public NetViewerEdge addEdge(int weight, NetViewerNode source, NetViewerNode aim) {
+        LOGGER.debug("Adding new edge to NetViewer and Petri net");
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), weight, source, aim);
+        g.addEdge(ret, source, aim, EdgeType.DIRECTED);
+        if (ret.getSource().getNodeType().equalsIgnoreCase(PLACE)) {
+            Place from = synchronizer.getPlaceFromId(ret.getSource().getMasterNode().getId());
+            Transition to = synchronizer.getTransitionFromId(ret.getAim().getId());
+            synchronizer.addArc(from, to, weight);
+        } else if (ret.getSource().getNodeType().equalsIgnoreCase(TRANSITION)) {
+            Transition from = synchronizer.getTransitionFromId(ret.getSource().getId());
+            Place to = synchronizer.getPlaceFromId(ret.getAim().getMasterNode().getId());
+            synchronizer.addArc(from, to, weight);
+        }
+        LOGGER.debug("Successfully added new edge to NetViewer and Petri net");
+        return ret;
+    }
+
+    /**
+     * Removes a logical place. All edges a go back to master node or to a other
+     * given logical places
+     *
+     * @param nvNode Place to remove
+     * @param aim Aim for edges.
+     */
+    public void removeLogicalPlace(NetViewerNode nvNode, NetViewerNode aim) {
+        if (!nvNode.getNodeType().equalsIgnoreCase(PLACE) || !aim.getNodeType().equalsIgnoreCase(PLACE)) {
+            return;
+        }
+        if (nvNode.equals(nvNode.getMasterNode())) {
+            return;
+        }
+        LOGGER.debug("Removing logical place from NetViewer");
+        List<NetViewerEdge> edgesToDelete = new ArrayList<>();
+        for (NetViewerEdge e : nvNode.getInEdges()) {
+            addEdge(e.getWeight(), e.getSource(), aim);
+            edgesToDelete.add(g.findEdge(e.getSource(), nvNode));
+        }
+        for (NetViewerEdge e : nvNode.getOutEdges()) {
+            addEdge(e.getWeight(), aim, e.getAim());
+            edgesToDelete.add(g.findEdge(nvNode, e.getAim()));
+        }
+        for (NetViewerEdge nvEdge : edgesToDelete) {
+            nvEdge.getSource().removeOutEdge(nvEdge);
+            nvEdge.getAim().removeInEdge(nvEdge);
+            removeEdgeFromGraph(nvEdge);
+        }
+        nvNode.getMasterNode().removeLogicalNode(nvNode);
+        if (!nvNode.getMasterNode().getColor().equals(Color.WHITE)) {
+            nvNode.getMasterNode().setColor(nvNode.getMasterNode().getColor());
+        } else {
+            nvNode.getMasterNode().setColor(Color.WHITE);
+        }
+        if (nvNode.getMasterNode().getLogicalPlaces().size() == 1) {
+            nvNode.getMasterNode().setColor(Color.WHITE);
+        }
+        LOGGER.debug("Successfully removed logical place from NetViewer");
+    }
+
+    /**
+     * Removes the given edge from the Graph and the PetriNet.
+     *
+     * @param edge The edge to remove
+     */
+    public void removeEdge(NetViewerEdge edge) {
+        LOGGER.debug("Removing edge from Graph and Petri net");
+        removeEdgeFromPetriNet(edge);
+        removeAllBends(edge);
+        removeEdgeFromGraph(edge);
+        LOGGER.debug("Successfully removed edge from Graph and Petri net");
+    }
+
+    /**
+     * Removes the edge from the graph
+     *
+     * @param edge
+     */
+    private void removeEdgeFromGraph(NetViewerEdge edge) {
+        LOGGER.debug("Removing edge from graph");
+        if (edge.getMasterEdge().equals(edge)) {
+            edge.getAim().removeInEdge(edge);
+            edge.getSource().removeOutEdge(edge);
+        }
+        edge.getMasterEdge().getAim().removeInEdge(edge.getMasterEdge());
+        edge.getMasterEdge().getSource().removeOutEdge(edge.getMasterEdge());
+        g.removeEdge(edge.getMasterEdge());
+        LOGGER.debug("Successfully removed edge from graph");
+    }
+
+    /**
+     * Melt multiple logical places to the master node. The master node is
+     * detected automatically
+     *
+     * @param nvNodes The list of logical places to be melted
+     */
+    public void mergeLogicalPlaces(List<NetViewerNode> nvNodes) {
+        LOGGER.debug("Merging logical places with master node in NetViewer");
+        NetViewerNode masterNode = nvNodes.get(0).getMasterNode();
+        for (NetViewerNode nvNode : nvNodes) {
+            if (!nvNode.getNodeType().equalsIgnoreCase(PLACE)) {
+                return;
+            }
+        }
+        if (nvNodes.contains(masterNode)) {
+            nvNodes.remove(masterNode);
+        }
+        for (NetViewerNode nvNode : nvNodes) {
+            removeNode(nvNode);
+        }
+        LOGGER.debug("Successfully merged logical places with master node in NetViewer");
+    }
+
+    /**
+     * Removes the edge from the Petri net.
+     *
+     * @param edge
+     */
+    public void removeEdgeFromPetriNet(NetViewerEdge edge) {
+        if (edge == null) {
+            return;
+        }
+        LOGGER.debug("Removing edge from Petri net");
+        if (edge.getSource().getNodeType().equals(PLACE)) {
+            Place from = synchronizer.getPlaceFromId(edge.getSource().getMasterNode().getId());
+            Transition to = synchronizer.getTransitionFromId(edge.getAim().getId());
+            synchronizer.removeArc(from, to);
+        } else {
+            Transition from = synchronizer.getTransitionFromId(edge.getSource().getId());
+            Place to = synchronizer.getPlaceFromId(edge.getAim().getMasterNode().getId());
+            synchronizer.removeArc(from, to);
+        }
+        LOGGER.debug("Successfully removed edge from Petri net");
+    }
+
+    /**
+     * Remove all bends of a gives edge
+     *
+     * @param edge
+     */
+    public void removeAllBends(NetViewerEdge edge) {
+        LOGGER.debug("Removing all bends from edge in NetViewer");
+        List<NetViewerEdge> edgeList = edge.getMasterEdge().getBendEdges();
+        for (NetViewerEdge e : edgeList) {
+            e.getSource().removeOutEdge(e);
+            e.getAim().removeInEdge(e);
+            g.removeEdge(e);
+            if (e.getAim().getNodeType().equalsIgnoreCase(BEND)) {
+                g.removeVertex(e.getAim());
+            }
+        }
+        edge.getMasterEdge().clearBendEdges();
+        edge.getMasterEdge().setVisible(true);
+        LOGGER.debug("Successfully removed all bends from edge in NetViewer");
+    }
+
+    /**
+     * Removes a bend from the given edge
+     *
+     * @param edge
+     */
+    public void removeBend(NetViewerEdge edge) {
+        LOGGER.debug("Removing one bend from an edge in NetViewer");
+        NetViewerEdge invisibleEdge = null;
+        NetViewerEdge otherEdge;
+        // NetViewer.BEND ------ NODE
+        if (edge.getSource().getNodeType().equalsIgnoreCase(BEND) && !edge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
+            edge.getAim().removeInEdge(edge);
+            edge.getSource().removeOutEdge(edge);
+            otherEdge = (NetViewerEdge) edge.getSource().getInEdges().toArray()[0];
+            if (!otherEdge.getSource().getNodeType().equals(BEND)) {
+                invisibleEdge = g.findEdge(otherEdge.getSource(), edge.getAim());
+            } else {
+                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
+            }
+            g.removeVertex(edge.getSource());
+        } // NODE ------ NetViewer.BEND
+        else if (edge.getAim().getNodeType().equalsIgnoreCase(BEND) && !edge.getSource().getNodeType().equalsIgnoreCase(BEND)) {
+            edge.getSource().removeOutEdge(edge);
+            edge.getAim().removeInEdge(edge);
+            otherEdge = (NetViewerEdge) edge.getAim().getOutEdges().toArray()[0];
+            if (!otherEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
+                invisibleEdge = g.findEdge(edge.getSource(), otherEdge.getAim());
+            } else {
+                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge());
+            }
+            g.removeVertex(edge.getAim());
+        } // NetViewer.BEND ------ NetViewer.BEND
+        else {
+            edge.getAim().removeInEdge(edge);
+            edge.getSource().removeOutEdge(edge);
+            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);
+            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
+            g.removeVertex(otherEdge.getAim());
+        }
+        otherEdge.getMasterEdge().removeBendEdge(otherEdge);
+        g.removeEdge(otherEdge);
+        edge.getMasterEdge().removeBendEdge(edge);
+        g.removeEdge(edge);
+        if (invisibleEdge != null) {
+            invisibleEdge.setVisible(true);
+        }
+        LOGGER.debug("Successfully removed one bend from an edge in NetViewer");
+    }
+
+    /**
+     * Removes the given node from the Graph and the Petri net
+     *
+     * @param nvNode
+     */
+    public void removeNode(NetViewerNode nvNode) {
+        LOGGER.info("Removing node from graph and Petri net");
+        boolean notLogicalAnymore = false;
+        // Remove all bends
+        List<NetViewerEdge> bends2remove = new ArrayList<>();
+        for (NetViewerEdge edge : nvNode.getInEdges()) {
+            if (!edge.getMasterEdge().equals(edge)) {
+                continue;
+            }
+            if (!edge.getMasterEdge().getBendEdges().isEmpty()) {
+                bends2remove.add(edge.getMasterEdge());
+            }
+        }
+        for (NetViewerEdge edge : nvNode.getOutEdges()) {
+            if (!edge.getMasterEdge().equals(edge)) {
+                continue;
+            }
+            if (!edge.getMasterEdge().getBendEdges().isEmpty()) {
+                bends2remove.add(edge.getMasterEdge());
+            }
+        }
+        for (NetViewerEdge edge : bends2remove) {
+            removeAllBends(edge);
+        }
+        if (nvNode.isMasterNode()) {
+            // Needed to avoid ConcurrentModification Errors
+            List<NetViewerNode> nvList = new ArrayList<>();
+            for (NetViewerNode n : nvNode.getLogicalPlaces()) {
+                if (n.equals(nvNode)) {
+                    continue;
+                }
+                nvList.add(n);
+            }
+            for (NetViewerNode n : nvList) {
+                removeNode(n);
+            }
+            nvNode.clearLogicalPlaces();
+        } else if (nvNode.isLogical()) {
+            removeLogicalPlace(nvNode, nvNode.getMasterNode());
+            // If a logical place is deleted, bends and egdes have to be removed from Graph but not from Petri net!!!
+            notLogicalAnymore = true;
+        }
+        // Now remove all edges
+        for (NetViewerEdge edge : nvNode.getOutEdges()) {
+            removeEdgeFromPetriNet(edge);
+            edge.getAim().removeInEdge(edge.getMasterEdge());
+        }
+        for (NetViewerEdge edge : nvNode.getInEdges()) {
+            removeEdgeFromPetriNet(edge);
+            edge.getSource().removeOutEdge(edge.getMasterEdge());
+        }
+        // and than the node
+        g.removeVertex(nvNode);
+        // and from the PetriNet
+        if (!nvNode.isLogical() && !notLogicalAnymore) {
+            if (nvNode.getNodeType().equalsIgnoreCase(PLACE)) {
+                synchronizer.removePlace(synchronizer.getPlaceFromId(nvNode.getId()));
+                placeMap.remove(nvNode.getId());
+            } else if (nvNode.getNodeType().equalsIgnoreCase(TRANSITION)) {
+                synchronizer.removeTransition(synchronizer.getTransitionFromId(nvNode.getId()));
+                transitionMap.remove(nvNode.getId());
+            }
+        }
+        LOGGER.info("Successfully removed node from graph and Petri net");
+    }
+
+    /**
+     * Merges a set of vertices to one vertex
+     *
+     * @param meltingPot List of NetViewerNode to be merged
+     */
+    public void mergeVertices(List<NetViewerNode> meltingPot) {
+        LOGGER.debug("Merging vertices to a single vertex in NetViewer");
+        // Define the vertex which "survive"
+        NetViewerNode meltAim = meltingPot.get(0);
+        // Go through all other vertices to melt these
+        List<NetViewerEdge> toDelete = new ArrayList<>();
+        for (NetViewerNode nvNode : meltingPot) {
+
+            if (nvNode.equals(meltAim)) {
+                continue;
+            }
+            // Delete old edges and create the new ones
+            for (NetViewerEdge e : nvNode.getOutEdges()) {
+                toDelete.add(e);
+            }
+            for (NetViewerEdge e : toDelete) {
+                addEdge(e.getWeight(), meltAim, e.getAim());
+                removeEdge(e);
+            }
+            toDelete.clear();
+            for (NetViewerEdge e : nvNode.getInEdges()) {
+                toDelete.add(e);
+            }
+            for (NetViewerEdge e : toDelete) {
+                addEdge(e.getWeight(), e.getSource(), meltAim);
+                removeEdge(e);
+            }
+            // Remove the old vertex
+            removeNode(nvNode);
+        }
+        LOGGER.debug("Successfully merged vertices to a single vertex in NetViewer");
+    }
+
+    /**
+     * Reverse a transition. Do nothing if a place is given
+     *
+     * @param nvNode
+     */
+    public void reverseTransition(NetViewerNode nvNode, int x, int y) {
+        if (nvNode.getNodeType().equalsIgnoreCase(TRANSITION)) {
+            LOGGER.debug("Reversing transition");
+            NetViewerNode newNode = addNode(TRANSITION, nvNode.getName() + "_rev", x, y);
+            Arc a;
+            Transition t = getTransitionFromNode(nvNode);
+            for (Place p : t.inputs()) {
+                a = synchronizer.getArc(p, t);
+                addEdge(a.weight(), newNode, getNodeFromPlaceId(p.id()));
+            }
+            for (Place p : t.outputs()) {
+                a = synchronizer.getArc(t, p);
+                addEdge(a.weight(), getNodeFromPlaceId(p.id()), newNode);
+            }
+            LOGGER.debug("Successfully reversed transition");
+        }
+    }
 }

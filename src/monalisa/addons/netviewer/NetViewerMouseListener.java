@@ -48,14 +48,14 @@ public class NetViewerMouseListener implements MouseListener {
                 point.x = e.getX();
                 point.y = e.getY();
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
-                synchronizer.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
+                nv.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             } else if (this.mouseMode.equalsIgnoreCase(TRANSITION)) {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY();
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
-                synchronizer.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
+                nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             }
         } else if (e.getClickCount() == 2 && nv.getMouseMode()) {

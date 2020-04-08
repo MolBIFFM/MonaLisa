@@ -114,7 +114,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                             for (NetViewerNode n : vv.getRenderContext().getPickedVertexState().getPicked()) {
                                 pickedVerticesList.add(n);
                             }
-                            synchronizer.mergeLogicalPlaces(pickedVerticesList);
+                            nv.mergeLogicalPlaces(pickedVerticesList);
                             nv.nonModificationActionHappend();
                         }
                     });
@@ -133,7 +133,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Reverse Transitions");
-                        synchronizer.reverseTransition(nvNode, me.getX(), me.getY());
+                        nv.reverseTransition(nvNode, me.getX(), me.getY());
                         nv.modificationActionHappend();
                     }
                 });
@@ -152,7 +152,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     LOGGER.info("Merging vertices from SearchBar");
-                    synchronizer.mergeVertices(owner.getSelectedValuesList());
+                    nv.mergeVertices(owner.getSelectedValuesList());
                     nv.modificationActionHappend();
                 }
             });

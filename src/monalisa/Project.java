@@ -18,6 +18,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import monalisa.addons.netviewer.NetViewerStorage;
 
 import monalisa.data.PropertyList;
 import monalisa.data.input.PetriNetInputHandlers;
@@ -56,7 +57,9 @@ public final class Project implements Serializable {
 
     private PropertyList properties;
 
-    private Synchronizer synchronizer;
+    transient private Synchronizer synchronizer;
+
+    private NetViewerStorage nvs; // Replaces synchronizer's storage
 
     private Map<String, Map<String, Object>> addonStorage;
     private ToolManager toolMan;
@@ -81,6 +84,8 @@ public final class Project implements Serializable {
         this.projectChanged = false;
 
         this.synchronizer = new Synchronizer(this.petriNet);
+
+        this.nvs = new NetViewerStorage();
         LOGGER.info("Finished creating new project from external file.");
     }
 
@@ -99,6 +104,8 @@ public final class Project implements Serializable {
         this.properties = new PropertyList();
 
         this.synchronizer = new Synchronizer(this.petriNet);
+
+        this.nvs = new NetViewerStorage();
         LOGGER.info("Finished creating new empty project.");
     }
 
@@ -117,6 +124,8 @@ public final class Project implements Serializable {
         this.projectChanged = false;
 
         this.synchronizer = new Synchronizer(this.petriNet);
+
+        this.nvs = new NetViewerStorage();
         LOGGER.info("Finished creating new project from Petri net.");
     }
 
@@ -133,6 +142,7 @@ public final class Project implements Serializable {
         this.properties = oldProject.properties;
         this.synchronizer = oldProject.synchronizer;
         this.toolMan = oldProject.toolMan;
+        this.nvs = oldProject.nvs;
         this.projectPath = newProjectFile;
         LOGGER.info("Finished cloning project for 'Save as...'");
     }
@@ -144,6 +154,15 @@ public final class Project implements Serializable {
      */
     public Synchronizer getSynchronizer() {
         return this.synchronizer;
+    }
+
+    /**
+     * Returns the instance of the NetViewerStorage of the project.
+     *
+     * @return
+     */
+    public NetViewerStorage getNvs() {
+        return this.nvs;
     }
 
     /**
@@ -261,6 +280,7 @@ public final class Project implements Serializable {
             // application since the project has been saved.
             project.toolMan.updateTools();
 
+            project.synchronizer = new Synchronizer(project.petriNet);
             LOGGER.info("Finished loading project from file.");
             return project;
         } catch (ClassNotFoundException e) {
@@ -430,9 +450,9 @@ public final class Project implements Serializable {
         }
 
         // Workaround for older projects
-        if (synchronizer == null) {
-            LOGGER.warn("Workaround for older projects, creating new Synchronizer");
-            synchronizer = new Synchronizer(petriNet);
+        if (nvs == null) {
+            LOGGER.warn("Workaround for older projects, creating new nvs");
+            nvs = new NetViewerStorage();
         }
     }
 }

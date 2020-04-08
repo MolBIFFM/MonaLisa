@@ -590,6 +590,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                         try {
                             LOGGER.info("Saving project on application exit");
                             if (project.getPath() != null) {
+                                netViewer.updateNVS();
                                 updateProjectStorage();
                                 project.save();
                             } else {
@@ -746,7 +747,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(newProjectFile))) {
                 newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
             }
-
+            netViewer.updateNVS();
             updateProjectStorage();
             Project newProj = Project.create(oldProject, newProjectFile);
             this.project = newProj;
@@ -1237,12 +1238,17 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             Settings.writeToFile(Settings.getConfigFile());
             ret = true;
         }
+        netViewer.updateNVS();
         updateProjectStorage();
         project.save();
-        LOGGER.info("Successfully saving project");
+        LOGGER.info("Successfully saved project");
         return ret;
     }
 
+    /**
+     * Gathers objects for storage from all addonPanels and puts then into the
+     * project's storage.
+     */
     public void updateProjectStorage() {
         for (AddonPanel a : addonPanels) {
             if (a.getObjectsForStorage() != null) {

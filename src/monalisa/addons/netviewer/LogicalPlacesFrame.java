@@ -33,7 +33,6 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
 
     public LogicalPlacesFrame(final NetViewer netViewer, Synchronizer synchronizer) {
         this.netViewer = netViewer;
-        this.synchronizer = synchronizer;
         LOGGER.info("Initializing LogicalPlacesFrame");
         initComponents();
         neighborsList.setCellRenderer(new LogicalPlacesListCellRenderer());
@@ -163,7 +162,7 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
         LOGGER.info("Creating new logical place");
-        this.synchronizer.addLogicalPlace((NetViewerNode) this.netViewer.vv.getPickedVertexState().getPicked().toArray()[0], neighborsList.getSelectedValuesList(), null);
+        netViewer.addLogicalPlace((NetViewerNode) this.netViewer.vv.getPickedVertexState().getPicked().toArray()[0], neighborsList.getSelectedValuesList(), null);
         this.netViewer.nonModificationActionHappend();
         this.setVisible(false);
         this.netViewer.setEnabled(true);
@@ -177,7 +176,7 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
         for (int i = 0; i < neighborsList.getModel().getSize() - 1; i++) {
             selectedNodes = new ArrayList<>();
             selectedNodes.add(neighborsList.getModel().getElementAt(i));
-            synchronizer.addLogicalPlace(sourceNode, selectedNodes, null);
+            netViewer.addLogicalPlace(sourceNode, selectedNodes, null);
         }
         this.netViewer.nonModificationActionHappend();
         this.setVisible(false);
@@ -200,6 +199,4 @@ public class LogicalPlacesFrame extends javax.swing.JFrame {
     private static final StringResources strings = resources.getDefaultStrings();
 
     private final NetViewer netViewer;
-    private final Synchronizer synchronizer;
-
 }

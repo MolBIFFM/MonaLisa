@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 public class ToolManager implements ProgressListener, Serializable {
 
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
+    private static final long serialVersionUID = -3642254005926990462L;
 
     transient private List<Tool> tools;
     transient private Map<Class<? extends Tool>, Map<Configuration, Result>> results;

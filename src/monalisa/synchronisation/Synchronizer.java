@@ -9,35 +9,11 @@
  */
 package monalisa.synchronisation;
 
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
-import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.SparseGraph;
-import edu.uci.ics.jung.graph.util.EdgeType;
-import edu.uci.ics.jung.visualization.layout.PersistentLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import monalisa.addons.netviewer.MonaLisaLayout;
-import monalisa.addons.netviewer.NetViewer;
-import monalisa.addons.netviewer.NetViewerEdge;
-import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
-import monalisa.data.pn.UniquePetriNetEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,20 +25,10 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jens Einloft
  */
-public class Synchronizer implements Serializable {
-
-    private static final long serialVersionUID = -7561258127410331113L;
+public class Synchronizer {
 
     private final PetriNet pn;
-    private final Graph<NetViewerNode, NetViewerEdge> g;
-    private Map<NetViewerNode, PersistentLayout.Point> map;
-    private transient MonaLisaLayout<NetViewerNode, NetViewerEdge> layout;
-
-    private int latestVertexID = 0;
-    private int latestEdgeID = 0;
-
-    private final Map<Integer, NetViewerNode> transitionMap;
-    private final Map<Integer, NetViewerNode> placeMap;
+    // Have been moved, but need to be serialized: latestVertexID, latestEdgeID, transitionsMap, placeMap, g, map
 
     private static final Logger LOGGER = LogManager.getLogger(Synchronizer.class);
 
@@ -72,14 +38,9 @@ public class Synchronizer implements Serializable {
      * @param pn The PetriNet to synchronize
      */
     public Synchronizer(PetriNet pn) {
+        LOGGER.info("Initializing new synchronizer.");
         this.pn = pn;
-        this.g = new SparseGraph<>();
-        this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
-
-        transitionMap = new HashMap<>();
-        placeMap = new HashMap<>();
-
-        translatePNtoGraph();
+        LOGGER.info("Successfully initialized new synchronizer.");
     }
 
     /**
@@ -93,798 +54,166 @@ public class Synchronizer implements Serializable {
     }
 
     /**
-     * Return the Graph which is synchronized by the instance of the
-     * Synchronizer
-     *
-     * @return The graph which is synchronized
-     */
-    public Graph<NetViewerNode, NetViewerEdge> getGraph() {
-        return this.g;
-    }
-
-    /**
-     * Returns the layout, corresponding to this Synchronizer instance.
-     *
-     * @return
-     */
-    public MonaLisaLayout<NetViewerNode, NetViewerEdge> getLayout() {
-        return this.layout;
-    }
-
-    /**
-     * Returns the corresponding NetViewerNode to a place or transition. If the
-     * given UPNE is neither a Place or Transition, the function returns NULL.
-     *
-     * @param upne Either a Place or a Transition
-     * @return If the given UPNE is neither a Place or Transition, the function
-     * returns NULL otherwise the reference of a NetViewerNode.
-     */
-    public NetViewerNode getNodeFromVertex(UniquePetriNetEntity upne) {
-        NetViewerNode ret = null;
-
-        if (upne == null) {
-            return null;
-        }
-
-        if (upne.getClass().equals(monalisa.data.pn.Transition.class)) {
-            ret = this.transitionMap.get(upne.id());
-        }
-        if (upne.getClass().equals(monalisa.data.pn.Place.class)) {
-            ret = this.placeMap.get(upne.id());
-        }
-
-        return ret;
-    }
-
-    /**
-     * Returns the corresponding NetViewerNode to ID of a transition.
+     * Returns the corresponding Place for an id.
      *
      * @param id
-     * @return The corresponding transition, if for the given ID exist a
-     * Transition, NULL otherwise.
+     * @return The corresponding Place or NULL, if no place with that id exists.
      */
-    public NetViewerNode getNodeFromTransitionId(Integer id) {
-        NetViewerNode ret = null;
-
-        if (this.transitionMap.containsKey(id)) {
-            ret = this.transitionMap.get(id);
-        }
-
-        return ret;
+    public Place getPlaceFromId(int id) {
+        return pn.findPlace(id);
     }
 
     /**
-     * Returns the corresponding NetViewerNode to ID of a place.
+     * Returns the corresponding Transition for an id.
      *
      * @param id
-     * @return The corresponding place, if for the given ID exist a place, NULL
-     * otherwise.
+     * @return The corresponding Transition or NULL, if no place with that id
+     * exists.
      */
-    public NetViewerNode getNodeFromPlaceId(Integer id) {
-        NetViewerNode ret = null;
-
-        if (this.placeMap.containsKey(id)) {
-            ret = this.placeMap.get(id);
-        }
-
-        return ret;
+    public Transition getTransitionFromId(int id) {
+        return pn.findTransition(id);
     }
 
     /**
-     * Returns the corresponding Place of a NetViewerNode.
+     * Returns the arc from Place from to Transition to
      *
-     * @param nvNode
-     * @return The corresponding Place or NULL, if nvNode is not a Place
+     * @param from
+     * @param to
+     * @return the arc from Place from to Transition to, if it exists.
      */
-    public Place getPlaceFromNode(NetViewerNode nvNode) { // Would prefer to remove this direction.
-        return this.pn.findPlace(nvNode.getMasterNode().getId());
+    public Arc getArc(Place from, Transition to) {
+        return pn.getArc(from, to);
     }
 
     /**
-     * Returns the corresponding Transition of a NetViewerNode.
+     * Returns the arc from Transition from to Place to
      *
-     * @param nvNode
-     * @return The corresponding Transition or NULL, if nvNode is not a
-     * Transition
+     * @param from
+     * @param to
+     * @return the arc from Transition from to Place to, if it exists.
      */
-    public Transition getTransitionFromNode(NetViewerNode nvNode) {
-        return this.pn.findTransition(nvNode.getId());
+    public Arc getArc(Transition from, Place to) {
+        return pn.getArc(from, to);
     }
 
+    // START: Section for manipulating the Net
     /**
-     * Generates the graph class for the NetViewer out of the PetriNet.
-     */
-    private void translatePNtoGraph() {
-        if (this.g != null) {
-            LOGGER.info("Translating Petri net to graph for NetViewer");
-            int edgeCount = 0;
-            NetViewerNode nvNode;
-            // generate Places
-            String labelName, propertyName;
-            for (Place place : this.pn.places()) {
-                labelName = place.<String>getProperty("name");
-                nvNode = new NetViewerNode(place.id(), NetViewer.PLACE, labelName);
-                placeMap.put(place.id(), nvNode); // this map is needed to synchrone the PN with ne Netviewer graph and for coloring of the nodes
-                g.addVertex(nvNode);
-
-                // has the place a compartment?
-                if (place.getCompartment() != null) {
-                    nvNode.putProperty("compartment", place.getCompartment());
-                }
-                // save all properties from place to nvNode
-                Iterator it = place.getPropertyList().iterator();
-                while (it.hasNext()) {
-                    propertyName = (String) it.next();
-                    nvNode.putProperty(propertyName, place.getProperty(propertyName));
-                }
-                // serach for highest id, to get no conflict by creating new nodes
-                if (place.id() > latestVertexID) {
-                    latestVertexID = place.id();
-                }
-            }
-
-            // generate Transitions
-            for (Transition transition : this.pn.transitions()) {
-                labelName = (String) transition.getProperty("name");
-                nvNode = new NetViewerNode(transition.id(), NetViewer.TRANSITION, labelName);
-                transitionMap.put(transition.id(), nvNode);
-                g.addVertex(nvNode);
-                // has the transition a compartment?
-                if (transition.getCompartment() != null) {
-                    nvNode.putProperty("compartment", transition.getCompartment());
-                }
-                // save all properties from place to nvNode
-                Iterator it = transition.getPropertyList().iterator();
-                while (it.hasNext()) {
-                    propertyName = (String) it.next();
-                    nvNode.putProperty(propertyName, transition.getProperty(propertyName));
-                }
-                // serach for highest id, to get no conflict by creating new nodes
-                if (transition.id() > latestVertexID) {
-                    latestVertexID = transition.id();
-                }
-            }
-
-            // generate Edges
-            int weight;
-            NetViewerEdge edge;
-            for (Place place : this.pn.places()) {
-                // inputs
-                for (Transition transition : place.inputs()) {
-                    weight = this.pn.getArc(this.pn.findTransition(transition.id()), this.pn.findPlace(place.id())).weight();
-                    edge = new NetViewerEdge("e" + edgeCount, weight, transitionMap.get(transition.id()), placeMap.get(place.id()));
-                    g.addEdge(edge, edge.getSource(), edge.getAim(), EdgeType.DIRECTED);
-                    edgeCount++;
-                }
-                // outputs
-                for (Transition transition : place.outputs()) {
-                    weight = this.pn.getArc(this.pn.findPlace(place.id()), this.pn.findTransition(transition.id())).weight();
-                    edge = new NetViewerEdge("e" + edgeCount, weight, placeMap.get(place.id()), transitionMap.get(transition.id()));
-                    g.addEdge(edge, edge.getSource(), edge.getAim(), EdgeType.DIRECTED);
-                    edgeCount++;
-                }
-            }
-            LOGGER.info("Successfully translated Petri net to graph for NetViewer");
-        }
-    }
-
-    /**
-     * START: Section for manipulating the Net *
-     */
-    /**
-     * Creates a new node and add him to the Graph and the PetriNet.
+     * Creates a new place and adds it to the Petri net.
      *
-     * @param type NetViewer.PLACE or NetViewer.TRANSITION
-     * @param labelName String which is displayed in the NetViewer
-     * @param x x coordinate
-     * @param y y coordinate
-     * @return the created NetViewerNode
+     * @param id
+     * @param name
+     * @param x x coordinate in layout
+     * @param y y coordinate in layout
+     * @return the newly created place
      */
-    public NetViewerNode addNode(String type, String labelName, double x, double y) {
-        LOGGER.debug("Adding new node to NetViewer and Petri net");
-        NetViewerNode ret = new NetViewerNode(getNewNodeId(), type, labelName);
-        g.addVertex(ret);
-
-        Point.Double point = new Point.Double(x, y);
-        layout.setLocation(ret, point);
-
-        if (ret.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-            Place place = new Place(ret.getId());
-            place.putProperty("name", ret.getName());
-            place.putProperty("posX", x);
-            place.putProperty("posY", y);
-            this.pn.addPlace(place);
-            this.placeMap.put(place.id(), ret);
-        } else if (ret.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-            Transition transition = new Transition(ret.getId());
-            transition.putProperty("name", ret.getName());
-            transition.putProperty("posX", x);
-            transition.putProperty("posY", y);
-            this.pn.addTransition(transition);
-            this.transitionMap.put(transition.id(), ret);
-        }
-        LOGGER.debug("Successfully added new node to NetViewer and Petri net");
-        return ret;
+    public Place addPlace(int id, String name, double x, double y) {
+        Place place = new Place(id);
+        place.putProperty("name", name);
+        place.putProperty("posX", x);
+        place.putProperty("posY", y);
+        pn.addPlace(place);
+        LOGGER.info("Added place " + place.getProperty("name") + " to Petri net");
+        return place;
     }
 
     /**
-     * Add a new node in dependence to another node
+     * Removes a place p from the Petri net.
      *
-     * @param nvNode
-     * @param direction 0 = input ; 1 = output
+     * @param p the place to remove
      */
-    public NetViewerNode addNode(NetViewerNode nvNode, Boolean direction) {
-        LOGGER.debug("Adding new node to NetViewer in dependence from another node");
-        NetViewerNode ret;
-
-        Point2D coordinates = layout.transform(nvNode);
-        if ((nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION))) {
-            ret = addNode(NetViewer.PLACE, "Created_from_" + nvNode.getName(), (int) coordinates.getX() + 50, (int) coordinates.getY() + 50);
-        } else {
-            ret = addNode(NetViewer.TRANSITION, "Created_from_" + nvNode.getName(), (int) coordinates.getX() + 50, (int) coordinates.getY() + 50);
-        }
-
-        if (direction) {
-            addEdge(1, ret, nvNode);
-        } else {
-            addEdge(1, nvNode, ret);
-        }
-        LOGGER.debug("Successfully added new node to NetViewer in dependence from another node");
-        return ret;
+    public void removePlace(Place p) {
+        pn.removePlace(p);
+        LOGGER.info("Removed place " + p.getProperty("name") + " from Petri net");
     }
 
     /**
-     * Create a new logical place
+     * Creates a new transition and adds it to the Petri net.
      *
-     * @param sourceNode
-     * @param selectedNodes
-     * @param nodePosition
+     * @param id
+     * @param name
+     * @param x x coordinate in layout
+     * @param y y coordinate in layout
+     * @return the newly created transition
      */
-    public void addLogicalPlace(NetViewerNode sourceNode, List<NetViewerNode> selectedNodes, Point2D nodePosition) {
-        if (!selectedNodes.isEmpty()) {
-            LOGGER.debug("Adding new logical place to NetViewer");
-            NetViewerNode newNode = sourceNode.getMasterNode().generateLocicalPlace(getNewNodeId());
-            sourceNode.getMasterNode().setColor(Color.GRAY);
-            g.addVertex(newNode);
-
-            if (!(sourceNode.getMasterNode().getColor().equals(Color.WHITE) || sourceNode.getMasterNode().getColor().equals(Color.GRAY))) {
-                newNode.setColor(sourceNode.getColor());
-            }
-
-            if (!sourceNode.getMasterNode().getStrokeColor().equals(Color.BLACK)) {
-                newNode.setStrokeColor(sourceNode.getMasterNode().getStrokeColor());
-            } else {
-                newNode.setStrokeColor(Color.BLACK);
-            }
-
-            if (sourceNode.getCorners() != 0) {
-                newNode.setCorners(sourceNode.getCorners());
-            }
-
-            NetViewerEdge oldEdge, newEdge;
-            for (Object n : selectedNodes) {
-                // in which direction are the edge?
-                oldEdge = g.findEdge(sourceNode, (NetViewerNode) n);
-                if (oldEdge != null) {
-                    newEdge = new NetViewerEdge("L" + getNewEdgeId(), oldEdge.getWeight(), newNode, (NetViewerNode) n);
-                    removeAllBends(oldEdge);
-                    g.removeEdge(oldEdge);
-                    g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
-                    sourceNode.removeOutEdge(oldEdge);
-                } else {
-                    oldEdge = g.findEdge((NetViewerNode) n, sourceNode);
-                    newEdge = new NetViewerEdge("L" + getNewEdgeId(), oldEdge.getWeight(), (NetViewerNode) n, newNode);
-                    removeAllBends(oldEdge);
-                    g.removeEdge(oldEdge);
-                    g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
-                    sourceNode.removeInEdge(oldEdge);
-                }
-
-                oldEdge.getAim().removeInEdge(oldEdge);
-                oldEdge.getSource().removeOutEdge(oldEdge);
-            }
-            if (nodePosition == null) {
-                Point2D coordinates = layout.transform(sourceNode);
-                layout.setLocation(newNode, new Point.Double(coordinates.getX() + 50.0, coordinates.getY() + 50.0));
-            } else {
-                layout.setLocation(newNode, nodePosition);
-            }
-            LOGGER.debug("Successfully added new logical place to NetViewer");
-        }
+    public Transition addTransition(int id, String name, double x, double y) {
+        Transition transition = new Transition(id);
+        transition.putProperty("name", name);
+        transition.putProperty("posX", x);
+        transition.putProperty("posY", y);
+        pn.addTransition(transition);
+        LOGGER.info("Added transition " + transition.getProperty("name") + " to Petri net");
+        return transition;
     }
 
     /**
-     * Add a bend to a given edge at a given point (x,y)
+     * Removes a transition t from the Petri net.
      *
-     * @param nvEdge
-     * @param x
-     * @param y
+     * @param t the transition to remove
      */
-    public NetViewerEdge addBend(NetViewerEdge nvEdge, double x, double y) {
-        LOGGER.debug("Adding bend to edge in NetViewer");
-        NetViewerEdge newEdge;
-        NetViewerEdge masterEdge = nvEdge.getMasterEdge();
-        NetViewerNode newNode = addNode(NetViewer.BEND, "B", x + 30.0, y + 30.0);
-
-        addBendEdge(nvEdge.getSource(), newNode, masterEdge);
-
-        newEdge = new NetViewerEdge("n" + this.getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge);
-        if (newEdge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-            g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.UNDIRECTED);
-        } else {
-            g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.DIRECTED);
-        }
-
-        if (!nvEdge.getSource().getNodeType().equalsIgnoreCase(NetViewer.BEND) && !nvEdge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-            nvEdge.setVisible(false);
-        } else {
-            g.removeEdge(nvEdge);
-            masterEdge.removeBendEdge(nvEdge);
-            nvEdge.getAim().removeInEdge(nvEdge);
-            nvEdge.getSource().removeOutEdge(nvEdge);
-        }
-        LOGGER.debug("Successfully added bend to edge in NetViewer");
-        return newEdge;
+    public void removeTransition(Transition t) {
+        pn.removeTransition(t);
+        LOGGER.info("Removed transition " + t.getProperty("name") + " from Petri net");
     }
 
     /**
-     * Add a edge to the Graph and the PetriNet.
+     * Adds an arc from Place from to Transition to to the Petri net.
      *
-     * @param weight Weight of the edge
-     * @param source Source of the edge
-     * @param aim Aim of the edge
-     * @return The new created NetViewerEdge
+     * @param from Source Place
+     * @param to Target Transition
+     * @param weight Arc weight
+     * @return the newly created arc
      */
-    public NetViewerEdge addEdge(int weight, NetViewerNode source, NetViewerNode aim) {
-        LOGGER.debug("Adding new edge to NetViewer and Petri net");
-        NetViewerEdge ret = new NetViewerEdge("n" + this.getNewEdgeId(), weight, source, aim);
-        g.addEdge(ret, source, aim, EdgeType.DIRECTED);
-
-        Object from, to;
-        Arc arc;
-        switch (ret.getSource().getNodeType()) {
-            case NetViewer.PLACE:
-                from = this.pn.findPlace(ret.getSource().getMasterNode().getId());
-                to = this.pn.findTransition(ret.getAim().getId());
-                arc = new Arc(from, to, ret.getWeight());
-                this.pn.addArc((Place) from, (Transition) to, arc);
-                break;
-            case NetViewer.TRANSITION:
-                from = this.pn.findTransition(ret.getSource().getId());
-                to = this.pn.findPlace(ret.getAim().getMasterNode().getId());
-                arc = new Arc(from, to, ret.getWeight());
-                this.pn.addArc((Transition) from, (Place) to, arc);
-                break;
-        }
-        LOGGER.debug("Successfully added new edge to NetViewer and Petri net");
-        return ret;
+    public Arc addArc(Place from, Transition to, int weight) {
+        Arc arc = new Arc(from, to, weight);
+        pn.addArc(from, to, arc);
+        LOGGER.info("Added edge from place " + from.getProperty("name") + " to transition " + to.getProperty("name") + ".");
+        return arc;
     }
 
     /**
-     * Add a new bend edge to the Graph
+     * Adds an arc from Transition from to Place to to the Petri net.
      *
-     * @param weight
-     * @param source
-     * @param aim
-     * @param masterEdge
-     * @return
+     * @param from Source Transition
+     * @param to Target Place
+     * @param weight Arc weight
+     * @return the newly created arc
      */
-    private NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
-        LOGGER.debug("Adding new bended edge to NetViewer");
-        NetViewerEdge ret = new NetViewerEdge("n" + this.getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge);
-        g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
-        LOGGER.debug("Successfully added new bended edge to NetViewer");
-        return ret;
+    public Arc addArc(Transition from, Place to, int weight) {
+        Arc arc = new Arc(from, to, weight);
+        pn.addArc(from, to, arc);
+        LOGGER.info("Added edge from transition " + from.getProperty("name") + " to place " + to.getProperty("name") + ".");
+        return arc;
     }
 
     /**
-     * Removes the given edge from the Graph and the PetriNet.
+     * Removes an arc from Place from to Transition to to the Petri net, if it
+     * exists.
      *
-     * @param edge The edge to remove
+     * @param from Source Place
+     * @param to Target Transition
      */
-    public void removeEdge(NetViewerEdge edge) {
-        LOGGER.debug("Removing edge from Graph and Petri net");
-        removeEdgeFromPetriNet(edge);
-        removeAllBends(edge);
-        removeEdgeFromGraph(edge);
-        LOGGER.debug("Successfully removed edge from Graph and Petri net");
+    public void removeArc(Place from, Transition to) {
+        if (pn.getArc(from, to) != null) {
+            this.pn.removeArc(from, to);
+            LOGGER.info("Removed edge from place " + from.getProperty("name") + " to transition " + to.getProperty("name") + ".");
+        }
     }
 
     /**
-     * Removes the edge from the graph
+     * Removes an arc from Transition from to Place to to the Petri net, if it
+     * exists.
      *
-     * @param edge
+     * @param from Source Transition
+     * @param to Target Place
      */
-    private void removeEdgeFromGraph(NetViewerEdge edge) {
-        LOGGER.debug("Removing edge from graph");
-        if (edge.getMasterEdge().equals(edge)) {
-            edge.getAim().removeInEdge(edge);
-            edge.getSource().removeOutEdge(edge);
-        }
-
-        edge.getMasterEdge().getAim().removeInEdge(edge.getMasterEdge());
-        edge.getMasterEdge().getSource().removeOutEdge(edge.getMasterEdge());
-        g.removeEdge(edge.getMasterEdge());
-        LOGGER.debug("Successfully removed edge from graph");
-    }
-
-    /**
-     * Removes the edge from the Petri net.
-     *
-     * @param edge
-     */
-    private void removeEdgeFromPetriNet(NetViewerEdge edge) {
-        if (edge == null) {
-            return;
-        }
-        LOGGER.debug("Removing edge from Petri net");
-        if (edge.getSource().getNodeType().equals(NetViewer.PLACE)) {
-            Place from = this.pn.findPlace(edge.getSource().getMasterNode().getId());
-            Transition to = this.pn.findTransition(edge.getAim().getId());
-            Arc arc = this.pn.getArc(from, to);
-            if (arc != null) {
-                this.pn.removeArc(from, to);
-            }
-        } else {
-            Transition from = this.pn.findTransition(edge.getSource().getId());
-            Place to = this.pn.findPlace(edge.getAim().getMasterNode().getId());
-            Arc arc = this.pn.getArc(from, to);
-            if (arc != null) {
-                this.pn.removeArc(from, to);
-            }
-        }
-        LOGGER.debug("Successfully removed edge from Petri net");
-    }
-
-    /**
-     * Removes a logical place. All edges a go back to master node or to a other
-     * given logical places
-     *
-     * @param nvNode Place to remove
-     * @param aim Aim for edges.
-     */
-    private void removeLogicalPlace(NetViewerNode nvNode, NetViewerNode aim) {
-        if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE) || !aim.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-            return;
-        }
-        if (nvNode.equals(nvNode.getMasterNode())) {
-            return;
-        }
-        LOGGER.debug("Removing logical place from NetViewer");
-        List<NetViewerEdge> edgesToDelete = new ArrayList<>();
-
-        for (NetViewerEdge e : nvNode.getInEdges()) {
-            this.addEdge(e.getWeight(), e.getSource(), aim);
-            edgesToDelete.add(g.findEdge(e.getSource(), nvNode));
-        }
-        for (NetViewerEdge e : nvNode.getOutEdges()) {
-            this.addEdge(e.getWeight(), aim, e.getAim());
-            edgesToDelete.add(g.findEdge(nvNode, e.getAim()));
-        }
-
-        for (NetViewerEdge nvEdge : edgesToDelete) {
-            nvEdge.getSource().removeOutEdge(nvEdge);
-            nvEdge.getAim().removeInEdge(nvEdge);
-            removeEdgeFromGraph(nvEdge);
-        }
-
-        nvNode.getMasterNode().removeLogicalNode(nvNode);
-
-        if (!nvNode.getMasterNode().getColor().equals(Color.WHITE)) {
-            nvNode.getMasterNode().setColor(nvNode.getMasterNode().getColor());
-        } else {
-            nvNode.getMasterNode().setColor(Color.WHITE);
-        }
-
-        if (nvNode.getMasterNode().getLogicalPlaces().size() == 1) {
-            nvNode.getMasterNode().setColor(Color.WHITE);
-        }
-        LOGGER.debug("Successfully removed logical place from NetViewer");
-    }
-
-    /**
-     * Melt multiple logical places to the master node. The master node is
-     * detected automatically
-     *
-     * @param nvNodes The list of logical places to be melted
-     */
-    public void mergeLogicalPlaces(List<NetViewerNode> nvNodes) {
-        LOGGER.debug("Merging logical places with master node in NetViewer");
-        NetViewerNode masterNode = nvNodes.get(0).getMasterNode();
-
-        for (NetViewerNode nvNode : nvNodes) {
-            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                return;
-            }
-        }
-
-        if (nvNodes.contains(masterNode)) {
-            nvNodes.remove(masterNode);
-        }
-
-        for (NetViewerNode nvNode : nvNodes) {
-            removeNode(nvNode);
-        }
-        LOGGER.debug("Successfully merged logical places with master node in NetViewer");
-    }
-
-    /**
-     * Removes the given node from the Graph and the Petri net
-     *
-     * @param nvNode
-     */
-    public void removeNode(NetViewerNode nvNode) {
-        LOGGER.debug("Removing node from graph and Petri net");
-        boolean notLogicalAnymore = false;
-
-        // Remove all bends
-        List<NetViewerEdge> bends2remove = new ArrayList<>();
-        for (NetViewerEdge edge : nvNode.getInEdges()) {
-            if (!edge.getMasterEdge().equals(edge)) {
-                continue;
-            }
-            if (!edge.getMasterEdge().getBendEdges().isEmpty()) {
-                bends2remove.add(edge.getMasterEdge());
-            }
-        }
-        for (NetViewerEdge edge : nvNode.getOutEdges()) {
-            if (!edge.getMasterEdge().equals(edge)) {
-                continue;
-            }
-            if (!edge.getMasterEdge().getBendEdges().isEmpty()) {
-                bends2remove.add(edge.getMasterEdge());
-            }
-        }
-        for (NetViewerEdge edge : bends2remove) {
-            removeAllBends(edge);
-        }
-
-        if (nvNode.isMasterNode()) {
-            // Needed to avoid ConcurrentModification Errors
-            List<NetViewerNode> nvList = new ArrayList<>();
-            for (NetViewerNode n : nvNode.getLogicalPlaces()) {
-                if (n.equals(nvNode)) {
-                    continue;
-                }
-                nvList.add(n);
-            }
-            for (NetViewerNode n : nvList) {
-                removeNode(n);
-            }
-            nvNode.clearLogicalPlaces();
-        } else if (nvNode.isLogical()) {
-            removeLogicalPlace(nvNode, nvNode.getMasterNode());
-            // If a logical place is delted, bends and egdes have to be removed from Graph but not from Petri net!!!
-            notLogicalAnymore = true;
-        }
-
-        // Now remove all edges
-        for (NetViewerEdge edge : nvNode.getOutEdges()) {
-            removeEdgeFromPetriNet(edge);
-            edge.getAim().removeInEdge(edge.getMasterEdge());
-        }
-
-        for (NetViewerEdge edge : nvNode.getInEdges()) {
-            removeEdgeFromPetriNet(edge);
-            edge.getSource().removeOutEdge(edge.getMasterEdge());
-        }
-
-        // and than the node
-        g.removeVertex(nvNode);
-        // and from the PetriNet
-        if (!nvNode.isLogical() && !notLogicalAnymore) {
-            if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                this.pn.removePlace(this.pn.findPlace(nvNode.getId()));
-                this.placeMap.remove(nvNode.getId());
-            } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                this.pn.removeTransition(this.pn.findTransition(nvNode.getId()));
-                this.transitionMap.remove(nvNode.getId());
-            }
-        }
-        LOGGER.debug("Successfully removed node from graph and Petri net");
-    }
-
-    /**
-     * Remove all bends of a gives edge
-     *
-     * @param edge
-     */
-    public void removeAllBends(NetViewerEdge edge) {
-        LOGGER.debug("Removing all bends from edge in NetViewer");
-        List<NetViewerEdge> edgeList = edge.getMasterEdge().getBendEdges();
-
-        for (NetViewerEdge e : edgeList) {
-            e.getSource().removeOutEdge(e);
-            e.getAim().removeInEdge(e);
-
-            g.removeEdge(e);
-
-            if (e.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-                g.removeVertex(e.getAim());
-            }
-        }
-        edge.getMasterEdge().clearBendEdges();
-        edge.getMasterEdge().setVisible(true);
-        LOGGER.debug("Successfully removed all bends from edge in NetViewer");
-    }
-
-    /**
-     * Removes a bend from the given edge
-     *
-     * @param edge
-     */
-    public void removeBend(NetViewerEdge edge) {
-        LOGGER.debug("Removing one bend from an edge in NetViewer");
-        NetViewerEdge invisibleEdge = null, otherEdge;
-
-        // NetViewer.BEND ------ NODE
-        if (edge.getSource().getNodeType().equalsIgnoreCase(NetViewer.BEND) && !edge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-            edge.getAim().removeInEdge(edge);
-            edge.getSource().removeOutEdge(edge);
-            otherEdge = (NetViewerEdge) edge.getSource().getInEdges().toArray()[0];
-
-            if (!otherEdge.getSource().getNodeType().equals(NetViewer.BEND)) {
-                invisibleEdge = g.findEdge(otherEdge.getSource(), edge.getAim());
-            } else {
-                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
-            }
-            g.removeVertex(edge.getSource());
-        } // NODE ------ NetViewer.BEND
-        else if (edge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND) && !edge.getSource().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-            edge.getSource().removeOutEdge(edge);
-            edge.getAim().removeInEdge(edge);
-            otherEdge = (NetViewerEdge) edge.getAim().getOutEdges().toArray()[0];
-
-            if (!otherEdge.getAim().getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-                invisibleEdge = g.findEdge(edge.getSource(), otherEdge.getAim());
-            } else {
-                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge());
-            }
-            g.removeVertex(edge.getAim());
-        } // NetViewer.BEND ------ NetViewer.BEND
-        else {
-            edge.getAim().removeInEdge(edge);
-            edge.getSource().removeOutEdge(edge);
-            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);
-            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
-            g.removeVertex(otherEdge.getAim());
-        }
-
-        otherEdge.getMasterEdge().removeBendEdge(otherEdge);
-        g.removeEdge(otherEdge);
-        edge.getMasterEdge().removeBendEdge(edge);
-        g.removeEdge(edge);
-
-        if (invisibleEdge != null) {
-            invisibleEdge.setVisible(true);
-        }
-        LOGGER.debug("Successfully removed one bend from an edge in NetViewer");
-    }
-
-    /**
-     * Merges a set of vertices to one vertex
-     *
-     * @param meltingPot List of NetViewerNode to be merged
-     */
-    public void mergeVertices(List<NetViewerNode> meltingPot) {
-        LOGGER.debug("Merging vertices to a single vertex in NetViewer");
-        // Define the vertex which "survive"
-        NetViewerNode meltAim = meltingPot.get(0);
-
-        // Go through all other vertices to melt these
-        NetViewerEdge newEdge;
-        List<NetViewerEdge> toDelete = new ArrayList<>();
-        for (NetViewerNode nvNode : meltingPot) {;
-            if (nvNode.equals(meltAim)) {
-                continue;
-            }
-
-            // Delete old edges and create the new ones
-            for (NetViewerEdge e : nvNode.getOutEdges()) {
-                toDelete.add(e);
-            }
-            for (NetViewerEdge e : toDelete) {
-                addEdge(e.getWeight(), meltAim, e.getAim());
-                removeEdge(e);
-            }
-            toDelete.clear();
-            for (NetViewerEdge e : nvNode.getInEdges()) {
-                toDelete.add(e);
-            }
-            for (NetViewerEdge e : toDelete) {
-                addEdge(e.getWeight(), e.getSource(), meltAim);
-                removeEdge(e);
-            }
-
-            // Remove the old vertex
-            removeNode(nvNode);
-        }
-        LOGGER.debug("Successfully merged vertices to a single vertex in NetViewer");
-    }
-
-    /**
-     * Reverse a transition. Do nothing if a place is given
-     *
-     * @param nvNode
-     */
-    public void reverseTransition(NetViewerNode nvNode, int x, int y) {
-        if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-            LOGGER.debug("Reversing transition");
-            NetViewerNode newNode = addNode(NetViewer.TRANSITION, nvNode.getName() + "_rev", x, y);
-
-            Arc a;
-            Transition t = this.getTransitionFromNode(nvNode);
-            for (Place p : t.inputs()) {
-                a = this.pn.getArc(p, t);
-                addEdge(a.weight(), newNode, getNodeFromPlaceId(p.id()));
-            }
-
-            for (Place p : t.outputs()) {
-                a = this.pn.getArc(t, p);
-                addEdge(a.weight(), getNodeFromPlaceId(p.id()), newNode);
-            }
-            LOGGER.debug("Successfully reversed transition");
+    public void removeArc(Transition from, Place to) {
+        if (pn.getArc(from, to) != null) {
+            this.pn.removeArc(from, to);
+            LOGGER.info("Removed edge from transition " + from.getProperty("name") + " to place " + to.getProperty("name") + ".");
         }
     }
 
-    /**
-     * Return a new node id. This ID is higher than any other, older, ID.
-     *
-     * @return
-     */
-    public int getNewNodeId() {
-        return ++this.latestVertexID;
-    }
-
-    /**
-     * Return a new edge id. This ID is higher than any other, older, ID.
-     *
-     * @return
-     */
-    public int getNewEdgeId() {
-        return ++this.latestEdgeID;
-    }
-
-    /**
-     * END: Section for manipulating the Net *
-     */
-    /**
-     * Return a map to get the corresponding NetViewerNode of a transition.
-     *
-     * @return
-     */
-    public Map<Integer, NetViewerNode> getTransitionMap() {
-        return Collections.unmodifiableMap(transitionMap);
-    }
-
-    /**
-     * Return a map to get the corresponding NetViewerNode of a place.
-     *
-     * @return
-     */
-    public Map<Integer, NetViewerNode> getPlaceMap() {
-        return Collections.unmodifiableMap(placeMap);
-    }
-
-    private void writeObject(ObjectOutputStream objectOutput) throws IOException {
-        map = layout.persist();
-        objectOutput.defaultWriteObject();
-    }
-
-    private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
-        System.out.println(map);
-        objectInput.defaultReadObject();
-
-        System.out.println(map);
-        this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
-        this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
-        // Happens, if the user try to load an older project format
-
-        if (map != null) {
-            this.layout.restore(map);
-        }
-    }
-
+    // END: Section for manipulating the Net *
     public PetriNet getSubNetwork(Set<Place> places, Set<Transition> transitions, Set<Arc> arcs) {
         PetriNet subNetwork = new PetriNet();
         for (Place p : places) {
@@ -903,4 +232,24 @@ public class Synchronizer implements Serializable {
         }
         return subNetwork;
     }
+    /*
+    private void writeObject(ObjectOutputStream objectOutput) throws IOException {
+        map = layout.persist();
+        objectOutput.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
+        System.out.println(map);
+        objectInput.defaultReadObject();
+
+        System.out.println(map);
+        this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
+        this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
+        // Happens, if the user try to load an older project format
+
+        if (map != null) {
+            this.layout.restore(map);
+        }
+    }
+     */
 }

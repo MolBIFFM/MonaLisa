@@ -3057,7 +3057,7 @@ public class NetViewer extends JFrame implements ActionListener {
         changeMouseModeToPicking();
         gm.enableSimulatorMode(true);
         setGraphMousePlugin(popupMouse);
-        tb.menuPane.setEnabledAt(0, false);
+        tb.menuPane.setEnabledAt(0, false); // Disables network modifications
         nvkl.setActivated(false);
         LOGGER.info("Successfully started TokenSimulator");
     }

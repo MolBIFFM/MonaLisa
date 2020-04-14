@@ -9,9 +9,16 @@
  */
 package monalisa.addons.tokensimulator;
 
+import monalisa.addons.tokensimulator.gillespie.GillespieTokenSim;
+import monalisa.addons.tokensimulator.utils.Statistic;
+import monalisa.addons.tokensimulator.utils.Snapshot;
+import monalisa.addons.tokensimulator.utils.VertexIconTransformer;
+import monalisa.addons.tokensimulator.utils.MathematicalExpression;
+import monalisa.addons.tokensimulator.asynchronous.AsynchronousTokenSim;
+import monalisa.addons.tokensimulator.synchronous.SynchronousTokenSim;
+import monalisa.addons.tokensimulator.stochastic.StochasticTokenSim;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,6 +43,9 @@ import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
+import monalisa.addons.tokensimulator.listeners.VertexFireListener;
+import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
+import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -100,7 +110,7 @@ public class TokenSimulator {
     //Stores the controls that are provided by the selected simulator.
     private JComponent customTSControls;
     //Instance of the selected simulator mode. implements firing behavior.
-    public AbstractTokenSim tokenSim;
+    private AbstractTokenSim tokenSim;
     //popup-plugin for the mouse has to be implemented in AbstractTokenSim-object; handles the popups when right mouse button is pressed.
     private AbstractPopupGraphMousePlugin tspMouse;
 
@@ -168,7 +178,7 @@ public class TokenSimulator {
      * Stores the preferences of simulation. Custom simulation mode should also
      * store its preferences here.
      */
-    protected HashMap<String, Object> preferences = new HashMap<>();
+    private HashMap<String, Object> preferences = new HashMap<>();
 
     /**
      * A window where user can change preferences.
@@ -188,45 +198,6 @@ public class TokenSimulator {
     //END VARIABLES DECLARATION
 
     //BEGIN INNER CLASSES
-    public class PlaceConstantException extends Exception {
-
-        public PlaceConstantException() {
-            super(strings.get("TSPlaceConstantException"));
-        }
-    }
-
-    public class PlaceNonConstantException extends Exception {
-
-        public PlaceNonConstantException() {
-            super(strings.get("TSPlaceNonConstantException"));
-        }
-    }
-
-    /**
-     * If a transitions is picked and is active, it will be fired and visual
-     * output will be updated.
-     */
-    public class VertexFireListener implements ItemListener {
-
-        @Override
-        public void itemStateChanged(ItemEvent ie) {
-            if (ie.getStateChange() == ItemEvent.SELECTED) {
-                Set<NetViewerNode> pickedVertices = vv.getPickedVertexState().getPicked();
-                if (pickedVertices.size() == 1) {
-                    final NetViewerNode node = pickedVertices.iterator().next();
-                    if (node.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                        Transition t = petriNet.findTransition(node.getMasterNode().getId());
-                        if (activeTransitions.contains(t)) {
-                            fireTransitions(t);
-                            updateVisualOutput();
-                        }
-                        vv.getPickedVertexState().clear();
-                    }
-                }
-            }
-        }
-    }
-
     //END INNER CLASSES
     /**
      * Creates new instance of an implementation of the AbstractTokenSim. This
@@ -237,31 +208,31 @@ public class TokenSimulator {
         /*
          * Check what simulator mode is selected.
          */
-        String selectedSimulator = this.tokenSimPanel.simModeJComboBox.getSelectedItem().toString();
+        String selectedSimulator = this.getTokenSimPanel().simModeJComboBox.getSelectedItem().toString();
         if (selectedSimulator.equalsIgnoreCase(strings.get("ATSName"))) {
-            this.tokenSim = new AsynchronousTokenSim(this);
+            this.setTokenSim(new AsynchronousTokenSim(this));
         } else if (selectedSimulator.equalsIgnoreCase(strings.get("STSName"))) {
-            this.tokenSim = new SynchronousTokenSim(this);
+            this.setTokenSim(new SynchronousTokenSim(this));
         } else if (selectedSimulator.equalsIgnoreCase(strings.get("StochTSName"))) {
-            this.tokenSim = new StochasticTokenSim(this);
+            this.setTokenSim(new StochasticTokenSim(this));
         } else if (selectedSimulator.equalsIgnoreCase(strings.get("GilTSName"))) {
-            this.tokenSim = new GillespieTokenSim(this);
+            this.setTokenSim(new GillespieTokenSim(this));
         }
 
         //for this time, all transitions have to be checked for the active state.
-        this.tokenSim.addTransitionsToCheck(petriNet.transitions().toArray(new Transition[0]));
+        this.getTokenSim().addTransitionsToCheck(petriNet.transitions().toArray(new Transition[0]));
 
-        this.tspMouse = this.tokenSim.getMousePopupPlugin();
-        this.customTSControls = this.tokenSim.getControlComponent();
+        this.tspMouse = this.getTokenSim().getMousePopupPlugin();
+        this.customTSControls = this.getTokenSim().getControlComponent();
 
         /*
          * Set the name of choosen mode for customSimulatorJPanel in preferences frame
          */
-        JPanel customTSPrefs = this.tokenSim.getPreferencesPanel();
+        JPanel customTSPrefs = this.getTokenSim().getPreferencesPanel();
         customTSPrefs.setBorder(BorderFactory.createTitledBorder(selectedSimulator));
-        this.preferencesJFrame.customSimulatorJScrollPane.setViewportView(customTSPrefs);
-        this.preferencesJFrame.repaint();
-        this.tokenSimPanel.customControlScrollPane.setViewportView(this.customTSControls);
+        this.getPreferencesJFrame().customSimulatorJScrollPane.setViewportView(customTSPrefs);
+        this.getPreferencesJFrame().repaint();
+        this.getTokenSimPanel().customControlScrollPane.setViewportView(this.customTSControls);
     }
 
     /**
@@ -271,18 +242,18 @@ public class TokenSimulator {
     private void init() {
         //By default, logging is disabled
         LOGGER.info("Initializing the token simulator");
-        this.preferences.put("LogEnabled", false);
-        this.preferences.put("LogPath", System.getProperty("user.home") + File.separator + "MonaLisa_Simulation_log");
-        this.preferences.put("SaveSnapshots", true);
-        this.preferences.put(("EnablePlotting"), true);
+        this.getPreferences().put("LogEnabled", false);
+        this.getPreferences().put("LogPath", System.getProperty("user.home") + File.separator + "MonaLisa_Simulation_log");
+        this.getPreferences().put("SaveSnapshots", true);
+        this.getPreferences().put(("EnablePlotting"), true);
         Map<Place, Boolean> placesToPlot = new HashMap<>();
-        this.preferences.put("PlacesToPlot", placesToPlot);
+        this.getPreferences().put("PlacesToPlot", placesToPlot);
 
         //get actual visualization viewer from NetViewer
-        this.vv = this.netViewer.getVisualizationViewer();
+        this.vv = this.getNetViewer().getVisualizationViewer();
         //get the size of vertices in NetViewer
 
-        this.vertexSize = (int) this.tokenSimPanel.iconSizeSpinner.getValue();
+        this.vertexSize = (int) this.getTokenSimPanel().iconSizeSpinner.getValue();
 
         //create clear history
         this.lastHistoryStep = -1;
@@ -339,20 +310,20 @@ public class TokenSimulator {
             this.customMarkingsMap.put(markingName, tmpMarking);
         } else {
             LOGGER.debug("Custom marking was found, so it is used in the simulator");
-            this.tokenSimPanel.customMarkingsJComboBox.removeAllItems();
+            this.getTokenSimPanel().customMarkingsJComboBox.removeAllItems();
             for (String markingName : this.customMarkingsMap.keySet()) {
-                this.tokenSimPanel.customMarkingsJComboBox.addItem(markingName);
+                this.getTokenSimPanel().customMarkingsJComboBox.addItem(markingName);
             }
         }
         LOGGER.info("Initial marking was created based on custom/default marking");
         //Preferences frame
         this.preferencesJFrame = new TokenSimPreferencesJFrame(this);
 
-        this.preferencesJFrame.logPathJTextField.setText((String) this.preferences.get("LogPath"));
-        this.preferencesJFrame.createLogJCheckBox.setSelected((Boolean) this.preferences.get("LogEnabled"));
+        this.getPreferencesJFrame().logPathJTextField.setText((String) this.getPreferences().get("LogPath"));
+        this.getPreferencesJFrame().createLogJCheckBox.setSelected((Boolean) this.getPreferences().get("LogEnabled"));
 
-        this.preferencesJFrame.pack();
-        this.preferencesJFrame.setVisible(false);
+        this.getPreferencesJFrame().pack();
+        this.getPreferencesJFrame().setVisible(false);
 
         /*
         Map for plotting functionality.
@@ -519,7 +490,7 @@ public class TokenSimulator {
  /*
         Add values to plot series if plotting is enabled
          */
-        if (this.totalStepNr == 0 && (boolean) this.preferences.get("EnablePlotting")) {
+        if (this.totalStepNr == 0 && (boolean) this.getPreferences().get("EnablePlotting")) {
             this.updatePlot();
         }
         LOGGER.info("Fire transitions that are supposed to fire");
@@ -551,7 +522,7 @@ public class TokenSimulator {
                     newToken = this.marking.get(place.id()) - this.petriNet.getArc(place, transition).weight();
                     this.marking.put(place.id(), newToken);
                     //add all post-transitions of the place to checkTransitions
-                    this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
+                    this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
                 }
             }
             //add tokens to all output places
@@ -562,7 +533,7 @@ public class TokenSimulator {
                     newToken = this.marking.get(place.id()) + this.petriNet.getArc(transition, place).weight();
                     this.marking.put(place.id(), newToken);
                     //add all post-transitions of the place to checkTransitions
-                    this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
+                    this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
                 }
             }
             //END computing new state
@@ -570,14 +541,14 @@ public class TokenSimulator {
 
         //compute active transitions after firing complete step
         LOGGER.debug("Compute active transitions after firing the transitions");
-        this.tokenSim.computeActiveTransitions();
+        this.getTokenSim().computeActiveTransitions();
 
         if (history) {
             this.addHistoryEntry(transitions);
         }
 
         this.totalStepNr++;
-        this.currStatistic.stepsFired++;
+        this.currStatistic.incrementSteps();
         //check whether to save snapshot of current state
         try {
             int k = MAX_HISTORY;
@@ -586,7 +557,7 @@ public class TokenSimulator {
             LOGGER.error(E);
         }
         if (this.snapshotsInterval > 0) {
-            if ((boolean) this.preferences.get("SaveSnapshots") && this.totalStepNr % this.snapshotsInterval == 0) {
+            if ((boolean) this.getPreferences().get("SaveSnapshots") && this.totalStepNr % this.snapshotsInterval == 0) {
                 this.saveSnapshot();
             }
         }
@@ -594,13 +565,13 @@ public class TokenSimulator {
         /*
         Actualize the log file if loggin is enabled.
          */
-        if ((boolean) this.preferences.get("LogEnabled")) {
+        if ((boolean) this.getPreferences().get("LogEnabled")) {
             this.writeLog(transitions);
         }
         /*
         Add values to plot series if plotting is enabled
          */
-        if ((boolean) this.preferences.get("EnablePlotting")) {
+        if ((boolean) this.getPreferences().get("EnablePlotting")) {
             this.updatePlot();
         }
     }
@@ -616,7 +587,7 @@ public class TokenSimulator {
     public void reverseFireTransitions(Transition... transitions) {
         LOGGER.info("Reverse Firing of Transitions for backtracking of Simulations");
         this.totalStepNr--;
-        this.currStatistic.stepsFired--;
+        this.currStatistic.decrementSteps();
         for (Transition transition : transitions) {
             LOGGER.debug("Changing the current mode of Simulation to reverse");
             this.currStatistic.transitionReverseFired(transition);              //tells the currStatistic object that transition-firing was canceled
@@ -628,7 +599,7 @@ public class TokenSimulator {
                     newToken = this.marking.get(place.id()) + this.petriNet.getArc(place, transition).weight();
                     this.marking.put(place.id(), newToken);
                     //add all post-transitions of the place to checkTransitions
-                    this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
+                    this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
                 }
             }
             //remove tokens from all output places
@@ -638,12 +609,12 @@ public class TokenSimulator {
                     newToken = this.marking.get(place.id()) - this.petriNet.getArc(transition, place).weight();
                     this.marking.put(place.id(), newToken);
                     //add all post-transitions of the place to checkTransitions
-                    this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
+                    this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(place).toArray(new Transition[0]));
                 }
             }
             //compute active transitions after firing complete step
             LOGGER.debug("Compute active transitions after firing one");
-            this.tokenSim.computeActiveTransitions();
+            this.getTokenSim().computeActiveTransitions();
         }
     }
 
@@ -665,7 +636,7 @@ public class TokenSimulator {
             while (this.lastHistoryStep < this.historyArrayList.size() - 1) {
                 this.historyArrayList.remove(this.historyArrayList.size() - 1);
             }
-            this.tokenSimPanel.historyForwardJButton.setEnabled(false);
+            this.getTokenSimPanel().historyForwardJButton.setEnabled(false);
         }
 
         //check whether the limit size of history is reached. If it is, remove the first history entry
@@ -685,10 +656,10 @@ public class TokenSimulator {
         this.historyArrayList.trimToSize();
 
         this.lastHistoryStep++;
-        this.tokenSimPanel.historyJList.repaint();
-        this.tokenSimPanel.historyJList.ensureIndexIsVisible(this.lastHistoryStep);
+        this.getTokenSimPanel().historyJList.repaint();
+        this.getTokenSimPanel().historyJList.ensureIndexIsVisible(this.lastHistoryStep);
         if (!this.lockGUI) {
-            this.tokenSimPanel.historyBackJButton.setEnabled(true);
+            this.getTokenSimPanel().historyBackJButton.setEnabled(true);
         }
     }
 
@@ -711,7 +682,7 @@ public class TokenSimulator {
         this.snapshots.add(currSnapshot);
         this.snapshots.trimToSize();
         this.snapshotsListModel.addElement("Step " + this.totalStepNr);
-        this.tokenSimPanel.snapshotsJList.ensureIndexIsVisible(this.snapshotsListModel.size() - 1);
+        this.getTokenSimPanel().snapshotsJList.ensureIndexIsVisible(this.snapshotsListModel.size() - 1);
     }
 
     /**
@@ -745,13 +716,13 @@ public class TokenSimulator {
         //Copy values of constant places
         this.constantPlaces.putAll(snapshot.getConstantPlaces());
         //after loading a snapshot, active transitions must be calculated
-        this.tokenSim.addTransitionsToCheck(this.petriNet.transitions().toArray(new Transition[0]));
-        this.tokenSim.computeActiveTransitions();
+        this.getTokenSim().addTransitionsToCheck(this.petriNet.transitions().toArray(new Transition[0]));
+        this.getTokenSim().computeActiveTransitions();
         this.vv.repaint();
 
         this.lastHistoryStep = this.historyArrayList.size() - 1;
-        this.tokenSimPanel.historyForwardJButton.setEnabled(false);
-        this.tokenSimPanel.historyBackJButton.setEnabled(!historyArrayList.isEmpty());
+        this.getTokenSimPanel().historyForwardJButton.setEnabled(false);
+        this.getTokenSimPanel().historyBackJButton.setEnabled(!historyArrayList.isEmpty());
     }
 
     /**
@@ -990,7 +961,7 @@ public class TokenSimulator {
 
     private void updatePlot() {
         LOGGER.debug("Updating the plot for all places to plot");
-        Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) this.preferences.get("PlacesToPlot");
+        Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) this.getPreferences().get("PlacesToPlot");
         /*
         Add current number of tokens to the chart series.
          */
@@ -999,7 +970,7 @@ public class TokenSimulator {
                 //Get the series object which corresponds to place p.
                 XYSeries series = this.seriesMap.get(p);
                 //Add the current time and number of tokens in the place p.
-                series.add(this.tokenSim.getSimulatedTime(), this.tokenSim.getTokens(p.id()), false);
+                series.add(this.getTokenSim().getSimulatedTime(), this.getTokenSim().getTokens(p.id()), false);
             }
         }
     }
@@ -1017,7 +988,7 @@ public class TokenSimulator {
          * Dataset for a XY chart.
          */
         XYSeriesCollection chartDataset = new XYSeriesCollection();
-        Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) this.preferences.get("PlacesToPlot");
+        Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) this.getPreferences().get("PlacesToPlot");
         for (Entry<Place, XYSeries> entr : this.seriesMap.entrySet()) {
             if (placesToPlot.get(entr.getKey())) {
                 chartDataset.addSeries(entr.getValue());
@@ -1076,7 +1047,7 @@ public class TokenSimulator {
             /*
              * Create default directory for log-files
              */
-            new File((String) this.preferences.get("LogPath")).mkdir();
+            new File((String) this.getPreferences().get("LogPath")).mkdir();
             //create a name of the log-file based on current date
             Calendar cal = Calendar.getInstance();
             this.logName = "Sim_log_" + cal.getTime().toString().replaceAll(" ", "_");
@@ -1086,7 +1057,7 @@ public class TokenSimulator {
              */
             try {
                 this.logWriter = new PrintWriter(new BufferedWriter(
-                        new FileWriter((String) this.preferences.get("LogPath") + File.separator + this.logName + ".csv")));
+                        new FileWriter((String) this.getPreferences().get("LogPath") + File.separator + this.logName + ".csv")));
                 logSB.append("PlaceName\t\t\t");
                 for (Place place : this.petriNet.places()) {
                     logSB.append((String) place.getProperty("name")).append("\t");
@@ -1100,7 +1071,7 @@ public class TokenSimulator {
                 LOGGER.error("IOException while writing log header", ex);
             }
         }
-        logSB.append("\n").append(this.totalStepNr).append("\t").append(this.tokenSim.getSimulatedTime()).append("\t");
+        logSB.append("\n").append(this.totalStepNr).append("\t").append(this.getTokenSim().getSimulatedTime()).append("\t");
         //Append names of fired transitions
         for (Transition t : transitions) {
             logSB.append((String) t.getProperty("name")).append(";");
@@ -1108,7 +1079,7 @@ public class TokenSimulator {
         logSB.deleteCharAt(logSB.length() - 1);
         logSB.append("\t");
         for (Place place : this.petriNet.places()) {
-            logSB.append(this.tokenSim.getTokens(place.id())).append("\t");
+            logSB.append(this.getTokenSim().getTokens(place.id())).append("\t");
         }
         logWriter.print(logSB);
     }
@@ -1131,13 +1102,13 @@ public class TokenSimulator {
         //create an instance of choosen token simulator
         this.newTokenSim();
 
-        this.netViewer.startTokenSimulator(this.tspMouse);
-        this.tokenSim.startSim();
+        this.getNetViewer().startTokenSimulator(this.tspMouse);
+        this.getTokenSim().startSim();
 
         //add customMarking names to customMarkingComboBix
-        this.tokenSimPanel.customMarkingsJComboBox.removeAllItems();
+        this.getTokenSimPanel().customMarkingsJComboBox.removeAllItems();
         for (String markingName : this.customMarkingsMap.keySet()) {
-            this.tokenSimPanel.customMarkingsJComboBox.addItem(markingName);
+            this.getTokenSimPanel().customMarkingsJComboBox.addItem(markingName);
         }
 
         //load current tokens from Petri net
@@ -1156,36 +1127,36 @@ public class TokenSimulator {
         //assign new VertexIconTransformer
         this.vertexIconTransformer = new VertexIconTransformer(this);
         this.vv.getRenderContext().setVertexIconTransformer(this.vertexIconTransformer);
-        this.vv.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(this.vertexSize));
+        this.vv.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(this.getVertexSize()));
         //assign ItemListener for firing picked transitions
         this.vv.getRenderContext().getPickedVertexState().addItemListener(this.vertexFireListener);
         //assign correct values for the spinner
-        this.tokenSimPanel.fontSizeSpinner.setValue(this.netViewer.getFontSize());
-        this.tokenSimPanel.arrowSizeSpinner.setValue(this.netViewer.getArrowSize());
-        this.tokenSimPanel.edgeSizeSpinner.setValue(this.netViewer.getEdgeSize());
-        if (this.netViewer.getIconSize() > 25) {
-            this.tokenSimPanel.iconSizeSpinner.setValue(this.netViewer.getIconSize());
+        this.getTokenSimPanel().fontSizeSpinner.setValue(this.getNetViewer().getFontSize());
+        this.getTokenSimPanel().arrowSizeSpinner.setValue(this.getNetViewer().getArrowSize());
+        this.getTokenSimPanel().edgeSizeSpinner.setValue(this.getNetViewer().getEdgeSize());
+        if (this.getNetViewer().getIconSize() > 25) {
+            this.getTokenSimPanel().iconSizeSpinner.setValue(this.getNetViewer().getIconSize());
         }
         //enables/disables GUI-components
-        this.tokenSimPanel.startSimulationJButton.setEnabled(false);
-        this.tokenSimPanel.endSimulationJButton.setEnabled(true);
-        this.tokenSimPanel.iconSizeSpinner.setEnabled(true);
-        this.tokenSimPanel.arrowSizeSpinner.setEnabled(true);
-        this.tokenSimPanel.fontSizeSpinner.setEnabled(true);
-        this.tokenSimPanel.edgeSizeSpinner.setEnabled(true);
-        this.tokenSimPanel.showStatisticsJButton.setEnabled(true);
-        this.tokenSimPanel.saveMarkingJButton.setEnabled(true);
-        this.tokenSimPanel.deleteMarkingJButton.setEnabled(true);
-        this.tokenSimPanel.historyJList.setEnabled(true);
-        this.tokenSimPanel.snapshotsJList.setEnabled(true);
-        this.tokenSimPanel.simModeJComboBox.setEnabled(false);
-        this.tokenSimPanel.customMarkingsJComboBox.setEnabled(true);
-        this.tokenSimPanel.preferencesJButton.setEnabled(true);
-        this.tokenSimPanel.saveSetupButton.setEnabled(true);
-        this.tokenSimPanel.loadSetupButton.setEnabled(true);
-        this.tokenSimPanel.showPlotButton.setEnabled(true);
+        this.getTokenSimPanel().startSimulationJButton.setEnabled(false);
+        this.getTokenSimPanel().endSimulationJButton.setEnabled(true);
+        this.getTokenSimPanel().iconSizeSpinner.setEnabled(true);
+        this.getTokenSimPanel().arrowSizeSpinner.setEnabled(true);
+        this.getTokenSimPanel().fontSizeSpinner.setEnabled(true);
+        this.getTokenSimPanel().edgeSizeSpinner.setEnabled(true);
+        this.getTokenSimPanel().showStatisticsJButton.setEnabled(true);
+        this.getTokenSimPanel().saveMarkingJButton.setEnabled(true);
+        this.getTokenSimPanel().deleteMarkingJButton.setEnabled(true);
+        this.getTokenSimPanel().historyJList.setEnabled(true);
+        this.getTokenSimPanel().snapshotsJList.setEnabled(true);
+        this.getTokenSimPanel().simModeJComboBox.setEnabled(false);
+        this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(true);
+        this.getTokenSimPanel().preferencesJButton.setEnabled(true);
+        this.getTokenSimPanel().saveSetupButton.setEnabled(true);
+        this.getTokenSimPanel().loadSetupButton.setEnabled(true);
+        this.getTokenSimPanel().showPlotButton.setEnabled(true);
         this.vv.repaint();
-        this.tokenSimPanel.historyJList.repaint();
+        this.getTokenSimPanel().historyJList.repaint();
     }
 
     /**
@@ -1202,7 +1173,7 @@ public class TokenSimulator {
      *
      * @return Number of simulated steps.
      */
-    protected int getSimulatedSteps() {
+    public int getSimulatedSteps() {
         return this.totalStepNr;
     }
 
@@ -1211,45 +1182,45 @@ public class TokenSimulator {
      */
     public void endSimulator() {
         LOGGER.info("Ending the current token simulator");
-        if (this.tokenSim == null) {
+        if (this.getTokenSim() == null) {
             return;
         }
-        this.tokenSim.endSim();
-        this.tokenSimPanel.customControlScrollPane.setViewportView(null);
-        this.netViewer.endTokenSimulator(tspMouse);
+        this.getTokenSim().endSim();
+        this.getTokenSimPanel().customControlScrollPane.setViewportView(null);
+        this.getNetViewer().endTokenSimulator(tspMouse);
 
         //assign old VertexIconTransformer
         this.vv.getRenderContext().setVertexIconTransformer(oldIconTransformer);
         //remove ItemListener for firing picked transitions
         vv.getRenderContext().getPickedVertexState().removeItemListener(vertexFireListener);
         this.vv.repaint();
-        this.preferencesJFrame.dispose();
+        this.getPreferencesJFrame().dispose();
         //reset the spinner values to the NetViewer
-        this.netViewer.setArrowSize((double) this.tokenSimPanel.arrowSizeSpinner.getValue());
-        this.netViewer.setFontSize((int) this.tokenSimPanel.fontSizeSpinner.getValue());
-        this.netViewer.setIconSize((int) this.tokenSimPanel.iconSizeSpinner.getValue());
-        this.netViewer.setEdgeSize((int) this.tokenSimPanel.edgeSizeSpinner.getValue());
+        this.getNetViewer().setArrowSize((double) this.getTokenSimPanel().arrowSizeSpinner.getValue());
+        this.getNetViewer().setFontSize((int) this.getTokenSimPanel().fontSizeSpinner.getValue());
+        this.getNetViewer().setIconSize((int) this.getTokenSimPanel().iconSizeSpinner.getValue());
+        this.getNetViewer().setEdgeSize((int) this.getTokenSimPanel().edgeSizeSpinner.getValue());
         //enables/disables GUI-components
-        this.tokenSimPanel.startSimulationJButton.setEnabled(true);
-        this.tokenSimPanel.endSimulationJButton.setEnabled(false);
-        this.tokenSimPanel.iconSizeSpinner.setEnabled(false);
-        this.tokenSimPanel.arrowSizeSpinner.setEnabled(false);
-        this.tokenSimPanel.fontSizeSpinner.setEnabled(false);
-        this.tokenSimPanel.edgeSizeSpinner.setEnabled(false);
-        this.tokenSimPanel.historyBackJButton.setEnabled(false);
-        this.tokenSimPanel.historyForwardJButton.setEnabled(false);
-        this.tokenSimPanel.showStatisticsJButton.setEnabled(false);
-        this.tokenSimPanel.saveMarkingJButton.setEnabled(false);
-        this.tokenSimPanel.deleteMarkingJButton.setEnabled(false);
-        this.tokenSimPanel.historyJList.setEnabled(false);
-        this.tokenSimPanel.snapshotsJList.setEnabled(false);
-        this.tokenSimPanel.simModeJComboBox.setEnabled(true);
-        this.tokenSimPanel.customMarkingsJComboBox.setEnabled(false);
-        this.tokenSimPanel.preferencesJButton.setEnabled(false);
-        this.tokenSimPanel.saveSetupButton.setEnabled(false);
-        this.tokenSimPanel.loadSetupButton.setEnabled(false);
-        this.tokenSimPanel.showPlotButton.setEnabled(false);
-        this.preferencesJFrame.setVisible(false);
+        this.getTokenSimPanel().startSimulationJButton.setEnabled(true);
+        this.getTokenSimPanel().endSimulationJButton.setEnabled(false);
+        this.getTokenSimPanel().iconSizeSpinner.setEnabled(false);
+        this.getTokenSimPanel().arrowSizeSpinner.setEnabled(false);
+        this.getTokenSimPanel().fontSizeSpinner.setEnabled(false);
+        this.getTokenSimPanel().edgeSizeSpinner.setEnabled(false);
+        this.getTokenSimPanel().historyBackJButton.setEnabled(false);
+        this.getTokenSimPanel().historyForwardJButton.setEnabled(false);
+        this.getTokenSimPanel().showStatisticsJButton.setEnabled(false);
+        this.getTokenSimPanel().saveMarkingJButton.setEnabled(false);
+        this.getTokenSimPanel().deleteMarkingJButton.setEnabled(false);
+        this.getTokenSimPanel().historyJList.setEnabled(false);
+        this.getTokenSimPanel().snapshotsJList.setEnabled(false);
+        this.getTokenSimPanel().simModeJComboBox.setEnabled(true);
+        this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(false);
+        this.getTokenSimPanel().preferencesJButton.setEnabled(false);
+        this.getTokenSimPanel().saveSetupButton.setEnabled(false);
+        this.getTokenSimPanel().loadSetupButton.setEnabled(false);
+        this.getTokenSimPanel().showPlotButton.setEnabled(false);
+        this.getPreferencesJFrame().setVisible(false);
         /*
         Close writer.
          */
@@ -1301,33 +1272,33 @@ public class TokenSimulator {
     public void lockGUI(Boolean lock) {
         this.lockGUI = lock;
         if (lock) {
-            this.tokenSimPanel.historyJList.setEnabled(false);
-            this.tokenSimPanel.snapshotsJList.setEnabled(false);
-            this.tokenSimPanel.historyBackJButton.setEnabled(false);
-            this.tokenSimPanel.historyForwardJButton.setEnabled(false);
-            this.tokenSimPanel.customMarkingsJComboBox.setEnabled(false);
-            this.tokenSimPanel.saveMarkingJButton.setEnabled(false);
-            this.tokenSimPanel.deleteMarkingJButton.setEnabled(false);
-            this.tokenSimPanel.customMarkingsJComboBox.setEnabled(false);
-            this.tokenSimPanel.preferencesJButton.setEnabled(false);
-            this.tokenSimPanel.saveSetupButton.setEnabled(false);
-            this.tokenSimPanel.loadSetupButton.setEnabled(false);
+            this.getTokenSimPanel().historyJList.setEnabled(false);
+            this.getTokenSimPanel().snapshotsJList.setEnabled(false);
+            this.getTokenSimPanel().historyBackJButton.setEnabled(false);
+            this.getTokenSimPanel().historyForwardJButton.setEnabled(false);
+            this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(false);
+            this.getTokenSimPanel().saveMarkingJButton.setEnabled(false);
+            this.getTokenSimPanel().deleteMarkingJButton.setEnabled(false);
+            this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(false);
+            this.getTokenSimPanel().preferencesJButton.setEnabled(false);
+            this.getTokenSimPanel().saveSetupButton.setEnabled(false);
+            this.getTokenSimPanel().loadSetupButton.setEnabled(false);
         } else {
-            this.tokenSimPanel.historyJList.setEnabled(true);
-            this.tokenSimPanel.snapshotsJList.setEnabled(true);
+            this.getTokenSimPanel().historyJList.setEnabled(true);
+            this.getTokenSimPanel().snapshotsJList.setEnabled(true);
             if (this.lastHistoryStep > -1) {
-                this.tokenSimPanel.historyBackJButton.setEnabled(true);
+                this.getTokenSimPanel().historyBackJButton.setEnabled(true);
             }
             if (this.lastHistoryStep < this.historyArrayList.size() - 1) {
-                this.tokenSimPanel.historyForwardJButton.setEnabled(true);
+                this.getTokenSimPanel().historyForwardJButton.setEnabled(true);
             }
-            this.tokenSimPanel.customMarkingsJComboBox.setEnabled(true);
-            this.tokenSimPanel.saveMarkingJButton.setEnabled(true);
-            this.tokenSimPanel.deleteMarkingJButton.setEnabled(true);
-            this.tokenSimPanel.customMarkingsJComboBox.setEnabled(true);
-            this.tokenSimPanel.preferencesJButton.setEnabled(true);
-            this.tokenSimPanel.saveSetupButton.setEnabled(true);
-            this.tokenSimPanel.loadSetupButton.setEnabled(true);
+            this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(true);
+            this.getTokenSimPanel().saveMarkingJButton.setEnabled(true);
+            this.getTokenSimPanel().deleteMarkingJButton.setEnabled(true);
+            this.getTokenSimPanel().customMarkingsJComboBox.setEnabled(true);
+            this.getTokenSimPanel().preferencesJButton.setEnabled(true);
+            this.getTokenSimPanel().saveSetupButton.setEnabled(true);
+            this.getTokenSimPanel().loadSetupButton.setEnabled(true);
         }
     }
 
@@ -1347,8 +1318,8 @@ public class TokenSimulator {
         if (!petriNet.findPlace(id).isConstant()) {
             this.marking.put(id, tokens);
             //add all post-transitions of the place to checkTransitions and compute active transitions
-            this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(p).toArray(new Transition[0]));
-            this.tokenSim.computeActiveTransitions();
+            this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(p).toArray(new Transition[0]));
+            this.getTokenSim().computeActiveTransitions();
             this.vv.repaint();
         } //if the place is constant, trow an exception.
         else {
@@ -1373,8 +1344,8 @@ public class TokenSimulator {
         if (p.isConstant()) {
             this.constantPlaces.put(id, mathExp);
             //add all post-transitions of the place to checkTransitions and compute active transitions
-            this.tokenSim.addTransitionsToCheck(this.petriNet.getTransitionsFor(p).toArray(new Transition[0]));
-            this.tokenSim.computeActiveTransitions();
+            this.getTokenSim().addTransitionsToCheck(this.petriNet.getTransitionsFor(p).toArray(new Transition[0]));
+            this.getTokenSim().computeActiveTransitions();
             this.vv.repaint();
         } //if the place is non-constant, trow an exception.
         else {
@@ -1455,7 +1426,7 @@ public class TokenSimulator {
         } else {
             //if the place is already non-constant, do nothing.
             if (p.isConstant()) {
-                long value = tokenSim.getTokens(p.id());
+                long value = getTokenSim().getTokens(p.id());
                 p.setConstant(false);
                 this.constantPlaces.remove(id);
                 /*
@@ -1512,10 +1483,59 @@ public class TokenSimulator {
         //netViewer are initialized on creating TokenSimulator and will not be changed.
         this.netViewer = netViewer;
         this.tokenSimPanel = tokenSimPanel;
-        this.vertexFireListener = new TokenSimulator.VertexFireListener();
+        this.vertexFireListener = new VertexFireListener(this, vv);
         this.petriNet = petriNet;
 
         this.createGUI();
     }
     //END PUBLIC METHODS
+
+    /**
+     * @return the tokenSim
+     */
+    public AbstractTokenSim getTokenSim() {
+        return tokenSim;
+    }
+
+    /**
+     * @param tokenSim the tokenSim to set
+     */
+    public void setTokenSim(AbstractTokenSim tokenSim) {
+        this.tokenSim = tokenSim;
+    }
+
+    /**
+     * @return the preferences
+     */
+    public HashMap<String, Object> getPreferences() {
+        return preferences;
+    }
+
+    /**
+     * @return the netViewer
+     */
+    public NetViewer getNetViewer() {
+        return netViewer;
+    }
+
+    /**
+     * @return the tokenSimPanel
+     */
+    public TokenSimPanel getTokenSimPanel() {
+        return tokenSimPanel;
+    }
+
+    /**
+     * @return the vertexSize
+     */
+    public int getVertexSize() {
+        return vertexSize;
+    }
+
+    /**
+     * @return the preferencesJFrame
+     */
+    public TokenSimPreferencesJFrame getPreferencesJFrame() {
+        return preferencesJFrame;
+    }
 }

@@ -282,7 +282,7 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
      * @param evt
      */
     private void cancelJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelJButtonActionPerformed
-        ts.netViewer.hideMenu();
+        ts.getNetViewer().hideMenu();
     }//GEN-LAST:event_cancelJButtonActionPerformed
     /**
      * Accept all changes and write them to the preferences-map
@@ -290,21 +290,21 @@ public class TokenSimPreferencesJFrame extends javax.swing.JFrame {
      * @param evt
      */
     private void okJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okJButtonActionPerformed
-        this.ts.preferences.put("LogEnabled", this.createLogJCheckBox.isSelected());
-        this.ts.preferences.put("LogPath", this.logPathJTextField.getText());
-        this.ts.preferences.put("SaveSnapshots", this.snapshotsCB.isSelected());
-        this.ts.preferences.put("EnablePlotting", this.chartPlottingCB.isSelected());
+        this.ts.getPreferences().put("LogEnabled", this.createLogJCheckBox.isSelected());
+        this.ts.getPreferences().put("LogPath", this.logPathJTextField.getText());
+        this.ts.getPreferences().put("SaveSnapshots", this.snapshotsCB.isSelected());
+        this.ts.getPreferences().put("EnablePlotting", this.chartPlottingCB.isSelected());
         Map<Place, Boolean> plotPlaces = new HashMap<>();
         for (Entry<Place, JCheckBox> entr : placesToPlot.entrySet()) {
             plotPlaces.put(entr.getKey(), entr.getValue().isSelected());
         }
-        this.ts.preferences.put("PlacesToPlot", plotPlaces);
-        this.ts.tokenSim.updatePreferences();
-        this.ts.netViewer.hideMenu();
+        this.ts.getPreferences().put("PlacesToPlot", plotPlaces);
+        this.ts.getTokenSim().updatePreferences();
+        this.ts.getNetViewer().hideMenu();
     }//GEN-LAST:event_okJButtonActionPerformed
 
     private void chartPlottingCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chartPlottingCBActionPerformed
-        this.ts.tokenSimPanel.showPlotButton.setEnabled(chartPlottingCB.isSelected());
+        this.ts.getTokenSimPanel().showPlotButton.setEnabled(chartPlottingCB.isSelected());
     }//GEN-LAST:event_chartPlottingCBActionPerformed
 
     private void placesToPlotBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_placesToPlotBActionPerformed

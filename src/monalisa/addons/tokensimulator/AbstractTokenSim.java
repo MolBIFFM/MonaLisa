@@ -9,6 +9,8 @@
  */
 package monalisa.addons.tokensimulator;
 
+import monalisa.addons.tokensimulator.utils.MathExpFrame;
+import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import java.awt.event.ActionEvent;
@@ -34,6 +36,8 @@ import javax.swing.event.ChangeListener;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.addons.netviewer.NetViewerNode;
+import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
+import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -89,7 +93,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
                     //Create new popup
                     JPopupMenu popup = new JPopupMenu();
                     //Get the place of PN represented by the selected node.
-                    final Place place = petriNet.findPlace(node.getMasterNode().getId());
+                    final Place place = getPetriNet().findPlace(node.getMasterNode().getId());
                     /*
                      * If the place is not constant, set the number of tokens.
                      */
@@ -101,12 +105,12 @@ public abstract class AbstractTokenSim implements ChangeListener {
                                     long tokens = Long.parseLong(JOptionPane.showInputDialog(TokenSimulator.strings.get("TSSetTokenPT")));
                                     //negative integers are ignored
                                     if (tokens >= 0) {
-                                        tokenSim.setTokens(place.id(), tokens);
+                                        getTokenSim().setTokens(place.id(), tokens);
                                     }
                                 } catch (NumberFormatException E) {
                                     LOGGER.error("NumberFormatException while checking input" + E);
                                     JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
-                                } catch (TokenSimulator.PlaceConstantException ex) {
+                                } catch (PlaceConstantException ex) {
                                     LOGGER.error("ConstantPlaceException while checking for mouseaction " + ex);
                                 }
                             }
@@ -121,7 +125,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
                                 Create new frame for math exp.
                                  */
                                 MathExpFrame frame;
-                                frame = new MathExpFrame(petriNet.places(), tokenSim.getMathematicalExpression(place.id()));
+                                frame = new MathExpFrame(getPetriNet().places(), getTokenSim().getMathematicalExpression(place.id()));
                                 frame.addToTitle(place.getProperty("name").toString());
                                 /*
                                 The information is the id of the place for which the mathematical expression is created. Used in the listener.
@@ -141,7 +145,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
                     cbItem.addItemListener(new ItemListener() {
                         @Override
                         public void itemStateChanged(ItemEvent e) {
-                            tokenSim.setPlaceConstant(place.id(), cbItem.isSelected());
+                            getTokenSim().setPlaceConstant(place.id(), cbItem.isSelected());
                         }
                     });
                     popup.add(cbItem);
@@ -226,7 +230,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
      *
      * @return Transition which will be fired in the next step.
      */
-    protected abstract Transition getTransitionToFire();
+    public abstract Transition getTransitionToFire();
 
     /**
      * Saves simulation setup, including marking, firing rates, constant-flags
@@ -270,7 +274,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
      * time a token number for a place changes, all post-transitions of this
      * place are added to checkTransitions.
      */
-    protected void computeActiveTransitions() {
+    public void computeActiveTransitions() {
         /*
          * Iterate through all transitions that should be checked.
          */
@@ -289,16 +293,16 @@ public abstract class AbstractTokenSim implements ChangeListener {
                  * the transition cannot be active and all other pre-places must not be checked.
                  */
                 long tokens = this.getTokens(place.id());
-                if (this.petriNet.getArc(place, transition).weight() > tokens) {
+                if (this.getPetriNet().getArc(place, transition).weight() > tokens) {
                     active = false;
                     break;
                 }
             }
             if (active) {
-                this.tokenSim.activeTransitions.add(transition);
+                this.getTokenSim().activeTransitions.add(transition);
             } else {
                 //Ensure that previous active-marked transition is not active any more.
-                this.tokenSim.activeTransitions.remove(transition);
+                this.getTokenSim().activeTransitions.remove(transition);
             }
         }
         LOGGER.info("Found all active Transitions");
@@ -307,7 +311,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
         After active transitions were computed, clear the transitionsToCheck-list. However, post-transitions of constant
         places must be retained as they should be checked every step.
          */
-        this.transitionsToCheck.retainAll(this.tokenSim.constantPlacesPostTransitions);
+        this.transitionsToCheck.retainAll(this.getTokenSim().constantPlacesPostTransitions);
     }
 
     /**
@@ -316,7 +320,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
      *
      * @param transitions Transitions which pre-places marking was changed.
      */
-    protected void addTransitionsToCheck(Transition... transitions) {
+    public void addTransitionsToCheck(Transition... transitions) {
         transitionsToCheck.addAll(Arrays.asList(transitions));
     }
 
@@ -336,8 +340,8 @@ public abstract class AbstractTokenSim implements ChangeListener {
                 /*
                 Put the new mathematical expression to the constant places - map.
                  */
-                this.tokenSim.setMathExpression((int) ((MathExpFrame) source).getInformation(this), exp);
-            } catch (TokenSimulator.PlaceNonConstantException ex) {
+                this.getTokenSim().setMathExpression((int) ((MathExpFrame) source).getInformation(this), exp);
+            } catch (PlaceNonConstantException ex) {
                 LOGGER.error("NonConstant Place Exception while experiencing a change of state" + ex);
             }
 
@@ -355,14 +359,42 @@ public abstract class AbstractTokenSim implements ChangeListener {
      */
     public long getTokens(int id) {
         if (!petriNet.findPlace(id).isConstant()) {
-            return this.tokenSim.getMarking().get(id);
+            return this.getTokenSim().getMarking().get(id);
         } else {
             Map<Integer, Double> markingDouble = new HashMap<>();
-            for (Entry<Integer, Long> entr : tokenSim.getMarking().entrySet()) {
+            for (Entry<Integer, Long> entr : getTokenSim().getMarking().entrySet()) {
                 markingDouble.put(entr.getKey(), entr.getValue().doubleValue());
             }
-            MathematicalExpression mathExp = tokenSim.getMathematicalExpression(id);
+            MathematicalExpression mathExp = getTokenSim().getMathematicalExpression(id);
             return Math.round(mathExp.evaluateML(markingDouble, this.getSimulatedTime()));
         }
+    }
+
+    /**
+     * @return the random
+     */
+    public HighQualityRandom getRandom() {
+        return random;
+    }
+
+    /**
+     * set the random
+     */
+    public void setRandom(HighQualityRandom seeded) {
+        this.random = seeded;
+    }
+
+    /**
+     * @return the petriNet
+     */
+    public PetriNetFacade getPetriNet() {
+        return petriNet;
+    }
+
+    /**
+     * @return the tokenSim
+     */
+    public TokenSimulator getTokenSim() {
+        return tokenSim;
     }
 }

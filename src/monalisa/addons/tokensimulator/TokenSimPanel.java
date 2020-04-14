@@ -8,8 +8,7 @@
  */
 package monalisa.addons.tokensimulator;
 
-import java.awt.Color;
-import java.awt.Component;
+import monalisa.addons.tokensimulator.utils.StatisticFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -17,27 +16,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import monalisa.addons.AddonPanel;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
+import monalisa.addons.tokensimulator.utils.HistoryCellRenderer;
+import monalisa.addons.tokensimulator.listeners.CustomMarkingsComboBoxPopupListener;
+import monalisa.addons.tokensimulator.listeners.HistorySelectionListener;
+import monalisa.addons.tokensimulator.listeners.SnapshotsListSelectionListener;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
-import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
-import org.jfree.data.xy.XYSeries;
 
 /**
  *
@@ -48,132 +41,6 @@ public class TokenSimPanel extends AddonPanel {
     private final TokenSimulator ts;
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(TokenSimPanel.class);
 
-    // START INNER CLASSES
-    /**
-     * Handles navigation through the history. When a history entry in
-     * historyList is picked, all steps between the current state and picked
-     * state will be performed (if picked state is later than current state) or
-     * reverse-fired (if picked state is earlier than current state); i.e. the
-     * picked state will be the last performed state.
-     */
-    public class HistorySelectionListener implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            LOGGER.info("New Entry chosen from history list");
-            if (e.getValueIsAdjusting() == false) {
-                int selectedVar = historyJList.getSelectedIndex();
-                if (selectedVar > -1) {
-                    historyJList.clearSelection();
-                    //if the last step was performed later than the picked state, reverse-fire all steps between the last performer step and the picked
-                    historyJList.setEnabled(false);
-                    while (selectedVar < ts.lastHistoryStep) {
-                        ts.reverseFireTransitions(ts.historyArrayList.get(ts.lastHistoryStep--));
-                    }
-                    //if the selected step was performed after the curren step, perform steps between selected and lastHistoryStep and update the visual output after the last firing
-                    while (selectedVar > ts.lastHistoryStep) {
-                        ts.fireTransitions(false, ts.historyArrayList.get(++ts.lastHistoryStep));
-                    }
-                    historyBackJButton.setEnabled(ts.lastHistoryStep > -1);
-                    historyForwardJButton.setEnabled(ts.lastHistoryStep < ts.historyArrayList.size() - 1);
-                    ts.updateVisualOutput();
-
-                    historyJList.repaint();
-                    historyJList.ensureIndexIsVisible(ts.lastHistoryStep);
-                    historyJList.setEnabled(true);
-                }
-            }
-        }
-    }
-
-    /**
-     * Handles the coloring of entries in historyList. The last performed step
-     * has red background.
-     */
-    public class HistoryCellRenderer implements ListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-            JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            if (index == ts.lastHistoryStep) {
-                renderer.setBackground(Color.red);
-            } else {
-                renderer.setBackground(Color.white);
-            }
-            return renderer;
-        }
-    }
-
-    /**
-     * Handles the navigation through snapshots. When a snapshot is picked, the
-     * snapshots marking and history are assigned to current state
-     */
-    public class SnapshotsListSelectionListener implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent lse) {
-            if (lse.getValueIsAdjusting() == false) {
-                int selectedVar = snapshotsJList.getSelectedIndex();
-                if (selectedVar > -1) {
-                    snapshotsJList.clearSelection();
-                    ts.loadSnapshot(ts.snapshots.get(selectedVar));
-                }
-            }
-        }
-    }
-
-    /**
-     * Handles selection of a marking from the customMarkingsComboBox.
-     */
-    public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
-
-        private boolean canceled = false;
-
-        @Override
-        public void popupMenuWillBecomeVisible(PopupMenuEvent pme) {
-            canceled = false;
-        }
-
-        @Override
-        public void popupMenuWillBecomeInvisible(PopupMenuEvent pme) {
-            //only if the popup becomes invisible in the cause of selecting an item by user.
-            if (!canceled) {
-                //get the name of selected marking
-                String markingName = (String) customMarkingsJComboBox.getSelectedItem();
-                /*
-                Put the values from the selected marking into current marking.
-                 */
-                ts.marking.putAll(ts.customMarkingsMap.get(markingName));
-                //re-compute active transitions
-                ts.tokenSim.addTransitionsToCheck(pnf.transitions().toArray(new Transition[0]));
-                ts.tokenSim.computeActiveTransitions();
-                //clear history
-                ts.historyListModel.clear();
-                ts.historyArrayList.clear();
-                ts.lastHistoryStep = -1;
-                //clear snapshots
-                ts.snapshots.clear();
-                ts.snapshotsListModel.clear();
-                //clear statistic
-                ts.totalStepNr = 0;
-                ts.currStatistic = new Statistic(ts);
-                for (Map.Entry<Place, XYSeries> entr : ts.seriesMap.entrySet()) {
-                    entr.getValue().clear();
-                    entr.getValue().add(ts.tokenSim.getSimulatedTime(), ts.tokenSim.getTokens(entr.getKey().id()), false);
-                }
-
-                ts.updateVisualOutput();
-            }
-        }
-
-        @Override
-        public void popupMenuCanceled(PopupMenuEvent pme) {
-            canceled = true;
-        }
-    }
-
-    // END INNER CLASSES
     /**
      * Creates new form TopologcialPanel
      */
@@ -181,7 +48,7 @@ public class TokenSimPanel extends AddonPanel {
         super(netViewer, petriNet, "Simulator");
         LOGGER.info("Initiating TokenSimPanel");
         initComponents();
-
+        LOGGER.info("Successfully initiated TokenSimPanel");
         this.ts = new TokenSimulator();
         modifyComponents();
         this.ts.initTokenSimulator(netViewer, petriNet, this);
@@ -199,22 +66,22 @@ public class TokenSimPanel extends AddonPanel {
         //history
         this.ts.historyListModel = new DefaultListModel();
         historyJList.setModel(this.ts.historyListModel);
-        historyJList.setCellRenderer(new HistoryCellRenderer());
-        historyJList.addListSelectionListener(new HistorySelectionListener());
+        historyJList.setCellRenderer(new HistoryCellRenderer(ts));
+        historyJList.addListSelectionListener(new HistorySelectionListener(historyBackJButton, historyForwardJButton, historyJList, ts));
 
         //snapshots
         this.ts.snapshotsListModel = new DefaultListModel();
         snapshotsJList.setModel(this.ts.snapshotsListModel);
-        snapshotsJList.addListSelectionListener(new SnapshotsListSelectionListener());
+        snapshotsJList.addListSelectionListener(new SnapshotsListSelectionListener(ts, snapshotsJList));
 
         //create new selection listener selecting custom markings. If an entry is selected in customMarkingsComboBox, load the marking
-        customMarkingsJComboBox.addPopupMenuListener(new CustomMarkingsComboBoxPopupListener());
+        customMarkingsJComboBox.addPopupMenuListener(new CustomMarkingsComboBoxPopupListener(ts, customMarkingsJComboBox));
 
         //Increase the size of vertices (places and transitions)
         iconSizeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                int newIconSize = ((Integer) ts.tokenSimPanel.iconSizeSpinner.getValue());
+                int newIconSize = ((Integer) ts.getTokenSimPanel().iconSizeSpinner.getValue());
                 netViewer.getVisualizationViewer().getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(newIconSize));
                 ts.vertexIconTransformer.setVertexSize(newIconSize);
                 netViewer.getVisualizationViewer().repaint();
@@ -283,7 +150,7 @@ public class TokenSimPanel extends AddonPanel {
                     } else {
                         Map<Integer, Long> tmpMarking = new HashMap<>(pnf.places().size());
                         for (Place place : pnf.places()) {
-                            tmpMarking.put(place.id(), ts.tokenSim.getTokens(place.id()));
+                            tmpMarking.put(place.id(), ts.getTokenSim().getTokens(place.id()));
                         }
                         ts.customMarkingsMap.put(markingName, tmpMarking);
                         //insert new marking entry to the top of the ComboBox
@@ -314,6 +181,11 @@ public class TokenSimPanel extends AddonPanel {
         });
     }
 
+    public void disableSetup() {
+        loadSetupButton.setEnabled(false);
+        saveSetupButton.setEnabled(false);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -782,20 +654,20 @@ public class TokenSimPanel extends AddonPanel {
      * @param evt
      */
     private void preferencesJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preferencesJButtonActionPerformed
-        this.ts.preferencesJFrame.logPathJTextField.setText((String) this.ts.preferences.get("LogPath"));
-        this.ts.preferencesJFrame.createLogJCheckBox.setSelected((Boolean) this.ts.preferences.get("LogEnabled"));
-        this.ts.preferencesJFrame.logPathJTextField.setEnabled((Boolean) this.ts.preferences.get("LogEnabled"));
-        this.ts.preferencesJFrame.logPathBrowseJButton.setEnabled((Boolean) this.ts.preferences.get("LogEnabled"));
-        this.ts.tokenSim.loadPreferences();
-        this.ts.netViewer.displayMenu(this.ts.preferencesJFrame.getContentPane(), "TokenSimPreferences");
+        this.ts.getPreferencesJFrame().logPathJTextField.setText((String) this.ts.getPreferences().get("LogPath"));
+        this.ts.getPreferencesJFrame().createLogJCheckBox.setSelected((Boolean) this.ts.getPreferences().get("LogEnabled"));
+        this.ts.getPreferencesJFrame().logPathJTextField.setEnabled((Boolean) this.ts.getPreferences().get("LogEnabled"));
+        this.ts.getPreferencesJFrame().logPathBrowseJButton.setEnabled((Boolean) this.ts.getPreferences().get("LogEnabled"));
+        this.ts.getTokenSim().loadPreferences();
+        this.ts.getNetViewer().displayMenu(this.ts.getPreferencesJFrame().getContentPane(), "TokenSimPreferences");
     }//GEN-LAST:event_preferencesJButtonActionPerformed
 
     private void saveSetupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSetupButtonActionPerformed
-        this.ts.tokenSim.exportSetup();
+        this.ts.getTokenSim().exportSetup();
     }//GEN-LAST:event_saveSetupButtonActionPerformed
 
     private void loadSetupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSetupButtonActionPerformed
-        this.ts.tokenSim.importSetup();
+        this.ts.getTokenSim().importSetup();
     }//GEN-LAST:event_loadSetupButtonActionPerformed
 
     private void showPlotButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPlotButtonActionPerformed

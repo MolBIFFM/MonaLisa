@@ -197,8 +197,6 @@ public class TokenSimulator {
     private static final Logger LOGGER = LogManager.getLogger(TokenSimulator.class);
     //END VARIABLES DECLARATION
 
-    //BEGIN INNER CLASSES
-    //END INNER CLASSES
     /**
      * Creates new instance of an implementation of the AbstractTokenSim. This
      * method should be used for choosing specific simulator, mousePopupPlugin

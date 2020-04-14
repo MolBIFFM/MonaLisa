@@ -38,6 +38,7 @@ import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
 import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
+import monalisa.addons.tokensimulator.utils.TokensimPopupMousePlugin;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -74,87 +75,6 @@ public abstract class AbstractTokenSim implements ChangeListener {
     private static final Logger LOGGER = LogManager.getLogger(AbstractTokenSim.class);
 
     //END VARIABLES DECLARATION
-    //BEGIN INNER CLASSES
-    /**
-     * Handles the popup which appears when a place is selected by
-     * right-clicking on it.
-     */
-    private class PopupMousePlugin extends AbstractPopupGraphMousePlugin implements MouseListener {
-
-        @Override
-        protected void handlePopup(final MouseEvent me) {
-            Set<NetViewerNode> pickedVertices = vv.getPickedVertexState().getPicked();
-            //The popup will appear if only one single place is picked. It ignores the picked transitions or arcs.
-            if (pickedVertices.size() == 1) {
-                //Get the selected node.
-                final NetViewerNode node = pickedVertices.iterator().next();
-                //if the selected node is a place, set the number of tokens for the place
-                if (node.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
-                    //Create new popup
-                    JPopupMenu popup = new JPopupMenu();
-                    //Get the place of PN represented by the selected node.
-                    final Place place = getPetriNet().findPlace(node.getMasterNode().getId());
-                    /*
-                     * If the place is not constant, set the number of tokens.
-                     */
-                    if (!place.isConstant()) {
-                        popup.add(new AbstractAction(TokenSimulator.strings.get("TSSetTokens")) {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                try {
-                                    long tokens = Long.parseLong(JOptionPane.showInputDialog(TokenSimulator.strings.get("TSSetTokenPT")));
-                                    //negative integers are ignored
-                                    if (tokens >= 0) {
-                                        getTokenSim().setTokens(place.id(), tokens);
-                                    }
-                                } catch (NumberFormatException E) {
-                                    LOGGER.error("NumberFormatException while checking input" + E);
-                                    JOptionPane.showMessageDialog(null, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
-                                } catch (PlaceConstantException ex) {
-                                    LOGGER.error("ConstantPlaceException while checking for mouseaction " + ex);
-                                }
-                            }
-                        });
-                    } /*
-                     If the place is constant, show window for editing mathematical expression.
-                     */ else {
-                        popup.add(new AbstractAction(TokenSimulator.strings.get("TSSetTokens")) {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                /*
-                                Create new frame for math exp.
-                                 */
-                                MathExpFrame frame;
-                                frame = new MathExpFrame(getPetriNet().places(), getTokenSim().getMathematicalExpression(place.id()));
-                                frame.addToTitle(place.getProperty("name").toString());
-                                /*
-                                The information is the id of the place for which the mathematical expression is created. Used in the listener.
-                                 */
-                                frame.addListener(AbstractTokenSim.this, place.id());
-                                frame.setVisible(true);
-                            }
-                        });
-                    }
-
-                    /*
-                     * Add checkbox item for selecting whether the place is constant (i.e. the number of tokens on it will not be modified by simulators)
-                     */
-                    final JMenuItem cbItem = new JCheckBoxMenuItem(TokenSimulator.strings.get("PlaceConstant"));
-                    cbItem.setToolTipText(TokenSimulator.strings.get("PlaceConstantTT"));
-                    cbItem.setSelected(place.isConstant());
-                    cbItem.addItemListener(new ItemListener() {
-                        @Override
-                        public void itemStateChanged(ItemEvent e) {
-                            getTokenSim().setPlaceConstant(place.id(), cbItem.isSelected());
-                        }
-                    });
-                    popup.add(cbItem);
-                    popup.show(vv, me.getX(), me.getY());
-                }
-            }
-        }
-    }
-    //END INNER CLASSES
 
     //BEGIN CONSTRUCTORS
     /**
@@ -251,7 +171,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
      * @return
      */
     protected AbstractPopupGraphMousePlugin getMousePopupPlugin() {
-        return (new PopupMousePlugin());
+        return (new TokensimPopupMousePlugin(vv, petriNet, this));
     }
 
     /**

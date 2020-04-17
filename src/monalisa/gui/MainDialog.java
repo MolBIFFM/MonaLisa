@@ -837,7 +837,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         try {
             project = Project.load(projectFile);
         } catch (IOException ex) {
-            LOGGER.error("Caught IOException while trying to open project from file");
+            LOGGER.error("Caught IOException while trying to open project from file: ", ex);
             JOptionPane.showMessageDialog(this, strings.get("ErrorReadingFileMessage", projectFile), strings.get("ErrorReadingFileTitle"), JOptionPane.ERROR_MESSAGE);
             return;
         }

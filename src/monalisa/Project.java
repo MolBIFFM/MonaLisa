@@ -57,7 +57,7 @@ public final class Project implements Serializable {
 
     private PropertyList properties;
 
-    transient private Synchronizer synchronizer;
+    private Synchronizer synchronizer;
 
     private NetViewerStorage nvs; // Replaces synchronizer's storage
 
@@ -432,6 +432,12 @@ public final class Project implements Serializable {
         addonStorage.put(addonName, toStore);
     }
 
+    private void writeObject(ObjectOutputStream objectOutput) throws IOException {
+        this.synchronizer = null;
+        objectOutput.defaultWriteObject();
+    }
+
+    
     /**
      * Function is called, if a project is loaded.
      *
@@ -442,17 +448,19 @@ public final class Project implements Serializable {
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
         LOGGER.info("Reading storage from input");
         objectInput.defaultReadObject();
-
         // Short workaround for older versions.
         if (addonStorage == null) {
             LOGGER.warn("Workaround for older versions, creating new HashMap");
             addonStorage = new HashMap<>();
-        }
-
+        }        
         // Workaround for older projects
         if (nvs == null) {
-            LOGGER.warn("Workaround for older projects, creating new nvs");
+            LOGGER.warn("Workaround for older projects, creating new NetViewerStprage");
             nvs = new NetViewerStorage();
+        }
+        if (synchronizer != null) {
+            LOGGER.warn("Synchronizer found, older project. Old layout will be lost.");
+            synchronizer = null;
         }
     }
 }

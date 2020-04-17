@@ -9,6 +9,7 @@
  */
 package monalisa.synchronisation;
 
+import java.io.Serializable;
 import java.util.Set;
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
@@ -25,11 +26,10 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Jens Einloft
  */
-public class Synchronizer {
+public class Synchronizer implements Serializable {
 
+    private static final long serialVersionUID = -7561258127410331113L;
     private final PetriNet pn;
-    // Have been moved, but need to be serialized: latestVertexID, latestEdgeID, transitionsMap, placeMap, g, map
-
     private static final Logger LOGGER = LogManager.getLogger(Synchronizer.class);
 
     /**

@@ -94,10 +94,7 @@ public class NetViewerStorage implements Serializable {
     }
 
     private void readObject(ObjectInputStream objectInput) throws IOException, ClassNotFoundException {
-        System.out.println(map);
         objectInput.defaultReadObject();
-
-        System.out.println(map);
         this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
         this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
         // Happens, if the user try to load an older project format
@@ -106,5 +103,29 @@ public class NetViewerStorage implements Serializable {
             this.layout.restore(map);
         }
         LOGGER.info("Read in: " + this.toString());
+    }
+
+    /**
+     * Allows for creation of a NetViewerStorage from the values of an old
+     * Synchronizer.
+     * @param vertexID
+     * @param edgeID
+     * @param placeMap
+     * @param transitionMap
+     * @param g
+     * @param map
+     */
+    public void fromOldSynchronizer(int vertexID, int edgeID,
+            Map<Integer, NetViewerNode> placeMap,
+            Map<Integer, NetViewerNode> transitionMap,
+            Graph<NetViewerNode, NetViewerEdge> g,
+            Map<NetViewerNode, PersistentLayout.Point> map) {
+        this.latestVertexID = vertexID;
+        this.latestEdgeID = edgeID;
+        this.placeMap = placeMap;
+        this.transitionMap = transitionMap;
+        this.g = g;
+        this.map = map;
+        this.layout.restore(map);
     }
 }

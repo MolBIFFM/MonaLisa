@@ -12,7 +12,6 @@ package monalisa.addons.tokensimulator.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.DefaultListModel;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +27,7 @@ public class Snapshot {
     //Number of step at which this snapshot was taken
     private final int stepNr;
     //Elements of the ListModel of historyList
-    private final Object[] historyListModel;
+    private final String[] historyListModelNames;
     //Transitions that have fired in history
     private final ArrayList<Transition[]> historyArrayList;
     //Current marking; links a number of tokens for each place-id for non-static places
@@ -49,7 +48,7 @@ public class Snapshot {
      */
     private Snapshot() {
         stepNr = 0;
-        historyListModel = null;
+        historyListModelNames = null;
         historyArrayList = null;
         marking = null;
         constantPlaces = null;
@@ -63,13 +62,18 @@ public class Snapshot {
      * @param historyArrayListN actual historyArrayList
      * @param markingN actual marking
      */
-    public Snapshot(int stepNrN, DefaultListModel historyListModelN,
+    public Snapshot(int stepNrN, Object[] historyListModelN,
             ArrayList<Transition[]> historyArrayListN,
             Map<Integer, Long> markingN,
             Map<Integer, MathematicalExpression> constantPlacesN) {
         LOGGER.info("Creating a new snapshot at stepnumber " + Integer.toString(stepNrN));
         this.stepNr = stepNrN;
-        this.historyListModel = historyListModelN.toArray();
+        this.historyListModelNames = new String[historyListModelN.length]; // = (String[]) historyListModelN;
+        int j = 0;
+        for (Object entryName : historyListModelN) {
+            historyListModelNames[j] = (String) entryName;
+            j++;
+        }
 
         //deep copy of historyArrayList
         this.historyArrayList = new ArrayList<>();
@@ -98,8 +102,8 @@ public class Snapshot {
         return this.stepNr;
     }
 
-    public Object[] getHistoryListModel() {
-        return this.historyListModel;
+    public String[] getHistoryListModelNames() {
+        return this.historyListModelNames;
     }
 
     public ArrayList<Transition[]> getHistoryArrayList() {

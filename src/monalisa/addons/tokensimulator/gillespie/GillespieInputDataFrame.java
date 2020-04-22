@@ -31,7 +31,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.netviewer.NetViewer;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
 import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.Place;
@@ -61,7 +62,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
     private Class[] reactionTypes = new Class[]{Transition.class, java.lang.String.class};
     //columns namens    
     private String[] reactionColumnNames = new String[]{"Reaction", "Reaction rate constant[M][s]"};
-    private GillespieTokenSim tokenSim;
+    private GillespieTokenSim gillTS;
     /**
      * Gives the user number of tokens or concentrations.
      */
@@ -94,6 +95,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
     private double volMol = volume * 6E23;
     private static final Logger LOGGER = LogManager.getLogger(GillespieInputDataFrame.class);
     //END VARIABLES DECLARATION
+    private NetViewer nv;
 
     //BEGIN INNER CLASSES
     //custom table model for the reactant tabel
@@ -102,7 +104,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         @Override
         public void setValueAt(Object value, int row, int col) {
             double molVol = volume * 6E23;
-            double conecentration = 0;
+            double concentration = 0;
 
             if (col == 1) {
                 //non-constant places
@@ -110,11 +112,11 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     //put the given concentration of the compound to the concentrations-map.
                     try {
                         if (inputModePlaces.equals(CONCENTRATION)) {
-                            conecentration = Double.parseDouble(value.toString());
+                            concentration = Double.parseDouble(value.toString());
                         } else if (inputModePlaces.equals(TOKENS)) {
-                            conecentration = Double.parseDouble(value.toString()) / molVol;
+                            concentration = Double.parseDouble(value.toString()) / molVol;
                         }
-                        concentrations.put(concentrations.keySet().toArray(new Place[0])[row], conecentration);
+                        concentrations.put(concentrations.keySet().toArray(new Place[0])[row], concentration);
                     } catch (NumberFormatException ex) {
                         LOGGER.error("NumberFormatException while creating the reactant table", ex);
                     }
@@ -192,7 +194,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         if (inputModeTransitionSelection.equals(DETERMINISTIC)) {
                             exp = new MathematicalExpression((String) value);
                         } else {
-                            exp = new MathematicalExpression(Double.toString(tokenSim.convertCToK(t, Double.valueOf((String) value))));
+                            exp = new MathematicalExpression(Double.toString(gillTS.convertCToK(t, Double.valueOf((String) value))));
                         }
                         reactionRates.put(t, exp);
                     } catch (RuntimeException ex) {
@@ -209,7 +211,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
 
         @Override
         public int getRowCount() {
-            return tokenSim.getPetriNet().transitions().size();
+            return gillTS.getPetriNet().transitions().size();
         }
 
         @Override
@@ -229,7 +231,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                 return reactionRates.values().toArray(new MathematicalExpression[0])[row].toString();
             } else {
                 try {
-                    return tokenSim.convertKToC(t, new Double(reactionRates.values().toArray(new MathematicalExpression[0])[row].toString()));
+                    return gillTS.convertKToC(t, new Double(reactionRates.values().toArray(new MathematicalExpression[0])[row].toString()));
                 } catch (NumberFormatException e) {
                     return Double.NaN;
                 }
@@ -264,27 +266,28 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
      *
      * @param tokenSimN
      */
-    public GillespieInputDataFrame(GillespieTokenSim tokenSimN) {
-        this.tokenSim = tokenSimN;
+    public GillespieInputDataFrame(GillespieTokenSim tokenSimN, NetViewer nv) {
+        this.gillTS = tokenSimN;
+        this.nv = nv;
         /*
          * Get the volume
          */
-        this.volume = tokenSim.volume;
+        this.volume = gillTS.volume;
         /*
          * Put every place of the petri net in the concentrations-HashMap
          */
         LOGGER.info("Creating the concentrations-HashMap and filling it with data");
-        for (Place p : this.tokenSim.getPetriNet().places()) {
+        for (Place p : this.gillTS.getPetriNet().places()) {
             if (!p.isConstant()) {
                 /*
                  * The number of tokens (number of molecules) must be converted to concentration in M first.
                  */
-                this.concentrations.put(p, this.tokenSim.getTokens(p.id()) / this.tokenSim.volMol);
+                this.concentrations.put(p, this.gillTS.getTokens(p.id()) / this.gillTS.volMol);
             } else {
                 /*
                  * The mathematical expression should describe concentrations in M.
                  */
-                this.constantPlaces.put(p, this.tokenSim.getTokenSim().getMathematicalExpression(p.id()));
+                this.constantPlaces.put(p, this.gillTS.getSimulationMan().getMathematicalExpression(p.id()));
             }
         }
 
@@ -293,8 +296,8 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
          * simulator.
          */
         LOGGER.info("Filling the reactionRates-HashMap with data");
-        for (Transition t : this.tokenSim.getPetriNet().transitions()) {
-            this.reactionRates.put(t, this.tokenSim.deterministicReactionConstants.get(t.id()));
+        for (Transition t : this.gillTS.getPetriNet().transitions()) {
+            this.reactionRates.put(t, this.gillTS.deterministicReactionConstants.get(t.id()));
         }
         initComponents();
 
@@ -400,7 +403,9 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         int rowModel = reactionTable.convertRowIndexToModel(row);
 
                         if (inputModeTransitions.equals(DETERMINISTIC)) {
-                            MathExpFrame frame = new MathExpFrame(tokenSim.getPetriNet().places(), reactionRates.values().toArray(new MathematicalExpression[reactionRates.size()])[rowModel]);
+                            MathExpFrame frame = new MathExpFrame(gillTS.getPetriNet().places(),
+                                    reactionRates.values().toArray(new MathematicalExpression[reactionRates.size()])[rowModel],
+                                    gillTS);
                             frame.addToTitle(reactionTable.getValueAt(row, 0).toString());
 
                             Object[] information = {row, col, TRANSITION};
@@ -445,8 +450,9 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         int col = reactantTable.getSelectedColumn();
                         int index = rowModel - concentrations.size();
                         if (col == 1) {
-                            MathExpFrame frame = new MathExpFrame(tokenSim.getPetriNet().places(),
-                                    constantPlaces.values().toArray(new MathematicalExpression[constantPlaces.size()])[index]);
+                            MathExpFrame frame = new MathExpFrame(gillTS.getPetriNet().places(),
+                                    constantPlaces.values().toArray(new MathematicalExpression[constantPlaces.size()])[index],
+                                    gillTS);
                             frame.addToTitle(reactantTable.getValueAt(row, 0).toString());
                             Object[] information = {row, col, PLACE};
                             frame.addListener(GillespieInputDataFrame.this, information);
@@ -528,14 +534,14 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         kMode = new javax.swing.JRadioButton();
         cMode = new javax.swing.JRadioButton();
 
-        setTitle(TokenSimulator.strings.get("GilTSInputDataFrameTitle"));
+        setTitle(SimulationManager.strings.get("GilTSInputDataFrameTitle"));
         setAutoRequestFocus(false);
-        setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
+        setIconImage(SimulationManager.resources.getImage("icon-16.png"));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        volumeLabel.setText(TokenSimulator.strings.get("GilTSInputDataFrameVolume"));
+        volumeLabel.setText(SimulationManager.strings.get("GilTSInputDataFrameVolume"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -587,7 +593,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         jPanel1.add(saveButton, gridBagConstraints);
 
         volumeTextField.setText("1.0");
-        volumeTextField.setToolTipText(TokenSimulator.strings.get("GilTSInputDataFrameVolumeTT"));
+        volumeTextField.setToolTipText(SimulationManager.strings.get("GilTSInputDataFrameVolumeTT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -664,13 +670,13 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         try {
             //Parse the volume.
             this.volume = Double.parseDouble(this.volumeTextField.getText());
-            this.tokenSim.volume = volume;
+            this.gillTS.volume = volume;
             double molVol = volume * 6E23;
-            this.tokenSim.volMol = molVol;
+            this.gillTS.volMol = molVol;
             /*
              * Convert concentrations to molecule numbers
              */
-            for (Place p : this.tokenSim.getPetriNet().places()) {
+            for (Place p : this.gillTS.getPetriNet().places()) {
                 /*
                  * If the place is non-constant, get the entered concentration and convert it to molecule (token) number.
                  */
@@ -682,7 +688,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                         JOptionPane.showMessageDialog(null, error);
                     }
                     try {
-                        this.tokenSim.getTokenSim().setTokens(p.id(), tokens);
+                        this.gillTS.getSimulationMan().setTokens(p.id(), tokens);
                     } catch (PlaceConstantException ex) {
                         LOGGER.error("Problem while trying to set a token value to a constant place, which should not have been constant in the first place", ex);
                     }
@@ -691,7 +697,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                  */ else {
                     MathematicalExpression exp = this.constantPlaces.get(p);
                     try {
-                        this.tokenSim.getTokenSim().setMathExpression(p.id(), exp);
+                        this.gillTS.getSimulationMan().setMathExpression(p.id(), exp);
                     } catch (PlaceNonConstantException ex) {
                         LOGGER.error("Problem while trying to get a token value from a non constant place, which should have been constant in the first place", ex);
                     }
@@ -702,18 +708,18 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
              * Store deterministic reaction rate constants. Do not perform conversion to stochastic reaction rate constant!.
              */
             for (Transition t : this.reactionRates.keySet()) {
-                this.tokenSim.deterministicReactionConstants.put(t.id(), this.reactionRates.get(t));
+                this.gillTS.deterministicReactionConstants.put(t.id(), this.reactionRates.get(t));
+                LOGGER.info("Setting detReactionConstant for transition " + t.getProperty("name") + " to " + this.reactionRates.get(t));
             }
-            tokenSim.getTokenSim().getNetViewer().hideMenu();
+            nv.hideMenu();
         } catch (NumberFormatException E) {
             LOGGER.error("NumberFormatException while trying to parse the textfield for gillespie input", E);
             JOptionPane.showMessageDialog(null, "Invalid volume! Allowed are real numbers, separated by a '.'");
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        tokenSim.getTokenSim().getNetViewer().hideMenu();
+        nv.hideMenu();
     }//GEN-LAST:event_discardButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

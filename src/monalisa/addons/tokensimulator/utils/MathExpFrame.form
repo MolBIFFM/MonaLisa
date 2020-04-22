@@ -43,7 +43,7 @@
         <Component class="javax.swing.JButton" name="saveBtn">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="TokenSimulator.strings.get(&quot;Save&quot;)" type="code"/>
+              <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;Save&quot;)" type="code"/>
             </Property>
           </Properties>
           <Events>
@@ -164,7 +164,7 @@
                 </Property>
                 <Property name="selectionMode" type="int" value="0"/>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="TokenSimulator.strings.get(&quot;MathExpPlaceListTT&quot;)" type="code"/>
+                  <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;MathExpPlaceListTT&quot;)" type="code"/>
                 </Property>
               </Properties>
             </Component>

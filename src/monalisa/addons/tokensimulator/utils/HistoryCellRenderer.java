@@ -11,7 +11,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 
 /**
  * Handles the coloring of entries in historyList. The last performed step
@@ -19,17 +19,17 @@ import monalisa.addons.tokensimulator.TokenSimulator;
  */
 public class HistoryCellRenderer implements ListCellRenderer {
 
-    private final TokenSimulator ts;
+    private final SimulationManager simulationMan;
 
-    public HistoryCellRenderer(TokenSimulator ts) {
-        this.ts = ts;
+    public HistoryCellRenderer(SimulationManager simulationManager) {
+        this.simulationMan = simulationManager;
     }
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
         JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if (index == ts.lastHistoryStep) {
+        if (index == simulationMan.lastHistoryStep) {
             renderer.setBackground(Color.red);
         } else {
             renderer.setBackground(Color.white);

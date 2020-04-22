@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.tools.BooleanChangeEvent;
+import monalisa.tools.BooleanChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,9 +35,8 @@ public class UpdaterTask extends TimerTask {
 
     Lock updaterLock = new ReentrantLock();
     private int MAX_PARALLEL_THREADS;
-    private boolean running;
-    private final GillespieTokenSim gts;
-    private final StochasticSimulator sts;
+    private boolean running = true;
+    private final GillespieTokenSim gillTS;
 
     /**
      * Map of currently running threads, linked to the runnable instances they
@@ -47,13 +48,22 @@ public class UpdaterTask extends TimerTask {
      */
     private final Queue<ExactSSA> runnablesQueue;
     
+    private final List<BooleanChangeListener> boolListeners = new ArrayList<>();
+    
     private static final Logger LOGGER = LogManager.getLogger(UpdaterTask.class);
+    private final File outFile;
+    private final List<File> outFiles;
+    private final boolean logAll;
 
-    public UpdaterTask(HashMap<Thread, ExactSSA> running, Queue<ExactSSA> queue, GillespieTokenSim gts, StochasticSimulator sts) {
+    public UpdaterTask(HashMap<Thread, ExactSSA> running, Queue<ExactSSA> queue,
+            GillespieTokenSim gillTS, File outputFile, List<File> outputFiles,
+            boolean logAll) {
         this.runningThreads = running;
         this.runnablesQueue = queue;
-        this.gts = gts;
-        this.sts = sts;
+        this.gillTS = gillTS;
+        this.logAll = logAll;
+        this.outFile = outputFile;
+        this.outFiles = outputFiles;
     }
 
     @Override
@@ -94,9 +104,9 @@ public class UpdaterTask extends TimerTask {
             /*
             If runnables are waiting in the queue, create as much threads as were removed.
              */
-            while (!runnablesQueue.isEmpty() && runningThreads.size() < MAX_PARALLEL_THREADS && gts.isNewThreadAllowed()) {
+            while (!runnablesQueue.isEmpty() && runningThreads.size() < MAX_PARALLEL_THREADS && gillTS.isNewThreadAllowed()) {
                 ExactSSA run = runnablesQueue.remove();
-                gts.registerNewThread();
+                gillTS.registerNewThread();
                 Thread thread = new Thread(run);
                 runningThreads.put(thread, run);
                 thread.start();
@@ -107,24 +117,24 @@ public class UpdaterTask extends TimerTask {
              */
             if (runningThreads.isEmpty() && runnablesQueue.isEmpty()) {
                 running = false;
-                sts.getRunButton().setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-                sts.getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png")));
+                // Fire #DONE
+                fireBoolChange(false);
                 //enable computation of averages.
                 // averagesButton.setEnabled(true);                    
 
-                if (sts.isLogAll() && !alreadyLogged) {
+                if (logAll && !alreadyLogged) {
                     alreadyLogged = true;
-                    File sumFile = new File(sts.getOutputFile().getParentFile().getAbsolutePath().concat("/summary.csv"));
+                    File sumFile = new File(outFile.getParentFile().getAbsolutePath().concat("/summary.csv"));
                     sumFile.createNewFile();
                     Boolean firstLine;
                     Boolean firstFile = true;
                     BufferedReader in;
                     PrintWriter pWriter = new PrintWriter(new BufferedWriter(new FileWriter(sumFile)));
                     try {
-                        for (File file : sts.getOutputFiles()) {
+                        for (File file : outFiles) {
                             try {
                                 if (!firstFile) {
-                                    pWriter.println("\t ----- run " + sts.getOutputFiles().indexOf(file) + " -----");
+                                    pWriter.println("\t ----- run " + outFiles.indexOf(file) + " -----");
                                 }
                                 in = new BufferedReader(new FileReader(file));
                                 firstLine = true;
@@ -153,9 +163,22 @@ public class UpdaterTask extends TimerTask {
                 }
             }
         } catch (IOException ex) {
-            LOGGER.error("IOException while trying to coordinate the multiple threads while performing a stochastic simulation");
+            LOGGER.error("IOException while trying to coordinate the multiple threads while performing a stochastic simulation: ", ex);
         } finally {
             updaterLock.unlock();
+        }
+    }
+
+    public void addBooleanChangeListener(BooleanChangeListener bl) {
+        if (!boolListeners.contains(bl)) {
+            boolListeners.add(bl);
+        }
+    }
+
+    private void fireBoolChange(boolean b) {
+        BooleanChangeEvent e = new BooleanChangeEvent(this, b);
+        for (BooleanChangeListener bl : boolListeners) {
+            bl.changed(e);
         }
     }
 }

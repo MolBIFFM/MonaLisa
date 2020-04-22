@@ -8,8 +8,9 @@ package monalisa.addons.tokensimulator.stochastic;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractSimulationSwingWorker;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,11 +18,10 @@ import org.apache.logging.log4j.Logger;
 /**
  * Thread which performs the simulation sequence.
  */
-public class StochasticSimulationSwingWorker extends SwingWorker {
+public class StochasticSimulationSwingWorker extends AbstractSimulationSwingWorker {
 
-    private final TokenSimulator ts;
-    private final StochasticTokenSim stoc;
-    private final StochasticTokenSimPanel tsPanel;
+    private final SimulationManager simulationMan;
+    private final StochasticTokenSim stochTS;
     private final Logger LOGGER = LogManager.getLogger(StochasticSimulationSwingWorker.class);
     /**
      * Number of steps this thread should perform.
@@ -33,27 +33,27 @@ public class StochasticSimulationSwingWorker extends SwingWorker {
      */
     private boolean isRunning;
 
-    public StochasticSimulationSwingWorker(TokenSimulator ts, StochasticTokenSim stoc, StochasticTokenSimPanel tsPanel, int nrOfStepsN) {
-        this.ts = ts;
-        this.stoc = stoc;
-        this.tsPanel = tsPanel;
-        this.stepsLeft = nrOfStepsN;    
+    public StochasticSimulationSwingWorker(SimulationManager simulationManager, StochasticTokenSim stochTS, boolean cont, int nrOfStepsN) {
+        this.simulationMan = simulationManager;
+        this.stochTS = stochTS;
+        this.continuous = cont;
+        this.stepsLeft = nrOfStepsN;
     }
 
     @Override
     protected Void doInBackground() {
         //time delay between single firings
-        int timeDelay = (Integer) ts.getPreferences().get("Time delay");
+        int timeDelay = (Integer) simulationMan.getPreferences().get("Time delay");
         //how often visual output will be updated
-        final int updateInterval = (Integer) ts.getPreferences().get("Update interval");
-        tsPanel.getProgressBar().setMaximum(stepsLeft);
+        final int updateInterval = (Integer) simulationMan.getPreferences().get("Update interval");
+        fireSimulationEvent(SimulationEvent.INIT, stepsLeft); // ProgressBar init
         /*
             * Set the running state of this runnable to "true".
          */
         this.isRunning = true;
 
         //all active transitions that can be fired right now
-        Set<Transition> activeTransitions = ts.getActiveTransitions();
+        Set<Transition> activeTransitions = simulationMan.getActiveTransitions();
 
         /*
             * Perform firing until aborted.
@@ -74,11 +74,11 @@ public class StochasticSimulationSwingWorker extends SwingWorker {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ts.fireTransitions(stoc.getTransitionToFire());
+                        simulationMan.fireTransitions(stochTS.getTransitionToFire());
                         //If updateInterval is positive, check whether visual output must be updated in current step.
                         if (updateInterval > 0) {
-                            if (ts.getSimulatedSteps() % updateInterval == 0) {
-                                ts.updateVisualOutput();
+                            if (simulationMan.getSimulatedSteps() % updateInterval == 0) {
+                                fireSimulationEvent(SimulationEvent.UPDATE_VISUAL, -1); // Update visuals
                             }
                         }
                     }
@@ -87,10 +87,11 @@ public class StochasticSimulationSwingWorker extends SwingWorker {
                 /*
                     * If continuous mode is not selected, reduce the number of steps left by one.
                  */
-                if (!tsPanel.isContinuous()) {
-                    tsPanel.getProgressBar().setValue(tsPanel.getProgressBar().getMaximum() - --stepsLeft);
+                if (!continuous) {
+                    --stepsLeft;
+                    fireSimulationEvent(SimulationEvent.UPDATE_PROGRESS, stepsLeft); // Update ProgressBar
                     /*
-                        * Abort simulation if no more steps are left.
+                     * Abort simulation if no more steps are left.
                      */
                     if (stepsLeft <= 0) {
                         this.isRunning = false;
@@ -107,15 +108,13 @@ public class StochasticSimulationSwingWorker extends SwingWorker {
     @Override
     protected void done() {
         /*
-            * Reset the progress bar.
+         * Reset the progress bar.
          */
-        tsPanel.getProgressBar().setMaximum(0);
-        tsPanel.getProgressBar().setValue(0);
-
-        //unlock GUI
-        tsPanel.unlock();
-        ts.lockGUI(false);
-        ts.flushLog();
+        LOGGER.info("Stochastic simulation is done, resetting the progress bar and unlocking GUI");
+        fireSimulationEvent(SimulationEvent.DONE, -1); // Done
+        simulationMan.lockGUI(false);
+        simulationMan.flushLog();
+        LOGGER.info("Successfully unlocked GUI after stochastic simulation.");
     }
 
     /**
@@ -124,7 +123,6 @@ public class StochasticSimulationSwingWorker extends SwingWorker {
     public void stopSequence() {
         LOGGER.debug("Stopping the sequence and updating the visual output");
         this.isRunning = false;
-        //update visual output
-        ts.updateVisualOutput();
+        fireSimulationEvent(SimulationEvent.STOPPED, -1); // Update visuals
     }
 }

@@ -11,18 +11,27 @@ package monalisa.addons.tokensimulator.utils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import layout.TableLayout;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.SimulationPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +54,7 @@ public class StatisticFrame {
     private JList snapshotList;
     //If a snapshot is picked, show its statistic in statisticScrollPane
     private final ListSelectionListener snapshotListSelectionListener;
-    private TokenSimulator ts;
+    private SimulationPanel owner;
     private static final Logger LOGGER = LogManager.getLogger(StatisticFrame.class);
 
     //END VARIABLES DECLARATION
@@ -57,8 +66,8 @@ public class StatisticFrame {
         snapshotListSelectionListener = null;
     }
 
-    public StatisticFrame(TokenSimulator tsN) {
-        this.ts = tsN;
+    public StatisticFrame(SimulationPanel owner) {
+        this.owner = owner;
         /*
          * when a snapshot in the list is picked, show statistic for it
          */
@@ -69,16 +78,15 @@ public class StatisticFrame {
                     int selectedVar = snapshotList.getSelectedIndex();
                     if (selectedVar > -1) {
                         snapshotList.clearSelection();
-                        Snapshot snap = ts.snapshots.get(selectedVar);
+                        Snapshot snap = owner.getSnapshots().get(selectedVar);
                         Statistic stat = snap.getStatistic();
                         stepNr.setText("Step " + snap.getStepNr());
-                        statisticScrollPane.setViewportView(stat.getStatisticTable());
+                        statisticScrollPane.setViewportView(getStatisticTable(stat));
 
                         textOutput.setText("");
-                        textOutput.append(TokenSimulator.strings.get("STATTotalStepsFired").concat(" ").concat(Integer.toString(
+                        textOutput.append(SimulationManager.strings.get("STATTotalStepsFired").concat(" ").concat(Integer.toString(
                                 stat.stepsFired)));
-                        textOutput.append(System.getProperty("line.separator").concat(
-                                TokenSimulator.strings.get("STATTotalTransitionsFired")).concat(" ").
+                        textOutput.append(System.getProperty("line.separator").concat(SimulationManager.strings.get("STATTotalTransitionsFired")).concat(" ").
                                 concat(Integer.toString(stat.transitionsFired)));
 
                         statisticFrame.repaint();
@@ -96,10 +104,10 @@ public class StatisticFrame {
      */
     private void initGUI() {
         LOGGER.info("Showing current statistics to the simulation");
-        this.statisticFrame = new JFrame(TokenSimulator.strings.get("STATName"));
+        this.statisticFrame = new JFrame(SimulationManager.strings.get("STATName"));
         this.statisticFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.statisticFrame.setLocationRelativeTo(null);
-        this.statisticFrame.setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
+        this.statisticFrame.setIconImage(SimulationManager.resources.getImage("icon-16.png"));
         /*
          * Make frame disappear when ESC pressed.
          */
@@ -128,7 +136,7 @@ public class StatisticFrame {
          * "Show Statistic"-Button was clicked
          * 
          */
-        Snapshot snap = ts.snapshots.get(ts.snapshots.size() - 1);
+        Snapshot snap = owner.getSnapshots().get(owner.getSnapshots().size() - 1);
         Statistic stat = snap.getStatistic();
 
         this.stepNr = new JLabel("Step " + snap.getStepNr(), JLabel.CENTER);
@@ -136,13 +144,12 @@ public class StatisticFrame {
         this.textOutput = new JTextArea();
         this.textOutput.setEditable(false);
 
-        this.statisticScrollPane = new JScrollPane(stat.getStatisticTable());
-        this.textOutput.append(TokenSimulator.strings.get("STATTotalStepsFired").concat(" ").concat(Integer.toString(stat.stepsFired)));
-        this.textOutput.append(System.getProperty("line.separator").concat(
-                TokenSimulator.strings.get("STATTotalTransitionsFired"))
+        this.statisticScrollPane = new JScrollPane(getStatisticTable(stat));
+        this.textOutput.append(SimulationManager.strings.get("STATTotalStepsFired").concat(" ").concat(Integer.toString(stat.stepsFired)));
+        this.textOutput.append(System.getProperty("line.separator").concat(SimulationManager.strings.get("STATTotalTransitionsFired"))
                 .concat(" ").concat(Integer.toString(stat.transitionsFired)));
 
-        this.snapshotList = new JList(this.ts.snapshotsListModel);
+        this.snapshotList = new JList(this.owner.snapshotsListModel);
         this.snapshotList.addListSelectionListener(this.snapshotListSelectionListener);
         this.snapshotListScrollPane = new JScrollPane(this.snapshotList);
 
@@ -153,5 +160,28 @@ public class StatisticFrame {
 
         this.statisticFrame.pack();
         this.statisticFrame.setVisible(true);
+    }
+
+    /**
+     * return a table with statistics
+     *
+     * @return
+     */
+    public JTable getStatisticTable(Statistic statistic) {
+        JTable statisticTable = new JTable();
+        statisticTable.setModel(statistic.getTableModel());
+        statisticTable.setFillsViewportHeight(true);
+        TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(statistic.getTableModel());
+        statisticTable.setRowSorter(rowSorter);
+        List sortKeys = new ArrayList();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        rowSorter.setComparator(1, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer t, Integer t1) {
+                return t - t1;
+            }
+        });
+        rowSorter.setSortKeys(sortKeys);
+        return statisticTable;
     }
 }

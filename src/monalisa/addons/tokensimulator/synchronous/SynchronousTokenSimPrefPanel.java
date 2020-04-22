@@ -9,17 +9,17 @@
  */
 package monalisa.addons.tokensimulator.synchronous;
 
-import monalisa.addons.tokensimulator.asynchronous.AsynchronousTokenSim;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractTokenSimPrefPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
 
 /**
  *
  * @author Pavel Balazki.
  */
-public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
+public class SynchronousTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
 
     //BEGIN VARIABLES DECLARATOIN
-    private AsynchronousTokenSim ts;
+    private SynchronousTokenSim syncTS;
     //END VARIABLES DECLARATION
 
     //BEGIN CONSTRUCTORS
@@ -30,9 +30,10 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public SynchronousTokenSimPrefPanel(AsynchronousTokenSim tsN) {
-        this.ts = tsN;
+    public SynchronousTokenSimPrefPanel(SynchronousTokenSim tsN) {
+        this.syncTS = tsN;
         initComponents();
+        fireAtOnceComboBox.setSelectedItem(100); // Unsure if this is just a relic   
     }
     //END CONSTRUCTORS
 
@@ -59,7 +60,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         setLayout(new java.awt.GridBagLayout());
 
         fireAtOnceComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "10", "20", "30", "40", "50", "60", "70", "80", "90", "100" }));
-        fireAtOnceComboBox.setToolTipText(TokenSimulator.strings.get("STSFireAtOnceComboBoxT"));
+        fireAtOnceComboBox.setToolTipText(SimulationManager.strings.get("STSFireAtOnceComboBoxT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -67,7 +68,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 0);
         add(fireAtOnceComboBox, gridBagConstraints);
 
-        fireAtOnceLabel.setText(TokenSimulator.strings.get("STSFireAtOnceLabel"));
+        fireAtOnceLabel.setText(SimulationManager.strings.get("STSFireAtOnceLabel"));
         fireAtOnceLabel.setToolTipText("<html>The fraction of active transitions to fire per step can be selected. The standard value is 100%, <br />\nlowering the value will result in firing only a fraction of active transitions.<br />\nThe actual number of fired transitions is rounded up, so selecting 50% of three active transitions <br />\nwill result in firing of two transitions. The transitions are selected randomly with equal probability in each step.</html>\n");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -76,7 +77,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 15, 3, 3);
         add(fireAtOnceLabel, gridBagConstraints);
 
-        jLabel1.setText(TokenSimulator.strings.get("STSFireAtOnceLabelPerCent"));
+        jLabel1.setText(SimulationManager.strings.get("STSFireAtOnceLabelPerCent"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
@@ -84,7 +85,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 15, 0, 0);
         add(jLabel1, gridBagConstraints);
 
-        updateIntervalLabel.setText(TokenSimulator.strings.get("ATSUpdateIntervalLabel"));
+        updateIntervalLabel.setText(SimulationManager.strings.get("ATSUpdateIntervalLabel"));
         updateIntervalLabel.setToolTipText("Controls the frequency of visual update in the NetViewer");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -95,7 +96,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
 
         updateIntervalFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         updateIntervalFormattedTextField.setText("1");
-        updateIntervalFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSUpdateIntervalT"));
+        updateIntervalFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSUpdateIntervalT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -105,7 +106,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
 
         timeDelayJFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         timeDelayJFormattedTextField.setText("0");
-        timeDelayJFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSTimeDelayT"));
+        timeDelayJFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSTimeDelayT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -113,7 +114,7 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 0);
         add(timeDelayJFormattedTextField, gridBagConstraints);
 
-        timeDelayJLabel.setText(TokenSimulator.strings.get("ATSTimeDelayLabel"));
+        timeDelayJLabel.setText(SimulationManager.strings.get("ATSTimeDelayLabel"));
         timeDelayJLabel.setToolTipText("The time, the simulator will wait before performing the next step");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -131,5 +132,34 @@ public class SynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     protected javax.swing.JFormattedTextField updateIntervalFormattedTextField;
     private javax.swing.JLabel updateIntervalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void updatePreferences() {
+        /*
+         * Update time delay.
+         */
+        int timeDelay = Integer.parseInt(timeDelayJFormattedTextField.getText());
+        if (timeDelay >= 0) {
+            syncTS.getSimulationMan().getPreferences().put("Time delay", timeDelay);
+        }
+        /*
+         * Update update interval
+         */
+        int updateInterval = Integer.parseInt(updateIntervalFormattedTextField.getText());
+        if (updateInterval >= 0) {
+            syncTS.getSimulationMan().getPreferences().put("Update interval", updateInterval);
+        }
+        /*
+         * Update how many transition to fire at once.
+         */
+        syncTS.getSimulationMan().getPreferences().put("Fire at once", Integer.parseInt((String) fireAtOnceComboBox.getSelectedItem()));
+    }
+
+    @Override
+    public void loadPreferences() {
+        timeDelayJFormattedTextField.setText(((Integer) syncTS.getSimulationMan().getPreferences().get("Time delay")).toString());
+        updateIntervalFormattedTextField.setText(((Integer) syncTS.getSimulationMan().getPreferences().get("Update interval")).toString());
+        fireAtOnceComboBox.setSelectedItem((String) syncTS.getSimulationMan().getPreferences().get("Fire at once").toString());
+    }
 
 }

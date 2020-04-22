@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,13 +31,13 @@ public class TauLeapingSSA extends ExactSSA {
     private final static int CRITICAL_THRESHOLD = 20;
     private final static double EPS = 0.03;
     private final static Logger LOGGER = LogManager.getLogger(TauLeapingSSA.class);
-    private final StochasticSimulator sts;
-    private final GillespieTokenSim gts;
+    private final GillespieTokenSim gillTS;
+    private final SimulationStorage simStor;
 
-    public TauLeapingSSA(File outF, int runNr, Long seed, StochasticSimulator sts, GillespieTokenSim gts) {
-        super(outF, runNr, seed, sts, gts);
-        this.sts = sts;
-        this.gts = gts;
+    public TauLeapingSSA(File outF, int runNr, Long seed, GillespieTokenSim gillTS, SimulationStorage simStor) {
+        super(outF, runNr, seed, gillTS, simStor);
+        this.gillTS = gillTS;
+        this.simStor = simStor;
 
         /*
         Check which reactions are critical at the beginning of the simulation.
@@ -50,21 +51,21 @@ public class TauLeapingSSA extends ExactSSA {
             /*
             Iterate through non-constant educts of this reaction.
              */
-            for (int eductIdx : sts.getReactionsNonConstantEducts()[reactionIdx]) {
+            for (int eductIdx : simStor.getReactionsNonConstantEducts()[reactionIdx]) {
                 //Number of molecules of the educt.
                 long eductNr = this.nonConstantMarkingRun[eductIdx];
                 //Stoichiometric factor of the reaction
-                int factor = sts.getEductStoichMatrix()[reactionIdx][eductIdx];
+                int factor = simStor.getEductStoichMatrix()[reactionIdx][eductIdx];
                 /*
                 If the factor is 0
                  */
                 minL = Math.min(minL, Math.round(eductNr / factor));
             }
-            for (int eductIdx : sts.getReactionsConstantEducts()[reactionIdx]) {
+            for (int eductIdx : simStor.getReactionsConstantEducts()[reactionIdx]) {
                 //Number of molecules of the educt.
                 long eductNr = this.constantMarkingRun[eductIdx];
                 //Stoichiometric factor of the reaction
-                int factor = sts.getEductStoichMatrix()[reactionIdx][eductIdx + sts.getNonConstantPlaceIDs().length];
+                int factor = simStor.getEductStoichMatrix()[reactionIdx][eductIdx + simStor.getNonConstantPlaceIDs().length];
                 minL = Math.min(minL, Math.round(eductNr / factor));
             }
             /*
@@ -79,13 +80,13 @@ public class TauLeapingSSA extends ExactSSA {
 
     @Override
     public void run() {
-        outPanel.showPlotButton.setEnabled(false);
+        fireSimulationEvent(SimulationEvent.INIT, -1);
         /*
         List of reactions which fired in this step. Used for output.
          */
         Set<Integer> firedReactions = new HashSet<>();
         try {
-            outputWriter = new BufferedWriter(new FileWriter(outputFileRun, true));
+            outputWriter = new BufferedWriter(new FileWriter(getOutputFileRun(), true));
         } catch (IOException ex) {
             LOGGER.error("IOException while trying to create a new buffered file writer for the output in the stochastic simulation", ex);
         }
@@ -121,18 +122,18 @@ public class TauLeapingSSA extends ExactSSA {
                 Compute next firing time of non critical reactions
                  */
                 double nextFiringTimeNonCritical;
-                if (sts.getMaxSimTime() > 0) {
-                    if (sts.getMaxSimTime() - timePassed <= 0) {
+                if (simStor.getMaxSimTime() > 0) {
+                    if (simStor.getMaxSimTime() - timePassed <= 0) {
                         this.requestStop();
                         break;
                     }
-                    nextFiringTimeNonCritical = sts.getMaxSimTime() - timePassed;
+                    nextFiringTimeNonCritical = simStor.getMaxSimTime() - timePassed;
                 } else {
                     nextFiringTimeNonCritical = Double.MAX_VALUE;
                 }
                 if (!nonCriticalReactions.isEmpty()) {
-                    for (int compoundIdx = 0; compoundIdx < sts.getCompoundsInfluence().length; compoundIdx++) {
-                        Set<Integer> reactions = sts.getCompoundsInfluence()[compoundIdx];
+                    for (int compoundIdx = 0; compoundIdx < simStor.getCompoundsInfluence().length; compoundIdx++) {
+                        Set<Integer> reactions = simStor.getCompoundsInfluence()[compoundIdx];
                         if (reactions.isEmpty()) {
                             continue;
                         }
@@ -141,7 +142,7 @@ public class TauLeapingSSA extends ExactSSA {
                         for (int reactionIdx : reactions) {
                             Double tmpRate = reactionRatesRun.get(reactionIdx);
                             if (tmpRate != null) {
-                                int stoichFactor = sts.getEductStoichMatrix()[reactionIdx][compoundIdx];
+                                int stoichFactor = simStor.getEductStoichMatrix()[reactionIdx][compoundIdx];
                                 my += -stoichFactor * reactionRatesRun.get(reactionIdx);
                                 sigma += stoichFactor * stoichFactor * tmpRate;
                             }
@@ -182,7 +183,7 @@ public class TauLeapingSSA extends ExactSSA {
                 if (nextFiringTimeNonCritical < nextFiringTimeCritical) {
                     LOGGER.debug("Next firing time is from a non critical reaction, therefore trying to fire it");
                     //check if the simulation should go on or the maximal time is reached.
-                    if (sts.getMaxSimTime() > 0 && (timePassed + nextFiringTimeNonCritical) > sts.getMaxSimTime()) {
+                    if (simStor.getMaxSimTime() > 0 && (timePassed + nextFiringTimeNonCritical) > simStor.getMaxSimTime()) {
                         LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation before firing it");
                         this.requestStop();
                         break;
@@ -203,7 +204,7 @@ public class TauLeapingSSA extends ExactSSA {
                 } else {
                     LOGGER.debug("Next firing reaction is critical");
                     //check if the simulation should go on or the maximal time is reached.
-                    if (sts.getMaxSimTime() > 0 && (timePassed + nextFiringTimeCritical) > sts.getMaxSimTime()) {
+                    if (simStor.getMaxSimTime() > 0 && (timePassed + nextFiringTimeCritical) > simStor.getMaxSimTime()) {
                         LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation before firing it");
                         this.requestStop();
                         break;
@@ -243,7 +244,7 @@ public class TauLeapingSSA extends ExactSSA {
                     this.timePassed += nextFiringTimeCritical;
                 }
                 //Write updated molecule numbers into output file.
-                if (sts.getUpdateInterval() == 0 || timePassed - lastUpdate >= sts.getUpdateInterval()) {
+                if (simStor.getUpdateInterval() == 0 || timePassed - lastUpdate >= simStor.getUpdateInterval()) {
                     LOGGER.debug("Writing the new molecule numbers into the output file");
                     writeOutput(firedReactions.toArray(new Integer[firedReactions.size()]));
                 }
@@ -253,10 +254,9 @@ public class TauLeapingSSA extends ExactSSA {
         } catch (IOException ex) {
             LOGGER.error("IOException while trying to calculate the next firing step or writing its results in the output", ex);
         }
-        this.outTextArea.append(("\n").concat(TokenSimulator.strings.get("SimFinished")).concat(dateFormat.format(Calendar.getInstance().getTime())));
         this.updateOutput();
-        outPanel.showPlotButton.setEnabled(true);
-        gts.checkOutRunningThread();
+        fireSimulationEvent(SimulationEvent.DONE, ("\n").concat(SimulationManager.strings.get("SimFinished")).concat(dateFormat.format(Calendar.getInstance().getTime())));
+        gillTS.checkOutRunningThread();
     }
 
     private void updateReactions() {
@@ -283,18 +283,18 @@ public class TauLeapingSSA extends ExactSSA {
                 /*
                 Iterate through non-constant educts of this reaction.
                  */
-                for (int eductIdx : sts.getReactionsNonConstantEducts()[reactionIdx]) {
+                for (int eductIdx : simStor.getReactionsNonConstantEducts()[reactionIdx]) {
                     //Number of molecules of the educt.
                     long eductNr = this.nonConstantMarkingRun[eductIdx];
                     //Stoichiometric factor of the reaction
-                    int factor = sts.getEductStoichMatrix()[reactionIdx][eductIdx];
+                    int factor = simStor.getEductStoichMatrix()[reactionIdx][eductIdx];
                     minL = Math.min(minL, Math.round(eductNr / factor));
                 }
-                for (int eductIdx : sts.getReactionsConstantEducts()[reactionIdx]) {
+                for (int eductIdx : simStor.getReactionsConstantEducts()[reactionIdx]) {
                     //Number of molecules of the educt.
                     long eductNr = this.constantMarkingRun[eductIdx];
                     //Stoichiometric factor of the reaction
-                    int factor = sts.getEductStoichMatrix()[reactionIdx][eductIdx + sts.getNonConstantPlaceIDs().length];
+                    int factor = simStor.getEductStoichMatrix()[reactionIdx][eductIdx + simStor.getNonConstantPlaceIDs().length];
                     minL = Math.min(minL, Math.round(eductNr / factor));
                 }
                 /*
@@ -321,7 +321,7 @@ public class TauLeapingSSA extends ExactSSA {
         Remove all reactions from the reactionsToUpdate-set except for the reactions with constant pre-places (educts).
          */
         reactionsToUpdate.clear();
-        reactionsToUpdate.addAll(sts.getConstantPlacesPostTransitions());
+        reactionsToUpdate.addAll(simStor.getConstantPlacesPostTransitions());
     }
 
     /**
@@ -349,7 +349,7 @@ public class TauLeapingSSA extends ExactSSA {
          */
         double nextFiringTime = (Math.log(1 / randomRun.nextDouble()) / sumOfRates);
         //check if the simulation should go on or the maximal time is reached.
-        if (sts.getMaxSimTime() > 0 && (timePassed + nextFiringTime) > sts.getMaxSimTime()) {
+        if (simStor.getMaxSimTime() > 0 && (timePassed + nextFiringTime) > simStor.getMaxSimTime()) {
             LOGGER.debug("Maximum simulation time has been reached, therefore stopping the simulation");
             this.requestStop();
             return -1;
@@ -380,7 +380,7 @@ public class TauLeapingSSA extends ExactSSA {
         this.stepsSimulated++;
         this.timePassed += nextFiringTime;
 
-        if (this.timePassed >= this.lastUpdate + sts.getUpdateInterval()) {
+        if (this.timePassed >= this.lastUpdate + simStor.getUpdateInterval()) {
             writeOutput(reaction);
         }
 
@@ -388,7 +388,7 @@ public class TauLeapingSSA extends ExactSSA {
         LOGGER.debug("Firing the reaction that has been determined to occur next");
         fireReaction(reaction);
 
-        if (sts.getUpdateInterval() == 0 || timePassed - lastUpdate >= sts.getUpdateInterval()) {
+        if (simStor.getUpdateInterval() == 0 || timePassed - lastUpdate >= simStor.getUpdateInterval()) {
             LOGGER.debug("Writing the resulting output after firing the reaction");
             writeOutput(reaction);
         }
@@ -403,11 +403,11 @@ public class TauLeapingSSA extends ExactSSA {
          */
         LOGGER.debug("Firing the reaction with the ID: " + Integer.toString(reactionIdx));
         LOGGER.debug("Calculating the new values for all educts");
-        for (int eductIdx : sts.getReactionsNonConstantEducts()[reactionIdx]) {
+        for (int eductIdx : simStor.getReactionsNonConstantEducts()[reactionIdx]) {
             /*
             Get the number of molecules of the educt and remove the stoichiometric factor from it.
              */
-            long nrOfMolecules = nonConstantMarkingRun[eductIdx] - sts.getEductStoichMatrix()[reactionIdx][eductIdx];
+            long nrOfMolecules = nonConstantMarkingRun[eductIdx] - simStor.getEductStoichMatrix()[reactionIdx][eductIdx];
             //Ensure that no negative values are produced
             if (nrOfMolecules < 0) {
                 System.out.println(nrOfMolecules);
@@ -420,18 +420,18 @@ public class TauLeapingSSA extends ExactSSA {
             /*
             Update the concentrations entry.
              */
-            concentrations.put(this.nonConstantPlaceIDsRun[eductIdx], nrOfMolecules / sts.getVolMol());
+            concentrations.put(this.nonConstantPlaceIDsRun[eductIdx], nrOfMolecules / simStor.getVolMol());
             /*
             Mark all reactions which are dependent from this educt so the reaction rates will be re-calculated.
              */
-            reactionsToUpdate.addAll(sts.getCompoundsInfluence()[eductIdx]);
+            reactionsToUpdate.addAll(simStor.getCompoundsInfluence()[eductIdx]);
         }
         LOGGER.debug("Calculating the new values for all products");
-        for (int productIdx : sts.getReactionsNonConstantProducts()[reactionIdx]) {
+        for (int productIdx : simStor.getReactionsNonConstantProducts()[reactionIdx]) {
             /*
             Get the number of molecules of the educt and add the stoichiometric factor from it.
              */
-            long nrOfMolecules = nonConstantMarkingRun[productIdx] + sts.getProductStoichMatrix()[reactionIdx][productIdx];
+            long nrOfMolecules = nonConstantMarkingRun[productIdx] + simStor.getProductStoichMatrix()[reactionIdx][productIdx];
             /*
             Update the marking.
              */
@@ -439,11 +439,11 @@ public class TauLeapingSSA extends ExactSSA {
             /*
             Update the concentrations entry.
              */
-            concentrations.put(this.nonConstantPlaceIDsRun[productIdx], nrOfMolecules / sts.getVolMol());
+            concentrations.put(this.nonConstantPlaceIDsRun[productIdx], nrOfMolecules / simStor.getVolMol());
             /*
             Mark all reactions which are dependent from this educt so the reaction rates will be re-calculated.
              */
-            reactionsToUpdate.addAll(sts.getCompoundsInfluence()[productIdx]);
+            reactionsToUpdate.addAll(simStor.getCompoundsInfluence()[productIdx]);
         }
         /*
         Update marking and concentration for constant places
@@ -452,7 +452,7 @@ public class TauLeapingSSA extends ExactSSA {
         for (int i = 0; i < this.constantMarkingRun.length; i++) {
             MathematicalExpression exp = this.constantPlacesExpRun[i];
             double val = exp.evaluateML(concentrations, this.timePassed);
-            this.constantMarkingRun[i] = Math.round(val * sts.getVolMol());
+            this.constantMarkingRun[i] = Math.round(val * simStor.getVolMol());
             this.concentrations.put(this.constantPlaceIDsRun[i], val);
         }
     }

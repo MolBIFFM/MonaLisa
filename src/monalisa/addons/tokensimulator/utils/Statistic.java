@@ -9,18 +9,9 @@
  */
 package monalisa.addons.tokensimulator.utils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.Transition;
 
 /**
@@ -31,14 +22,13 @@ import monalisa.data.pn.Transition;
 public class Statistic {
 
     //BEGIN VARIABLES DECLARATION
-    private static final String[] columnNames = {TokenSimulator.strings.get("STATTName"), TokenSimulator.strings.get("STATFired")};
+    private static final String[] columnNames = {SimulationManager.strings.get("STATTName"), SimulationManager.strings.get("STATFired")};
     //GUI
     //table representation of statistic data
-    private JTable statisticTable;
     //table model of statisticsTable
     private final StatisticsTableModel tableModel;
     //TokenSimulator that fires the transitions
-    private final TokenSimulator tokenSim;
+    private final SimulationManager simulationMan;
     /**
      * Maps the name of the transition to the number of how often it did fire
      */
@@ -53,11 +43,11 @@ public class Statistic {
      */
     private Statistic() {
         tableModel = null;
-        tokenSim = null;
+        simulationMan = null;
     }
 
-    public Statistic(TokenSimulator tsN) {
-        this.tokenSim = tsN;
+    public Statistic(SimulationManager simulationManager) {
+        this.simulationMan = simulationManager;
         this.stepsFired = 0;                                                    //counts how many steps were fired
         this.tokensTotal = 0;                                                   //counts how many tokens are on the places
         this.transitionsFired = 0;                                              //counts how many transitions have fired
@@ -66,7 +56,7 @@ public class Statistic {
          * For every transition in petri-net, an entry in countTransitions saves how often the transition has fired.
          */
         this.countTransitions = new HashMap<>();
-        for (Transition transition : this.tokenSim.getPetriNet().transitions()) {
+        for (Transition transition : this.simulationMan.getPetriNet().transitions()) {
             this.countTransitions.put((String) transition.getProperty("name"), 0);
         }
 
@@ -77,7 +67,7 @@ public class Statistic {
      * Create a copy of existing statistic.
      */
     public Statistic(Statistic statN) {
-        this.tokenSim = statN.tokenSim;
+        this.simulationMan = statN.simulationMan;
         this.stepsFired = statN.stepsFired;
         this.tokensTotal = statN.tokensTotal;
         this.transitionsFired = statN.transitionsFired;
@@ -118,26 +108,9 @@ public class Statistic {
     }
 
     /**
-     * return a table with statistics
-     *
-     * @return
+     * @return the tableModel
      */
-    public JTable getStatisticTable() {
-        this.statisticTable = new JTable();
-        this.statisticTable.setModel(this.tableModel);
-        this.statisticTable.setFillsViewportHeight(true);
-        TableRowSorter<TableModel> rowSorter = new TableRowSorter<TableModel>(this.tableModel);
-        this.statisticTable.setRowSorter(rowSorter);
-        List sortKeys = new ArrayList();
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        rowSorter.setComparator(1, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer t, Integer t1) {
-                return (t - t1);
-            }
-        });
-        rowSorter.setSortKeys(sortKeys);
-
-        return this.statisticTable;
+    public StatisticsTableModel getTableModel() {
+        return tableModel;
     }
 }

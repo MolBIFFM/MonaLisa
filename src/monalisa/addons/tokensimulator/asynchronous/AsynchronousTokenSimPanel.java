@@ -10,7 +10,12 @@
 package monalisa.addons.tokensimulator.asynchronous;
 
 import java.awt.event.KeyEvent;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import javax.swing.JOptionPane;
+import monalisa.addons.tokensimulator.AbstractTokenSimPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.SimulationPanel;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
+import monalisa.addons.tokensimulator.listeners.SimulationListener;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -18,12 +23,13 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author Pavel Balazki.
  */
-public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
+public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements SimulationListener {
 
     //BEGIN VARIABLES DECLARATION
-    private AsynchronousTokenSim ts;
+    private AsynchronousTokenSim asyncTS;
     private static final Logger LOGGER = LogManager.getLogger(AsynchronousTokenSimPanel.class);
     //END VARIABLES DECLARATION
+    private SimulationPanel owner;
 
     //BEGIN CONSTRUCTORS
     /**
@@ -33,8 +39,9 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public AsynchronousTokenSimPanel(AsynchronousTokenSim tsN) {
-        this.ts = tsN;
+    public AsynchronousTokenSimPanel(AsynchronousTokenSim tsN, SimulationPanel owner) {
+        this.asyncTS = tsN;
+        this.owner = owner;
         initComponents();
     }
 
@@ -42,7 +49,6 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
     /**
      * @return the progressBar
      */
-
     public javax.swing.JProgressBar getProgressBar() {
         return progressBar;
     }
@@ -51,9 +57,10 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         return continuousModeCheckBox.isSelected();
     }
 
+    @Override
     public void unlock() {
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
 
         if (!continuousModeCheckBox.isSelected()) {
             stepField.setEnabled(true);
@@ -91,7 +98,7 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 6, 0);
         add(simName, gridBagConstraints);
 
-        stepLabel.setText(TokenSimulator.strings.get("ATSStepLabel"));
+        stepLabel.setText(SimulationManager.strings.get("ATSStepLabel"));
         stepLabel.setToolTipText("Number of steps to perform, if \"Start simulation sequence\" is used.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -107,8 +114,8 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(progressBar, gridBagConstraints);
 
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
         fireTransitionsButton.setEnabled(false);
         fireTransitionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -123,8 +130,8 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         add(fireTransitionsButton, gridBagConstraints);
 
-        continuousModeCheckBox.setText(TokenSimulator.strings.get("ATSContinuousModeCheckBox"));
-        continuousModeCheckBox.setToolTipText(TokenSimulator.strings.get("ATSContinuousModeCheckBoxT"));
+        continuousModeCheckBox.setText(SimulationManager.strings.get("ATSContinuousModeCheckBox"));
+        continuousModeCheckBox.setToolTipText(SimulationManager.strings.get("ATSContinuousModeCheckBoxT"));
         continuousModeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 continuousModeCheckBoxActionPerformed(evt);
@@ -138,7 +145,7 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
         add(continuousModeCheckBox, gridBagConstraints);
 
         stepField.setText("1");
-        stepField.setToolTipText(TokenSimulator.strings.get("ATSFiringPerStepT"));
+        stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enterPressed(evt);
@@ -155,26 +162,31 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
 
     private void fireTransitionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fireTransitionsButtonActionPerformed
         //if no firing takes place, start new sequence of firing
-        if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))) {
+        if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSFireTransitionsB"))) {
             LOGGER.info("Firing of transition in the asynchronous token simulator has started");
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
-            this.ts.startFiring();
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            LOGGER.info("Set text of transitionButton to: " + SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
+            startFiring();
         } //if a firing sequence is being executed, stop it
-        else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))) {
+        else if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSStopFiringB"))) {
             LOGGER.info("Firing of transition in the asynchronous token simulator has ended");
-            this.ts.stopFiring();
+            stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed
 
     private void continuousModeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuousModeCheckBoxActionPerformed
         if (this.continuousModeCheckBox.isSelected()) {
             this.stepField.setEnabled(false);
-        } else
+        } else {
             this.stepField.setEnabled(true);
+        }
+        if (asyncTS.getSimSwingWorker() != null) {
+            asyncTS.getSimSwingWorker().setContinuous(isContinuous());
+        }
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
@@ -183,9 +195,9 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
-            this.ts.startFiring();
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
+            startFiring();
         }
     }//GEN-LAST:event_enterPressed
 
@@ -197,4 +209,94 @@ public class AsynchronousTokenSimPanel extends javax.swing.JPanel {
     protected javax.swing.JTextField stepField;
     private javax.swing.JLabel stepLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    protected void startFiring() {
+        LOGGER.info("Firing of Asynchronous Token Simulator started");        
+        stepField.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        asyncTS.getSimulationMan().lockGUI(true);
+        try {
+            //number of steps that will be performed
+            int steps = Integer.parseInt(stepField.getText());
+            if (steps < 1) {
+                steps = 1;
+                stepField.setText("1");
+            }
+            //Create new thread that will perform all firing steps.
+            asyncTS.setSimSwingWorker(new AsynchronousSimulationSwingWorker(asyncTS.getSimulationMan(), asyncTS, isContinuous(), steps));
+            asyncTS.getSimSwingWorker().addSimulationListener(this);
+            asyncTS.getSimSwingWorker().execute();
+            LOGGER.info("Started execution of ATS Swingworker.");
+        } catch (NumberFormatException nfe) {
+            stopFiring();
+            LOGGER.error("NumberFormatException while checking the number of firing steps in the asynchronous token simulator", nfe);
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        }
+    }
+    
+    @Override
+    protected void stopFiring(){
+        if (asyncTS.getSimSwingWorker() != null) {
+        LOGGER.info("Firing of Asynchronous Token Simulator stopped");                    
+            asyncTS.getSimSwingWorker().stopSequence();
+        }
+    }
+
+    @Override
+    public void simulationUpdated(SimulationEvent e) {
+        String type = e.getType();
+        switch (type) {
+            case SimulationEvent.INIT:
+                getProgressBar().setMaximum((int) e.getValue());
+                break;
+            case SimulationEvent.UPDATE_PROGRESS:
+                getProgressBar().setValue(getProgressBar().getMaximum() - ((int) e.getValue()));
+                break;
+            case SimulationEvent.UPDATE_VISUAL:
+                asyncTS.getSimulationMan().updateVisualOutput();
+                break;
+            case SimulationEvent.DONE:
+                getProgressBar().setMaximum(0);
+                getProgressBar().setValue(0);
+                //unlock GUI
+                unlock();
+                break;
+            case SimulationEvent.STOPPED:
+                asyncTS.getSimulationMan().updateVisualOutput();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void startSim() {
+        LOGGER.info("Asynchronous token simulation started");
+        stepField.setEnabled(true);
+        fireTransitionsButton.setEnabled(true);
+        asyncTS.computeActiveTransitions();    
+    }
+
+    @Override
+    public void endSim() {
+        try {
+            if (asyncTS.getSimSwingWorker() != null) { // Should only be null if the sim was stopped without starting it.
+                asyncTS.getSimSwingWorker().cancel(true);
+            }
+        } catch (NullPointerException ex) {
+            LOGGER.error("Nullpointer exception while trying to cancel simSwingWorker in asynchronous token simulator", ex);
+        }
+        stepField.setEnabled(false);
+        fireTransitionsButton.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        owner.disableSetup();
+        asyncTS.getSimulationMan().lockGUI(true);
+        LOGGER.info("Asynchronous token simulator ended");    
+    }
+
+    @Override
+    public void setSimName(String name) {
+        simName.setText(name);            
+    }
 }

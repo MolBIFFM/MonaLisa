@@ -14,48 +14,30 @@ import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import monalisa.addons.tokensimulator.utils.Utilities;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.addons.tokensimulator.exceptions.FactorialTooBigException;
-import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import monalisa.tools.BooleanChangeEvent;
+import monalisa.tools.BooleanChangeListener;
 import monalisa.util.HighQualityRandom;
 import monalisa.util.MonaLisaFileChooser;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,7 +49,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Pavel Balazki.
  */
-public class StochasticSimulator extends javax.swing.JFrame {
+public class StochasticSimulator extends javax.swing.JFrame implements BooleanChangeListener {
 
     //BEGIN VARIABLES DECLARATION
     //-----------------Places---------------
@@ -190,7 +172,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * Instance of the token simulator which started this stochastic simulation.
      * Enables access to the Petri net and visual output updating routine.
      */
-    private final GillespieTokenSim ts;
+    private final GillespieTokenSim gillTS;
     /**
      * Number of simulation threads which can run simulataneously. If more
      * simulation runs are started, they are put in a queue and executed as soon
@@ -206,6 +188,10 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * Each runnable is a simulation run.
      */
     private final ArrayList<ExactSSA> runnables = new ArrayList<>();
+    /**
+     * List of StochasticSimulatorRunPanels associated with runnables.
+     */
+    private final ArrayList<StochasticSimulatorRunPanel> runPanels = new ArrayList<>();
     /**
      * Map of currently running threads, linked to the runnable instances they
      * are executing.
@@ -228,6 +214,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * generators of the simulation runs.
      */
     private HighQualityRandom globalRandom;
+
+    private final SimulationStorage simStor;
     /**
      * Object which processes the output files, e.g. crates a new file with the
      * averages of all simulation runs.
@@ -235,6 +223,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
 //    private final OutputProcessor outputProcessor = new OutputProcessor();
     private static final Logger LOGGER = LogManager.getLogger(StochasticSimulator.class);
     //END VARIABLES DECLARATION
+    private final FastSimulationModes simOwner;
 
     //BEGIN INNER CLASSES
     /**
@@ -443,7 +432,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
      * @param ran
      */
     public StochasticSimulator(GillespieTokenSim tsN, Map<Integer, MathematicalExpression> detReactionConstants, Map<Integer, Long> nonConstantPlaces,
-            double vol, HighQualityRandom ran) {
+            double vol, HighQualityRandom ran, FastSimulationModes simOwner) {
         LOGGER.info("Instantiating a stochastic simulator");
         this.volume = vol;
         this.volMol = this.volume * 6E23;
@@ -453,8 +442,9 @@ public class StochasticSimulator extends javax.swing.JFrame {
         this.outputFile = new File(System.getProperty("user.home").concat(File.separator).concat("StochasticSimulation").concat(File.separator).
                 concat("StochasticSim.csv"));
         this.outputFiles = new ArrayList<>();
-        this.ts = tsN;
-        PetriNetFacade petriNet = ts.getPetriNet();
+        this.simOwner = simOwner;
+        this.gillTS = tsN;
+        PetriNetFacade petriNet = gillTS.getPetriNet();
         /*
         Iterate through places of the net and create entries of compounds.
          */
@@ -475,11 +465,11 @@ public class StochasticSimulator extends javax.swing.JFrame {
             if (!place.isConstant()) {
                 nonConstantPlacesIDsMap.put(id, nonConstantIdx++);
                 nonConstantPlacesNamesList.add(name);
-                nonConstantPlacesMarkingList.add(this.ts.getTokens(id));
+                nonConstantPlacesMarkingList.add(this.gillTS.getTokens(id));
             } else {
                 constantPlacesIDsMap.put(id, constantIdx++);
                 constantPlacesNamesList.add(name);
-                constantPlacesMathExpList.add(this.ts.getTokenSim().getMathematicalExpression(id));
+                constantPlacesMathExpList.add(this.gillTS.getSimulationMan().getMathematicalExpression(id));
             }
         }
         //non-constant places
@@ -593,7 +583,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     /*
                     If a transition has a constant pre-place, its reaction rate must be recalculated at each step.
                      */
-                    if (!ts.getTokenSim().getMathematicalExpression(pId).isConstant()) {
+                    if (!gillTS.getSimulationMan().getMathematicalExpression(pId).isConstant()) {
                         constantPlacesPostTransitions.add(reactionIdx);
                     }
                     //Index of the compound
@@ -646,6 +636,27 @@ public class StochasticSimulator extends javax.swing.JFrame {
             }
 
         }
+        this.simStor = new SimulationStorage(
+                volMol,
+                maxSimTime,
+                updateInterval,
+                nonConstantPlaceIDs,
+                constantPlaceIDs,
+                constantPlacesExp,
+                reactionRateConstants,
+                nonConstantInitialMarking,
+                nonConstantPlaceNames,
+                constantPlaceNames,
+                reactionIDs,
+                constantPlacesPostTransitions,
+                reactionsNonConstantEducts,
+                eductStoichMatrix,
+                compoundsInfluence,
+                reactionsNonConstantProducts,
+                productStoichMatrix,
+                reactionOrder,
+                reactionsConstantEducts,
+                reactionNames);
 
         initComponents();
         this.globalRandom = new HighQualityRandom(ran.getSeed());
@@ -663,7 +674,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                             JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
                 }
                 if (result == JOptionPane.OK_OPTION) {
-                    ts.fastSimFrame.removeFastSim(StochasticSimulator.this);
+                    simOwner.removeFastSim(StochasticSimulator.this);
                 }
             }
         });
@@ -672,6 +683,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         for (int i = 1; i < 501; i++) {
             this.nrOfSimsBox.addItem(i);
         }
+
     }
     //END CONSTRUCTORS
 
@@ -717,7 +729,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         options.setLayout(new java.awt.GridBagLayout());
 
         runTime.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        runTime.setText(TokenSimulator.strings.get("SimTimeSpan"));
+        runTime.setText(SimulationManager.strings.get("SimTimeSpan"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -726,7 +738,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         options.add(runTime, gridBagConstraints);
 
         updateTime.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        updateTime.setText(TokenSimulator.strings.get("OutputInterval"));
+        updateTime.setText(SimulationManager.strings.get("OutputInterval"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -740,7 +752,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         timeSpanField.setText("000:00:00:00  ");
-        timeSpanField.setToolTipText(TokenSimulator.strings.get("SimTimeSpanTT"));
+        timeSpanField.setToolTipText(SimulationManager.strings.get("SimTimeSpanTT"));
         timeSpanField.setMaximumSize(new java.awt.Dimension(75, 2147483647));
         timeSpanField.setMinimumSize(new java.awt.Dimension(75, 25));
         timeSpanField.setPreferredSize(new java.awt.Dimension(75, 25));
@@ -758,7 +770,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         updateIntervalField.setText("00:00:00:00");
-        updateIntervalField.setToolTipText(TokenSimulator.strings.get("OutputIntervalTT"));
+        updateIntervalField.setToolTipText(SimulationManager.strings.get("OutputIntervalTT"));
         updateIntervalField.setMaximumSize(new java.awt.Dimension(175, 2147483647));
         updateIntervalField.setMinimumSize(new java.awt.Dimension(175, 25));
         updateIntervalField.setPreferredSize(new java.awt.Dimension(175, 25));
@@ -771,7 +783,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         options.add(updateIntervalField, gridBagConstraints);
 
         algorithmType.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        algorithmType.setText(TokenSimulator.strings.get("SelectAlgorithm"));
+        algorithmType.setText(SimulationManager.strings.get("SelectAlgorithm"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -788,7 +800,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         options.add(selectAlgoComboBox, gridBagConstraints);
 
         nbrThreads.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        nbrThreads.setText(TokenSimulator.strings.get("NrOfSims"));
+        nbrThreads.setText(SimulationManager.strings.get("NrOfSims"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;
@@ -803,8 +815,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         options.add(nrOfSimsBox, gridBagConstraints);
 
-        newRandomB.setText(TokenSimulator.strings.get("NewRandomB"));
-        newRandomB.setToolTipText(TokenSimulator.strings.get("NewRandomBT"));
+        newRandomB.setText(SimulationManager.strings.get("NewRandomB"));
+        newRandomB.setToolTipText(SimulationManager.strings.get("NewRandomBT"));
         newRandomB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newRandomBActionPerformed(evt);
@@ -819,8 +831,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
         options.add(newRandomB, gridBagConstraints);
 
         runButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png"))); // NOI18N
-        runButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        runButton.setToolTipText(TokenSimulator.strings.get("RunStochSimTT"));
+        runButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        runButton.setToolTipText(SimulationManager.strings.get("RunStochSimTT"));
         runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 runButtonActionPerformed(evt);
@@ -841,8 +853,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         options.add(outPathField, gridBagConstraints);
 
-        browseOutFileButton.setText(TokenSimulator.strings.get("Browse"));
-        browseOutFileButton.setToolTipText(TokenSimulator.strings.get("OutputPathTT"));
+        browseOutFileButton.setText(SimulationManager.strings.get("Browse"));
+        browseOutFileButton.setToolTipText(SimulationManager.strings.get("OutputPathTT"));
         browseOutFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 browseOutFileButtonActionPerformed(evt);
@@ -969,7 +981,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
 //            this.averagesButton.setEnabled(false);
 //            this.averagesProgressBar.setValue(0);
 
-            getRunButton().setText(TokenSimulator.strings.get("ATSStopFiringB"));
+            getRunButton().setText(SimulationManager.strings.get("ATSStopFiringB"));
             getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/stop_tools.png")));
             browseOutFileButton.setEnabled(false);
             outPathField.setEditable(false);
@@ -985,8 +997,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     If maximum parallel running threads limit is not exceeded, start a new thread with the runnable.
                     Otherwise put it into the queue.
                      */
-                    if (this.runningThreads.size() < MAX_PARALLEL_THREADS && this.ts.isNewThreadAllowed()) {
-                        this.ts.registerNewThread();
+                    if (this.runningThreads.size() < MAX_PARALLEL_THREADS && this.gillTS.isNewThreadAllowed()) {
+                        this.gillTS.registerNewThread();
                         Thread thread = new Thread(run);
                         this.runningThreads.put(thread, run);
                         thread.start();
@@ -1031,18 +1043,22 @@ public class StochasticSimulator extends javax.swing.JFrame {
                          */
                         ExactSSA runnable = null;
                         if (selectAlgoComboBox.getSelectedItem().toString().equals("Exact SSA")) {
-                            runnable = new ExactSSA(getOutputFile(), i, globalRandom.nextLong(), this, this.ts);
+                            runnable = new ExactSSA(getOutputFile(), i, globalRandom.nextLong(), this.gillTS, simStor);
                         }
                         if (selectAlgoComboBox.getSelectedItem().toString().equals("Approximate SSA")) {
-                            runnable = new TauLeapingSSA(getOutputFile(), i, globalRandom.nextLong(), this, this.ts);
+                            runnable = new TauLeapingSSA(getOutputFile(), i, globalRandom.nextLong(), this.gillTS, simStor);
                         }
+                        StochasticSimulatorRunPanel runPanel = new StochasticSimulatorRunPanel(runnable, nonConstantPlaceNames, constantPlaceNames);
+                        this.runPanels.add(runPanel);
+                        runnable.addSimulationListener(runPanel);
+                        getSimRunsTabbedPane().addTab("Simulation run " + i, runPanel);
                         this.runnables.add(runnable);
                         /*
                         If maximum parallel running threads limit is not exceeded, start a new thread with the runnable.
                         Otherwise put it into the queue.
                          */
-                        if (i < MAX_PARALLEL_THREADS && this.ts.isNewThreadAllowed()) {
-                            this.ts.registerNewThread();
+                        if (i < MAX_PARALLEL_THREADS && this.gillTS.isNewThreadAllowed()) {
+                            this.gillTS.registerNewThread();
                             Thread thread = new Thread(runnable);
                             this.runningThreads.put(thread, runnable);
                             thread.start();
@@ -1052,8 +1068,8 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     }
                 } catch (IOException ex) {
                     LOGGER.error("IOException while trying to create files for coordinating threads in the stochastic simulation");
-                    JOptionPane.showMessageDialog(this, TokenSimulator.strings.get("CannotCreateFiles"),
-                            TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, SimulationManager.strings.get("CannotCreateFiles"),
+                            SimulationManager.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
                     this.outPathField.setEnabled(true);
                     this.browseOutFileButton.setEnabled(true);
                 }
@@ -1062,7 +1078,9 @@ public class StochasticSimulator extends javax.swing.JFrame {
              * Create and start the updater task.
              */
             Timer timer = new Timer();
-            timer.schedule(new UpdaterTask(runningThreads, runnablesQueue, ts, this), 0, UPDATER_TASK_INTERVAL);
+            UpdaterTask ut = new UpdaterTask(runningThreads, runnablesQueue, gillTS, outputFile, outputFiles, isLogAll());
+            ut.addBooleanChangeListener(this);
+            timer.schedule(ut, 0, UPDATER_TASK_INTERVAL);
         } /*
          * If the simulation is running, stop it. The corresponding runnables, however, will not be destroyed and can be started afterwards.
          */ else {
@@ -1089,7 +1107,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
         }
         this.runningThreads.clear();
         this.runnablesQueue.clear();
-        getRunButton().setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
+        getRunButton().setText(SimulationManager.strings.get("ATSFireTransitionsB"));
         getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png")));
     }
 
@@ -1100,7 +1118,7 @@ public class StochasticSimulator extends javax.swing.JFrame {
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
         }
         if (result == JOptionPane.OK_OPTION) {
-            ts.fastSimFrame.removeFastSim(StochasticSimulator.this);
+            simOwner.removeFastSim(StochasticSimulator.this);
         }
     }
 //        //Stop the computation of the averages
@@ -1312,5 +1330,14 @@ public class StochasticSimulator extends javax.swing.JFrame {
      */
     public List<File> getOutputFiles() {
         return outputFiles;
+    }
+
+    @Override
+    public void changed(BooleanChangeEvent e) {
+        if (e.getNewValue() == false) {
+        getRunButton().setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png")));
+        running = false;
+        }
     }
 }

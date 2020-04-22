@@ -5,10 +5,14 @@
  */
 package monalisa.addons.tokensimulator.listeners;
 
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.netviewer.NetViewerEdge;
+import monalisa.addons.netviewer.NetViewerNode;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.SimulationPanel;
 
 /**
  * Handles the navigation through snapshots. When a snapshot is picked, the
@@ -16,12 +20,15 @@ import monalisa.addons.tokensimulator.TokenSimulator;
  */
 public class SnapshotsListSelectionListener implements ListSelectionListener {
 
-    private final TokenSimulator ts;
+    private final SimulationPanel simulationPan;
     private final JList snapshots;
+    private final VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
 
-    public SnapshotsListSelectionListener(TokenSimulator ts, JList snapshots) {
+
+    public SnapshotsListSelectionListener(SimulationPanel simulationPan, JList snapshots, VisualizationViewer<NetViewerNode, NetViewerEdge> vv) {
         this.snapshots = snapshots;
-        this.ts = ts;
+        this.simulationPan = simulationPan;
+        this.vv = vv;
     }
 
     @Override
@@ -30,7 +37,8 @@ public class SnapshotsListSelectionListener implements ListSelectionListener {
             int selectedVar = snapshots.getSelectedIndex();
             if (selectedVar > -1) {
                 snapshots.clearSelection();
-                ts.loadSnapshot(ts.snapshots.get(selectedVar));
+                simulationPan.loadSnap(selectedVar);
+                vv.repaint();
             }
         }
     }

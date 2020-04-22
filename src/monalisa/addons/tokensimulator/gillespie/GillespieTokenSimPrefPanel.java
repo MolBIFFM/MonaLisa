@@ -10,17 +10,21 @@
 package monalisa.addons.tokensimulator.gillespie;
 
 import javax.swing.JOptionPane;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractTokenSimPrefPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.util.HighQualityRandom;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Pavel Balazki
  */
-public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
+public class GillespieTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
 
     //BEGIN VARIABLES DECLARATION
-    private GillespieTokenSim ts;
+    private GillespieTokenSim gillTS;
+    private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSimPrefPanel.class);
 
     //END VARIABLES DECLARATION
     //BEGIN CONSTRUCTORS
@@ -32,7 +36,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
     }
 
     public GillespieTokenSimPrefPanel(GillespieTokenSim tsN) {
-        this.ts = tsN;
+        this.gillTS = tsN;
         initComponents();
     }
     //END CONSTRUCTORS
@@ -61,7 +65,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
 
         timeDelayJFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         timeDelayJFormattedTextField.setText("0");
-        timeDelayJFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSTimeDelayT"));
+        timeDelayJFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSTimeDelayT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -72,7 +76,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
         add(timeDelayJFormattedTextField, gridBagConstraints);
 
         timeDelayJLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        timeDelayJLabel.setText(TokenSimulator.strings.get("ATSTimeDelayLabel"));
+        timeDelayJLabel.setText(SimulationManager.strings.get("ATSTimeDelayLabel"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -82,7 +86,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
 
         updateIntervalFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         updateIntervalFormattedTextField.setText("1");
-        updateIntervalFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSUpdateIntervalT"));
+        updateIntervalFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSUpdateIntervalT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -93,7 +97,7 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
         add(updateIntervalFormattedTextField, gridBagConstraints);
 
         updateIntervalLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        updateIntervalLabel.setText(TokenSimulator.strings.get("ATSUpdateIntervalLabel"));
+        updateIntervalLabel.setText(SimulationManager.strings.get("ATSUpdateIntervalLabel"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -102,8 +106,8 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
         add(updateIntervalLabel, gridBagConstraints);
 
         setSeedButton.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        setSeedButton.setText(TokenSimulator.strings.get("STSSetSeedB"));
-        setSeedButton.setToolTipText(TokenSimulator.strings.get("STSSetSeedB"));
+        setSeedButton.setText(SimulationManager.strings.get("STSSetSeedB"));
+        setSeedButton.setToolTipText(SimulationManager.strings.get("STSSetSeedB"));
         setSeedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setSeedButtonActionPerformed(evt);
@@ -119,8 +123,8 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
         add(setSeedButton, gridBagConstraints);
 
         limitThreadsCB.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        limitThreadsCB.setText(TokenSimulator.strings.get("GilTSLimitThreadsCB"));
-        limitThreadsCB.setToolTipText(TokenSimulator.strings.get("GilTSLimitThreadsTT")
+        limitThreadsCB.setText(SimulationManager.strings.get("GilTSLimitThreadsCB"));
+        limitThreadsCB.setToolTipText(SimulationManager.strings.get("GilTSLimitThreadsTT")
         );
         limitThreadsCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,8 +152,8 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
 
     private void setSeedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSeedButtonActionPerformed
         try {
-            long seed = new Long(JOptionPane.showInputDialog(TokenSimulator.strings.get("STSSetSeedBT"), this.ts.getRandom().getSeed()));
-            this.ts.setRandom(new HighQualityRandom(seed));
+            long seed = new Long(JOptionPane.showInputDialog(SimulationManager.strings.get("STSSetSeedBT"), this.gillTS.getRandom().getSeed()));
+            this.gillTS.setRandom(new HighQualityRandom(seed));
         } catch (NumberFormatException E) {
             JOptionPane.showMessageDialog(null, "The seed must be a 48-bit long (Integer)");
         }
@@ -168,4 +172,59 @@ public class GillespieTokenSimPrefPanel extends javax.swing.JPanel {
     protected javax.swing.JFormattedTextField updateIntervalFormattedTextField;
     private javax.swing.JLabel updateIntervalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void updatePreferences() {
+        LOGGER.info("Updating the Preferences in the gillespie simulation");
+        /*
+         * Update time delay.
+         */
+        LOGGER.debug("Updating the time delay preferences in the gillespie simulation");
+        try {
+            int timeDelay = Integer.parseInt(timeDelayJFormattedTextField.getText());
+            if (timeDelay >= 0) {
+                gillTS.getSimulationMan().getPreferences().put("Time delay", timeDelay);
+            }
+        } catch (NumberFormatException ex) {
+            LOGGER.error("NumberFormatException while updating the time delay in the preferences in the gillespie simulation", ex);
+        }
+        /*
+         * Update update interval
+         */
+        LOGGER.debug("Updating the update interval preferences in the gillespie simulation");
+        try {
+            int updateInterval = Integer.parseInt(updateIntervalFormattedTextField.getText());
+            if (updateInterval >= 0) {
+                gillTS.getSimulationMan().getPreferences().put("Update interval", updateInterval);
+            }
+        } catch (NumberFormatException ex) {
+            LOGGER.error("NumberFormatException while updating the update interval in the preferences in the gillespie simulation", ex);
+        }
+        /*
+        Update the limit of parallel simulation threads.
+         */
+        LOGGER.debug("Updating the preference for the limit of parallel simulation threads in the gillespie simulation");
+        gillTS.getSimulationMan().getPreferences().put("LimitMaxThreads", limitThreadsCB.isSelected());
+        int nrOfThreads = (int) gillTS.getSimulationMan().getPreferences().get("MaxThreadsNr");
+        try {
+            nrOfThreads = Integer.parseInt(nrOfMaxThreadsField.getText());
+        } catch (NumberFormatException ex) {
+            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation");
+            JOptionPane.showMessageDialog(this, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        }
+        if (nrOfThreads < 1) {
+            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation, defaulted back to 1");
+            JOptionPane.showMessageDialog(this, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+            nrOfThreads = 1;
+        }
+        gillTS.getSimulationMan().getPreferences().put("MaxThreadsNr", nrOfThreads);    }
+
+    @Override
+    public void loadPreferences() {
+        timeDelayJFormattedTextField.setText(((Integer) gillTS.getSimulationMan().getPreferences().get("Time delay")).toString());
+        updateIntervalFormattedTextField.setText(((Integer) gillTS.getSimulationMan().getPreferences().get("Update interval")).toString());
+        limitThreadsCB.setSelected((boolean) gillTS.getSimulationMan().getPreferences().get("LimitMaxThreads"));
+        nrOfMaxThreadsField.setEnabled((boolean) gillTS.getSimulationMan().getPreferences().get("LimitMaxThreads"));
+        nrOfMaxThreadsField.setText(gillTS.getSimulationMan().getPreferences().get("MaxThreadsNr").toString());
+        LOGGER.info("Preferences loaded");    }
 }

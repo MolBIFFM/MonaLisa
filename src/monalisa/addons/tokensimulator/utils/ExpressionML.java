@@ -58,6 +58,7 @@ public class ExpressionML {
 
     public ExpressionML(String exp, Map<String, Integer> variables) throws RuntimeException {
         expression = exp;
+        this.variables = variables;
         /*
          * Check whether the expression is a direct instruction or a "if then" condition.
          */

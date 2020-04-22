@@ -12,7 +12,7 @@ import java.util.Set;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.Transition;
 
 /**
@@ -21,11 +21,11 @@ import monalisa.data.pn.Transition;
  */
 public class VertexFireListener implements ItemListener {
 
-    private final TokenSimulator ts;
+    private final SimulationManager simulationMan;
     private final VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
 
-    public VertexFireListener(TokenSimulator ts, VisualizationViewer vv) {
-        this.ts = ts;
+    public VertexFireListener(SimulationManager simulationManager, VisualizationViewer vv) {
+        this.simulationMan = simulationManager;
         this.vv = vv;
     }
 
@@ -36,10 +36,10 @@ public class VertexFireListener implements ItemListener {
             if (pickedVertices.size() == 1) {
                 final NetViewerNode node = pickedVertices.iterator().next();
                 if (node.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
-                    Transition t = ts.getPetriNet().findTransition(node.getMasterNode().getId());
-                    if (ts.getActiveTransitions().contains(t)) {
-                        ts.fireTransitions(t);
-                        ts.updateVisualOutput();
+                    Transition t = simulationMan.getPetriNet().findTransition(node.getMasterNode().getId());
+                    if (simulationMan.getActiveTransitions().contains(t)) {
+                        simulationMan.fireTransitions(t);
+                        simulationMan.updateVisualOutput();
                     }
                     vv.getPickedVertexState().clear();
                 }

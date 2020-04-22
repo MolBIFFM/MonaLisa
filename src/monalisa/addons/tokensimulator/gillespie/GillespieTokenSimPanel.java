@@ -9,8 +9,27 @@
  */
 package monalisa.addons.tokensimulator.gillespie;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
+import monalisa.addons.tokensimulator.AbstractTokenSimPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.SimulationPanel;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
+import monalisa.addons.tokensimulator.listeners.SimulationListener;
+import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -18,12 +37,17 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author Pavel Balazki
  */
-public class GillespieTokenSimPanel extends javax.swing.JPanel {
+public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements SimulationListener {
 
     //BEGIN VARIABLES DECLARATION
-    private GillespieTokenSim ts;
+    private GillespieTokenSim gillTS;
     private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSimPanel.class);
     //END VARIABLES DECLARATION
+    private SimulationPanel owner;
+    /**
+     * Frame that groups all instances of FastSimulationMode.
+     */
+    protected FastSimulationModes fastSimFrame;
 
     //BEGIN CONSTRUCTORS
     /**
@@ -33,8 +57,10 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public GillespieTokenSimPanel(GillespieTokenSim tsN) {
-        this.ts = tsN;
+    public GillespieTokenSimPanel(GillespieTokenSim tsN, SimulationPanel owner) {
+        this.owner = owner;
+        this.gillTS = tsN;
+        this.fastSimFrame = new FastSimulationModes(gillTS, this);
         initComponents();
     }
     //END CONSTRUCTORS
@@ -47,15 +73,16 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
     }
 
     public void unlock() {
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
         bgModeB.setEnabled(true);
 
         if (!continuousModeCheckBox.isSelected()) {
             stepField.setEnabled(true);
         }
         continuousModeCheckBox.setEnabled(true);
-        inputDataButton.setEnabled(true);    }
+        inputDataButton.setEnabled(true);
+    }
 
     public boolean isContinuous() {
         return continuousModeCheckBox.isSelected();
@@ -85,8 +112,8 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         setPreferredSize(this.getPreferredSize());
         setLayout(new java.awt.GridBagLayout());
 
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
         fireTransitionsButton.setEnabled(false);
         fireTransitionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +145,7 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         add(simName, gridBagConstraints);
 
         stepField.setText("1");
-        stepField.setToolTipText(TokenSimulator.strings.get("ATSFiringPerStepT"));
+        stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enterPressed(evt);
@@ -132,7 +159,7 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepField, gridBagConstraints);
 
-        stepLabel.setText(TokenSimulator.strings.get("ATSStepLabel"));
+        stepLabel.setText(SimulationManager.strings.get("ATSStepLabel"));
         stepLabel.setToolTipText("Number of steps to perform, if \"Start simulation sequence\" is used.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -141,8 +168,8 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepLabel, gridBagConstraints);
 
-        inputDataButton.setText(TokenSimulator.strings.get("GilTSInputDataFrameTitle"));
-        inputDataButton.setToolTipText(TokenSimulator.strings.get("GilTSInputDataT"));
+        inputDataButton.setText(SimulationManager.strings.get("GilTSInputDataFrameTitle"));
+        inputDataButton.setToolTipText(SimulationManager.strings.get("GilTSInputDataT"));
         inputDataButton.setEnabled(false);
         inputDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -157,8 +184,8 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(inputDataButton, gridBagConstraints);
 
-        continuousModeCheckBox.setText(TokenSimulator.strings.get("ATSContinuousModeCheckBox"));
-        continuousModeCheckBox.setToolTipText(TokenSimulator.strings.get("ATSContinuousModeCheckBoxT"));
+        continuousModeCheckBox.setText(SimulationManager.strings.get("ATSContinuousModeCheckBox"));
+        continuousModeCheckBox.setToolTipText(SimulationManager.strings.get("ATSContinuousModeCheckBoxT"));
         continuousModeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 continuousModeCheckBoxActionPerformed(evt);
@@ -171,8 +198,8 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(continuousModeCheckBox, gridBagConstraints);
 
-        bgModeB.setText(TokenSimulator.strings.get("GilTSBGModeButton"));
-        bgModeB.setToolTipText(TokenSimulator.strings.get("GilTSBGModeTT"));
+        bgModeB.setText(SimulationManager.strings.get("GilTSBGModeButton"));
+        bgModeB.setToolTipText(SimulationManager.strings.get("GilTSBGModeTT"));
         bgModeB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bgModeBActionPerformed(evt);
@@ -197,18 +224,18 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
 
     private void fireTransitionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fireTransitionsButtonActionPerformed
         //if no firing takes place, start new sequence of firing
-        if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))) {
+        if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSFireTransitionsB"))) {
             //at this point, user can no more enable or disable the continuous mode
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
             LOGGER.info("Firebutton has been pressed and firing starts");
-            this.ts.startFiring();
+            startFiring();
         } //if a firing sequence is being executed, stop it
-        else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))) {
+        else if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSStopFiringB"))) {
             LOGGER.info("Firebutton has been pressed and firing stopped");
-            this.ts.stopFiring();
+            stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed
 
@@ -221,11 +248,11 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void inputDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputDataButtonActionPerformed
-        this.ts.setInputData();
+        setInputData();
     }//GEN-LAST:event_inputDataButtonActionPerformed
 
     private void bgModeBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgModeBActionPerformed
-        this.ts.fastSimFrame.addFastSim(new StochasticSimulator(this.ts, this.ts.deterministicReactionConstants, this.ts.getTokenSim().getMarking(), this.ts.volume, this.ts.getRandom()));
+        this.fastSimFrame.addFastSim(new StochasticSimulator(this.gillTS, this.gillTS.deterministicReactionConstants, this.gillTS.getSimulationMan().getMarking(), this.gillTS.volume, this.gillTS.getRandom(), fastSimFrame));
     }//GEN-LAST:event_bgModeBActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
@@ -233,9 +260,9 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
-            this.ts.startFiring();
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
+            this.startFiring();
         }
     }//GEN-LAST:event_enterPressed
 
@@ -251,4 +278,220 @@ public class GillespieTokenSimPanel extends javax.swing.JPanel {
     private javax.swing.JLabel stepLabel;
     // End of variables declaration//GEN-END:variables
 
+    @Override
+    public void setSimName(String name) {
+        simName.setText(name);
+    }
+
+    @Override
+    public void startSim() {
+        this.fastSimFrame.setFastModes(new HashSet<>());
+        this.stepField.setEnabled(true);
+        this.fireTransitionsButton.setEnabled(true);
+        this.bgModeB.setEnabled(true);
+        this.inputDataButton.setEnabled(true);
+        LOGGER.info("Gillespie simulation started");
+        gillTS.computeActiveTransitions();
+    }
+
+    @Override
+    public void endSim() {
+        if (gillTS.getSimSwingWorker() != null) {
+            gillTS.getSimSwingWorker().cancel(true);
+        }
+        //Try to stop running fast modes.
+        for (StochasticSimulator sim : fastSimFrame.getFastModes()) {
+            this.fastSimFrame.removeFastSim(sim);
+        }
+
+        stepField.setEnabled(false);
+        fireTransitionsButton.setEnabled(false);
+        bgModeB.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        inputDataButton.setEnabled(false);
+        owner.disableSetup();
+        LOGGER.info("Gillespie simulation stopped");
+        gillTS.getSimulationMan().lockGUI(true);
+    }
+
+    /**
+     * Start firing sequence.
+     */
+    protected void startFiring() {
+        //lock GUI, so the user cannot interrupt the firing sequence by alterating the settings.
+        LOGGER.info("Firing in the gillespie simulation started");
+        stepField.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        inputDataButton.setEnabled(false);
+        bgModeB.setEnabled(false);
+        //tells the token simulator to lock the GUI, too.
+        gillTS.getSimulationMan().lockGUI(true);
+
+        //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
+        LOGGER.debug("Parsing the number of steps to perfrom out of the textfield");
+        try {
+            //number of steps that will be performed
+            int steps = Integer.parseInt(stepField.getText());
+            if (steps < 1) {
+                steps = 1;
+                stepField.setText("1");
+            }
+            /*
+            Calculate number of distinct combinations for all transitions.
+             */
+            gillTS.computeDistCombinations();
+            //Create new thread that will perform all firing steps.
+            gillTS.setSimSwingWorker(new GillespieSimulationSwingWorker(gillTS.getSimulationMan(), gillTS, isContinuous(), steps));
+            gillTS.getSimSwingWorker().addSimulationListener(this);
+            gillTS.getSimSwingWorker().execute();
+        } catch (NumberFormatException nfe) {
+            LOGGER.error("NumberFormatException while trying to parse an integer out of the texfield for the amount of steps that should be calculated, therefore stopping the firing", nfe);
+            stopFiring();
+        }
+    }
+
+    /**
+     * Stop actual firing sequence.
+     */
+    @Override
+    protected void stopFiring() {
+        if (gillTS.getSimSwingWorker() != null) {
+            gillTS.getSimSwingWorker().stopSequence();
+        }
+    }
+
+    @Override // REWORK NEEDED HERE
+    public void simulationUpdated(SimulationEvent e) {
+        String type = e.getType();
+        switch (type) {
+            case SimulationEvent.INIT:
+                getProgressBar().setMaximum((int) e.getValue());
+                break;
+            case SimulationEvent.UPDATE_PROGRESS:
+                getProgressBar().setValue(getProgressBar().getMaximum() - ((int) e.getValue()));
+                break;
+            case SimulationEvent.UPDATE_VISUAL:
+                gillTS.getSimulationMan().updateVisualOutput();
+                break;
+            case SimulationEvent.DONE:
+                getProgressBar().setMaximum(0);
+                getProgressBar().setValue(0);
+                //unlock GUI
+                unlock();
+                simTimeLabel.setText("Simulated time: " + gillTS.getSimulatedTime());
+                break;
+            case SimulationEvent.STOPPED:
+                gillTS.getSimulationMan().updateVisualOutput();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Set biological data of the system which will be simulated.
+     */
+    protected void setInputData() {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                LOGGER.debug("Setting the input data in the gillespie simulation");
+                JFrame inputDataFrame = new GillespieInputDataFrame(gillTS, owner.getNetViewer());
+                owner.getNetViewer().displayMenu(inputDataFrame.getContentPane(), SimulationManager.strings.get("GilTSInputDataFrameTitle"));
+            }
+        });
+    }
+
+    /**
+     * Set firing rates for transitions.
+     */
+    protected void setFiringRates() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                LOGGER.debug("Setting the firing rates for all transitions for the gillespie simulation");
+                final String[] columnNames = {SimulationManager.strings.get("StochTSFiringRatesTableTransition"), SimulationManager.strings.get("StochTSFiringRatesTableRate")}; //names of columns of the firingRatesTable
+                AbstractTableModel tableModel = new AbstractTableModel() {
+                    @Override
+                    public boolean isCellEditable(int row, int col) {
+                        return col != 0;
+                    }
+
+                    @Override
+                    public void setValueAt(Object value, int row, int col) {
+                        if (col == 1) {
+                            try {
+                                /*
+                                 * Replace "," with "." first.
+                                 */
+                                double val = Double.parseDouble(value.toString().replaceAll(",", "."));
+                                gillTS.getFiringRates().put(((Transition) getValueAt(row, 0)).id(), val);
+                            } catch (NumberFormatException ex) {
+                            }
+                        }
+                    }
+
+                    @Override
+                    public String getColumnName(int col) {
+                        return columnNames[col].toString();
+                    }
+
+                    @Override
+                    public int getRowCount() {
+                        return gillTS.getFiringRates().size();
+                    }
+
+                    @Override
+                    public int getColumnCount() {
+                        return columnNames.length;
+                    }
+
+                    @Override
+                    public Object getValueAt(int row, int col) {
+                        if (col == 0) {
+                            return gillTS.getPetriNet().findTransition(gillTS.getFiringRates().keySet().toArray(new Integer[gillTS.getFiringRates().size()])[row]);
+                        } else {
+                            return gillTS.getFiringRates().values().toArray(new Double[gillTS.getFiringRates().size()])[row];
+                        }
+                    }
+                };
+                JTable firingRatesTable = new JTable();
+                firingRatesTable.setModel(tableModel);
+                firingRatesTable.setFillsViewportHeight(true);
+                //Enable sorting of rows.
+                firingRatesTable.setAutoCreateRowSorter(true);
+                final JFrame firingRatesFrame = new JFrame(SimulationManager.strings.get("StochTSFiringRatesFrame"));
+                /*
+                 * Make frame disappear when ESC pressed.
+                 */
+                firingRatesFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
+                firingRatesFrame.getRootPane().getActionMap().put("Cancel", new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        owner.getPreferencesJFrame().setEnabled(true); //getPreferencesJFrame().setEnabled(true);
+                        firingRatesFrame.dispose();
+                    }
+                });
+                firingRatesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                firingRatesFrame.setLocationRelativeTo(null);
+                firingRatesFrame.setIconImage(SimulationManager.resources.getImage("icon-16.png"));
+                firingRatesFrame.getContentPane().add(new JScrollPane(firingRatesTable));
+                /*
+                 * Add listener which enables the preferences-frame when firing rates frame is closed.
+                 */
+                firingRatesFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        owner.getPreferencesJFrame().setEnabled(true);
+                    }
+                });
+                firingRatesFrame.pack();
+                /*
+                 * Disable preferences frame as long as firing rates are edited.
+                 */
+                owner.getPreferencesJFrame().setEnabled(false);
+                firingRatesFrame.setVisible(true);
+            }
+        });
+    }
 }

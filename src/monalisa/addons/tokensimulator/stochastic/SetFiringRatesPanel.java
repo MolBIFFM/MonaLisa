@@ -12,7 +12,7 @@ package monalisa.addons.tokensimulator.stochastic;
 import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 import monalisa.addons.netviewer.NetViewer;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Transition;
 
@@ -24,7 +24,7 @@ public class SetFiringRatesPanel extends javax.swing.JPanel {
 
     private AbstractTableModel tableModel;
     private NetViewer netViewer;
-    final String[] columnNames = {TokenSimulator.strings.get("StochTSFiringRatesTableTransition"), TokenSimulator.strings.get("StochTSFiringRatesTableRate")};   //names of columns of the firingRatesTable    
+    final String[] columnNames = {SimulationManager.strings.get("StochTSFiringRatesTableTransition"), SimulationManager.strings.get("StochTSFiringRatesTableRate")};   //names of columns of the firingRatesTable    
 
     /**
      * Creates new form SetFiringRatesPanel

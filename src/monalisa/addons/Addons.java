@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import monalisa.addons.annotations.AnnotationsPanel;
 import monalisa.addons.centrality.CentralityPanel;
-import monalisa.addons.tokensimulator.TokenSimPanel;
+import monalisa.addons.tokensimulator.SimulationPanel;
 import monalisa.addons.topological.TopologyPanel;
 import monalisa.addons.netproperties.NetPropertiesPanel;
 
@@ -27,7 +27,7 @@ public class Addons {
     public static final List<Class<? extends AddonPanel>> addons = new ArrayList<>();
 
     static {
-        addons.add(TokenSimPanel.class);
+        addons.add(SimulationPanel.class);
         addons.add(CentralityPanel.class);
         addons.add(AnnotationsPanel.class);
         addons.add(TopologyPanel.class);

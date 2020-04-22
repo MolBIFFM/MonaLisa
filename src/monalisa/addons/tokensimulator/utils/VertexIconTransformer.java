@@ -20,7 +20,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.Transition;
 import org.apache.commons.collections15.Transformer;
 
@@ -34,19 +34,19 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
     //BEGIN VARIABLES DECLARATION
     private int vertexSize;
     private int tokenSize;
-    private final TokenSimulator ts;
+    private final SimulationManager simulationMan;
     //END VARIABLES DECLARATION
 
     //BEGIN CONSTRUCTORS
     /**
      * Create new VertexIconTransformer.
      *
-     * @param tsN
+     * @param simulationManager
      */
-    public VertexIconTransformer(TokenSimulator tsN) {
-        this.vertexSize = tsN.getVertexSize();
+    public VertexIconTransformer(SimulationManager simulationManager, int vSize) {
+        this.vertexSize = vSize;
         this.tokenSize = vertexSize / 4;
-        this.ts = tsN;
+        this.simulationMan = simulationManager;
     }
     //END CONSTRUCTORS
 
@@ -90,7 +90,7 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
             graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
 
             //if transition is active
-            if (this.ts.getActiveTransitions().contains(ts.getPetriNet().findTransition(id))) {
+            if (this.simulationMan.getActiveTransitions().contains(simulationMan.getPetriNet().findTransition(id))) {
                 graphics.setColor(Color.GREEN);
                 graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
                 graphics.setColor(Color.BLACK);
@@ -99,14 +99,14 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
             }
 
             //if the transition was fired in last step, return black square with red border
-            int lastFired = this.ts.lastHistoryStep;
+            int lastFired = this.simulationMan.lastHistoryStep;
             if (lastFired >= 0) {
-                for (Transition t : this.ts.historyArrayList.get(lastFired)) {
+                for (Transition t : this.simulationMan.historyArrayList.get(lastFired)) {
                     if (id == t.id()) {
                         graphics.setColor(Color.RED);
                         graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
                         graphics.setColor(Color.BLACK);
-                        if (ts.getActiveTransitions().contains(this.ts.getPetriNet().findTransition(id))) {
+                        if (simulationMan.getActiveTransitions().contains(this.simulationMan.getPetriNet().findTransition(id))) {
                             graphics.setColor(Color.GREEN);
                         }
                         int offset = (int) Math.round(this.vertexSize * 0.2);
@@ -145,7 +145,7 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
             graphics.drawOval(0, 0, vertexSize - 1, vertexSize - 1);
 
             graphics.setColor(Color.RED);
-            long tokenCount = ts.getTokenSim().getTokens(id);
+            long tokenCount = simulationMan.getTokenSim().getTokens(id);
             switch ((int) tokenCount) {
                 case 0:
                     break;

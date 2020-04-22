@@ -10,17 +10,18 @@
 package monalisa.addons.tokensimulator.stochastic;
 
 import javax.swing.JOptionPane;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractTokenSimPrefPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.util.HighQualityRandom;
 
 /**
  *
  * @author Pavel Balazki.
  */
-public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
+public class StochasticTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
 
     //BEGIN VARIABLES DECLARATION
-    private StochasticTokenSim ts;
+    private StochasticTokenSim StochTS;
     //END VARIABLES DECLARATION
 
     //BEGIN CONSTRUCTORS
@@ -32,7 +33,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
     }
 
     public StochasticTokenSimPrefPanel(StochasticTokenSim tsN) {
-        this.ts = tsN;
+        this.StochTS = tsN;
         initComponents();
     }
     //END CONSTRUCTORS
@@ -60,7 +61,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
 
         updateIntervalFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         updateIntervalFormattedTextField.setText("1");
-        updateIntervalFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSUpdateIntervalT"));
+        updateIntervalFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSUpdateIntervalT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -70,7 +71,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
         add(updateIntervalFormattedTextField, gridBagConstraints);
 
         updateIntervalLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        updateIntervalLabel.setText(TokenSimulator.strings.get("ATSUpdateIntervalLabel"));
+        updateIntervalLabel.setText(SimulationManager.strings.get("ATSUpdateIntervalLabel"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -79,8 +80,8 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
         add(updateIntervalLabel, gridBagConstraints);
 
         setSeedButton.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        setSeedButton.setText(TokenSimulator.strings.get("STSSetSeedB"));
-        setSeedButton.setToolTipText(TokenSimulator.strings.get("STSSetSeedBT"));
+        setSeedButton.setText(SimulationManager.strings.get("STSSetSeedB"));
+        setSeedButton.setToolTipText(SimulationManager.strings.get("STSSetSeedBT"));
         setSeedButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 setSeedButtonActionPerformed(evt);
@@ -95,7 +96,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
         add(setSeedButton, gridBagConstraints);
 
         timeDelayJLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        timeDelayJLabel.setText(TokenSimulator.strings.get("ATSTimeDelayLabel"));
+        timeDelayJLabel.setText(SimulationManager.strings.get("ATSTimeDelayLabel"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -105,7 +106,7 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
 
         timeDelayJFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         timeDelayJFormattedTextField.setText("0");
-        timeDelayJFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSTimeDelayT"));
+        timeDelayJFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSTimeDelayT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -115,8 +116,8 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
         add(timeDelayJFormattedTextField, gridBagConstraints);
 
         qEnablingCheckBox.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        qEnablingCheckBox.setText(TokenSimulator.strings.get("StochTSMarkingDependentFiringRate"));
-        qEnablingCheckBox.setToolTipText(TokenSimulator.strings.get("StochTSMarkingDependentFiringRateT"));
+        qEnablingCheckBox.setText(SimulationManager.strings.get("StochTSMarkingDependentFiringRate"));
+        qEnablingCheckBox.setToolTipText(SimulationManager.strings.get("StochTSMarkingDependentFiringRateT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
@@ -127,8 +128,8 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
 
     private void setSeedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setSeedButtonActionPerformed
         try {
-            long seed = new Long(JOptionPane.showInputDialog(TokenSimulator.strings.get("STSSetSeedBT"), this.ts.getRandom().getSeed()));
-            this.ts.setRandom(new HighQualityRandom(seed));
+            long seed = new Long(JOptionPane.showInputDialog(SimulationManager.strings.get("STSSetSeedBT"), this.StochTS.getRandom().getSeed()));
+            this.StochTS.setRandom(new HighQualityRandom(seed));
         } catch (NumberFormatException E) {
             JOptionPane.showMessageDialog(null, "The seed must be a 48-bit long (Integer)");
         }
@@ -142,5 +143,34 @@ public class StochasticTokenSimPrefPanel extends javax.swing.JPanel {
     protected javax.swing.JFormattedTextField updateIntervalFormattedTextField;
     private javax.swing.JLabel updateIntervalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void updatePreferences() {
+        /*
+         * Update time delay.
+         */
+        int timeDelay = Integer.parseInt(timeDelayJFormattedTextField.getText());
+        if (timeDelay >= 0) {
+            StochTS.getSimulationMan().getPreferences().put("Time delay", timeDelay);
+        }
+        /*
+         * Update update interval
+         */
+        int updateInterval = Integer.parseInt(updateIntervalFormattedTextField.getText());
+        if (updateInterval >= 0) {
+            StochTS.getSimulationMan().getPreferences().put("Update interval", updateInterval);
+        }
+        /*
+         * Update marking dependent firing rates check box
+         */
+        StochTS.getSimulationMan().getPreferences().put("Marking dependent rates", qEnablingCheckBox.isSelected());
+    }
+
+    @Override
+    public void loadPreferences() {
+        timeDelayJFormattedTextField.setText(((Integer) StochTS.getSimulationMan().getPreferences().get("Time delay")).toString());
+        updateIntervalFormattedTextField.setText(((Integer) StochTS.getSimulationMan().getPreferences().get("Update interval")).toString());
+        qEnablingCheckBox.setSelected((Boolean) StochTS.getSimulationMan().getPreferences().get("Marking dependent rates"));
+    }
 
 }

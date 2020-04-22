@@ -9,7 +9,6 @@
  */
 package monalisa.addons.tokensimulator.utils;
 
-import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -18,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -29,7 +29,9 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractTokenSim;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.Place;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -61,9 +63,10 @@ public class MathExpFrame extends javax.swing.JFrame {
      */
     private final Map<String, Integer> variables = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(MathExpFrame.class);
+    private AbstractTokenSim abstTS;
+    private int id = -1;
 
     //END VARIABLES DECLARATION
-
     //BEGIN CONSTRUCTORS
     /**
      * Creates new form MathExpFrame.
@@ -79,16 +82,17 @@ public class MathExpFrame extends javax.swing.JFrame {
      * @param exp Mathematical expression which will be edited. If no old math
      * exp exists, create new one with a "0" string.
      */
-    public MathExpFrame(Collection<Place> places, MathematicalExpression exp) {
+    public MathExpFrame(Collection<Place> places, MathematicalExpression exp, AbstractTokenSim abstTS) {
         LOGGER.info("Creating a new frame to edit a mathematical expression");
-        setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
+        setIconImage(SimulationManager.resources.getImage("icon-16.png"));
         //set the name of this window
         this.mathExp = exp;
         this.setTitle("Mathematical expression");
         this.text = exp.toString();
+        this.abstTS = abstTS;
         initComponents();
         this.variables.putAll(exp.getVariables());
-        allPlacesList.setName(TokenSimulator.strings.get("Place"));
+        allPlacesList.setName(SimulationManager.strings.get("Place"));
         DefaultListModel allPlacesListModel = new DefaultListModel();
         DefaultListModel varSelectListModel = new DefaultListModel();
         //Put the places in the list. Only non-constant places can be used as variables.
@@ -204,6 +208,10 @@ public class MathExpFrame extends javax.swing.JFrame {
         return this.listeners.get(l);
     }
 
+    public void addPlaceInformation(int id) {
+        this.id = id;
+    }
+
     /**
      * Add a string to existing title of the frame.
      *
@@ -243,7 +251,7 @@ public class MathExpFrame extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(650, 900));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        saveBtn.setText(TokenSimulator.strings.get("Save"));
+        saveBtn.setText(SimulationManager.strings.get("Save"));
         saveBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveBtnActionPerformed(evt);
@@ -307,7 +315,7 @@ public class MathExpFrame extends javax.swing.JFrame {
             public Object getElementAt(int i) { return strings[i]; }
         });
         allPlacesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        allPlacesList.setToolTipText(TokenSimulator.strings.get("MathExpPlaceListTT"));
+        allPlacesList.setToolTipText(SimulationManager.strings.get("MathExpPlaceListTT"));
         jScrollPane2.setViewportView(allPlacesList);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -350,12 +358,18 @@ public class MathExpFrame extends javax.swing.JFrame {
          */
         try {
             this.mathExp = new MathematicalExpression(text, variables);
-            for (ChangeListener l : this.listeners.keySet()) {
-                l.stateChanged(new ChangeEvent(this));
+            if (this.listeners.isEmpty() && this.id != -1) {
+                abstTS.getSimulationMan().setMathExpression(id, mathExp);
+            } else {
+                for (ChangeListener l : this.listeners.keySet()) {
+                    l.stateChanged(new ChangeEvent(this));
+                }
             }
-        } catch (RuntimeException ex) {
+            }catch (RuntimeException ex) {
             LOGGER.error("Unknown function or unparsable expression found while trying to build a mathematical expression out of the input in the frame");
-            JOptionPane.showMessageDialog(rootPane, TokenSimulator.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, SimulationManager.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
+        } catch (PlaceNonConstantException ex) {
+            LOGGER.error("PlaceNotConstantException occurred while trying to save mathematical expression: ", ex);
         }
     }//GEN-LAST:event_saveBtnActionPerformed
 

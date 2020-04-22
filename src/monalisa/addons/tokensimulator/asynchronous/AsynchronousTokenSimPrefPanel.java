@@ -9,14 +9,16 @@
  */
 package monalisa.addons.tokensimulator.asynchronous;
 
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractTokenSimPrefPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
 
 /**
  *
  * @author Pavel Balazki.
  */
-public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
+public class AsynchronousTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
     //BEGIN VARIABLES DECLARATION
+    AsynchronousTokenSim asyncTS;
     //END VARIABLES DECLARATION
 
     //BEGIN CONSTRUCTORS
@@ -28,6 +30,7 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     }
 
     public AsynchronousTokenSimPrefPanel(AsynchronousTokenSim tsN) {
+        this.asyncTS = tsN;
         initComponents();
     }
     //END CONSTRUCTORS
@@ -51,7 +54,7 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         setPreferredSize(this.getPreferredSize());
         setLayout(new java.awt.GridBagLayout());
 
-        timeDelayJLabel.setText(TokenSimulator.strings.get("ATSTimeDelayLabel"));
+        timeDelayJLabel.setText(SimulationManager.strings.get("ATSTimeDelayLabel"));
         timeDelayJLabel.setToolTipText("The time, the simulator will wait before performing the next step");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -61,7 +64,7 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         add(timeDelayJLabel, gridBagConstraints);
 
         timeDelayJFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        timeDelayJFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSTimeDelayT"));
+        timeDelayJFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSTimeDelayT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -70,7 +73,7 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 0);
         add(timeDelayJFormattedTextField, gridBagConstraints);
 
-        updateIntervalLabel.setText(TokenSimulator.strings.get("ATSUpdateIntervalLabel"));
+        updateIntervalLabel.setText(SimulationManager.strings.get("ATSUpdateIntervalLabel"));
         updateIntervalLabel.setToolTipText("Controls the frequency of visual update in the NetViewer");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -80,7 +83,7 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
         add(updateIntervalLabel, gridBagConstraints);
 
         updateIntervalFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        updateIntervalFormattedTextField.setToolTipText(TokenSimulator.strings.get("ATSUpdateIntervalT"));
+        updateIntervalFormattedTextField.setToolTipText(SimulationManager.strings.get("ATSUpdateIntervalT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -95,4 +98,28 @@ public class AsynchronousTokenSimPrefPanel extends javax.swing.JPanel {
     protected javax.swing.JFormattedTextField updateIntervalFormattedTextField;
     private javax.swing.JLabel updateIntervalLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void updatePreferences() {
+        /*
+         * Update time delay.
+         */
+        int timeDelay = Integer.parseInt(timeDelayJFormattedTextField.getText());
+        if (timeDelay >= 0) {
+            asyncTS.getSimulationMan().getPreferences().put("Time delay", timeDelay);
+        }
+        /*
+         * Update update interval
+         */
+        int updateInterval = Integer.parseInt(updateIntervalFormattedTextField.getText());
+        if (updateInterval >= 0) {
+            asyncTS.getSimulationMan().getPreferences().put("Update interval", updateInterval);
+        }
+    }
+
+    @Override
+    public void loadPreferences() {
+        timeDelayJFormattedTextField.setText(((Integer) asyncTS.getSimulationMan().getPreferences().get("Time delay")).toString());
+        updateIntervalFormattedTextField.setText(((Integer) asyncTS.getSimulationMan().getPreferences().get("Update interval")).toString());
+    }
 }

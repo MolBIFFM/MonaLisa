@@ -9,8 +9,9 @@ import java.util.Map;
 import javax.swing.JComboBox;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import monalisa.addons.tokensimulator.SimulationPanel;
 import monalisa.addons.tokensimulator.utils.Statistic;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.jfree.data.xy.XYSeries;
@@ -21,11 +22,13 @@ import org.jfree.data.xy.XYSeries;
 public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
 
     private boolean canceled = false;
-    private final TokenSimulator ts;
+    private final SimulationPanel simPanel;
+    private final SimulationManager simulationMan;
     private final JComboBox combobox;
 
-    public CustomMarkingsComboBoxPopupListener(TokenSimulator ts, JComboBox combobox) {
-        this.ts = ts;
+    public CustomMarkingsComboBoxPopupListener(SimulationPanel simPanel, SimulationManager simulationManager, JComboBox combobox) {
+        this.simPanel = simPanel;
+        this.simulationMan = simulationManager;
         this.combobox = combobox;
     }
 
@@ -43,26 +46,26 @@ public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
             /*
            Put the values from the selected marking into current marking.
              */
-            ts.marking.putAll(ts.customMarkingsMap.get(markingName));
+            simulationMan.marking.putAll(simulationMan.customMarkingsMap.get(markingName));
             //re-compute active transitions
-            ts.getTokenSim().addTransitionsToCheck(ts.getPetriNet().transitions().toArray(new Transition[0]));
-            ts.getTokenSim().computeActiveTransitions();
+            simulationMan.getTokenSim().addTransitionsToCheck(simulationMan.getPetriNet().transitions().toArray(new Transition[0]));
+            simulationMan.getTokenSim().computeActiveTransitions();
             //clear history
-            ts.historyListModel.clear();
-            ts.historyArrayList.clear();
-            ts.lastHistoryStep = -1;
+            simulationMan.historyListModel.clear();
+            simulationMan.historyArrayList.clear();
+            simulationMan.lastHistoryStep = -1;
             //clear snapshots
-            ts.snapshots.clear();
-            ts.snapshotsListModel.clear();
+            simPanel.getSnapshots().clear();
+            simPanel.snapshotsListModel.clear();
             //clear statistic
-            ts.totalStepNr = 0;
-            ts.currStatistic = new Statistic(ts);
-            for (Map.Entry<Place, XYSeries> entr : ts.seriesMap.entrySet()) {
+            simulationMan.totalStepNr = 0;
+            simulationMan.currStatistic = new Statistic(simulationMan);
+            for (Map.Entry<Place, XYSeries> entr : simPanel.seriesMap.entrySet()) {
                 entr.getValue().clear();
-                entr.getValue().add(ts.getTokenSim().getSimulatedTime(), ts.getTokenSim().getTokens(entr.getKey().id()), false);
+                entr.getValue().add(simulationMan.getTokenSim().getSimulatedTime(), simulationMan.getTokenSim().getTokens(entr.getKey().id()), false);
             }
 
-            ts.updateVisualOutput();
+            simulationMan.updateVisualOutput();
         }
     }
 

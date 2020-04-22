@@ -55,10 +55,10 @@ public class FastSimulationTabComponent extends JPanel {
     private final JTabbedPane pane;
     private final StochasticSimulator stochSim;
 
-    public FastSimulationTabComponent(final JTabbedPane pane, final StochasticSimulator stockSim) {
+    public FastSimulationTabComponent(final JTabbedPane pane, final StochasticSimulator stochSim) {
         //unset default FlowLayout' gaps
         super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        this.stochSim = stockSim;
+        this.stochSim = stochSim;
         if (pane == null) {
             throw new NullPointerException("TabbedPane is null");
         }

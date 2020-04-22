@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.data.pn.Place;
 
 /**
@@ -85,33 +85,33 @@ public class GnuplotConfig extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("gnuplot configuration");
         setAlwaysOnTop(true);
-        setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
+        setIconImage(SimulationManager.resources.getImage("icon-16.png"));
 
-        saveButton.setText(TokenSimulator.strings.get("Save"));
+        saveButton.setText(SimulationManager.strings.get("Save"));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
             }
         });
 
-        cancelButton.setText(TokenSimulator.strings.get("Cancel"));
+        cancelButton.setText(SimulationManager.strings.get("Cancel"));
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
         });
 
-        jLabel1.setText(TokenSimulator.strings.get("GNUOutFormat"));
+        jLabel1.setText(SimulationManager.strings.get("GNUOutFormat"));
 
         outFormatBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "png", "pdf" }));
 
-        jLabel2.setText(TokenSimulator.strings.get("GNUPlotStyle"));
+        jLabel2.setText(SimulationManager.strings.get("GNUPlotStyle"));
 
         plotStlyeBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "points", "lines", "linespoints", "impulses", "dots", "steps", "fsteps", "histeps", "errorbars", "xerrorbars", "yerrorbars", "xyerrorbars", "boxes", "boxerrorbars", "boxxyerrorbars" }));
 
-        logXScaleCB.setText(TokenSimulator.strings.get("LogXScale"));
+        logXScaleCB.setText(SimulationManager.strings.get("LogXScale"));
 
-        logYScaleCB.setText(TokenSimulator.strings.get("LogYScale"));
+        logYScaleCB.setText(SimulationManager.strings.get("LogYScale"));
 
         javax.swing.GroupLayout placesSelectionPanelLayout = new javax.swing.GroupLayout(placesSelectionPanel);
         placesSelectionPanel.setLayout(placesSelectionPanelLayout);
@@ -126,7 +126,7 @@ public class GnuplotConfig extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(placesSelectionPanel);
 
-        jLabel3.setText(TokenSimulator.strings.get("PlotFor"));
+        jLabel3.setText(SimulationManager.strings.get("PlotFor"));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

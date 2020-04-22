@@ -9,36 +9,19 @@
  */
 package monalisa.addons.tokensimulator;
 
-import monalisa.addons.tokensimulator.utils.MathExpFrame;
+import java.io.File;
+import java.io.FileNotFoundException;
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import javax.swing.AbstractAction;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import monalisa.addons.netviewer.NetViewer;
-import monalisa.addons.netviewer.NetViewerEdge;
-import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
 import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
-import monalisa.addons.tokensimulator.utils.TokensimPopupMousePlugin;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -52,10 +35,9 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author Pavel Balazki
  */
-public abstract class AbstractTokenSim implements ChangeListener {
+public abstract class AbstractTokenSim {
 
     //BEGIN VARIABLES DECLARATION
-    private VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
     /**
      * Stores all transitions that should be checked for their active state. In
      * the default implementation of computing the active transitions, all
@@ -63,7 +45,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
      */
     protected Set<Transition> transitionsToCheck;
     protected PetriNetFacade petriNet;
-    protected TokenSimulator tokenSim;
+    protected SimulationManager simulationMan;
     /**
      * Random number generator for simulation tasks.
      */
@@ -88,12 +70,11 @@ public abstract class AbstractTokenSim implements ChangeListener {
      * New instance of AbstractTokenSim gets the TokenSimulator-object and uses
      * its VisualizationViewer and petriNet.
      *
-     * @param tsN
+     * @param simulationMan
      */
-    public AbstractTokenSim(TokenSimulator tsN) {
-        this.tokenSim = tsN;
-        this.petriNet = tokenSim.getPetriNet();
-        this.vv = this.tokenSim.getVisualizationViewer();
+    public AbstractTokenSim(SimulationManager simulationMan) {
+        this.simulationMan = simulationMan;
+        this.petriNet = simulationMan.getPetriNet();
         this.transitionsToCheck = new HashSet<>();
 
         init();
@@ -106,21 +87,6 @@ public abstract class AbstractTokenSim implements ChangeListener {
      * perform some custom initialization.
      */
     protected abstract void init();
-
-    /**
-     * Creates the GUI-Component with controls of this specific simulation mode
-     * that will be used in NetViewer menu.
-     *
-     * @return
-     */
-    protected abstract JComponent getControlComponent();
-
-    /**
-     * Creates a JPanel which will be embedded in preferences-frame
-     *
-     * @return
-     */
-    protected abstract JPanel getPreferencesPanel();
 
     /**
      * Update preferences after they were changed in preferencesPanel and
@@ -156,23 +122,13 @@ public abstract class AbstractTokenSim implements ChangeListener {
      * Saves simulation setup, including marking, firing rates, constant-flags
      * for places etc to a XML-file.
      */
-    protected abstract void exportSetup();
+    protected abstract void exportSetup(File outfile) throws ParserConfigurationException, TransformerException;
 
     /**
      * Loads simulation setup, including marking, firing rates, constant-flags
      * for places etc from a XML-file.
      */
-    protected abstract void importSetup();
-
-    /**
-     * Create the mousePopupPlugin to handle mouse popups in token simulator.
-     * This method can be overridden for custom popup menus.
-     *
-     * @return
-     */
-    protected AbstractPopupGraphMousePlugin getMousePopupPlugin() {
-        return (new TokensimPopupMousePlugin(vv, petriNet, this));
-    }
+    protected abstract void importSetup(File inFile) throws FileNotFoundException, XMLStreamException;
 
     /**
      * Get the time which was simulated.
@@ -219,10 +175,10 @@ public abstract class AbstractTokenSim implements ChangeListener {
                 }
             }
             if (active) {
-                this.getTokenSim().activeTransitions.add(transition);
+                this.getSimulationMan().activeTransitions.add(transition);
             } else {
                 //Ensure that previous active-marked transition is not active any more.
-                this.getTokenSim().activeTransitions.remove(transition);
+                this.getSimulationMan().activeTransitions.remove(transition);
             }
         }
         LOGGER.info("Found all active Transitions");
@@ -231,7 +187,7 @@ public abstract class AbstractTokenSim implements ChangeListener {
         After active transitions were computed, clear the transitionsToCheck-list. However, post-transitions of constant
         places must be retained as they should be checked every step.
          */
-        this.transitionsToCheck.retainAll(this.getTokenSim().constantPlacesPostTransitions);
+        this.transitionsToCheck.retainAll(this.getSimulationMan().constantPlacesPostTransitions);
     }
 
     /**
@@ -245,31 +201,6 @@ public abstract class AbstractTokenSim implements ChangeListener {
     }
 
     /**
-     * This method is called from the MathExpFrame, when the "Save"-button has
-     * been activated.
-     *
-     * @param e
-     */
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        Object source = e.getSource();
-        if (source instanceof MathExpFrame) {
-            //Get the new mathematical expression.
-            MathematicalExpression exp = ((MathExpFrame) source).getMathematicalExpression();
-            try {
-                /*
-                Put the new mathematical expression to the constant places - map.
-                 */
-                this.getTokenSim().setMathExpression((int) ((MathExpFrame) source).getInformation(this), exp);
-            } catch (PlaceNonConstantException ex) {
-                LOGGER.error("NonConstant Place Exception while experiencing a change of state" + ex);
-            }
-
-            ((MathExpFrame) source).dispose();
-        }
-    }
-
-    /**
      * Return the number of tokens on the place.
      *
      * @param id ID of the place.
@@ -279,13 +210,13 @@ public abstract class AbstractTokenSim implements ChangeListener {
      */
     public long getTokens(int id) {
         if (!petriNet.findPlace(id).isConstant()) {
-            return this.getTokenSim().getMarking().get(id);
+            return this.getSimulationMan().getMarking().get(id);
         } else {
             Map<Integer, Double> markingDouble = new HashMap<>();
-            for (Entry<Integer, Long> entr : getTokenSim().getMarking().entrySet()) {
+            for (Entry<Integer, Long> entr : getSimulationMan().getMarking().entrySet()) {
                 markingDouble.put(entr.getKey(), entr.getValue().doubleValue());
             }
-            MathematicalExpression mathExp = getTokenSim().getMathematicalExpression(id);
+            MathematicalExpression mathExp = getSimulationMan().getMathematicalExpression(id);
             return Math.round(mathExp.evaluateML(markingDouble, this.getSimulatedTime()));
         }
     }
@@ -312,9 +243,9 @@ public abstract class AbstractTokenSim implements ChangeListener {
     }
 
     /**
-     * @return the tokenSim
+     * @return the simulationManager
      */
-    public TokenSimulator getTokenSim() {
-        return tokenSim;
+    public SimulationManager getSimulationMan() {
+        return simulationMan;
     }
 }

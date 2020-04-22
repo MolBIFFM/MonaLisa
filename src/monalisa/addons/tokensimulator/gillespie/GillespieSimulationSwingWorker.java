@@ -8,8 +8,9 @@ package monalisa.addons.tokensimulator.gillespie;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractSimulationSwingWorker;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,43 +18,42 @@ import org.apache.logging.log4j.Logger;
 /**
  * Thread which performs the simulation sequence.
  */
-public class GillespieSimulationSwingWorker extends SwingWorker {
+public class GillespieSimulationSwingWorker extends AbstractSimulationSwingWorker {
 
     /**
      * Number of steps this thread should perform.
      */
     private int stepsLeft;
     /**
-     * Indicates whether the simulation is still running. Can be set to
-     * "false" upon termination call.
+     * Indicates whether the simulation is still running. Can be set to "false"
+     * upon termination call.
      */
     private boolean isRunning;
-    private final TokenSimulator ts;
-    private final GillespieTokenSim gill;
-    private final GillespieTokenSimPanel tsPanel;
+    private final SimulationManager simulationMan;
+    private final GillespieTokenSim gillTS;
     private static final Logger LOGGER = LogManager.getLogger(GillespieSimulationSwingWorker.class);
 
-    public GillespieSimulationSwingWorker(TokenSimulator ts, GillespieTokenSim gill, GillespieTokenSimPanel tsPanel, int nrOfStepsN) {
-        this.ts = ts;
-        this.gill = gill;
-        this.tsPanel = tsPanel;
+    public GillespieSimulationSwingWorker(SimulationManager ts, GillespieTokenSim gill, boolean cont, int nrOfStepsN) {
+        this.simulationMan = ts;
+        this.gillTS = gill;
+        this.continuous = cont;
         this.stepsLeft = nrOfStepsN;
     }
 
     @Override
     protected Void doInBackground() {
         //time delay between single firings
-        int timeDelay = (Integer) ts.getPreferences().get("Time delay");
+        int timeDelay = (Integer) simulationMan.getPreferences().get("Time delay");
         //how often visual output will be updated
-        final int updateInterval = (Integer) ts.getPreferences().get("Update interval");
-        tsPanel.getProgressBar().setMaximum(stepsLeft);
+        final int updateInterval = (Integer) simulationMan.getPreferences().get("Update interval");
+        fireSimulationEvent(SimulationEvent.INIT, stepsLeft); // ProgressBar init
         /*
          * Set the running state of this runnable to "true".
          */
         this.isRunning = true;
 
         //all active transitions that can be fired right now
-        Set<Transition> activeTransitions = ts.getActiveTransitions();
+        Set<Transition> activeTransitions = simulationMan.getActiveTransitions();
 
         /*
          * Perform firing until aborted.
@@ -74,12 +74,17 @@ public class GillespieSimulationSwingWorker extends SwingWorker {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ts.fireTransitions(gill.getTransitionToFire());
-                        //If updateInterval is positive, check whether visual output must be updated in current step.
-                        if (updateInterval > 0) {
-                            if (ts.getSimulatedSteps() % updateInterval == 0) {
-                                LOGGER.debug("Visual output in gillespie simulation updated since updateinterval is positive");
-                                ts.updateVisualOutput();
+                        Transition toFire = gillTS.getTransitionToFire();
+                        if (toFire == null) {
+                            LOGGER.info("Stopping the gillespie simulation because the markingRatesSum is equal to zero and no further reaction can occur");
+                            stopSequence();
+                        } else {
+                            simulationMan.fireTransitions(toFire);
+                            //If updateInterval is positive, check whether visual output must be updated in current step.
+                            if (updateInterval > 0) {
+                                if (simulationMan.getSimulatedSteps() % updateInterval == 0) {
+                                    fireSimulationEvent(SimulationEvent.UPDATE_VISUAL, -1); // Update visuals
+                                }
                             }
                         }
                     }
@@ -88,8 +93,9 @@ public class GillespieSimulationSwingWorker extends SwingWorker {
                 /*
                  * If continuous mode is not selected, reduce the number of steps left by one.
                  */
-                if (!tsPanel.isContinuous()) {
-                    tsPanel.getProgressBar().setValue(tsPanel.getProgressBar().getMaximum() - --stepsLeft);
+                if (!continuous) {
+                    --stepsLeft;
+                    fireSimulationEvent(SimulationEvent.UPDATE_PROGRESS, stepsLeft); // Update ProgressBar
                     /*
                      * Abort simulation if no more steps are left.
                      */
@@ -112,14 +118,9 @@ public class GillespieSimulationSwingWorker extends SwingWorker {
          * Reset the progress bar.
          */
         LOGGER.info("Gillespie simulation is done, setting everything back and unlocking GUI");
-        tsPanel.getProgressBar().setMaximum(0);
-        tsPanel.getProgressBar().setValue(0);
-
-        //unlock GUI
-        tsPanel.unlock();
-        ts.lockGUI(false);
-        ts.flushLog();
-        tsPanel.simTimeLabel.setText("Simulated time: " + gill.getSimulatedTime());
+        fireSimulationEvent(SimulationEvent.DONE, -1); // Done
+        simulationMan.lockGUI(false);
+        simulationMan.flushLog();
     }
 
     /**
@@ -129,6 +130,6 @@ public class GillespieSimulationSwingWorker extends SwingWorker {
         LOGGER.info("Gillespie simulation has been stopped");
         this.isRunning = false;
         //update visual output
-        ts.updateVisualOutput();
+        fireSimulationEvent(SimulationEvent.STOPPED, -1); // Update visuals
     }
 }

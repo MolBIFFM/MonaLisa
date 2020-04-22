@@ -31,7 +31,7 @@
         </Property>
         <Property name="text" type="java.lang.String" value="1"/>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ATSUpdateIntervalT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ATSUpdateIntervalT&quot;)" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -49,7 +49,7 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ATSUpdateIntervalLabel&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ATSUpdateIntervalLabel&quot;)" type="code"/>
         </Property>
       </Properties>
       <Constraints>
@@ -64,10 +64,10 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;STSSetSeedB&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;STSSetSeedB&quot;)" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;STSSetSeedBT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;STSSetSeedBT&quot;)" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -88,7 +88,7 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ATSTimeDelayLabel&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ATSTimeDelayLabel&quot;)" type="code"/>
         </Property>
       </Properties>
       <Constraints>
@@ -104,7 +104,7 @@
         </Property>
         <Property name="text" type="java.lang.String" value="0"/>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ATSTimeDelayT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ATSTimeDelayT&quot;)" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
@@ -122,10 +122,10 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;StochTSMarkingDependentFiringRate&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;StochTSMarkingDependentFiringRate&quot;)" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;StochTSMarkingDependentFiringRateT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;StochTSMarkingDependentFiringRateT&quot;)" type="code"/>
         </Property>
       </Properties>
       <AuxValues>

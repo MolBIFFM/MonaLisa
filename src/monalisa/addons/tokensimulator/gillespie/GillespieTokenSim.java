@@ -11,31 +11,12 @@ package monalisa.addons.tokensimulator.gillespie;
 
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import monalisa.addons.tokensimulator.utils.Utilities;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import javax.swing.table.AbstractTableModel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
@@ -49,11 +30,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import monalisa.addons.tokensimulator.AbstractTokenSim;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.addons.tokensimulator.exceptions.FactorialTooBigException;
+import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
+import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
-import monalisa.util.MonaLisaFileChooser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.apache.logging.log4j.Logger;
@@ -70,9 +52,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
     //BEGIN VARIABLES DECLARATION
     //GUI
     //JPanel with custom controls of the simulator.
-    private GillespieTokenSimPanel tsPanel;
     //JPanel with preferences of simulator.
-    private GillespieTokenSimPrefPanel prefPanel;
     /**
      * Thread which executes simulation.
      */
@@ -123,23 +103,12 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     protected double volMol = volume * 6E23;
     /**
-     * Set of running fast modes of stochastic simulation.
-     */
-    protected Set<StochasticSimulator> fastModes;
-    /**
      * Number of total simulation threads in all fast modes together.
      */
     private int nrOfRunningThreads = 0;
 
-    /**
-     * Frame that groups all instances of FastSimulationMode.
-     */
-    protected FastSimulationModes fastSimFrame;
-
     private static final Logger LOGGER = LogManager.getLogger(GillespieTokenSim.class);
     //END VARIABLES DECLARATION
-
-    //END INNER CLASSES
 
     //BEGIN CONSTRUCTORS
     /**
@@ -147,14 +116,14 @@ public class GillespieTokenSim extends AbstractTokenSim {
      *
      * @param tsN
      */
-    public GillespieTokenSim(TokenSimulator tsN) {
+    public GillespieTokenSim(SimulationManager tsN) {
         super(tsN);
         /*
          * Initialize deterministic reaction rate constants with 1.
          */
         LOGGER.info("Gillespie Token Sim initiated");
         this.deterministicReactionConstants = new HashMap<>();
-        for (Transition t : this.tokenSim.getPetriNet().transitions()) {
+        for (Transition t : this.simulationMan.getPetriNet().transitions()) {
             /*
              * In reactions with order greater than or equal to 2, the reaction rate constant k is multiplied with the
              * factorial of each arc weight
@@ -325,123 +294,31 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * create new GUI-Panel
          */
         LOGGER.info("GUI-Panel for Gillespie Simulation initiated");
-        this.tsPanel = new GillespieTokenSimPanel(this);
-        this.prefPanel = new GillespieTokenSimPrefPanel(this);
         /*
          * Set the name of the Stochastic simulator as a text for the JLabel simName
          */
-        this.tsPanel.simName.setText(TokenSimulator.strings.get("GilTSName"));
         //END CREATING GUI ELEMENTS
-        this.getTokenSim().getPreferences().put("Time delay", 0);
-        this.getTokenSim().getPreferences().put("Update interval", 1);
-        this.getTokenSim().getPreferences().put("LimitMaxThreads", false);
-        this.getTokenSim().getPreferences().put("MaxThreadsNr", Runtime.getRuntime().availableProcessors());
+        this.getSimulationMan().getPreferences().put("Time delay", 0);
+        this.getSimulationMan().getPreferences().put("Update interval", 1);
+        this.getSimulationMan().getPreferences().put("LimitMaxThreads", false);
+        this.getSimulationMan().getPreferences().put("MaxThreadsNr", Runtime.getRuntime().availableProcessors());
 
-        this.fastSimFrame = new FastSimulationModes(this);
-    }
-
-    /**
-     *
-     * @return the tsPanel, a JPanel with custom controls. tsPanel is an
-     * instance of StochasticTokenSimPanel
-     */
-    @Override
-    protected JComponent getControlComponent() {
-        return this.tsPanel;
-    }
-
-    @Override
-    protected JPanel getPreferencesPanel() {
-        return this.prefPanel;
     }
 
     @Override
     protected void updatePreferences() {
-        LOGGER.info("Updating the Preferences in the gillespie simulation");
-        /*
-         * Update time delay.
-         */
-        LOGGER.debug("Updating the time delay preferences in the gillespie simulation");
-        try {
-            int timeDelay = Integer.parseInt(this.prefPanel.timeDelayJFormattedTextField.getText());
-            if (timeDelay >= 0) {
-                this.getTokenSim().getPreferences().put("Time delay", timeDelay);
-            }
-        } catch (NumberFormatException ex) {
-            LOGGER.error("NumberFormatException while updating the time delay in the preferences in the gillespie simulation", ex);
-        }
-        /*
-         * Update update interval
-         */
-        LOGGER.debug("Updating the update interval preferences in the gillespie simulation");
-        try {
-            int updateInterval = Integer.parseInt(this.prefPanel.updateIntervalFormattedTextField.getText());
-            if (updateInterval >= 0) {
-                this.getTokenSim().getPreferences().put("Update interval", updateInterval);
-            }
-        } catch (NumberFormatException ex) {
-            LOGGER.error("NumberFormatException while updating the update interval in the preferences in the gillespie simulation", ex);
-        }
-        /*
-        Update the limit of parallel simulation threads.
-         */
-        LOGGER.debug("Updating the preference for the limit of parallel simulation threads in the gillespie simulation");
-        this.getTokenSim().getPreferences().put("LimitMaxThreads", this.prefPanel.limitThreadsCB.isSelected());
-        int nrOfThreads = (int) this.getTokenSim().getPreferences().get("MaxThreadsNr");
-        try {
-            nrOfThreads = Integer.parseInt(this.prefPanel.nrOfMaxThreadsField.getText());
-        } catch (NumberFormatException ex) {
-            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation");
-            JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
-        }
-        if (nrOfThreads < 1) {
-            LOGGER.error("NumberFormatException while trying to update the preference for the limit of parallel simulation threads in the gillespie simulation, defaulted back to 1");
-            JOptionPane.showMessageDialog(prefPanel, TokenSimulator.strings.get("TSNumberFormatExceptionM"));
-            nrOfThreads = 1;
-        }
-        this.getTokenSim().getPreferences().put("MaxThreadsNr", nrOfThreads);
     }
 
     @Override
     protected void loadPreferences() {
-        this.prefPanel.timeDelayJFormattedTextField.setText(((Integer) this.getTokenSim().getPreferences().get("Time delay")).toString());
-        this.prefPanel.updateIntervalFormattedTextField.setText(((Integer) this.getTokenSim().getPreferences().get("Update interval")).toString());
-        this.prefPanel.limitThreadsCB.setSelected((boolean) this.getTokenSim().getPreferences().get("LimitMaxThreads"));
-        this.prefPanel.nrOfMaxThreadsField.setEnabled((boolean) this.getTokenSim().getPreferences().get("LimitMaxThreads"));
-        this.prefPanel.nrOfMaxThreadsField.setText(this.getTokenSim().getPreferences().get("MaxThreadsNr").toString());
-        LOGGER.info("Preferences loaded");
     }
 
     @Override
     protected void startSim() {
-        this.fastModes = new HashSet<>();
-        this.tsPanel.stepField.setEnabled(true);
-        this.tsPanel.fireTransitionsButton.setEnabled(true);
-        this.tsPanel.bgModeB.setEnabled(true);
-        this.tsPanel.inputDataButton.setEnabled(true);
-        LOGGER.info("Gillespie simulation started");
-        this.computeActiveTransitions();
-
     }
 
     @Override
     protected void endSim() {
-        if (this.simSwingWorker != null) {
-            this.simSwingWorker.cancel(true);
-        }
-        //Try to stop running fast modes.
-        for (StochasticSimulator sim : this.fastModes) {
-            this.fastSimFrame.removeFastSim(sim);
-        }
-
-        this.tsPanel.stepField.setEnabled(false);
-        this.tsPanel.fireTransitionsButton.setEnabled(false);
-        this.tsPanel.bgModeB.setEnabled(false);
-        this.tsPanel.continuousModeCheckBox.setEnabled(false);
-        this.tsPanel.inputDataButton.setEnabled(false);
-        this.getTokenSim().getTokenSimPanel().disableSetup();
-        LOGGER.info("Gillespie simulation stopped");
-        getTokenSim().lockGUI(true);
     }
 
     /**
@@ -461,13 +338,13 @@ public class GillespieTokenSim extends AbstractTokenSim {
          * For this, first transform the numbers of molecules of non-constant places to concentrations.
          */
         Map<Integer, Double> concentrations = new HashMap<>();
-        for (Entry<Integer, Long> entr : this.getTokenSim().getMarking().entrySet()) {
+        for (Entry<Integer, Long> entr : this.getSimulationMan().getMarking().entrySet()) {
             concentrations.put(entr.getKey(), entr.getValue() / volMol);
         }
         /*
          * Evaluate concentrations for all constant places using non-constant concentrations as variables.
          */
-        for (Entry<Integer, MathematicalExpression> entr : this.getTokenSim().getConstantPlaces().entrySet()) {
+        for (Entry<Integer, MathematicalExpression> entr : this.getSimulationMan().getConstantPlaces().entrySet()) {
             concentrations.put(entr.getKey(), entr.getValue().evaluateML(concentrations, this.time));
         }
         LOGGER.debug("Calculated the marking dependent rate for each transition and the concentrations for all constant places");
@@ -480,13 +357,17 @@ public class GillespieTokenSim extends AbstractTokenSim {
         double detReactionRateConst;
         double stochReactionRateConst;
         LOGGER.debug("Search through all active Transitions and find the sum of marking dependent firing rate");
-        for (Transition t : this.getTokenSim().getActiveTransitions()) {
+        for (Transition t : this.getSimulationMan().getActiveTransitions()) {
+            LOGGER.info("Active transitions found in SimulationMan");
             //ID of the transition.
             tID = t.id();
             /*
              * Evaluate deterministic reaction rate constant
              */
+            LOGGER.info(concentrations);
             detReactionRateConst = this.deterministicReactionConstants.get(tID).evaluateML(concentrations, this.time);
+            LOGGER.info(deterministicReactionConstants.get(tID));
+            LOGGER.info("DetReactionRateConst: " + detReactionRateConst);            
             /*
              * Convert deterministic reaction rate constant to stochastic reaction rate constant.
              */
@@ -496,14 +377,16 @@ public class GillespieTokenSim extends AbstractTokenSim {
              * Multiply the stochastic reaction rate constant with the number of distinct
              * molecular reactant combinations available in current state to get the actual rate of reaction.
              */
+            LOGGER.info("StochReactionRateConst: " + stochReactionRateConst);
+            LOGGER.info("distComb: " + this.distinctCombinations.get(tID));
             double reactionRate = stochReactionRateConst * this.distinctCombinations.get(tID);
+            LOGGER.info("Reaction Rate to be added: " + reactionRate);
             this.markingDependentRates.put(tID, reactionRate);
             markingRatesSum += reactionRate;
         }
         //if the sum of marking dependent firing rate is zero, no reaction can occur and the simulation should stop.
         if (markingRatesSum == 0) {
-            LOGGER.debug("Stopping the gillespie simulation because the markingRatesSum is equal to zero and no further reaction can occur");
-            this.stopFiring();
+            LOGGER.info("MARKING IS ZERO");
             return null;
         }
         /*
@@ -541,449 +424,267 @@ public class GillespieTokenSim extends AbstractTokenSim {
         return (transitionToFire);
     }
 
-    /**
-     * Set firing rates for transitions.
-     */
-    protected void setFiringRates() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                LOGGER.debug("Setting the firing rates for all transitions for the gillespie simulation");
-                final String[] columnNames = {TokenSimulator.strings.get("StochTSFiringRatesTableTransition"),
-                    TokenSimulator.strings.get("StochTSFiringRatesTableRate")};   //names of columns of the firingRatesTable
-
-                AbstractTableModel tableModel = new AbstractTableModel() {
-                    @Override
-                    public boolean isCellEditable(int row, int col) {
-                        return col != 0;
-                    }
-
-                    @Override
-                    public void setValueAt(Object value, int row, int col) {
-                        if (col == 1) {
-                            try {
-                                /*
-                                 * Replace "," with "." first.
-                                 */
-                                double val = Double.parseDouble(value.toString().replaceAll(",", "."));
-                                firingRates.put(((Transition) getValueAt(row, 0)).id(), val);
-                            } catch (NumberFormatException ex) {
-                            }
-                        }
-                    }
-
-                    @Override
-                    public String getColumnName(int col) {
-                        return columnNames[col].toString();
-                    }
-
-                    @Override
-                    public int getRowCount() {
-                        return firingRates.size();
-                    }
-
-                    @Override
-                    public int getColumnCount() {
-                        return columnNames.length;
-                    }
-
-                    @Override
-                    public Object getValueAt(int row, int col) {
-                        if (col == 0) {
-                            return getPetriNet().findTransition(firingRates.keySet().toArray(new Integer[firingRates.size()])[row]);
-                        } else {
-                            return firingRates.values().toArray(new Double[firingRates.size()])[row];
-                        }
-                    }
-                };
-
-                JTable firingRatesTable = new JTable();
-                firingRatesTable.setModel(tableModel);
-                firingRatesTable.setFillsViewportHeight(true);
-                //Enable sorting of rows.
-                firingRatesTable.setAutoCreateRowSorter(true);
-
-                final JFrame firingRatesFrame = new JFrame(TokenSimulator.strings.get("StochTSFiringRatesFrame"));
-                /*
-                 * Make frame disappear when ESC pressed.
-                 */
-                firingRatesFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-                        KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
-                firingRatesFrame.getRootPane().getActionMap().put("Cancel", new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        getTokenSim().getPreferencesJFrame().setEnabled(true);
-                        firingRatesFrame.dispose();
-                    }
-                });
-                firingRatesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                firingRatesFrame.setLocationRelativeTo(null);
-                firingRatesFrame.setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
-                firingRatesFrame.getContentPane().add(new JScrollPane(firingRatesTable));
-                /*
-                 * Add listener which enables the preferences-frame when firing rates frame is closed.
-                 */
-                firingRatesFrame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        getTokenSim().getPreferencesJFrame().setEnabled(true);
-                    }
-                });
-                firingRatesFrame.pack();
-                /*
-                 * Disable preferences frame as long as firing rates are edited.
-                 */
-                getTokenSim().getPreferencesJFrame().setEnabled(false);
-                firingRatesFrame.setVisible(true);
-            }
-        });
-    }
-
-    /**
-     * Set biological data of the system which will be simulated.
-     */
-    protected void setInputData() {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                LOGGER.debug("Setting the input data in the gillespie simulation");
-                JFrame inputDataFrame = new GillespieInputDataFrame(GillespieTokenSim.this);
-                getTokenSim().getNetViewer().displayMenu(inputDataFrame.getContentPane(), TokenSimulator.strings.get("GilTSInputDataFrameTitle"));
-            }
-        });
-    }
-
-    /**
-     * Start firing sequence.
-     */
-    protected void startFiring() {
-        //lock GUI, so the user cannot interrupt the firing sequence by alterating the settings.
-        LOGGER.info("Firing in the gillespie simulation started");
-        this.tsPanel.stepField.setEnabled(false);
-        this.tsPanel.continuousModeCheckBox.setEnabled(false);
-        this.tsPanel.inputDataButton.setEnabled(false);
-        this.tsPanel.bgModeB.setEnabled(false);
-        //tells the token simulator to lock the GUI, too.
-        this.getTokenSim().lockGUI(true);
-
-        //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
-        LOGGER.debug("Parsing the number of steps to perfrom out of the textfield");
-        try {
-            //number of steps that will be performed
-            int steps = Integer.parseInt(tsPanel.stepField.getText());
-            if (steps < 1) {
-                steps = 1;
-                tsPanel.stepField.setText("1");
-            }
-            /*
-            Calculate number of distinct combinations for all transitions.
-             */
-            for (Transition t : this.getTokenSim().getPetriNet().transitions()) {
-                this.distinctCombinations.put(t.id(), this.calculateH(t));
-            }
-            //Create new thread that will perform all firing steps.
-            simSwingWorker = new GillespieSimulationSwingWorker(tokenSim, this, tsPanel, steps);
-            simSwingWorker.execute();
-        } catch (NumberFormatException nfe) {
-            LOGGER.error("NumberFormatException while trying to parse an integer out of the texfield for the amount of steps that should be calculated, therefore stopping the firing", nfe);
-            stopFiring();
-        }
-    }
-
-    /**
-     * Stop actual firing sequence.
-     */
-    protected void stopFiring() {
-        if (this.simSwingWorker != null) {
-            this.simSwingWorker.stopSequence();
-        }
-    }
-
     @Override
-    protected void exportSetup() {
+    protected void exportSetup(File outFile) throws ParserConfigurationException, TransformerException {
+        LOGGER.info("Exporting the setup of the gillespie token simulator");
         /*
-         * Ask user where he wants to have the setup file and how to name it.
+         * Create an XML-document
          */
-        LOGGER.info("Exporting the setup of the gillespie simulation");
-        File outFile;
-        MonaLisaFileChooser fc = new MonaLisaFileChooser();
-        fc.setDialogType(JFileChooser.SAVE_DIALOG);
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        outFile = fc.getSelectedFile();
         LOGGER.debug("After getting the chosen directory, trying to create a .XML-File for the setup of the gillespie simulation");
-        try {
-            /*
-             * Create an XML-document
-             */
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            //Create root element and append it to the document.
-            Element root = doc.createElement("SimulationSetup");
-            doc.appendChild(root);
+        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        //Create root element and append it to the document.
+        Element root = doc.createElement("SimulationSetup");
+        doc.appendChild(root);
 
-            //Create an element for the volume
-            Element vol = doc.createElement("volume");
-            root.appendChild(vol);
-            vol.appendChild(doc.createTextNode(String.valueOf(this.volume)));
+        //Create an element for the volume
+        Element vol = doc.createElement("volume");
+        root.appendChild(vol);
+        vol.appendChild(doc.createTextNode(String.valueOf(this.volume)));
 
-            //Create element for places and append it to the root.
-            Element placesEl = doc.createElement("places");
-            root.appendChild(placesEl);
-            LOGGER.debug("Default tree-structure and builders created, filling the data for places in next");
-            //Iterate through all places and create an element for each one.
-            for (Place place : this.getPetriNet().places()) {
-                //Create place element and append it to places element
-                Element placeEl = doc.createElement("place");
-                placesEl.appendChild(placeEl);
-                //Attributes - id, name, contant/not constant, nr. of tokens.
-                placeEl.setAttribute("id", String.valueOf(place.id()));
-                placeEl.setAttribute("name", (String) place.getProperty("name"));
-                placeEl.setAttribute("isConstant", String.valueOf(place.isConstant()));
-                //if the place is non-constant, store the number of tokens on this place. Otherwise, store the corresponding
-                //mathematical expression
-                if (!place.isConstant()) {
-                    placeEl.setAttribute("nrOfTokens", String.valueOf(this.getTokenSim().getMarking().get(place.id())));
-                } else {
-                    //Create a mathematical expression element for the place
-                    Element mathExpressionEl = doc.createElement("mathematicalExpression");
-                    placeEl.appendChild(mathExpressionEl);
-                    MathematicalExpression placeMathExp = this.getTokenSim().getConstantPlaces().get(place.id());
-                    //Text of the expression
-                    String expText = placeMathExp.toString();
-                    Element expTextEl = doc.createElement("expressionText");
-                    expTextEl.appendChild(doc.createTextNode(expText));
-                    mathExpressionEl.appendChild(expTextEl);
-                    /*
-                     * Iterate through variables and create an element for each one.
-                     */
-                    Map<String, Integer> variables = placeMathExp.getVariables();
-                    Element varEl;
-                    for (String variable : variables.keySet()) {
-                        varEl = doc.createElement("variable");
-                        mathExpressionEl.appendChild(varEl);
-                        varEl.setAttribute("name", variable);
-                        varEl.setAttribute("placeId", String.valueOf(variables.get(variable)));
-                    }
-                }
-            }
-            LOGGER.debug("Places-Data has been successfully added in the tree-structure");
-
-            //Create an element for transitions and append it to the root.
-            Element transitionsEl = doc.createElement("transitions");
-            root.appendChild(transitionsEl);
-
-            //Iterate through all transitions and create an element for each one.
-            Element transitionEl, detReactionConst, detExpTextEl, varEl;
-            MathematicalExpression detConstMathExp;
-            String detExpText;
-            Map<String, Integer> variables = null;
-            LOGGER.debug("Created the root transition element and filling in the data for the other transitions next");
-            for (Transition transition : this.getPetriNet().transitions()) {
-                //Create a transition element.
-                transitionEl = doc.createElement("transition");
-                transitionsEl.appendChild(transitionEl);
-                //Attributes - id, name, firing rate.
-                transitionEl.setAttribute("id", String.valueOf(transition.id()));
-                transitionEl.setAttribute("name", (String) transition.getProperty("name"));
-                transitionEl.setAttribute("firingRate", String.valueOf(firingRates.get(transition.id())));
-                //Create a mathematical expression element for deterministic reaction rate constant
-                detReactionConst = doc.createElement("detReactionRateConstant");
-                transitionEl.appendChild(detReactionConst);
-                detConstMathExp = this.deterministicReactionConstants.get(transition.id());
+        //Create element for places and append it to the root.
+        Element placesEl = doc.createElement("places");
+        root.appendChild(placesEl);
+        LOGGER.debug("Default tree-structure and builders created, filling the data for places in next");
+        //Iterate through all places and create an element for each one.
+        for (Place place : this.getPetriNet().places()) {
+            //Create place element and append it to places element
+            Element placeEl = doc.createElement("place");
+            placesEl.appendChild(placeEl);
+            //Attributes - id, name, contant/not constant, nr. of tokens.
+            placeEl.setAttribute("id", String.valueOf(place.id()));
+            placeEl.setAttribute("name", (String) place.getProperty("name"));
+            placeEl.setAttribute("isConstant", String.valueOf(place.isConstant()));
+            //if the place is non-constant, store the number of tokens on this place. Otherwise, store the corresponding
+            //mathematical expression
+            if (!place.isConstant()) {
+                placeEl.setAttribute("nrOfTokens", String.valueOf(this.getSimulationMan().getMarking().get(place.id())));
+            } else {
+                //Create a mathematical expression element for the place
+                Element mathExpressionEl = doc.createElement("mathematicalExpression");
+                placeEl.appendChild(mathExpressionEl);
+                MathematicalExpression placeMathExp = this.getSimulationMan().getConstantPlaces().get(place.id());
                 //Text of the expression
-                detExpText = detConstMathExp.toString();
-                detExpTextEl = doc.createElement("expressionText");
-                detExpTextEl.appendChild(doc.createTextNode(detExpText));
-                detReactionConst.appendChild(detExpTextEl);
+                String expText = placeMathExp.toString();
+                Element expTextEl = doc.createElement("expressionText");
+                expTextEl.appendChild(doc.createTextNode(expText));
+                mathExpressionEl.appendChild(expTextEl);
                 /*
                  * Iterate through variables and create an element for each one.
                  */
-                variables = detConstMathExp.getVariables();
+                Map<String, Integer> variables = placeMathExp.getVariables();
+                Element varEl;
                 for (String variable : variables.keySet()) {
                     varEl = doc.createElement("variable");
-                    detReactionConst.appendChild(varEl);
+                    mathExpressionEl.appendChild(varEl);
                     varEl.setAttribute("name", variable);
                     varEl.setAttribute("placeId", String.valueOf(variables.get(variable)));
                 }
             }
-
-            //Write the document into a file.
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(outFile);
-            transformer.transform(source, result);
-        } catch (ParserConfigurationException | TransformerException ex) {
-            LOGGER.error("Error while trying to write an .XML-File for the setupoutput, either wrong parser configuration or a defect transformer", ex);
         }
+        LOGGER.debug("Places-Data has been successfully added in the tree-structure");
+
+        //Create an element for transitions and append it to the root.
+        Element transitionsEl = doc.createElement("transitions");
+        root.appendChild(transitionsEl);
+
+        //Iterate through all transitions and create an element for each one.
+        Element transitionEl, detReactionConst, detExpTextEl, varEl;
+        MathematicalExpression detConstMathExp;
+        String detExpText;
+        Map<String, Integer> variables = null;
+        LOGGER.debug("Created the root transition element and filling in the data for the other transitions next");
+        for (Transition transition : this.getPetriNet().transitions()) {
+            //Create a transition element.
+            transitionEl = doc.createElement("transition");
+            transitionsEl.appendChild(transitionEl);
+            //Attributes - id, name, firing rate.
+            transitionEl.setAttribute("id", String.valueOf(transition.id()));
+            transitionEl.setAttribute("name", (String) transition.getProperty("name"));
+            transitionEl.setAttribute("firingRate", String.valueOf(firingRates.get(transition.id())));
+            //Create a mathematical expression element for deterministic reaction rate constant
+            detReactionConst = doc.createElement("detReactionRateConstant");
+            transitionEl.appendChild(detReactionConst);
+            detConstMathExp = this.deterministicReactionConstants.get(transition.id());
+            //Text of the expression
+            detExpText = detConstMathExp.toString();
+            detExpTextEl = doc.createElement("expressionText");
+            detExpTextEl.appendChild(doc.createTextNode(detExpText));
+            detReactionConst.appendChild(detExpTextEl);
+            /*
+             * Iterate through variables and create an element for each one.
+             */
+            variables = detConstMathExp.getVariables();
+            for (String variable : variables.keySet()) {
+                varEl = doc.createElement("variable");
+                detReactionConst.appendChild(varEl);
+                varEl.setAttribute("name", variable);
+                varEl.setAttribute("placeId", String.valueOf(variables.get(variable)));
+            }
+        }
+
+        //Write the document into a file.
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(outFile);
+        transformer.transform(source, result);
     }
 
     @Override
-    protected void importSetup() {
+    protected void importSetup(File inFile) throws FileNotFoundException, XMLStreamException {
         LOGGER.info("Importing the setup of the gillespie simulation");
-        try {
-            /*
-             * Get the setup file.
-             */
-            File inFile;
-            MonaLisaFileChooser fc = new MonaLisaFileChooser();
-            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            if (fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
-                return;
-            }
-            inFile = fc.getSelectedFile();
-            //Create a SAX-parser.
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inFile));
-            LOGGER.debug("File for input setup has been found and the proper factory and parser is initiated");
-            int id = 0;
-            String name = "";
-            boolean placeConstant = false;
-            Long placeTokens = 0L;
-            MathematicalExpression mathExp = null;
-            Map<String, Integer> variables = new HashMap<>();
-            StringBuilder sb = new StringBuilder();
-            LOGGER.debug("Parsing the .XML");
-            while (parser.hasNext()) {
-                switch (parser.getEventType()) {
-                    case XMLStreamConstants.START_DOCUMENT:
-                        break;
-                    case XMLStreamConstants.END_DOCUMENT:
-                        parser.close();
-                        break;
-                    case XMLStreamConstants.START_ELEMENT:
-                        switch (parser.getLocalName()) {
-                            case "place":
-                                //iterate through attributes
-                                for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                    switch (parser.getAttributeLocalName(i)) {
-                                        case "id":
-                                            id = Integer.parseInt(parser.getAttributeValue(i));
-                                            break;
-                                        case "isConstant":
-                                            placeConstant = Boolean.parseBoolean(parser.getAttributeValue(i));
-                                            break;
-                                        case "name":
-                                            name = parser.getAttributeValue(i);
-                                            break;
-                                        case "nrOfTokens":
-                                            placeTokens = Long.parseLong(parser.getAttributeValue(i));
-                                            break;
-                                    }
-                                }
-                                //find a place with the id.
-                                Place p = getPetriNet().findPlace(id);
-                                if (p == null) {
-                                    break;
-                                }
-                                //set the properties of the place.
-                                getTokenSim().setPlaceConstant(id, placeConstant);
-                                if (!placeConstant) {
-                                    getTokenSim().setTokens(id, placeTokens);
-                                }
-                                break;
-                            case "transition":
-                                double firingRate = 0;
-                                //iterate through attributes
-                                for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                    switch (parser.getAttributeLocalName(i)) {
-                                        case "id":
-                                            id = Integer.parseInt(parser.getAttributeValue(i));
-                                            break;
-                                        case "name":
-                                            name = parser.getAttributeValue(i);
-                                            break;
-                                        case "firingRate":
-                                            firingRate = Double.parseDouble(parser.getAttributeValue(i));
-                                            break;
-                                    }
-                                }
-                                //find a transition with the id.
-                                Transition transition = getPetriNet().findTransition(id);
-                                //only proceed if the Petri net has a transition with such an ID and the same name
-                                if (transition == null) {
-                                    break;
-                                }
-                                //set the properties of the transition
-                                firingRates.put(id, firingRate);
-                                break;
-                            case "detReactionRateConstant":
-                                variables.clear();
-                                break;
-                            case "mathematicalExpression":
-                                variables.clear();
-                                break;
-                            case "variable":
-                                String varName = "";
-                                String placeId = "";
-                                for (int i = 0; i < parser.getAttributeCount(); i++) {
-                                    switch (parser.getAttributeLocalName(i)) {
-                                        case "name":
-                                            varName = parser.getAttributeValue(i);
-                                            break;
-                                        case "placeId":
-                                            placeId = parser.getAttributeValue(i);
-                                            break;
-                                    }
-                                }
-                                variables.put(varName, Integer.parseInt(placeId));
-                                break;
-                        }
 
-                        break;
-                    case XMLStreamConstants.CHARACTERS:
-                        if (!parser.isWhiteSpace()) {
-                            sb.append(parser.getText());
-                        }
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        switch (parser.getLocalName()) {
-                            case "volume":
-                                volume = Double.parseDouble(sb.toString());
-                                volMol = volume * 6E23;
+        //Create a SAX-parser.
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLStreamReader parser = factory.createXMLStreamReader(new FileInputStream(inFile));
+        LOGGER.debug("File for input setup has been found and the proper factory and parser is initiated");
+        int id = 0;
+        String name = "";
+        boolean placeConstant = false;
+        Long placeTokens = 0L;
+        MathematicalExpression mathExp = null;
+        Map<String, Integer> variables = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        LOGGER.debug("Parsing the .XML");
+        while (parser.hasNext()) {
+            switch (parser.getEventType()) {
+                case XMLStreamConstants.START_DOCUMENT:
+                    break;
+                case XMLStreamConstants.END_DOCUMENT:
+                    parser.close();
+                    break;
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (parser.getLocalName()) {
+                        case "place":
+                            //iterate through attributes
+                            for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                switch (parser.getAttributeLocalName(i)) {
+                                    case "id":
+                                        id = Integer.parseInt(parser.getAttributeValue(i));
+                                        break;
+                                    case "isConstant":
+                                        placeConstant = Boolean.parseBoolean(parser.getAttributeValue(i));
+                                        break;
+                                    case "name":
+                                        name = parser.getAttributeValue(i);
+                                        break;
+                                    case "nrOfTokens":
+                                        placeTokens = Long.parseLong(parser.getAttributeValue(i));
+                                        break;
+                                }
+                            }
+                            //find a place with the id.
+                            Place p = getPetriNet().findPlace(id);
+                            if (p == null) {
+                                break;
+                            }
+                            //set the properties of the place.
+                            getSimulationMan().setPlaceConstant(id, placeConstant);
+                            if (!placeConstant) {
+                                try {
+                                    getSimulationMan().setTokens(id, placeTokens);
+                                } catch (PlaceConstantException ex) {
+                                    LOGGER.error("Error while setting tokens for places: ", ex);
+                                }
+                            }
+                            break;
+                        case "transition":
+                            double firingRate = 0;
+                            //iterate through attributes
+                            for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                switch (parser.getAttributeLocalName(i)) {
+                                    case "id":
+                                        id = Integer.parseInt(parser.getAttributeValue(i));
+                                        break;
+                                    case "name":
+                                        name = parser.getAttributeValue(i);
+                                        break;
+                                    case "firingRate":
+                                        firingRate = Double.parseDouble(parser.getAttributeValue(i));
+                                        break;
+                                }
+                            }
+                            //find a transition with the id.
+                            Transition transition = getPetriNet().findTransition(id);
+                            //only proceed if the Petri net has a transition with such an ID and the same name
+                            if (transition == null) {
+                                break;
+                            }
+                            //set the properties of the transition
+                            firingRates.put(id, firingRate);
+                            break;
+                        case "detReactionRateConstant":
+                            variables.clear();
+                            break;
+                        case "mathematicalExpression":
+                            variables.clear();
+                            break;
+                        case "variable":
+                            String varName = "";
+                            String placeId = "";
+                            for (int i = 0; i < parser.getAttributeCount(); i++) {
+                                switch (parser.getAttributeLocalName(i)) {
+                                    case "name":
+                                        varName = parser.getAttributeValue(i);
+                                        break;
+                                    case "placeId":
+                                        placeId = parser.getAttributeValue(i);
+                                        break;
+                                }
+                            }
+                            variables.put(varName, Integer.parseInt(placeId));
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    if (!parser.isWhiteSpace()) {
+                        sb.append(parser.getText());
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    switch (parser.getLocalName()) {
+                        case "volume":
+                            volume = Double.parseDouble(sb.toString());
+                            volMol = volume * 6E23;
+                            sb = new StringBuilder();
+                            break;
+                        case "detReactionRateConstant":
+                            if (getPetriNet().findTransition(id) == null) {
                                 sb = new StringBuilder();
                                 break;
-                            case "detReactionRateConstant":
-                                if (getPetriNet().findTransition(id) == null) {
-                                    sb = new StringBuilder();
-                                    break;
-                                }
-                                mathExp = new MathematicalExpression(sb.toString(), variables);
-                                sb = new StringBuilder();
-                                deterministicReactionConstants.put(id, mathExp);
-                                break;
-                            case "mathematicalExpression":
-                                if (getPetriNet().findPlace(id) == null) {
-                                    sb = new StringBuilder();
-                                    break;
-                                }
-                                mathExp = new MathematicalExpression(sb.toString(), variables);
+                            }
+                            mathExp = new MathematicalExpression(sb.toString(), variables);
+                            sb = new StringBuilder();
+                            deterministicReactionConstants.put(id, mathExp);
+                            break;
+                        case "mathematicalExpression":
+                            if (getPetriNet().findPlace(id) == null) {
                                 sb = new StringBuilder();
                                 break;
-                            case "place":
-                                if (getPetriNet().findPlace(id) == null) {
-                                    break;
-                                }
-                                if (placeConstant) {
-                                    getTokenSim().setMathExpression(id, mathExp);
-                                }
+                            }
+                            mathExp = new MathematicalExpression(sb.toString(), variables);
+                            sb = new StringBuilder();
+                            break;
+                        case "place":
+                            if (getPetriNet().findPlace(id) == null) {
                                 break;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                parser.next();
+                            }
+                            if (placeConstant) {
+                                try {
+                                    getSimulationMan().setMathExpression(id, mathExp);
+                                } catch (PlaceNonConstantException ex) {
+                                    LOGGER.error("Error while setting mathematical expression for places: ", ex);
+                                }
+                            }
+                            break;
+                    }
+                    break;
+                default:
+                    break;
             }
-        } catch (FileNotFoundException | XMLStreamException ex) {
-            JOptionPane.showMessageDialog(null, "Invalid XML file!",
-                    TokenSimulator.strings.get("Error"), JOptionPane.ERROR_MESSAGE);
-            LOGGER.error("Error while Parsing, either the file was not found or it was an invalid .XML", ex);
-        } catch (Exception ex) {
-            LOGGER.error("General error while parsing the input setup for the gillespie simulator", ex);
+            parser.next();
         }
     }
 
@@ -1014,13 +715,13 @@ public class GillespieTokenSim extends AbstractTokenSim {
     @Override
     public long getTokens(int id) {
         if (!petriNet.findPlace(id).isConstant()) {
-            return this.getTokenSim().getMarking().get(id);
+            return this.getSimulationMan().getMarking().get(id);
         } else {
             Map<Integer, Double> concentrations = new HashMap<>();
-            for (Entry<Integer, Long> entr : this.getTokenSim().getMarking().entrySet()) {
+            for (Entry<Integer, Long> entr : this.getSimulationMan().getMarking().entrySet()) {
                 concentrations.put(entr.getKey(), entr.getValue() / volMol);
             }
-            MathematicalExpression mathExp = getTokenSim().getMathematicalExpression(id);
+            MathematicalExpression mathExp = getSimulationMan().getMathematicalExpression(id);
             return Math.round(mathExp.evaluateML(concentrations, time) * volMol);
         }
     }
@@ -1051,8 +752,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
      * number of running threads is below the limit, false otherwise.
      */
     public boolean isNewThreadAllowed() {
-        if ((boolean) this.getTokenSim().getPreferences().get("LimitMaxThreads")) {
-            if (this.nrOfRunningThreads >= (int) this.getTokenSim().getPreferences().get("MaxThreadsNr")) {
+        if ((boolean) this.getSimulationMan().getPreferences().get("LimitMaxThreads")) {
+            if (this.nrOfRunningThreads >= (int) this.getSimulationMan().getPreferences().get("MaxThreadsNr")) {
                 return false;
             }
         }
@@ -1071,5 +772,32 @@ public class GillespieTokenSim extends AbstractTokenSim {
      */
     public void checkOutRunningThread() {
         this.nrOfRunningThreads--;
+    }
+
+    /**
+     * @return the simSwingWorker
+     */
+    public GillespieSimulationSwingWorker getSimSwingWorker() {
+        return simSwingWorker;
+    }
+
+    /**
+     * @param simSwingWorker the simSwingWorker to set
+     */
+    public void setSimSwingWorker(GillespieSimulationSwingWorker simSwingWorker) {
+        this.simSwingWorker = simSwingWorker;
+    }
+
+    protected void computeDistCombinations() {
+        for (Transition t : getSimulationMan().getPetriNet().transitions()) {
+            distinctCombinations.put(t.id(), calculateH(t));
+        }
+    }
+
+    /**
+     * @return the firingRates
+     */
+    protected Map<Integer, Double> getFiringRates() {
+        return firingRates;
     }
 }

@@ -8,8 +8,9 @@ package monalisa.addons.tokensimulator.asynchronous;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.AbstractSimulationSwingWorker;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,11 +18,10 @@ import org.apache.logging.log4j.Logger;
 /**
  * Thread which performs the simulation sequence.
  */
-public class AsynchronousSimulationSwingWorker extends SwingWorker {
+public class AsynchronousSimulationSwingWorker extends AbstractSimulationSwingWorker {
 
-    private final TokenSimulator ts;
+    private final SimulationManager simulationMan;
     private final AsynchronousTokenSim async;
-    private final AsynchronousTokenSimPanel tsPanel;
     private final Logger LOGGER = LogManager.getLogger(AsynchronousSimulationSwingWorker.class);
 
     /**
@@ -33,24 +33,21 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
      * upon termination call.
      */
     private boolean isRunning;
-    
-    private Set<Transition> transitionsToFire;
 
-
-    public AsynchronousSimulationSwingWorker(TokenSimulator ts, AsynchronousTokenSim sync, AsynchronousTokenSimPanel tsPanel, int nrOfStepsN) {
-        this.ts = ts;
+    public AsynchronousSimulationSwingWorker(SimulationManager simulationManager, AsynchronousTokenSim sync, boolean cont, int nrOfStepsN) {
+        this.simulationMan = simulationManager;
         this.async = sync;
-        this.tsPanel = tsPanel;
+        this.continuous = cont;
         this.stepsLeft = nrOfStepsN;
     }
 
     @Override
     protected Void doInBackground() {
         //time delay between single firings
-        int timeDelay = (Integer) ts.getPreferences().get("Time delay");
+        int timeDelay = (Integer) simulationMan.getPreferences().get("Time delay");
         //how often visual output will be updated
-        final int updateInterval = (Integer) ts.getPreferences().get("Update interval");
-        tsPanel.getProgressBar().setMaximum(stepsLeft);
+        final int updateInterval = (Integer) simulationMan.getPreferences().get("Update interval");
+        fireSimulationEvent(SimulationEvent.INIT, stepsLeft); // ProgressBar init
         /*
          * Set the running state of this runnable to "true".
          */
@@ -64,7 +61,7 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
          */
         while (isRunning) {
             try {
-                activeTransitions = ts.getActiveTransitions();
+                activeTransitions = simulationMan.getActiveTransitions();
                 /*
                  * If no transitions are active, abort simulation.
                  */
@@ -79,11 +76,11 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
                 SwingUtilities.invokeAndWait(new Runnable() {
                     @Override
                     public void run() {
-                        ts.fireTransitions(async.getTransitionToFire());
+                        simulationMan.fireTransitions(async.getTransitionToFire());
                         //If updateInterval is positive, check whether visual output must be updated in current step.
                         if (updateInterval > 0) {
-                            if (ts.getSimulatedSteps() % updateInterval == 0) {
-                                ts.updateVisualOutput();
+                            if (simulationMan.getSimulatedSteps() % updateInterval == 0) {
+                                fireSimulationEvent(SimulationEvent.UPDATE_VISUAL, -1); // Update visuals
                             }
                         }
                     }
@@ -92,8 +89,9 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
                 /*
                  * If continuous mode is not selected, reduce the number of steps left by one.
                  */
-                if (!tsPanel.isContinuous()) {
-                    tsPanel.getProgressBar().setValue(tsPanel.getProgressBar().getMaximum() - --stepsLeft);
+                if (!continuous) { // Actually need to pass this
+                    --stepsLeft;
+                    fireSimulationEvent(SimulationEvent.UPDATE_PROGRESS, stepsLeft); // Update ProgressBar
                     /*
                      * Abort simulation if no more steps are left.
                      */
@@ -114,14 +112,10 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
         /*
          * Reset the progress bar.
          */
-        LOGGER.info("Asynchronous simulation is done, resetting the progress bar and unlocking GUI");        
-        tsPanel.getProgressBar().setMaximum(0);
-        tsPanel.getProgressBar().setValue(0);
-
-        //unlock GUI
-        tsPanel.unlock();
-        ts.lockGUI(false);
-        ts.flushLog();
+        LOGGER.info("Asynchronous simulation is done, resetting the progress bar and unlocking GUI");
+        fireSimulationEvent(SimulationEvent.DONE, -1); // Done
+        simulationMan.lockGUI(false);
+        simulationMan.flushLog();
         LOGGER.info("Successfully unlocked GUI after asynchronous simulation.");
     }
 
@@ -130,7 +124,6 @@ public class AsynchronousSimulationSwingWorker extends SwingWorker {
      */
     public void stopSequence() {
         this.isRunning = false;
-        //update visual output
-        ts.updateVisualOutput();
+        fireSimulationEvent(SimulationEvent.STOPPED, -1); // Update visuals
     }
 }

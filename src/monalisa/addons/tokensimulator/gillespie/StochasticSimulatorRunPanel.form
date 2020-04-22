@@ -48,10 +48,10 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ExportPNMarking&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ExportPNMarking&quot;)" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;ExportPNMarkingTT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;ExportPNMarkingTT&quot;)" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -68,10 +68,10 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;TSPREFPlacesToPlotB&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;TSPREFPlacesToPlotB&quot;)" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;TSPREFPlacesToPlotTT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;TSPREFPlacesToPlotTT&quot;)" type="code"/>
         </Property>
       </Properties>
       <Events>
@@ -84,10 +84,10 @@
           <Font name="DejaVu Sans" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;TSShowPlotB&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;TSShowPlotB&quot;)" type="code"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="TokenSimulator.strings.get(&quot;TSShowPlotTT&quot;)" type="code"/>
+          <Connection code="monalisa.addons.tokensimulator.SimulationManager.strings.get(&quot;TSShowPlotTT&quot;)" type="code"/>
         </Property>
       </Properties>
       <Events>

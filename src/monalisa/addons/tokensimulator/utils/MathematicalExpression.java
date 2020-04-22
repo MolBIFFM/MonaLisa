@@ -9,13 +9,9 @@
  */
 package monalisa.addons.tokensimulator.utils;
 
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
-import net.objecthunter.exp4j.function.Function;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.apache.logging.log4j.Logger;
@@ -125,6 +121,7 @@ public final class MathematicalExpression {
                     return exp.evaluateML(concentrations, time);
                 }
             } catch (RuntimeException ex) {
+                LOGGER.error("Error during evaluting mathematical expression", ex);
                 return 0;
             }
         }

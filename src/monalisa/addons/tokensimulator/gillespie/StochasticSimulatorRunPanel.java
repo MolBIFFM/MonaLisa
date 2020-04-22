@@ -10,32 +10,49 @@
 package monalisa.addons.tokensimulator.gillespie;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
+import monalisa.addons.tokensimulator.listeners.SimulationListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
  * @author Pavel Balazki.
  */
-public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
+public class StochasticSimulatorRunPanel extends javax.swing.JPanel implements SimulationListener {
 
     private final ExactSSA sim;
     private final Map<Integer, JCheckBox> nonConstantPlacesToPlot = new HashMap<>();
     private final Map<Integer, JCheckBox> constantPlacesToPlot = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(StochasticSimulatorRunPanel.class);
+    /*
+     * TextArea with the output information. Displays the number of simulated steps and simulated time.
+     */
+    protected final JTextArea outTextArea = new JTextArea();
 
     /**
      * Creates new form StochasticSimulatorRunPanel
@@ -49,7 +66,9 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
         LOGGER.info("Creating a new Panel for the stochastic simulator");
         initComponents();
         this.sim = simN;
-        this.textScrollPane.setViewportView(sim.outTextArea);
+        this.textScrollPane.setViewportView(outTextArea);
+        outTextArea.setEditable(false);
+        outTextArea.setText(SimulationManager.strings.get("SimStartedAt").concat(sim.dateFormat.format(Calendar.getInstance().getTime())));        
         textScrollPane.setPreferredSize(new Dimension(400, 300));
         LOGGER.debug("Filling the stochastic simulator panel with data");
         for (int idx = 0; idx < nonConstantPlacesNames.length; idx++) {
@@ -79,8 +98,8 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
         showPlotButton = new javax.swing.JButton();
 
         exportMarkingButton.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        exportMarkingButton.setText(TokenSimulator.strings.get("ExportPNMarking"));
-        exportMarkingButton.setToolTipText(TokenSimulator.strings.get("ExportPNMarkingTT"));
+        exportMarkingButton.setText(SimulationManager.strings.get("ExportPNMarking"));
+        exportMarkingButton.setToolTipText(SimulationManager.strings.get("ExportPNMarkingTT"));
         exportMarkingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportMarkingButtonActionPerformed(evt);
@@ -88,8 +107,8 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
         });
 
         placesToPlotB.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        placesToPlotB.setText(TokenSimulator.strings.get("TSPREFPlacesToPlotB"));
-        placesToPlotB.setToolTipText(TokenSimulator.strings.get("TSPREFPlacesToPlotTT"));
+        placesToPlotB.setText(SimulationManager.strings.get("TSPREFPlacesToPlotB"));
+        placesToPlotB.setToolTipText(SimulationManager.strings.get("TSPREFPlacesToPlotTT"));
         placesToPlotB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 placesToPlotBActionPerformed(evt);
@@ -97,8 +116,8 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
         });
 
         showPlotButton.setFont(new java.awt.Font("DejaVu Sans", 0, 12)); // NOI18N
-        showPlotButton.setText(TokenSimulator.strings.get("TSShowPlotB"));
-        showPlotButton.setToolTipText(TokenSimulator.strings.get("TSShowPlotTT"));
+        showPlotButton.setText(SimulationManager.strings.get("TSShowPlotB"));
+        showPlotButton.setToolTipText(SimulationManager.strings.get("TSShowPlotTT"));
         showPlotButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showPlotButtonActionPerformed(evt);
@@ -153,7 +172,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
             }
         });
         frame.setMinimumSize(new Dimension(300, 500));
-        frame.setIconImage(TokenSimulator.resources.getImage("icon-16.png"));
+        frame.setIconImage(SimulationManager.resources.getImage("icon-16.png"));
         frame.pack();
         frame.setVisible(true);
     }//GEN-LAST:event_placesToPlotBActionPerformed
@@ -171,7 +190,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
                 constantList.add(entr.getKey());
             }
         }
-        sim.showPlot(nonConstantList, constantList);
+        showPlot(nonConstantList, constantList);
     }//GEN-LAST:event_showPlotButtonActionPerformed
 
 
@@ -181,4 +200,66 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel {
     protected javax.swing.JButton showPlotButton;
     private javax.swing.JScrollPane textScrollPane;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Creates a window with results of selected places plotted with JFreeChart.
+     * Results are read from the output file.
+     *
+     * @param nonConstantPlaces List of indexes of non-constant places.
+     * @param constantPlaces List of indexes of constant places.
+     */
+    public void showPlot(List<Integer> nonConstantPlaces, List<Integer> constantPlaces) {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                //CHECK FOR THE SIZE OF THE OUTPUT FILE AND SHOW A WARNING
+                //IF IT IS TOO BIG (> 5 MB)
+                LOGGER.info("Creating a plot out of the current stochastic simulation data");
+                int proceed = JOptionPane.OK_OPTION;
+                if (sim.getOutputFileRun().length() > 1024 * 1024 * 5) {
+                    proceed = JOptionPane.showConfirmDialog(null, "The number of timepoints is too large. This could result in long plotting time and even make the program unresponsive." + " Are you sure you want to continue? (Hint: You can limit the number of timepoints by increasing the update interval.)", "Warning!", JOptionPane.OK_CANCEL_OPTION);
+                }
+                try {
+                    if (proceed == JOptionPane.OK_OPTION) {
+                        XYSeriesCollection chartDataset = sim.prepDataset(nonConstantPlaces, constantPlaces);
+                        
+                        /*
+                        Generate graph.
+                         */
+                        LOGGER.debug("Generating the graph for the stochastic simulation data");
+                        final JFreeChart chart = ChartFactory.createScatterPlot("Simulation results", "Passed time [sec]", "Nr. of molecules", chartDataset, PlotOrientation.VERTICAL, true, false, false);
+                        ChartFrame frame = new ChartFrame("Simulation results", chart);
+                        frame.setSize(800, 600);
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        //                chartFrame.getContentPane().add(cp);
+                        frame.setVisible(true);
+                    }
+                } catch (IOException ex) {
+                    LOGGER.error("IOException while trying to create a graph out of the stochastic simulation data", ex);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void simulationUpdated(SimulationEvent e) {
+        String type = e.getType();
+        switch (type) {
+            case SimulationEvent.INIT:
+                showPlotButton.setEnabled(false);
+                break;
+            case SimulationEvent.DONE:
+                showPlotButton.setEnabled(true);
+                outTextArea.append((String) e.getValue());
+                break;
+            case SimulationEvent.UPDATE_PROGRESS:
+                outTextArea.append((String) e.getValue());
+                break;
+            case SimulationEvent.STOPPED:
+                outTextArea.append((String) e.getValue());
+                break;
+            default:
+                break;
+        }
+    }
 }

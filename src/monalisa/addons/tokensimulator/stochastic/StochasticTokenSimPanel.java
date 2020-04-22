@@ -10,17 +10,27 @@
 package monalisa.addons.tokensimulator.stochastic;
 
 import java.awt.event.KeyEvent;
-import monalisa.addons.tokensimulator.TokenSimulator;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import monalisa.addons.tokensimulator.AbstractTokenSimPanel;
+import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.addons.tokensimulator.SimulationPanel;
+import monalisa.addons.tokensimulator.listeners.SimulationEvent;
+import monalisa.addons.tokensimulator.listeners.SimulationListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author Pavel Balazki.
  */
-public class StochasticTokenSimPanel extends javax.swing.JPanel {
+public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements SimulationListener {
 
     //BEGIN VARIABLES DECLARATION
-    private StochasticTokenSim ts;
+    private StochasticTokenSim stochTS;
+    private static final Logger LOGGER = LogManager.getLogger(StochasticTokenSimPanel.class);
     //END VARIABLES DECLARATION
+    private SimulationPanel owner;
 
     //BEGIN CONSTRUCTORS
     /**
@@ -30,8 +40,9 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public StochasticTokenSimPanel(StochasticTokenSim tsN) {
-        this.ts = tsN;
+    public StochasticTokenSimPanel(StochasticTokenSim tsN, SimulationPanel owner) {
+        this.stochTS = tsN;
+        this.owner = owner;
         initComponents();
     }
     //END CONSTRUCTORS
@@ -48,16 +59,17 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
     }
 
     public void unlock() {
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
 
         if (!continuousModeCheckBox.isSelected()) {
             stepField.setEnabled(true);
         }
         continuousModeCheckBox.setEnabled(true);
         firingRateButton.setEnabled(true);
-        simTimeLabel.setText("Simulated time: " + ts.getSimulatedTime());        
+        simTimeLabel.setText("Simulated time: " + stochTS.getSimulatedTime());
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,8 +93,8 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         setPreferredSize(this.getPreferredSize());
         setLayout(new java.awt.GridBagLayout());
 
-        fireTransitionsButton.setText(TokenSimulator.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
         fireTransitionsButton.setEnabled(false);
         fireTransitionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,7 +126,7 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         add(simName, gridBagConstraints);
 
         stepField.setText("1");
-        stepField.setToolTipText(TokenSimulator.strings.get("ATSFiringPerStepT"));
+        stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enterPressed(evt);
@@ -128,7 +140,7 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepField, gridBagConstraints);
 
-        stepLabel.setText(TokenSimulator.strings.get("ATSStepLabel"));
+        stepLabel.setText(SimulationManager.strings.get("ATSStepLabel"));
         stepLabel.setToolTipText("Number of steps to perform, if \"Start simulation sequence\" is used.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -138,7 +150,7 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         add(stepLabel, gridBagConstraints);
 
         firingRateButton.setText("Set Firing Rates");
-        firingRateButton.setToolTipText(TokenSimulator.strings.get("StochTSFiringRatesFrame"));
+        firingRateButton.setToolTipText(SimulationManager.strings.get("StochTSFiringRatesFrame"));
         firingRateButton.setEnabled(false);
         firingRateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,8 +165,8 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(firingRateButton, gridBagConstraints);
 
-        continuousModeCheckBox.setText(TokenSimulator.strings.get("ATSContinuousModeCheckBox"));
-        continuousModeCheckBox.setToolTipText(TokenSimulator.strings.get("ATSContinuousModeCheckBoxT"));
+        continuousModeCheckBox.setText(SimulationManager.strings.get("ATSContinuousModeCheckBox"));
+        continuousModeCheckBox.setToolTipText(SimulationManager.strings.get("ATSContinuousModeCheckBoxT"));
         continuousModeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 continuousModeCheckBoxActionPerformed(evt);
@@ -178,21 +190,21 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
 
     private void fireTransitionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fireTransitionsButtonActionPerformed
         //if no firing takes place, start new sequence of firing
-        if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSFireTransitionsB"))) {
+        if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSFireTransitionsB"))) {
             //at this point, user can no more enable or disable the continuous mode
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
-            this.ts.startFiring();
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
+            startFiring();
         } //if a firing sequence is being executed, stop it
-        else if (this.fireTransitionsButton.getText().equals(TokenSimulator.strings.get("ATSStopFiringB"))) {
-            this.ts.stopFiring();
+        else if (this.fireTransitionsButton.getText().equals(SimulationManager.strings.get("ATSStopFiringB"))) {
+            stopFiring();
         }
     }//GEN-LAST:event_fireTransitionsButtonActionPerformed
 
     private void firingRateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firingRateButtonActionPerformed
-        this.ts.setFiringRates();
+        setFiringRates();
     }//GEN-LAST:event_firingRateButtonActionPerformed
 
     private void continuousModeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuousModeCheckBoxActionPerformed
@@ -201,6 +213,9 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
         } else {
             this.stepField.setEnabled(true);
         }
+        if (stochTS.getSimSwingWorker() != null) {
+            stochTS.getSimSwingWorker().setContinuous(isContinuous());
+        }
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
@@ -208,9 +223,9 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
             //at this point, user can not enable or disable the continuous mode no more
             this.continuousModeCheckBox.setEnabled(false);
             //switch button mode from "fire transitions" to "stop firing"
-            this.fireTransitionsButton.setText(TokenSimulator.strings.get("ATSStopFiringB"));
-            this.fireTransitionsButton.setToolTipText(TokenSimulator.strings.get("ATSStopFiringBT"));
-            this.ts.startFiring();
+            this.fireTransitionsButton.setText(SimulationManager.strings.get("ATSStopFiringB"));
+            this.fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSStopFiringBT"));
+            startFiring();
         }
     }//GEN-LAST:event_enterPressed
 
@@ -224,4 +239,116 @@ public class StochasticTokenSimPanel extends javax.swing.JPanel {
     protected javax.swing.JTextField stepField;
     private javax.swing.JLabel stepLabel;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Start firing sequence.
+     */
+    protected void startFiring() {
+        LOGGER.info("Stochastic firing started");
+        //lock GUI, so the user cannot interrupt the firing sequence by alterating the settings.
+        stepField.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        firingRateButton.setEnabled(false);
+        //tells the token simulator to lock the GUI, too.
+        stochTS.getSimulationMan().lockGUI(true);
+
+        //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
+        try {
+            //number of steps that will be performed
+            int steps = Integer.parseInt(stepField.getText());
+            if (steps < 1) {
+                steps = 1;
+                stepField.setText("1");
+            }
+            //Create new thread that will perform all firing steps.
+            stochTS.setSimSwingWorker(new StochasticSimulationSwingWorker(stochTS.getSimulationMan(), stochTS, isContinuous(), steps));
+            stochTS.getSimSwingWorker().addSimulationListener(this);            
+            stochTS.getSimSwingWorker().execute();
+        } catch (NumberFormatException nfe) {
+            LOGGER.error("NumberFormatException while trying to start firing, therefore stopping the firing", nfe);
+            stopFiring();
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        }
+    }
+
+    /**
+     * Stop actual firing sequence.
+     */
+    protected void stopFiring() {
+        LOGGER.info("Firing in the stochastic simulator stopped");
+        if (stochTS.getSimSwingWorker() != null) {
+            stochTS.getSimSwingWorker().stopSequence();
+        }
+    }
+
+    /**
+     * Open a frame where user can input firing rates for transitions.
+     */
+    private void setFiringRates() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                owner.getNetViewer().displayMenu(new SetFiringRatesPanel(owner.getNetViewer(), stochTS.getPetriNet(), stochTS.getFiringRates()), "Transition firing rates");
+            }
+        });
+    }
+
+    @Override
+    public void simulationUpdated(SimulationEvent e) {
+        String type = e.getType();
+        switch (type) {
+            case SimulationEvent.INIT:
+                getProgressBar().setMaximum((int) e.getValue());
+                break;
+            case SimulationEvent.UPDATE_PROGRESS:
+                getProgressBar().setValue(getProgressBar().getMaximum() - ((int) e.getValue()));
+                break;
+            case SimulationEvent.UPDATE_VISUAL:
+                stochTS.getSimulationMan().updateVisualOutput();
+                break;
+            case SimulationEvent.DONE:
+                getProgressBar().setMaximum(0);
+                getProgressBar().setValue(0);
+                //unlock GUI
+                unlock();
+                break;
+            case SimulationEvent.STOPPED:
+                stochTS.getSimulationMan().updateVisualOutput();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void setSimName(String name) {
+        simName.setText(name);            
+    }
+
+    @Override
+    public void startSim() {
+        LOGGER.info("Stopping stochastic token simulation");
+        stepField.setEnabled(true);
+        fireTransitionsButton.setEnabled(true);
+        firingRateButton.setEnabled(true);
+        stochTS.computeActiveTransitions();
+    }
+
+    @Override
+    public void endSim() {
+        LOGGER.info("Ending the stochastic token simulator");
+        try {
+            if (stochTS.getSimSwingWorker() != null) { // Should only be null if the sim was stopped without starting it.
+                stochTS.getSimSwingWorker().cancel(true);
+            }
+        } catch (NullPointerException ex) {
+            LOGGER.error("Nullpointer exception while trying to cancel the simSwingWorker in the stochastic token simulator", ex);
+        }
+        stepField.setEnabled(false);
+        fireTransitionsButton.setEnabled(false);
+        continuousModeCheckBox.setEnabled(false);
+        firingRateButton.setEnabled(false);
+        owner.disableSetup();
+        stochTS.getSimulationMan().lockGUI(true);
+    }
 }

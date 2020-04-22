@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -37,9 +38,14 @@ import org.apache.logging.log4j.LogManager;
  */
 public class FastSimulationModes extends MonaLisaFrame {
 
-    private GillespieTokenSim ts;
+    private GillespieTokenSim gillTS;
     private final ArrayList<StochasticSimulator> fastSimModes;
     private static final Logger LOGGER = LogManager.getLogger(FastSimulationModes.class);
+    /**
+     * Set of running fast modes of stochastic simulation.
+     */
+    private Set<StochasticSimulator> fastModes;
+    private GillespieTokenSimPanel owner;
 
     /**
      * Creates new form FastSimulationModes2
@@ -51,13 +57,14 @@ public class FastSimulationModes extends MonaLisaFrame {
         initComponents();
     }
 
-    public FastSimulationModes(GillespieTokenSim tsN) {
+    public FastSimulationModes(GillespieTokenSim tsN, GillespieTokenSimPanel owner) {
         super();
         this.setTitle("Fast Simulation Mode");
         this.fastSimModes = new ArrayList<>();
+        this.owner = owner;
         initComponents();
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.ts = tsN;
+        this.gillTS = tsN;
 
         this.simulationPane.addTab("", null);
         FlowLayout f = new FlowLayout(FlowLayout.CENTER, 5, 0);
@@ -81,7 +88,7 @@ public class FastSimulationModes extends MonaLisaFrame {
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ts.fastSimFrame.addFastSim(new StochasticSimulator(ts, ts.deterministicReactionConstants, ts.getTokenSim().getMarking(), ts.volume, ts.getRandom()));
+                owner.fastSimFrame.addFastSim(new StochasticSimulator(gillTS, gillTS.deterministicReactionConstants, gillTS.getSimulationMan().getMarking(), gillTS.volume, gillTS.getRandom(), owner.fastSimFrame));
             }
         };
         addTabButton.setFocusable(false);
@@ -111,7 +118,7 @@ public class FastSimulationModes extends MonaLisaFrame {
                                         sim.stopSimulation();
                                     }
                                 });
-                                ts.fastModes.remove(sim);
+                                fastModes.remove(sim);
                                 simulationPane.remove(sim.getContentPane());
                                 iterator.remove();
                                 sim.dispose();
@@ -139,7 +146,7 @@ public class FastSimulationModes extends MonaLisaFrame {
             this.setVisible(true);
         }
         this.fastSimModes.add(sim);
-        this.ts.fastModes.add(sim);
+        this.fastModes.add(sim);
         this.simulationPane.insertTab("Simulation " + this.fastSimModes.size(), null, sim.getContentPane(), null, simulationPane.getTabCount() - 1);
         this.simulationPane.setTabComponentAt(simulationPane.getTabCount() - 2, new FastSimulationTabComponent(simulationPane, sim));
         this.simulationPane.setSelectedIndex(simulationPane.getTabCount() - 2);
@@ -156,7 +163,7 @@ public class FastSimulationModes extends MonaLisaFrame {
     public void removeFastSim(StochasticSimulator sim) {
         sim.stopSimulation();
         this.fastSimModes.remove(sim);
-        this.ts.fastModes.remove(sim);
+        this.fastModes.remove(sim);
         this.simulationPane.remove(sim.getContentPane());
         sim.dispose();
         //If no simulation left, close the frame
@@ -202,4 +209,18 @@ public class FastSimulationModes extends MonaLisaFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane simulationPane;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the fastModes
+     */
+    public Set<StochasticSimulator> getFastModes() {
+        return fastModes;
+    }
+
+    /**
+     * @param fastModes the fastModes to set
+     */
+    public void setFastModes(Set<StochasticSimulator> fastModes) {
+        this.fastModes = fastModes;
+    }
 }

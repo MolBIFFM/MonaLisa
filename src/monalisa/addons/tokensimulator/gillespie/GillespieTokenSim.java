@@ -364,10 +364,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             /*
              * Evaluate deterministic reaction rate constant
              */
-            LOGGER.info(concentrations);
             detReactionRateConst = this.deterministicReactionConstants.get(tID).evaluateML(concentrations, this.time);
-            LOGGER.info(deterministicReactionConstants.get(tID));
-            LOGGER.info("DetReactionRateConst: " + detReactionRateConst);
             /*
              * Convert deterministic reaction rate constant to stochastic reaction rate constant.
              */
@@ -377,16 +374,12 @@ public class GillespieTokenSim extends AbstractTokenSim {
              * Multiply the stochastic reaction rate constant with the number of distinct
              * molecular reactant combinations available in current state to get the actual rate of reaction.
              */
-            LOGGER.info("StochReactionRateConst: " + stochReactionRateConst);
-            LOGGER.info("distComb: " + this.distinctCombinations.get(tID));
             double reactionRate = stochReactionRateConst * this.distinctCombinations.get(tID);
-            LOGGER.info("Reaction Rate to be added: " + reactionRate);
             this.markingDependentRates.put(tID, reactionRate);
             markingRatesSum += reactionRate;
         }
         //if the sum of marking dependent firing rate is zero, no reaction can occur and the simulation should stop.
         if (markingRatesSum == 0) {
-            LOGGER.info("MARKING IS ZERO");
             return null;
         }
         /*

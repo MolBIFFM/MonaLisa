@@ -217,7 +217,8 @@ public class GillespieTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
             JOptionPane.showMessageDialog(this, SimulationManager.strings.get("TSNumberFormatExceptionM"));
             nrOfThreads = 1;
         }
-        gillTS.getSimulationMan().getPreferences().put("MaxThreadsNr", nrOfThreads);    }
+        gillTS.getSimulationMan().getPreferences().put("MaxThreadsNr", nrOfThreads);
+    }
 
     @Override
     public void loadPreferences() {
@@ -226,5 +227,6 @@ public class GillespieTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
         limitThreadsCB.setSelected((boolean) gillTS.getSimulationMan().getPreferences().get("LimitMaxThreads"));
         nrOfMaxThreadsField.setEnabled((boolean) gillTS.getSimulationMan().getPreferences().get("LimitMaxThreads"));
         nrOfMaxThreadsField.setText(gillTS.getSimulationMan().getPreferences().get("MaxThreadsNr").toString());
-        LOGGER.info("Preferences loaded");    }
+        LOGGER.info("Preferences loaded");
+    }
 }

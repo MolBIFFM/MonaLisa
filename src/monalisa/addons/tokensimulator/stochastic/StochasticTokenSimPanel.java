@@ -262,7 +262,7 @@ public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements Si
             }
             //Create new thread that will perform all firing steps.
             stochTS.setSimSwingWorker(new StochasticSimulationSwingWorker(stochTS.getSimulationMan(), stochTS, isContinuous(), steps));
-            stochTS.getSimSwingWorker().addSimulationListener(this);            
+            stochTS.getSimSwingWorker().addSimulationListener(this);
             stochTS.getSimSwingWorker().execute();
         } catch (NumberFormatException nfe) {
             LOGGER.error("NumberFormatException while trying to start firing, therefore stopping the firing", nfe);
@@ -322,7 +322,7 @@ public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements Si
 
     @Override
     public void setSimName(String name) {
-        simName.setText(name);            
+        simName.setText(name);
     }
 
     @Override

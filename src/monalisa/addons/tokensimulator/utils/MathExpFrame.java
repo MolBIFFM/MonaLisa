@@ -17,7 +17,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -365,7 +364,7 @@ public class MathExpFrame extends javax.swing.JFrame {
                     l.stateChanged(new ChangeEvent(this));
                 }
             }
-            }catch (RuntimeException ex) {
+        } catch (RuntimeException ex) {
             LOGGER.error("Unknown function or unparsable expression found while trying to build a mathematical expression out of the input in the frame");
             JOptionPane.showMessageDialog(rootPane, SimulationManager.strings.get("MathExpError"), "Warning", JOptionPane.ERROR_MESSAGE);
         } catch (PlaceNonConstantException ex) {

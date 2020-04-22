@@ -24,7 +24,6 @@ public class SnapshotsListSelectionListener implements ListSelectionListener {
     private final JList snapshots;
     private final VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
 
-
     public SnapshotsListSelectionListener(SimulationPanel simulationPan, JList snapshots, VisualizationViewer<NetViewerNode, NetViewerEdge> vv) {
         this.snapshots = snapshots;
         this.simulationPan = simulationPan;

@@ -14,8 +14,8 @@ import javax.swing.ListCellRenderer;
 import monalisa.addons.tokensimulator.SimulationManager;
 
 /**
- * Handles the coloring of entries in historyList. The last performed step
- * has red background.
+ * Handles the coloring of entries in historyList. The last performed step has
+ * red background.
  */
 public class HistoryCellRenderer implements ListCellRenderer {
 

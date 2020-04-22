@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package monalisa.addons.tokensimulator;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingWorker;
@@ -21,7 +22,7 @@ public abstract class AbstractSimulationSwingWorker extends SwingWorker {
 
     public void setContinuous(boolean continuous) {
         this.continuous = continuous;
-    }    
+    }
 
     public synchronized void addSimulationListener(SimulationListener sl) {
         if (!simulationListeners.contains(sl)) {

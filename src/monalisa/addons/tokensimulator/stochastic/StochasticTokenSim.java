@@ -58,7 +58,6 @@ import org.apache.logging.log4j.Logger;
 public class StochasticTokenSim extends AbstractTokenSim {
 
     //BEGIN VARIABLES DECLARATION
-
     /**
      * Thread which executes simulation.
      */
@@ -121,7 +120,7 @@ public class StochasticTokenSim extends AbstractTokenSim {
         /*
          * create new GUI-Panel
          */
-        LOGGER.info("Initiating the GUI for the stochastic simulation");        
+        LOGGER.info("Initiating the GUI for the stochastic simulation");
         /*
          * Set the name of the Stochastic simulator as a text for the JLabel simName
          */

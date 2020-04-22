@@ -15,8 +15,8 @@ public class StatisticsTableModel extends AbstractTableModel {
 
     private final String[] columnNames;
     private final Map<String, Integer> countTransitions;
-    
-    public StatisticsTableModel (String[] columnNames, Map<String, Integer> countTransitions) {
+
+    public StatisticsTableModel(String[] columnNames, Map<String, Integer> countTransitions) {
         this.columnNames = columnNames;
         this.countTransitions = countTransitions;
     }

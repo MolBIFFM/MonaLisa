@@ -17,6 +17,7 @@ import monalisa.addons.tokensimulator.SimulationManager;
  * @author Pavel Balazki.
  */
 public class AsynchronousTokenSimPrefPanel extends AbstractTokenSimPrefPanel {
+
     //BEGIN VARIABLES DECLARATION
     AsynchronousTokenSim asyncTS;
     //END VARIABLES DECLARATION

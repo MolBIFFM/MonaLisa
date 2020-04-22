@@ -12,12 +12,13 @@ import java.util.EventObject;
  * @author Marcel
  */
 public final class SimulationEvent extends EventObject {
+
     public static final String INIT = "INIT";
     public static final String UPDATE_VISUAL = "UPDATE_VISUAL";
     public static final String UPDATE_PROGRESS = "UPDATE_PROGRESS";
     public static final String DONE = "DONE";
-    public static final String STOPPED = "STOPPED";    
-    
+    public static final String STOPPED = "STOPPED";
+
     private final String type;
     private final Object value;
 
@@ -26,7 +27,7 @@ public final class SimulationEvent extends EventObject {
         this.type = type;
         this.value = value;
     }
-    
+
     public String getType() {
         return type;
     }

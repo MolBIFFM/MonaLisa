@@ -212,7 +212,7 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
 
     @Override
     protected void startFiring() {
-        LOGGER.info("Firing of Asynchronous Token Simulator started");        
+        LOGGER.info("Firing of Asynchronous Token Simulator started");
         stepField.setEnabled(false);
         continuousModeCheckBox.setEnabled(false);
         asyncTS.getSimulationMan().lockGUI(true);
@@ -234,11 +234,11 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
             JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
         }
     }
-    
+
     @Override
-    protected void stopFiring(){
+    protected void stopFiring() {
         if (asyncTS.getSimSwingWorker() != null) {
-        LOGGER.info("Firing of Asynchronous Token Simulator stopped");                    
+            LOGGER.info("Firing of Asynchronous Token Simulator stopped");
             asyncTS.getSimSwingWorker().stopSequence();
         }
     }
@@ -275,7 +275,7 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
         LOGGER.info("Asynchronous token simulation started");
         stepField.setEnabled(true);
         fireTransitionsButton.setEnabled(true);
-        asyncTS.computeActiveTransitions();    
+        asyncTS.computeActiveTransitions();
     }
 
     @Override
@@ -292,11 +292,11 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
         continuousModeCheckBox.setEnabled(false);
         owner.disableSetup();
         asyncTS.getSimulationMan().lockGUI(true);
-        LOGGER.info("Asynchronous token simulator ended");    
+        LOGGER.info("Asynchronous token simulator ended");
     }
 
     @Override
     public void setSimName(String name) {
-        simName.setText(name);            
+        simName.setText(name);
     }
 }

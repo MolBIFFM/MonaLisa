@@ -21,7 +21,6 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerException;
-import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -57,7 +56,6 @@ public abstract class AbstractTokenSim {
     private static final Logger LOGGER = LogManager.getLogger(AbstractTokenSim.class);
 
     //END VARIABLES DECLARATION
-
     //BEGIN CONSTRUCTORS
     /**
      * Prevent using non-parameterized constructor.

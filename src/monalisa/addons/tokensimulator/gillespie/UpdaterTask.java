@@ -19,17 +19,15 @@ import java.util.Queue;
 import java.util.TimerTask;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.tools.BooleanChangeEvent;
 import monalisa.tools.BooleanChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * After UpdaterTask is started, it requests each running runnable to update
- * its output in equidistant intervals. It also checks, whether a run is
- * still running. If not, it removes the thread which corresponds to that
- * run.
+ * After UpdaterTask is started, it requests each running runnable to update its
+ * output in equidistant intervals. It also checks, whether a run is still
+ * running. If not, it removes the thread which corresponds to that run.
  */
 public class UpdaterTask extends TimerTask {
 
@@ -47,9 +45,9 @@ public class UpdaterTask extends TimerTask {
      * Runnables of simulation runs which are waiting for their turn.
      */
     private final Queue<ExactSSA> runnablesQueue;
-    
+
     private final List<BooleanChangeListener> boolListeners = new ArrayList<>();
-    
+
     private static final Logger LOGGER = LogManager.getLogger(UpdaterTask.class);
     private final File outFile;
     private final List<File> outFiles;
@@ -182,4 +180,3 @@ public class UpdaterTask extends TimerTask {
         }
     }
 }
-

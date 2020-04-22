@@ -12,8 +12,8 @@ import javax.swing.JPanel;
  * @author Marcel
  */
 public abstract class AbstractTokenSimPrefPanel extends JPanel {
-    
+
     public abstract void updatePreferences();
-    
-    public abstract void loadPreferences();    
+
+    public abstract void loadPreferences();
 }

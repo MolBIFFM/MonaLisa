@@ -42,7 +42,7 @@ public class Condition {
     private Expression leftPart = null, rightPart = null;
 
     final private short operator;
-    
+
     private final static Logger LOGGER = LogManager.getLogger(Condition.class);
 
     public Condition(String condition, Function int_div, Map<String, Integer> variables) {

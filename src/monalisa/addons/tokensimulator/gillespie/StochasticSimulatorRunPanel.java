@@ -68,7 +68,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel implements S
         this.sim = simN;
         this.textScrollPane.setViewportView(outTextArea);
         outTextArea.setEditable(false);
-        outTextArea.setText(SimulationManager.strings.get("SimStartedAt").concat(sim.dateFormat.format(Calendar.getInstance().getTime())));        
+        outTextArea.setText(SimulationManager.strings.get("SimStartedAt").concat(sim.dateFormat.format(Calendar.getInstance().getTime())));
         textScrollPane.setPreferredSize(new Dimension(400, 300));
         LOGGER.debug("Filling the stochastic simulator panel with data");
         for (int idx = 0; idx < nonConstantPlacesNames.length; idx++) {
@@ -222,7 +222,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel implements S
                 try {
                     if (proceed == JOptionPane.OK_OPTION) {
                         XYSeriesCollection chartDataset = sim.prepDataset(nonConstantPlaces, constantPlaces);
-                        
+
                         /*
                         Generate graph.
                          */

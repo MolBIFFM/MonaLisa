@@ -1335,9 +1335,9 @@ public class StochasticSimulator extends javax.swing.JFrame implements BooleanCh
     @Override
     public void changed(BooleanChangeEvent e) {
         if (e.getNewValue() == false) {
-        getRunButton().setText(SimulationManager.strings.get("ATSFireTransitionsB"));
-        getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png")));
-        running = false;
+            getRunButton().setText(SimulationManager.strings.get("ATSFireTransitionsB"));
+            getRunButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/run_tools.png")));
+            running = false;
         }
     }
 }

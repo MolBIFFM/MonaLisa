@@ -49,7 +49,6 @@ import org.w3c.dom.Element;
 public class SynchronousTokenSim extends AbstractTokenSim {
 
     //BEGIN VARIABLES DECLARATION
-
     /**
      * Thread which executes simulation.
      */

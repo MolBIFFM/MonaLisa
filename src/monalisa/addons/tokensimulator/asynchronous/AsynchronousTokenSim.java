@@ -49,7 +49,6 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
 
     //BEGIN VARIABLES DECLARATION
     //GUI
-
     /**
      * Thread which executes simulation.
      */

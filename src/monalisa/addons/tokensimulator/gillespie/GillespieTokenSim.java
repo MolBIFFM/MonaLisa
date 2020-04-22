@@ -367,7 +367,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
             LOGGER.info(concentrations);
             detReactionRateConst = this.deterministicReactionConstants.get(tID).evaluateML(concentrations, this.time);
             LOGGER.info(deterministicReactionConstants.get(tID));
-            LOGGER.info("DetReactionRateConst: " + detReactionRateConst);            
+            LOGGER.info("DetReactionRateConst: " + detReactionRateConst);
             /*
              * Convert deterministic reaction rate constant to stochastic reaction rate constant.
              */

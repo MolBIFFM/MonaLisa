@@ -13,7 +13,7 @@ import java.util.EventObject;
  */
 public class GuiEvent extends EventObject {
 
-    public static final String UPDATE_PLOT = "UPDATE_PLOT";    
+    public static final String UPDATE_PLOT = "UPDATE_PLOT";
     public static final String UPDATE_VISUAL = "UPDATE_VISUAL";
     public static final String REPAINT = "REPAINT";
     public static final String LOCK = "LOCK";
@@ -22,12 +22,12 @@ public class GuiEvent extends EventObject {
     public static final String HISTORY = "HISTORY";
 
     private final String type;
-    
+
     public GuiEvent(Object source, String type) {
         super(source);
         this.type = type;
     }
-    
+
     public String getType() {
         return type;
     }

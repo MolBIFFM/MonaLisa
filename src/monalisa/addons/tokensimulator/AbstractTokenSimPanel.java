@@ -12,16 +12,16 @@ import javax.swing.JPanel;
  * @author Marcel
  */
 public abstract class AbstractTokenSimPanel extends JPanel {
-    
+
     public abstract void setSimName(String name);
-    
+
     public abstract void unlock();
-    
+
     public abstract void startSim();
-    
+
     public abstract void endSim();
-    
+
     protected abstract void startFiring();
-    
+
     protected abstract void stopFiring();
 }

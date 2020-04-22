@@ -56,7 +56,6 @@ public class SimulationManager {
 
     //communication with the rest of MonaLisa
     //current project
-
     //petri net of the project
     private PetriNetFacade petriNet;
 
@@ -316,7 +315,6 @@ public class SimulationManager {
 
         fireGuiUpdateCall(GuiEvent.HISTORY);
     }
-
 
     /**
      * Loads the given snapshot and makes it to current state
@@ -709,7 +707,7 @@ public class SimulationManager {
     }
 
     public void addGuiListener(GuiListener gl) {
-        if (!listeners.contains(gl)){
+        if (!listeners.contains(gl)) {
             listeners.add(gl);
         }
     }

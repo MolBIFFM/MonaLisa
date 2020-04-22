@@ -12,6 +12,6 @@ import java.util.EventListener;
  * @author Marcel
  */
 public interface GuiListener extends EventListener {
-    
+
     void guiUpdateCall(GuiEvent e);
 }

@@ -30,8 +30,8 @@ public class ExpressionML {
      */
     String conditionStr;
     /**
-     * Variable which indicates whether the expression has a condition or
-     * not. True only if the string "condition" is not empty.
+     * Variable which indicates whether the expression has a condition or not.
+     * True only if the string "condition" is not empty.
      */
     boolean hasCondition;
     /**
@@ -114,15 +114,14 @@ public class ExpressionML {
     }
 
     /**
-     * Check whether current marking suffices the condition of this
-     * expression.
+     * Check whether current marking suffices the condition of this expression.
      *
-     * @param concentrations Concentrations of variables. Make sure they are
-     * in M and not in molecule number!
-     * @param time Simulation time. Each mathematical expression can have
-     * time as variable.
-     * @return true if the condition is given by current marking or no
-     * condition exists.
+     * @param concentrations Concentrations of variables. Make sure they are in
+     * M and not in molecule number!
+     * @param time Simulation time. Each mathematical expression can have time
+     * as variable.
+     * @return true if the condition is given by current marking or no condition
+     * exists.
      * @throws UnknownFunctionException
      * @throws UnparsableExpressionException
      */
@@ -211,8 +210,8 @@ public class ExpressionML {
     /**
      * Evaluate the instruction of expression.
      *
-     * @param concentrations Concentrations of variables, should be in M and
-     * not in molecule numbers!
+     * @param concentrations Concentrations of variables, should be in M and not
+     * in molecule numbers!
      * @return
      */
     public double evaluateML(Map<Integer, Double> concentrations, double time) throws RuntimeException {

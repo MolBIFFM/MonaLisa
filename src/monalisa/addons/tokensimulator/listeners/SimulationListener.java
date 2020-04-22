@@ -9,9 +9,10 @@ import java.util.EventListener;
 
 /**
  * Listener for simulation events to synchronize UI with progress etc.
+ *
  * @author Marcel Gehrmann
  */
 public interface SimulationListener extends EventListener {
-    
+
     void simulationUpdated(SimulationEvent e);
 }

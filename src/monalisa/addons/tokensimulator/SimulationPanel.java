@@ -124,7 +124,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     private ArrayList<Snapshot> snapshots;
     //ListModel of the snapshotsList; stores names of the snapshots, which are represented by the number of performed step.
     public DefaultListModel snapshotsListModel;
-    
+
     /**
      * Creates new form TopologcialPanel
      */
@@ -271,7 +271,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         loadSetupButton.setEnabled(false);
         saveSetupButton.setEnabled(false);
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -709,7 +709,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     private void endSimulationJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_endSimulationJButtonActionPerformed
         endSim();
         this.simulationMan.endSimulator();
-        snapshots = null;        
+        snapshots = null;
     }//GEN-LAST:event_endSimulationJButtonActionPerformed
 
     /**
@@ -764,7 +764,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         }
         outFile = fc.getSelectedFile();
         try {
-            LOGGER.info("Import of setup initiated");            
+            LOGGER.info("Import of setup initiated");
             this.simulationMan.getTokenSim().exportSetup(outFile);
         } catch (ParserConfigurationException | TransformerException ex) {
             LOGGER.error("Parser or Transformer exception while handling the setupexport in the asynchronous token simulator", ex);
@@ -782,7 +782,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         }
         inFile = fc.getSelectedFile();
         try {
-            LOGGER.info("Import of setup initiated");            
+            LOGGER.info("Import of setup initiated");
             this.simulationMan.getTokenSim().importSetup(inFile);
         } catch (FileNotFoundException | XMLStreamException ex) {
             JOptionPane.showMessageDialog(null, "Invalid XML file!",
@@ -853,42 +853,42 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         } else if (simType.equalsIgnoreCase(strings.get("STSName"))) {
             simulationMan.setTokenSim(new SynchronousTokenSim(simulationMan));
             this.customTSControls = new SynchronousTokenSimPanel((SynchronousTokenSim) simulationMan.getTokenSim(), this);
-            this.customTSControls.setSimName((strings.get("STSNAME")));            
+            this.customTSControls.setSimName((strings.get("STSNAME")));
             this.customTSPrefs = new SynchronousTokenSimPrefPanel((SynchronousTokenSim) simulationMan.getTokenSim());
         } else if (simType.equalsIgnoreCase(strings.get("StochTSName"))) {
             simulationMan.setTokenSim(new StochasticTokenSim(simulationMan));
             this.customTSControls = new StochasticTokenSimPanel((StochasticTokenSim) simulationMan.getTokenSim(), this);
-            this.customTSControls.setSimName((strings.get("StochTSNAME")));            
+            this.customTSControls.setSimName((strings.get("StochTSNAME")));
             this.customTSPrefs = new StochasticTokenSimPrefPanel((StochasticTokenSim) simulationMan.getTokenSim());
         } else if (simType.equalsIgnoreCase(strings.get("GilTSName"))) {
             simulationMan.setTokenSim(new GillespieTokenSim(simulationMan));
             this.customTSControls = new GillespieTokenSimPanel((GillespieTokenSim) simulationMan.getTokenSim(), this);
-            this.customTSControls.setSimName((strings.get("GilTSNAME")));                        
-            this.customTSPrefs = new GillespieTokenSimPrefPanel((GillespieTokenSim) simulationMan.getTokenSim());            
+            this.customTSControls.setSimName((strings.get("GilTSNAME")));
+            this.customTSPrefs = new GillespieTokenSimPrefPanel((GillespieTokenSim) simulationMan.getTokenSim());
         }
         simulationMan.getTokenSim().addTransitionsToCheck(simulationMan.getPetriNet().transitions().toArray(new Transition[0]));
         tspMouse = new TokenSimPopupMousePlugin(vv, simulationMan.getPetriNet(), simulationMan.getTokenSim());
-        
+
         /*
          * Set the name of choosen mode for customSimulatorJPanel in preferences frame
-         */         
+         */
         this.customTSPrefs.setBorder(BorderFactory.createTitledBorder(simType));
-        
+
         //Preferences frame
         preferencesJFrame = new SimulationPrefFrame(simulationMan, customTSPrefs, this);
         preferencesJFrame.logPathJTextField.setText((String) simulationMan.getPreferences().get("LogPath"));
         preferencesJFrame.createLogJCheckBox.setSelected((Boolean) simulationMan.getPreferences().get("LogEnabled"));
         preferencesJFrame.pack();
         preferencesJFrame.setVisible(false);
-        
+
         preferencesJFrame.customSimulatorJScrollPane.setViewportView(this.customTSPrefs);
         preferencesJFrame.repaint();
-        this.customControlScrollPane.setViewportView(this.customTSControls);       
+        this.customControlScrollPane.setViewportView(this.customTSControls);
     }
 
     private void startSim() {
         netViewer.startTokenSimulator(tspMouse);
-        
+
         customTSControls.startSim();
 
         //add customMarking names to customMarkingComboBix
@@ -896,7 +896,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         for (String markingName : simulationMan.customMarkingsMap.keySet()) {
             customMarkingsJComboBox.addItem(markingName);
         }
-        
+
         //save icon transformer from the vv before changing it to custom VertexIconTransformer
         oldIconTransformer = vv.getRenderContext().getVertexIconTransformer();
         //assign new VertexIconTransformer
@@ -932,7 +932,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         loadSetupButton.setEnabled(true);
         showPlotButton.setEnabled(true);
         vv.repaint();
-        historyJList.repaint();        
+        historyJList.repaint();
     }
 
     /**
@@ -942,7 +942,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     private void initTS() {
         //By default, logging is disabled
         LOGGER.info("Initializing the token simulator");
-        simulationMan.addGuiListener(this);        
+        simulationMan.addGuiListener(this);
         simulationMan.getPreferences().put("LogEnabled", false);
         simulationMan.getPreferences().put("LogPath", System.getProperty("user.home") + File.separator + "MonaLisa_Simulation_log");
         simulationMan.getPreferences().put("SaveSnapshots", true);
@@ -1156,7 +1156,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     @Override
     public void guiUpdateCall(GuiEvent e) {
         String type = e.getType();
-        switch(type) {
+        switch (type) {
             case GuiEvent.UPDATE_PLOT:
                 updatePlot();
                 break;
@@ -1195,7 +1195,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
                 customMarkingsJComboBox.setEnabled(true);
                 preferencesJButton.setEnabled(true);
                 saveSetupButton.setEnabled(true);
-                loadSetupButton.setEnabled(true);                
+                loadSetupButton.setEnabled(true);
                 break;
             case GuiEvent.SNAPSHOT:
                 saveSnapshot();
@@ -1207,7 +1207,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
                     historyForwardJButton.setEnabled(false);
                 }
                 if (!simulationMan.isLockGUI()) {
-                    historyBackJButton.setEnabled(true);                    
+                    historyBackJButton.setEnabled(true);
                 }
             default:
                 break;

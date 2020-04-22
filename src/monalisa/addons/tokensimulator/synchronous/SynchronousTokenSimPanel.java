@@ -181,7 +181,7 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
         }
         if (syncTS.getSimSwingWorker() != null) {
             syncTS.getSimSwingWorker().setContinuous(isContinuous());
-        }        
+        }
     }//GEN-LAST:event_continuousModeCheckBoxActionPerformed
 
     private void enterPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_enterPressed
@@ -219,7 +219,7 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
             }
             //Create new thread that will perform all firing steps.
             syncTS.setSimSwingWorker(new SynchronousSimulationSwingWorker(syncTS.getSimulationMan(), syncTS, isContinuous(), steps));
-            syncTS.getSimSwingWorker().addSimulationListener(this);            
+            syncTS.getSimSwingWorker().addSimulationListener(this);
             syncTS.getSimSwingWorker().execute();
         } catch (NumberFormatException nfe) {
             stopFiring();
@@ -265,7 +265,7 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
 
     @Override
     public void setSimName(String name) {
-        simName.setText(name);            
+        simName.setText(name);
     }
 
     @Override

@@ -50,13 +50,13 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcel Gehrmann
  */
-public class ToolUI implements BooleanChangeListener {
+public class ToolFrame implements BooleanChangeListener {
 
     private final ToolManager toolMan;
     private final Project project;
     transient private Map<Class<? extends Tool>, CollapsiblePanel> collapsibleToolPanels;
     transient private Map<Class<? extends Tool>, ToolPanel> toolPanels;
-    private final static Logger LOGGER = LogManager.getLogger(ToolUI.class);
+    private final static Logger LOGGER = LogManager.getLogger(ToolFrame.class);
     transient List<ToolStatusUpdateListener> toolStatusUpdateListeners;
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();
 
@@ -78,7 +78,7 @@ public class ToolUI implements BooleanChangeListener {
                     McsPanel.class
             );
 
-    public ToolUI(ToolManager toolMan, Project project) {
+    public ToolFrame(ToolManager toolMan, Project project) {
         this.toolMan = toolMan;
         this.project = project;
     }

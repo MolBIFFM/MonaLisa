@@ -41,7 +41,7 @@ import javax.swing.*;
 import layout.TableLayout;
 import monalisa.Project;
 import monalisa.Settings;
-import monalisa.ToolUI;
+import monalisa.ToolFrame;
 import monalisa.addons.netviewer.listener.NetChangedListener;
 import monalisa.addons.netviewer.transformer.AdvancedVertexLabelRenderer;
 import monalisa.addons.netviewer.transformer.EdgeArrowTransformer;
@@ -169,7 +169,7 @@ public class NetViewer extends JFrame implements ActionListener {
     protected ToolBar tb;
     private SearchBar sb;
     private LogicalPlacesFrame lpf;
-    private final ToolUI toolUI;
+    private final ToolFrame toolUI;
 
     private final List<JPanel> mouseModePanels = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
      */
-    public NetViewer(MainDialog owner, Project project, ToolUI toolUI) throws IOException, ClassNotFoundException, InterruptedException {
+    public NetViewer(MainDialog owner, Project project, ToolFrame toolUI) throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Initializing NetViewer");
         this.toolUI = toolUI;
         this.alignmentList = new ArrayList<>();

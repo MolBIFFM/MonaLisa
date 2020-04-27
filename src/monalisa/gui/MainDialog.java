@@ -27,7 +27,7 @@ import monalisa.Project;
 import monalisa.Settings;
 import monalisa.ToolStatusUpdateEvent;
 import monalisa.ToolStatusUpdateListener;
-import monalisa.ToolUI;
+import monalisa.ToolFrame;
 import monalisa.addons.AddonPanel;
 import monalisa.addons.Addons;
 import monalisa.addons.netviewer.NetViewer;
@@ -115,7 +115,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     private String documentTitle;
     private Project project;
-    private ToolUI toolUI;
+    private ToolFrame toolUI;
     private List<AddonPanel> addonPanels;
 
     public MainDialog() {
@@ -971,7 +971,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         mainContainer.add(scrollPane);
         setDocumentTitle(project.getName());
         setProjectRelatedEnabled(true);
-        toolUI = new ToolUI(project.getToolManager(), project);
+        toolUI = new ToolFrame(project.getToolManager(), project);
         LOGGER.info("Successfully initialized ToolUI");
         toolUI.getToolManager().addToolStatusUpdateListener(this);
         toolUI.createAnalyzeFrame(contentPanel, strings);

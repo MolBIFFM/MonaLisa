@@ -59,7 +59,7 @@ import monalisa.addons.tokensimulator.synchronous.SynchronousTokenSimPrefPanel;
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import monalisa.addons.tokensimulator.utils.Snapshot;
 import monalisa.addons.tokensimulator.utils.Statistic;
-import monalisa.addons.tokensimulator.utils.TokenSimPopupMousePlugin;
+import monalisa.addons.tokensimulator.utils.TSPopupMousePlugin;
 import monalisa.addons.tokensimulator.utils.VertexIconTransformer;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
@@ -867,7 +867,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
             this.customTSPrefs = new GillespieTokenSimPrefPanel((GillespieTokenSim) simulationMan.getTokenSim());
         }
         simulationMan.getTokenSim().addTransitionsToCheck(simulationMan.getPetriNet().transitions().toArray(new Transition[0]));
-        tspMouse = new TokenSimPopupMousePlugin(vv, simulationMan.getPetriNet(), simulationMan.getTokenSim());
+        tspMouse = new TSPopupMousePlugin(vv, simulationMan.getPetriNet(), simulationMan.getTokenSim());
 
         /*
          * Set the name of choosen mode for customSimulatorJPanel in preferences frame

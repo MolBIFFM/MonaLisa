@@ -50,12 +50,12 @@ public class NetViewerStorage implements Serializable {
         LOGGER.info("Initialized new NetViewerStorage: " + this.toString());
     }
 
-    public void updateStorage(int vertexID, int edgeID, NetViewer nv) {
+    public void updateStorage(int vertexID, int edgeID, Map<Integer, NetViewerNode> pm, Map<Integer, NetViewerNode> tm, NetViewer nv) {
         LOGGER.info("Updating NetViewerStorage");
         latestVertexID = vertexID;
         latestEdgeID = edgeID;
-        placeMap = nv.getPlaceMap();
-        transitionMap = nv.getTransitionMap();
+        placeMap = pm;
+        transitionMap = tm;
         g = nv.getGraph();
         layout = nv.getMLLayout();
         map = layout.persist();

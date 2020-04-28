@@ -2879,7 +2879,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * values.
      */
     public void updateNVS() {
-        nvs.updateStorage(latestVertexID, latestEdgeID, this);
+        nvs.updateStorage(latestVertexID, latestEdgeID, placeMap, transitionMap, this);
     }
 
     /**

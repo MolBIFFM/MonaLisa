@@ -87,29 +87,6 @@ public abstract class AbstractTokenSim {
     protected abstract void init();
 
     /**
-     * Update preferences after they were changed in preferencesPanel and
-     * save-button was pressed.
-     */
-    protected abstract void updatePreferences();
-
-    /**
-     * Load current settings to the Preferences-Panel.
-     */
-    protected abstract void loadPreferences();
-
-    /**
-     * AbstractTokenSim object receives the message that simulation mode has
-     * been started. Variables can be initialized or controls can be set active.
-     */
-    protected abstract void startSim();
-
-    /**
-     * AbstractTokenSim object receives the message that simulation mode has
-     * been stopped. Controls can be set inactive.
-     */
-    protected abstract void endSim();
-
-    /**
      * This method chooses which transition will be fired next.
      *
      * @return Transition which will be fired in the next step.

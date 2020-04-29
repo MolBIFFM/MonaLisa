@@ -76,22 +76,6 @@ public class SynchronousTokenSim extends AbstractTokenSim {
         //by default, all transitions will fire at once
     }
 
-    @Override
-    protected void updatePreferences() {
-    }
-
-    @Override
-    protected void loadPreferences() {
-    }
-
-    @Override
-    protected void startSim() {
-    }
-
-    @Override
-    protected void endSim() {
-    }
-
     /**
      * Compute what transitions will fire in next step. This will check every
      * active transitions. Is a transitions is not concurrent with other

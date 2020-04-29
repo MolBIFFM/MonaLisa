@@ -305,22 +305,6 @@ public class GillespieTokenSim extends AbstractTokenSim {
 
     }
 
-    @Override
-    protected void updatePreferences() {
-    }
-
-    @Override
-    protected void loadPreferences() {
-    }
-
-    @Override
-    protected void startSim() {
-    }
-
-    @Override
-    protected void endSim() {
-    }
-
     /**
      * This method calculates what transition will fire next and when it will
      * fire. A random time of firing will be drawn for each enabled transition,

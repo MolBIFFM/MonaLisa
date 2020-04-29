@@ -72,14 +72,6 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         this.getSimulationMan().getPreferences().put("Update interval", 1);
     }
 
-    @Override
-    protected void updatePreferences() {
-    }
-
-    @Override
-    protected void loadPreferences() {
-    }
-
     /**
      * The transition to fire will be chosen randomly from all active
      * transitions.
@@ -92,14 +84,6 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
         int transitionIndex = getRandom().nextInt(activeTransitions.length);
         LOGGER.debug("Random transition to fire has been chosen in asynchronous token simulator");
         return activeTransitions[transitionIndex];
-    }
-
-    @Override
-    protected void startSim() {
-    }
-
-    @Override
-    protected void endSim() {
     }
 
     @Override

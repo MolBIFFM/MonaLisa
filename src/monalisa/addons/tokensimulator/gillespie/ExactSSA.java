@@ -124,10 +124,13 @@ public class ExactSSA implements Runnable {
     private final SimulationStorage simStor;
 
     /**
-     * Create a new instance of runnable.
+     * Create a new instance of an ExactSSA runnable.
      *
      * @param outF File where the output will be written to.
      * @param runNr Number (index) of simulation run.
+     * @param seed Seed for randomization
+     * @param gillTS Associated GillespieTokenSim
+     * @param simStor Storage with data for simulation
      */
     public ExactSSA(File outF, int runNr, Long seed, GillespieTokenSim gillTS, SimulationStorage simStor) {
         this.gillTS = gillTS;
@@ -471,6 +474,14 @@ public class ExactSSA implements Runnable {
         }
     }
 
+    /**
+     * Prepares the dataset of the simulation for display.
+     *
+     * @param nonConstantPlaces List of non-constant places.
+     * @param constantPlaces List of constant places.
+     * @return XYSeries for all places.
+     * @throws IOException
+     */
     public XYSeriesCollection prepDataset(List<Integer> nonConstantPlaces, List<Integer> constantPlaces) throws IOException {
         //Create an array of XYSeries for places.
         final List<Integer> nonConstantPlacesF = nonConstantPlaces;
@@ -589,6 +600,11 @@ public class ExactSSA implements Runnable {
         return h * stochReactionRateConst;
     }
 
+    /**
+     * Writes a simulation log.
+     *
+     * @param reactions Reactions that occurred.
+     */
     protected void writeOutput(Integer... reactions) {
         LOGGER.debug("Writing general data into the StringBuilder");
         lastUpdate += simStor.getUpdateInterval();
@@ -635,16 +651,32 @@ public class ExactSSA implements Runnable {
         return outputFileRun;
     }
 
+    /**
+     * Adds a SimulationListener sl to the simulation.
+     *
+     * @param sl SimulationListener to be added.
+     */
     public synchronized void addSimulationListener(SimulationListener sl) {
         if (!listeners.contains(sl)) {
             listeners.add(sl);
         }
     }
 
+    /**
+     * Removes a SimulationListener sl from the simulation.
+     *
+     * @param sl SimulationListener to be removed.
+     */
     public synchronized void removeSimulationListener(SimulationListener sl) {
         listeners.remove(sl);
     }
 
+    /**
+     * Fires a SimulationEvent to all SimulationListeners.
+     *
+     * @param type Type of SimulationEvent to be fired.
+     * @param val Value for SimulationEvent, if needed. -1, if not.
+     */
     protected void fireSimulationEvent(String type, Object val) {
         SimulationEvent e = new SimulationEvent(this, type, val);
         for (SimulationListener sl : listeners) {

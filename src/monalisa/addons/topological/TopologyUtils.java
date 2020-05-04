@@ -46,7 +46,6 @@ public class TopologyUtils {
     private Map<Integer, Integer> ndTransitionsOut;
 
     public TopologyUtils() {
-
     }
 
     /**
@@ -174,7 +173,7 @@ public class TopologyUtils {
     /**
      * Actual computation of the degrees
      */
-    void computeDegrees(PetriNetFacade pnf) {
+    public void computeDegrees(PetriNetFacade pnf) {
         resetNdMaps();
         resetFreqMaps();
         Integer all;

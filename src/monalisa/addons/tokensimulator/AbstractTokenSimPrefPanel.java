@@ -9,11 +9,17 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Marcel
+ * @author Marcel Gehrmann
  */
 public abstract class AbstractTokenSimPrefPanel extends JPanel {
 
+    /**
+     * Updates the preferences for the current TokenSim.
+     */
     public abstract void updatePreferences();
 
+    /**
+     * Loads the preferences for the current TokenSim.
+     */
     public abstract void loadPreferences();
 }

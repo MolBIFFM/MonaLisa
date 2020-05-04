@@ -47,7 +47,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Frame displayed in the mainDialog for tools.
  * @author Marcel Gehrmann
  */
 public class ToolFrame implements BooleanChangeListener {
@@ -78,15 +78,29 @@ public class ToolFrame implements BooleanChangeListener {
                     McsPanel.class
             );
 
+    /**
+     * Initializes a new ToolFrame for a given toolManager and project.
+     * @param toolMan
+     * @param project
+     */
     public ToolFrame(ToolManager toolMan, Project project) {
         this.toolMan = toolMan;
         this.project = project;
     }
 
+    /**
+     * Returns all types of toolpanels that are registered with the ToolFrame.
+     * @return toolPanTypes
+     */
     public List<Class<? extends ToolPanel>> getToolPanels() {
         return Collections.unmodifiableList(toolPanTypes);
     }
 
+    /**
+     * Creates a new panel of the given type.
+     * @param type
+     * @return new ToolPanel of class 'type'
+     */
     public ToolPanel createPanel(Class<? extends ToolPanel> type) {
         LOGGER.info("Creating new panel: " + type.getSimpleName());
         if (type.equals(ClusterPanel.class)) {
@@ -109,12 +123,12 @@ public class ToolFrame implements BooleanChangeListener {
     }
 
     /**
-     * Creates the GUI for the Analyze Frame.
+     * Creates the GUI for the ToolFrame.
      *
      * @param container
      * @param strings
      */
-    public void createAnalyzeFrame(final JComponent container, StringResources strings) {
+    public void createToolFrame(final JComponent container, StringResources strings) {
         LOGGER.info("Creating UI for Analyze Frame.");
         GroupLayout containerLayout = (GroupLayout) container.getLayout();
         GroupLayout.ParallelGroup horizontal = containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING);

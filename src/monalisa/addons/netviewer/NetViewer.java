@@ -3117,7 +3117,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 propertyName = (String) it.next();
                 nvNode.putProperty(propertyName, place.getProperty(propertyName));
             }
-            // serach for highest id, to get no conflict by creating new nodes
+            // search for highest id, to get no conflict by creating new nodes
             if (place.id() > latestVertexID) {
                 latestVertexID = place.id();
             }
@@ -3138,7 +3138,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 propertyName = (String) it.next();
                 nvNode.putProperty(propertyName, transition.getProperty(propertyName));
             }
-            // serach for highest id, to get no conflict by creating new nodes
+            // search for highest id, to get no conflict by creating new nodes
             if (transition.id() > latestVertexID) {
                 latestVertexID = transition.id();
             }

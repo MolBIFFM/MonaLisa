@@ -706,16 +706,31 @@ public class SimulationManager {
         return preferences;
     }
 
+    /**
+     * Adds a GuiListener to the SimulationManager.
+     *
+     * @param gl
+     */
     public void addGuiListener(GuiListener gl) {
         if (!listeners.contains(gl)) {
             listeners.add(gl);
         }
     }
 
+    /**
+     * Removes a GuiListener from the SimulationManager
+     *
+     * @param gl
+     */
     public void removeGuiListener(GuiListener gl) {
         listeners.remove(gl);
     }
 
+    /**
+     * Fires a GuiUpdateCall for all GuiListeners.
+     *
+     * @param type
+     */
     public void fireGuiUpdateCall(String type) {
         GuiEvent event = new GuiEvent(this, type);
         for (GuiListener gl : listeners) {

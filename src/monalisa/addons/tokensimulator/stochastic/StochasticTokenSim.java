@@ -110,21 +110,11 @@ public class StochasticTokenSim extends AbstractTokenSim {
     /**
      * The init()-function is called in the super-constructor of the
      * AbstractTokenSim, which is called in the constructor of
-     * StochasticTokenSim. A JPanel with controls will be created, this panel in
-     * coded in StochasticTokenSimPanel. This panel will be given to the
-     * NetViewer and will be built in the control-toolbar.
+     * StochasticTokenSim. Initializes preferences for stochastic simulation.
      */
     @Override
     protected void init() {
-        //START CREATING GUI ELEMENTS
-        /*
-         * create new GUI-Panel
-         */
-        LOGGER.info("Initiating the GUI for the stochastic simulation");
-        /*
-         * Set the name of the Stochastic simulator as a text for the JLabel simName
-         */
-        //END CREATING GUI ELEMENTS
+        LOGGER.info("Initiating the preferences for the stochastic simulation");
         this.getSimulationMan().getPreferences().put("Time delay", 0);
         this.getSimulationMan().getPreferences().put("Update interval", 1);
         this.getSimulationMan().getPreferences().put("Marking dependent rates", false);

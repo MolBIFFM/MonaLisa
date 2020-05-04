@@ -27,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Panel that holds the GUI necessary to control the PInvariantTool.
  * @author Marcel Gehrmann
  */
 public class PInvariantPanel extends AbstractToolPanel {

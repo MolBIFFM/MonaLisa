@@ -40,7 +40,7 @@ public class TSPopupMousePlugin extends AbstractPopupGraphMousePlugin implements
     private final static Logger LOGGER = LogManager.getLogger(TSPopupMousePlugin.class);
     private final AbstractTokenSim abstTS;
 
-    public TSPopupMousePlugin (VisualizationViewer<NetViewerNode, NetViewerEdge> vv, PetriNetFacade pnf, AbstractTokenSim abstTS) {
+    public TSPopupMousePlugin(VisualizationViewer<NetViewerNode, NetViewerEdge> vv, PetriNetFacade pnf, AbstractTokenSim abstTS) {
         this.vv = vv;
         this.pnf = pnf;
         this.abstTS = abstTS;

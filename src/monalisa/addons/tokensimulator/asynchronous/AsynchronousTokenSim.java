@@ -48,7 +48,6 @@ import org.apache.logging.log4j.LogManager;
 public class AsynchronousTokenSim extends AbstractTokenSim {
 
     //BEGIN VARIABLES DECLARATION
-    //GUI
     /**
      * Thread which executes simulation.
      */
@@ -63,11 +62,11 @@ public class AsynchronousTokenSim extends AbstractTokenSim {
     //END CONSTRUCTORS
 
     /**
-     * Create GUI and etc, so classes that extend this class can use it too.
+     * Initializes preferences.
      */
     @Override
     protected void init() {
-        LOGGER.debug("GUI for Asynchronous Token Simulator initialized");
+        LOGGER.debug("Preferences for Asynchronous Token Simulator initialized");
         this.getSimulationMan().getPreferences().put("Time delay", 0);
         this.getSimulationMan().getPreferences().put("Update interval", 1);
     }

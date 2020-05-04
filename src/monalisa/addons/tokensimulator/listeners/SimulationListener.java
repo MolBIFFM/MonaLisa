@@ -14,5 +14,9 @@ import java.util.EventListener;
  */
 public interface SimulationListener extends EventListener {
 
+    /**
+     * Handles SimulationEvents to synchronize UI and update progress.
+     * @param e
+     */
     void simulationUpdated(SimulationEvent e);
 }

@@ -8,10 +8,14 @@ package monalisa.addons.tokensimulator.listeners;
 import java.util.EventListener;
 
 /**
- *
- * @author Marcel
+ * A listener for GuiEvents that updates the GUI.
+ * @author Marcel Gehrmann
  */
 public interface GuiListener extends EventListener {
 
+    /**
+     * Handles GuiEvents.
+     * @param e
+     */
     void guiUpdateCall(GuiEvent e);
 }

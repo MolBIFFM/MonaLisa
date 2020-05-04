@@ -9,7 +9,6 @@
  */
 package monalisa.addons.tokensimulator.gillespie;
 
-import monalisa.addons.tokensimulator.gillespie.GillespieTokenSim;
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 import monalisa.addons.tokensimulator.utils.Utilities;
 import java.awt.event.WindowAdapter;

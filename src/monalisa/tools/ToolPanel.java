@@ -11,7 +11,7 @@ import monalisa.data.Pair;
 import monalisa.results.Configuration;
 
 /**
- * Return a panel that holds the GUI necessary to control the settings of a
+ * A panel that holds the GUI necessary to control the settings of a
  * corresponding tool.<b>Note to implementors:</b> A panel should be created
  * only once and cached internally.
  *

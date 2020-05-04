@@ -424,14 +424,28 @@ public final class Project implements Serializable {
         return toolMan;
     }
 
+    /**
+     * 
+     * @return the storage for data from addons
+     */
     public Map<String, Map<String, Object>> getStorage() {
         return addonStorage;
     }
 
+    /**
+     * Puts data toStore into addonStorage under the addon's name
+     * @param addonName Name of the addon
+     * @param toStore data to store
+     */
     public void putStorage(String addonName, Map<String, Object> toStore) {
         addonStorage.put(addonName, toStore);
     }
 
+    /**
+     * Function is called when a project is saved and resets synchronizer.
+     * @param objectOutput
+     * @throws IOException 
+     */
     private void writeObject(ObjectOutputStream objectOutput) throws IOException {
         this.synchronizer = null;
         objectOutput.defaultWriteObject();

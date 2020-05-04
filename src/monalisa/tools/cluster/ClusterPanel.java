@@ -35,7 +35,7 @@ import monalisa.tools.cluster.distances.Distances;
 import monalisa.tools.tinv.TInvariantTool;
 
 /**
- *
+ * Panel that holds the GUI necessary to control the ClusterTool.
  * @author Marcel Gehrmann
  */
 public class ClusterPanel extends AbstractToolPanel {

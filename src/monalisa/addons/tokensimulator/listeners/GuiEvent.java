@@ -8,8 +8,8 @@ package monalisa.addons.tokensimulator.listeners;
 import java.util.EventObject;
 
 /**
- *
- * @author Marcel
+ * An event fired to update the GUI of the tokensimulator.
+ * @author Marcel Gehrmann
  */
 public class GuiEvent extends EventObject {
 
@@ -23,11 +23,20 @@ public class GuiEvent extends EventObject {
 
     private final String type;
 
+    /**
+     * Creates a new GuiEvent.
+     * @param source The object firing this event.
+     * @param type The type of GuiEvent.
+     */
     public GuiEvent(Object source, String type) {
         super(source);
         this.type = type;
     }
 
+    /**
+     * Returns the type of GuiEvent fired.
+     * @return type
+     */
     public String getType() {
         return type;
     }

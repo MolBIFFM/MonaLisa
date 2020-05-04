@@ -974,7 +974,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         toolUI = new ToolFrame(project.getToolManager(), project);
         LOGGER.info("Successfully initialized ToolUI");
         toolUI.getToolManager().addToolStatusUpdateListener(this);
-        toolUI.createAnalyzeFrame(contentPanel, strings);
+        toolUI.createToolFrame(contentPanel, strings);
         recursivelyDoLayout(mainContainer);
         menuTFileLoad.setEnabled(true);
 
@@ -1175,7 +1175,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     public void updateAnalyzeFrame() {
         contentPanel.removeAll();
-        toolUI.createAnalyzeFrame(contentPanel, strings);
+        toolUI.createToolFrame(contentPanel, strings);
     }
 
     @Override

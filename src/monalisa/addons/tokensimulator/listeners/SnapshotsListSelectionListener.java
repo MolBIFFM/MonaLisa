@@ -11,7 +11,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.addons.tokensimulator.SimulationPanel;
 
 /**

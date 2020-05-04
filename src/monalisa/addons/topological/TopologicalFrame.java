@@ -66,6 +66,5 @@ public class TopologicalFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private static final ResourceManager resources = ResourceManager.instance();
-    private static final StringResources strings = resources.getDefaultStrings();
 
 }

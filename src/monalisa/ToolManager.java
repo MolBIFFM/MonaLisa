@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Manager for Tools implemented in MonaLisa.
  * @author Marcel Gehrmann
  */
 public class ToolManager implements ProgressListener, Serializable {
@@ -41,6 +41,9 @@ public class ToolManager implements ProgressListener, Serializable {
 
     private static final Logger LOGGER = LogManager.getLogger(ToolManager.class);
 
+    /**
+     * Initializes a new ToolManager instance.
+     */
     public ToolManager() {
         LOGGER.info("Initializing new ToolManager.");
         this.toolStatusUpdateListeners = new ArrayList<>();
@@ -48,6 +51,9 @@ public class ToolManager implements ProgressListener, Serializable {
         LOGGER.info("Successfully initialized new ToolManager.");
     }
 
+    /**
+     * Initializes all tools registered in monaLisa.tools.Tools.
+     */
     private void initTools() {
         this.tools = new ArrayList<>();
         this.results = new HashMap<>();
@@ -74,6 +80,10 @@ public class ToolManager implements ProgressListener, Serializable {
         }
     }
 
+    /**
+     * Returns all tools.
+     * @return tools
+     */
     public List<Tool> getTools() {
         return tools;
     }
@@ -103,7 +113,10 @@ public class ToolManager implements ProgressListener, Serializable {
         return null;
     }
 
-    void updateTools() {
+    /**
+     * Updates the results for all tools.
+     */
+    public void updateTools() {
         for (Class<? extends Tool> toolType : Tools.toolTypes()) {
             if (results.containsKey(toolType)) {
                 results.put(toolType, new HashMap<Configuration, Result>());
@@ -314,15 +327,29 @@ public class ToolManager implements ProgressListener, Serializable {
         }
     }
 
-    void fireToolStatusUpdate(Tool tool, ToolStatusUpdateEvent.Status status) {
+    /**
+     * Fires a status update for a tool with a given status
+     * @param tool the tool to fire an update for
+     * @param status the new status of the tool
+     */
+    private void fireToolStatusUpdate(Tool tool, ToolStatusUpdateEvent.Status status) {
         fireToolStatusUpdate(new ToolStatusUpdateEvent(this, getToolName(tool), status));
     }
 
-    void fireToolStatusUpdate(Tool tool, int progress) {
+    /**
+     * Fires a status update for a tool with a given progress
+     * @param tool the tool to fire an update for
+     * @param progress the progress of the tool
+     */
+    private void fireToolStatusUpdate(Tool tool, int progress) {
         fireToolStatusUpdate(new ToolStatusUpdateEvent(this, getToolName(tool), progress));
     }
 
-    synchronized void fireToolStatusUpdate(ToolStatusUpdateEvent e) {
+    /**
+     * Distributes the status update event to all listeners
+     * @param e the tool status update event
+     */
+    protected synchronized void fireToolStatusUpdate(ToolStatusUpdateEvent e) {
         List<ToolStatusUpdateListener> listeners = new ArrayList<>(toolStatusUpdateListeners);
         for (ToolStatusUpdateListener listener : listeners) {
             listener.updated(e);
@@ -331,7 +358,6 @@ public class ToolManager implements ProgressListener, Serializable {
 
     /**
      * Removes a ToolStatusUpdateListener from the project.
-     *
      * @param listener
      */
     public synchronized void removeToolStatusUpdateListener(ToolStatusUpdateListener listener) {
@@ -353,10 +379,20 @@ public class ToolManager implements ProgressListener, Serializable {
         LOGGER.warn("Finished aborting the running tools.");
     }
 
+    /**
+     * Resets the messages from tools to an empty ErrorLog.
+     */
     public void resetToolMessages() {
         toolMessages = new ErrorLog();
     }
 
+    /**
+     * Runs a tool with a given configuration for it.
+     * @param tool tool to be run.
+     * @param config config for the tool to be run.
+     * @param project
+     * @return
+     */
     public ErrorLog runSingleTool(Tool tool, Configuration config, Project project) {
         LOGGER.info(getToolName(tool) + " started");
         tool.addProgressListener(this);

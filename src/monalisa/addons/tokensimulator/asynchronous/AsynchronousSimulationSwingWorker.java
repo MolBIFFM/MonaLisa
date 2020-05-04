@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Thread which performs the simulation sequence.
+ * Thread which performs the simulation sequence for asynchronous simulation.
  */
 public class AsynchronousSimulationSwingWorker extends AbstractSimulationSwingWorker {
 

@@ -33,7 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Panel that holds the GUI necessary to control the KnockoutTool.
  * @author Marcel Gehrmann
  */
 public class KnockoutPanel extends AbstractToolPanel {

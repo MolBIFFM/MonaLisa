@@ -63,13 +63,11 @@ public class SynchronousTokenSim extends AbstractTokenSim {
     //END CONSTRUCTORS
 
     /**
-     * Create GUI and etc, so classes that extend this class can use it too
+     * Initializes preferences for synchronous simulation.
      */
     @Override
     protected void init() {
-        //START CREATING GUI ELEMENTS
-        LOGGER.info("Initiating the GUI for the synchronous simulation");
-        //END CREATING GUI ELEMENTS
+        LOGGER.info("Initiating the preferences for the synchronous simulation");
         this.getSimulationMan().getPreferences().put("Time delay", 0);
         this.getSimulationMan().getPreferences().put("Update interval", 1);
         this.getSimulationMan().getPreferences().put("Fire at once", 100);

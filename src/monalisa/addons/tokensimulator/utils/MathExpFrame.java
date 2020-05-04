@@ -207,6 +207,12 @@ public class MathExpFrame extends javax.swing.JFrame {
         return this.listeners.get(l);
     }
 
+    /**
+     * When not called by GillespieInputFrame, sets which place it is called
+     * for.
+     *
+     * @param id
+     */
     public void addPlaceInformation(int id) {
         this.id = id;
     }

@@ -34,6 +34,15 @@ public class TauLeapingSSA extends ExactSSA {
     private final GillespieTokenSim gillTS;
     private final SimulationStorage simStor;
 
+    /**
+     * Create a new instance of a TauLeapingSSA runnable.
+     *
+     * @param outF File where the output will be written to.
+     * @param runNr Number (index) of simulation run.
+     * @param seed Seed for randomization
+     * @param gillTS Associated GillespieTokenSim
+     * @param simStor Storage with data for simulation
+     */
     public TauLeapingSSA(File outF, int runNr, Long seed, GillespieTokenSim gillTS, SimulationStorage simStor) {
         super(outF, runNr, seed, gillTS, simStor);
         this.gillTS = gillTS;

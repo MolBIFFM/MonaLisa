@@ -26,6 +26,12 @@ public class AnnotationUtils {
     public static final String HISTORY = "HISTORY";
     public static final String MIRIAM_BIO_QUALIFIERS = "MIRIAM_BIO_QUALIFIERS";
 
+    /**
+     * Adds a MIRIAM Bio qualifier to a PetriNetEntity
+     * @param ape
+     * @param mw
+     * @param resource
+     */
     public void addMiriam(AbstractPetriNetEntity ape, MiriamWrapper mw, String resource) {
         if (!ape.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
             addProperty(ape, MIRIAM_BIO_QUALIFIERS, new ArrayList<CVTerm>());
@@ -44,6 +50,12 @@ public class AnnotationUtils {
         }
     }
 
+    /**
+     * Adds a MIRIAM model qualifier to the Petri net.
+     * @param petriNet
+     * @param mw
+     * @param resource
+     */
     public void addMiriamModel(PetriNetFacade petriNet, MiriamWrapper mw, String resource) {
         if (!petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
             addProperty(petriNet, MIRIAM_MODEL_QUALIFIERS, new ArrayList<CVTerm>());
@@ -62,6 +74,14 @@ public class AnnotationUtils {
         }
     }
 
+    /**
+     * Edits a MIRIAM Bio qualifier for a PetriNetEntity.
+     * @param ape
+     * @param identifier
+     * @param mrw
+     * @param resource
+     * @param selectedItem
+     */
     public void editMiriam(AbstractPetriNetEntity ape, MiriamWrapper identifier, MiriamRegistryWrapper mrw, String resource, Object selectedItem) {
         List<CVTerm> cvts = (List<CVTerm>) ape.getProperty(MIRIAM_BIO_QUALIFIERS);
         // Same identifier = update the uri
@@ -110,6 +130,14 @@ public class AnnotationUtils {
         }
     }
 
+    /**
+     * Edits a MIRIAM model qualifier for the Petri net.
+     * @param petriNet
+     * @param identifier
+     * @param mrw
+     * @param uriTrimmed
+     * @param selectedItem
+     */
     public void editMiriamModel(PetriNetFacade petriNet, MiriamWrapper identifier, MiriamRegistryWrapper mrw, String uriTrimmed, Object selectedItem) {
         List<CVTerm> cvts = petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
         // Same identifier = update the uri
@@ -158,14 +186,33 @@ public class AnnotationUtils {
         }
     }
 
+    /**
+     * Adds a property to a PetriNetEntity
+     * @param <T>
+     * @param ape
+     * @param propName
+     * @param value
+     */
     public <T> void addProperty(AbstractPetriNetEntity ape, String propName, T value) {
         ape.putProperty(propName, value);
     }
 
+    /**
+     * Removes a property from a PetrinetEntity
+     * @param ape
+     * @param propName
+     */
     public void removeProperty(AbstractPetriNetEntity ape, String propName) {
         ape.removeProperty(propName);
     }
 
+    /**
+     * Updates the CV terms for a Petri net entity.
+     * @param ape
+     * @param mode
+     * @param propName
+     * @param term
+     */
     public void updateCVTerms(AbstractPetriNetEntity ape, String mode, String propName, CVTerm term) {
         if (mode.equals("add")) {
             ((List<CVTerm>) ape.getProperty(propName)).add(term);

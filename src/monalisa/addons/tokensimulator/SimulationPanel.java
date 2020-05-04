@@ -267,6 +267,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         });
     }
 
+    /**
+     * Disables the buttons for loading and saving setups.
+     */
     public void disableSetup() {
         loadSetupButton.setEnabled(false);
         saveSetupButton.setEnabled(false);
@@ -842,6 +845,12 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     protected javax.swing.JButton startSimulationJButton;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Initializes a TokenSim, its UI and the TSPopopMousePlugin given to the
+     * NetViewer.
+     *
+     * @param simType
+     */
     private void createTokenSim(String simType) {
         //create an instance of choosen token simulator
         LOGGER.info("simType: " + simType);
@@ -886,6 +895,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         this.customControlScrollPane.setViewportView(this.customTSControls);
     }
 
+    /**
+     * Starts up the simulation for a TokenSim.
+     */
     private void startSim() {
         netViewer.startTokenSimulator(tspMouse);
 
@@ -1022,6 +1034,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         LOGGER.debug("Map for plotting places has been created");
     }
 
+    /**
+     * Ends the simulation for a TokenSim.
+     */
     private void endSim() {
         if (simulationMan.getTokenSim() == null) {
             return;
@@ -1070,6 +1085,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         simulationMan.removeGuiListener(this);
     }
 
+    /**
+     * Updates the plot for places and their tokens.
+     */
     private void updatePlot() {
         LOGGER.debug("Updating the plot for all places to plot");
         Map<Place, Boolean> placesToPlot = (Map<Place, Boolean>) simulationMan.getPreferences().get("PlacesToPlot");
@@ -1143,16 +1161,31 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         chartFrame.setVisible(true);
     }
 
+    /**
+     * Returns the NetViewer.
+     *
+     * @return
+     */
     public NetViewer getNetViewer() {
         return netViewer;
     }
 
+    /**
+     * Loads the selected Snapshot.
+     *
+     * @param selected
+     */
     public void loadSnap(int selected) {
         simulationMan.loadSnapshot(snapshots.get(selected));
         historyForwardJButton.setEnabled(false);
         historyBackJButton.setEnabled(!simulationMan.historyArrayList.isEmpty());
     }
 
+    /**
+     * Handles GuiEvents fired from the SimulationManager.
+     *
+     * @param e
+     */
     @Override
     public void guiUpdateCall(GuiEvent e) {
         String type = e.getType();

@@ -34,7 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Panel that holds the GUI necessary to control the McsTool.
  * @author Marcel Gehrmann
  */
 public class McsPanel extends AbstractToolPanel {

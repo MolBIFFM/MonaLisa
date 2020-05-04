@@ -40,7 +40,6 @@
  */
 package monalisa.addons.tokensimulator.gillespie;
 
-import monalisa.addons.tokensimulator.gillespie.StochasticSimulator;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;

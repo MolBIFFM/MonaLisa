@@ -9,8 +9,9 @@ import java.util.Set;
 import monalisa.addons.tokensimulator.utils.MathematicalExpression;
 
 /**
- *
- * @author Marcel
+ * Class that stores all information necessary for a simulation initialized
+ * by the StochasticSimulator.
+ * @author Marcel Gehrmann
  */
 public class SimulationStorage {
 
@@ -20,13 +21,13 @@ public class SimulationStorage {
     private final Set<Integer>[] compoundsInfluence;
     private final double volMol;
     private final MathematicalExpression[] constantPlacesExp;
-    private double maxSimTime;
+    private final double maxSimTime;
     private final String[] constantPlaceNames;
     private final Set<Integer> constantPlacesPostTransitions;
     private final MathematicalExpression[] reactionRateConstants;
     private final String[] nonConstantPlaceNames;
     private final int[] nonConstantPlaceIDs;
-    private double updateInterval;
+    private final double updateInterval;
     private final long[] nonConstantInitialMarking;
     private final int[] reactionIDs;
     private final String[] reactionNames;

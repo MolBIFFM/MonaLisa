@@ -66,7 +66,7 @@ public abstract class AbstractTokenSim {
 
     /**
      * New instance of AbstractTokenSim gets the TokenSimulator-object and uses
-     * its VisualizationViewer and petriNet.
+     * its petriNet.
      *
      * @param simulationMan
      */

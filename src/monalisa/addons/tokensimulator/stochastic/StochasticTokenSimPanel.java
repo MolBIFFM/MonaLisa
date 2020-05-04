@@ -58,6 +58,7 @@ public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements Si
         return continuousModeCheckBox.isSelected();
     }
 
+    @Override
     public void unlock() {
         fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
         fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));

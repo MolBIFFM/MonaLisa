@@ -247,10 +247,6 @@ public class AnnotationsPanel extends AddonPanel {
         LOGGER.info("Successfully initialized AnnotationsPanel");
     }
 
-    static void editCompartmentIdentifiers(Compartment c) {
-
-    }
-
     private void fillIdentifierList(List<CVTerm> cvts) {
         LOGGER.info("Filling identifier list");
         int childCount;

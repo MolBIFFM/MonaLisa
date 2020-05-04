@@ -28,7 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Panel that holds the GUI necessary to control the TInvariantTool.
  * @author Marcel Gehrmann
  */
 public class TInvariantPanel extends AbstractToolPanel {

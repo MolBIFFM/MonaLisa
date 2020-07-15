@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -23,7 +24,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
+import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.data.pn.Compartment;
+import monalisa.data.pn.Place;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
@@ -211,6 +214,7 @@ public class ToolBar extends javax.swing.JPanel {
         mouseTransformingPanel = new javax.swing.JPanel();
         mouseTransformingButton = new javax.swing.JButton();
         saveProjectButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         styleButtonPanel = new javax.swing.JPanel();
         fontSizeLabel = new javax.swing.JLabel();
         iconSizeLabel = new javax.swing.JLabel();
@@ -290,7 +294,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         controlButtonPanel.add(enableHighlightingButton, gridBagConstraints);
 
         enableLabelsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/hide_labels.png"))); // NOI18N
@@ -303,7 +306,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         controlButtonPanel.add(enableLabelsButton, gridBagConstraints);
 
@@ -614,11 +616,20 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         controlButtonPanel.add(saveProjectButton, gridBagConstraints);
 
+        jButton1.setText("Reachability");
+        jButton1.setActionCommand("Reach");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        controlPane.add(controlButtonPanel, gridBagConstraints);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 2;
+        controlButtonPanel.add(jButton1, gridBagConstraints);
+
+        controlPane.add(controlButtonPanel, new java.awt.GridBagConstraints());
 
         styleButtonPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1228,6 +1239,13 @@ public class ToolBar extends javax.swing.JPanel {
         Pinv_list.clearSelection();
     }//GEN-LAST:event_reset_color_buttonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        HashMap<Place, Long> marking = new HashMap<>();
+        marking.putAll(netViewer.getProject().getPNFacade().marking());
+        ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking);
+        rd.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
@@ -1284,6 +1302,7 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JSpinner iconSizeSpinner;
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

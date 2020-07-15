@@ -237,7 +237,6 @@ public class ToolFrame implements BooleanChangeListener {
         return requirementsSatisfied;
     }
 
-    // runGivenTools and runSelectedTools are somewhat problematic and definitely need testing.
     /**
      * Starts all given tools.
      *

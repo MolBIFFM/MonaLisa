@@ -32,7 +32,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import monalisa.addons.netviewer.NetViewer;
-import monalisa.addons.tokensimulator.SimulationManager;
 import monalisa.addons.tokensimulator.exceptions.PlaceConstantException;
 import monalisa.addons.tokensimulator.exceptions.PlaceNonConstantException;
 import monalisa.data.pn.Place;
@@ -534,14 +533,14 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         kMode = new javax.swing.JRadioButton();
         cMode = new javax.swing.JRadioButton();
 
-        setTitle(SimulationManager.strings.get("GilTSInputDataFrameTitle"));
+        setTitle(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSInputDataFrameTitle"));
         setAutoRequestFocus(false);
-        setIconImage(SimulationManager.resources.getImage("icon-16.png"));
+        setIconImage(monalisa.addons.tokensimulator.SimulationManager.resources.getImage("icon-16.png"));
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        volumeLabel.setText(SimulationManager.strings.get("GilTSInputDataFrameVolume"));
+        volumeLabel.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSInputDataFrameVolume"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -593,7 +592,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
         jPanel1.add(saveButton, gridBagConstraints);
 
         volumeTextField.setText("1.0");
-        volumeTextField.setToolTipText(SimulationManager.strings.get("GilTSInputDataFrameVolumeTT"));
+        volumeTextField.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSInputDataFrameVolumeTT"));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;

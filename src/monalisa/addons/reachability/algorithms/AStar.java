@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 public class AStar extends AbstractReachabilityAlgorithm {
 
     private final String heur;
-    private static final Logger LOGGER = LogManager.getLogger(BestFirst.class);
+    private static final Logger LOGGER = LogManager.getLogger(AStar.class);
 
     public AStar(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target, String heur) {
         super(pf, pnf, marking, target);
@@ -55,20 +55,22 @@ public class AStar extends AbstractReachabilityAlgorithm {
             ReachabilityNode workingNode = workingList.get(0);
             workingList.remove(workingNode);
             vertices.add(workingNode);
-            LOGGER.info("Expanding new marking with priority " + workingNode.getPriority());
-            FullReachability.testprint_marking(workingNode);
+            LOGGER.debug("Expanding new marking with priority " + workingNode.getPriority());
             HashSet<Transition> activeTransitions = pf.computeActive(pnf.transitions(), workingNode.getMarking());
             for (Transition t : activeTransitions) {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                if (newNode.equals(tar)) {
+                /*for (Place p : pnf.places()) {                
+                    LOGGER.info(p.getProperty("name") + "\t" + newNode.getMarking().get(p));
+                }*/
+                if (newNode.equals(tar)) {                    
                     tar = newNode;
                     vertices.add(tar);
                     edges.add(new ReachabilityEdge(workingNode, tar, t));
                     g = new ReachabilityGraph(vertices, edges);
-                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
-                    LOGGER.info("Target marking has been reached.");
+                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());                    
+                    LOGGER.info("Target marking has been reached.");                  
                     return;
                 }
                 boolean unvisited = true;
@@ -122,8 +124,7 @@ public class AStar extends AbstractReachabilityAlgorithm {
     private void insertNode(ReachabilityNode node, ArrayList<ReachabilityNode> workingList) {
         computePriority(node);
         int pos = findPos(workingList, node);
-        LOGGER.info("Current priority: " + node.getPriority());
-        FullReachability.testprint_marking(node);
+        LOGGER.debug("Current priority: " + node.getPriority());
         workingList.add(pos, node);
     }
 
@@ -131,22 +132,29 @@ public class AStar extends AbstractReachabilityAlgorithm {
     public void computePriority(ReachabilityNode node) {
         double prio = node.getDepth();
         HashMap<Place, Long> diff = tar.getDifference(node);
+        /*for (Place p : pnf.places()) {
+            LOGGER.debug(p.getProperty("name") + "\t" + node.getMarking().get(p)
+            + "\t" + tar.getMarking().get(p) + "\t" + diff.get(p));
+        }*/
         HashSet<Double> placewise = new HashSet<>();
         for (Place p : pnf.places()) {
             HashSet<Double> intermediate = new HashSet<>();
             ArrayList<Transition> validTransitions = new ArrayList<>();
             // The place still has too many tokens compared to the target marking
+            LOGGER.debug(p.getProperty("name") + "\t" + diff.get(p));
             if (diff.get(p) < 0) {
                 validTransitions.addAll(p.outputs());
                 for (Transition t : validTransitions) {
                     intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
                 }
+                placewise.add(Collections.min(intermediate));                
             } // The place still has too few tokens compared to the target marking
             else if (diff.get(p) > 0) {
                 validTransitions.addAll(p.inputs());
                 for (Transition t : validTransitions) {
                     intermediate.add(Math.floor(diff.get(p) / pnf.getArc(t, p).weight()));
                 }
+                placewise.add(Collections.min(intermediate));                
             }
             // find smallest element in intermediate and add it to placewise            
             /*double smallest = Double.MAX_VALUE;
@@ -156,7 +164,6 @@ public class AStar extends AbstractReachabilityAlgorithm {
                 }
             }
             placewise.add(smallest);*/
-            placewise.add(Collections.min(intermediate));
         }
         // find maximal value in placewise and add it to priority
         /*double largest = Double.MIN_VALUE;
@@ -165,6 +172,7 @@ public class AStar extends AbstractReachabilityAlgorithm {
                 largest = entry;
             }
         }*/
+        LOGGER.debug("Depth: " + Double.toString(prio) + " Heur: " + Double.toString(Collections.max(placewise)));
         prio += Collections.max(placewise); // Add heuristic
         node.setPriority(prio);
     }

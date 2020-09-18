@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class FullReachability extends AbstractReachabilityAlgorithm {
 
-    private static final Logger LOGGER = LogManager.getLogger(FullCoverability.class);
+    private static final Logger LOGGER = LogManager.getLogger(FullReachability.class);
 
     public FullReachability(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
         super(pf, pnf, marking, target);

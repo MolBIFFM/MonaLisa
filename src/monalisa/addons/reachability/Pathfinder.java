@@ -57,7 +57,7 @@ public class Pathfinder {
     }
 
     /**
-     *
+     * Constructor used for algorithms that use a heuristic
      * @param pnf PetriNetFacade for the net.
      * @param marking The run marking. This will be changed, so it should be a
      * newly created marking.

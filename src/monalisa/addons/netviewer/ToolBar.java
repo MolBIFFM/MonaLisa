@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -26,11 +28,14 @@ import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.data.pn.Compartment;
+import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import monalisa.results.PInvariants;
+import monalisa.results.PInvariantsConfiguration;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
@@ -214,7 +219,6 @@ public class ToolBar extends javax.swing.JPanel {
         mouseTransformingPanel = new javax.swing.JPanel();
         mouseTransformingButton = new javax.swing.JButton();
         saveProjectButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         styleButtonPanel = new javax.swing.JPanel();
         fontSizeLabel = new javax.swing.JLabel();
         iconSizeLabel = new javax.swing.JLabel();
@@ -257,6 +261,7 @@ public class ToolBar extends javax.swing.JPanel {
         manuellColorSelection = new javax.swing.JCheckBox();
         reset_color_button = new javax.swing.JButton();
         heatMap_CheckBox = new javax.swing.JCheckBox();
+        reachabilityButton = new javax.swing.JButton();
         mcsPanel = new javax.swing.JPanel();
         mcsLabel = new javax.swing.JLabel();
         mcsCb = new javax.swing.JComboBox();
@@ -615,19 +620,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         controlButtonPanel.add(saveProjectButton, gridBagConstraints);
-
-        jButton1.setText("Reachability");
-        jButton1.setActionCommand("Reach");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
-        controlButtonPanel.add(jButton1, gridBagConstraints);
 
         controlPane.add(controlButtonPanel, new java.awt.GridBagConstraints());
 
@@ -1002,6 +994,20 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         optionsPanel.add(heatMap_CheckBox, gridBagConstraints);
 
+        reachabilityButton.setText("Reachability");
+        reachabilityButton.setActionCommand("Reach");
+        reachabilityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reachabilityButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
+        optionsPanel.add(reachabilityButton, gridBagConstraints);
+        reachabilityButton.getAccessibleContext().setAccessibleParent(analysisPane);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -1239,12 +1245,13 @@ public class ToolBar extends javax.swing.JPanel {
         Pinv_list.clearSelection();
     }//GEN-LAST:event_reset_color_buttonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void reachabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reachabilityButtonActionPerformed
         HashMap<Place, Long> marking = new HashMap<>();
         marking.putAll(netViewer.getProject().getPNFacade().marking());
-        ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking);
+        PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
+        ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking, pinvs);
         rd.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_reachabilityButtonActionPerformed
 
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
@@ -1302,7 +1309,6 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JSpinner iconSizeSpinner;
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -1324,6 +1330,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
+    private javax.swing.JButton reachabilityButton;
     protected javax.swing.JButton removeBendButton;
     protected javax.swing.JPanel removeBendPanel;
     private javax.swing.JButton reset_color_button;

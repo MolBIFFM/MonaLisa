@@ -10,8 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -263,16 +263,17 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private void computeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeButtonActionPerformed
         updateMarkings();
         LOGGER.info("Requested computation of a path from start to target marking.");
-        if (!checkPIs(pinvs, start, target)) {
-            LOGGER.warn("Aborting reachability analysis.");
-            return;
-        }
         String algo = algoRadioGroup.getSelection().getActionCommand();
         if (algo.equals("Breadth First Search")) {
             pf = new Pathfinder(pnf, start, target, algo);
         } else {
             pf = new Pathfinder(pnf, start, target, algo, (String) comboHeuristic.getSelectedItem());
         }
+        if (!pf.checkPIs(pinvs, start, target)) {
+            LOGGER.warn("Aborting reachability analysis.");
+            JOptionPane.showMessageDialog(this, "Start marking and target marking are incompatible. Sums for place invariants do not match.");            
+            return;
+        }        
         pf.addListenerToAlgorithm(this);
         pf.run();
     }//GEN-LAST:event_computeButtonActionPerformed
@@ -323,27 +324,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             default:
                 break;
         }
-    }
-
-    private boolean checkPIs(PInvariants pinvs, HashMap<Place, Long> start, HashMap<Place, Long> target) {
-        LOGGER.info("Checking Place Invariants before starting reachability analysis.");
-        for (Object pinv : pinvs.toArray()) {
-            PInvariant pin = (PInvariant) pinv;
-            int startSum = 0;
-            int targetSum = 0;
-            for (Place p : pin) {
-                startSum += pin.factor(p) * start.get(p);
-                targetSum += pin.factor(p) * target.get(p); 
-            }
-            if (startSum != targetSum) {
-                LOGGER.warn("Sums for start and target marking do not match.");
-                return false;
-            }
-            LOGGER.warn(pin.places().toString());
-            LOGGER.warn(pin.asVector().toString());
-        }
-        LOGGER.info("Sums for start and target marking match.");
-        return true;
     }
 
     private void updateMarkings() {

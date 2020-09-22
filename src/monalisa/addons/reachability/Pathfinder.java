@@ -15,9 +15,11 @@ import java.util.Map;
 import monalisa.addons.reachability.algorithms.AbstractReachabilityAlgorithm;
 import monalisa.addons.reachability.algorithms.FullCoverability;
 import monalisa.addons.reachability.algorithms.FullReachability;
+import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import monalisa.results.PInvariants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -213,5 +215,26 @@ public class Pathfinder {
 
     public void addListenerToAlgorithm(ReachabilityListener listener) {
         algorithm.addListener(listener);
+    }
+
+    public boolean checkPIs(PInvariants pinvs, HashMap<Place, Long> start, HashMap<Place, Long> target) {
+        LOGGER.info("Checking Place Invariants before starting reachability analysis.");
+        for (Object pinv : pinvs.toArray()) {
+            PInvariant pin = (PInvariant) pinv;
+            int startSum = 0;
+            int targetSum = 0;
+            for (Place p : pin) {
+                startSum += pin.factor(p) * start.get(p);
+                targetSum += pin.factor(p) * target.get(p);
+            }
+            if (startSum != targetSum) {
+                LOGGER.warn("Sums for start and target marking do not match.");
+                return false;
+            }
+            LOGGER.warn(pin.places().toString());
+            LOGGER.warn(pin.asVector().toString());
+        }
+        LOGGER.info("Sums for start and target marking match.");
+        return true;
     }
 }

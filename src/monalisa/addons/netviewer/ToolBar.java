@@ -1248,9 +1248,14 @@ public class ToolBar extends javax.swing.JPanel {
     private void reachabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reachabilityButtonActionPerformed
         HashMap<Place, Long> marking = new HashMap<>();
         marking.putAll(netViewer.getProject().getPNFacade().marking());
-        PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
-        ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking, pinvs);
-        rd.setVisible(true);
+        if (netViewer.getProject().getToolManager().hasResult(PInvariantTool.class, new PInvariantsConfiguration())) {
+            PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
+            ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking, pinvs);
+            rd.setVisible(true);
+        } else {
+            LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
+            JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+        }
     }//GEN-LAST:event_reachabilityButtonActionPerformed
 
     public boolean stackSelection() {

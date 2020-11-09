@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -20,35 +19,32 @@ import org.apache.logging.log4j.Logger;
  *
  * @author daniel
  */
-
-public class Homogenous extends NetPropertyAlgorithm<Boolean>{
+public class Homogenous extends NetPropertyAlgorithm<Boolean> {
 
     private static final Logger LOGGER = LogManager.getLogger(Homogenous.class);
 
-    public Homogenous (PetriNetFacade pn) {
+    public Homogenous(PetriNetFacade pn) {
         super(pn);
     }
-
 
     /**
      * A net is homogenous, if for any place p, all arcs starting at p have the
      * same multiplicity.
      */
     @Override
-    public void runAlgorithm(){
+    public void runAlgorithm() {
         LOGGER.info("Checking whether net is homogenous");
         algorithmName = "homogenous";
         algorithmValue = true;
         int arcValue;
-        for(Place p : petriNet.places()) { //checks all Places.
-            if(p.outputs().isEmpty()){
+        for (Place p : petriNet.places()) { //checks all Places.
+            if (p.outputs().isEmpty()) {
                 continue;
-            }
-            else{
+            } else {
                 arcValue = petriNet.getArc(p, p.outputs().get(0)).weight();
             }
-            for(Transition t : p.outputs()) { //checks all output Transitions of the Place p.
-                if(arcValue != petriNet.getArc(p, t).weight()){
+            for (Transition t : p.outputs()) { //checks all output Transitions of the Place p.
+                if (arcValue != petriNet.getArc(p, t).weight()) {
                     algorithmValue = false;
                     break;
                 }

@@ -7,10 +7,8 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.knockout;
 
-import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.UniquePetriNetEntity;
 
 import monalisa.tools.ErrorLog;
@@ -51,28 +49,31 @@ public abstract class KnockoutAlgorithm {
         List<String> knockedOut;
         List<String> alsoKnockedOut;
 
-        for(Transition t : pn.transitions())
+        for (Transition t : pn.transitions()) {
             originalTransitions.add((String) t.getProperty("name"));
+        }
 
         // Knock-out
-        while(hasNextKnockOutNetwork()) {
+        while (hasNextKnockOutNetwork()) {
             calculator = new TInvariantCalculator(getNextKnockOutNetwork(), log);
             knockedOut = new ArrayList<>();
             alsoKnockedOut = new ArrayList<>();
             tmpMap = new HashMap<>();
-            for(UniquePetriNetEntity e : getKnockoutEntities())
+            for (UniquePetriNetEntity e : getKnockoutEntities()) {
                 knockedOut.add((String) e.getProperty("name"));
-            for(TInvariant tinv : calculator.tinvariants(log)) {
-                for(Transition t : tinv) {
-                    if(tinv.factor(t) > 0) {
+            }
+            for (TInvariant tinv : calculator.tinvariants(log)) {
+                for (Transition t : tinv) {
+                    if (tinv.factor(t) > 0) {
                         tmpMap.put((String) t.getProperty("name"), 1);
                     }
                 }
             }
 
-            for(String name : originalTransitions) {
-                if(!tmpMap.containsKey(name) && !knockedOut.contains(name))
+            for (String name : originalTransitions) {
+                if (!tmpMap.containsKey(name) && !knockedOut.contains(name)) {
                     alsoKnockedOut.add(name);
+                }
             }
             results.put(knockedOut, alsoKnockedOut);
 

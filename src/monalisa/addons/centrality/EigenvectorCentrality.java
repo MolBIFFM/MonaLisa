@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.centrality;
 
 import java.util.Collection;
@@ -19,9 +18,11 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * This class computes the eigenvector centrality for every node in a Petri net
+ *
  * @author Lilya Mirzoyan
  */
-public class EigenvectorCentrality extends CentralityAbstract{
+public class EigenvectorCentrality extends CentralityAbstract {
+
     Collection<Place> places;
     Collection<Transition> transitions;
 
@@ -32,11 +33,13 @@ public class EigenvectorCentrality extends CentralityAbstract{
     private final AdjacencyMatrix adjMatrixTransitions;
 
     /**
-     * Calls some methods to compute the adjacency matrix for places and transitions
-     * in a Petri net and the eigenvector of the maximal eigenvalue of this matrix
+     * Calls some methods to compute the adjacency matrix for places and
+     * transitions in a Petri net and the eigenvector of the maximal eigenvalue
+     * of this matrix
+     *
      * @param petriNet
      */
-    public EigenvectorCentrality(PetriNetFacade petriNet){
+    public EigenvectorCentrality(PetriNetFacade petriNet) {
         super(petriNet);
 
         LOGGER.info("Initializing for eigenvector centrality");
@@ -50,23 +53,23 @@ public class EigenvectorCentrality extends CentralityAbstract{
     }
 
     /**
-     * Calculates the ranking for every place and every transition in a Petri net
-     * on the basis of eigenvector centrality
+     * Calculates the ranking for every place and every transition in a Petri
+     * net on the basis of eigenvector centrality
      */
     @Override
-    public void calculate(){
+    public void calculate() {
         LOGGER.info("Beginning calculation of eigenvector centrality");
         double eigenvector;
         double[] placeVector = vectorForPlaces.getVector();
         double[] transitionVector = vectorForTransitions.getVector();
         LOGGER.debug("Calculating eigenvector centrality for places");
-        for (Place p : places){
+        for (Place p : places) {
             eigenvector = placeVector[adjMatrixPlaces.getIndexForId(p.id())];
             rankingPlaces.put(p.id(), eigenvector);
         }
         LOGGER.debug("Finished calculating eigenvector centrality for places");
         LOGGER.debug("Calculating eigenvector centrality for transitions");
-        for (Transition t : transitions){
+        for (Transition t : transitions) {
             eigenvector = transitionVector[adjMatrixTransitions.getIndexForId(t.id())];
             rankingTransitions.put(t.id(), eigenvector);
         }

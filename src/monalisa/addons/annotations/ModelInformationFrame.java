@@ -7,20 +7,15 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import static monalisa.addons.annotations.AnnotationsPanel.HISTORY;
-import static monalisa.addons.annotations.AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS;
-import static monalisa.addons.annotations.AnnotationsPanel.MODEL_NAME;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.resources.ResourceManager;
@@ -43,6 +38,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
     private static final StringResources strings = resources.getDefaultStrings();
 
     private final AnnotationsPanel ap;
+    private final AnnotationUtils annUtils;
     private final PetriNetFacade petriNet;
     private final NetViewer netViewer;
 
@@ -62,6 +58,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
     public ModelInformationFrame(AnnotationsPanel ap, final PetriNetFacade petriNet, final NetViewer netViewer) {
         LOGGER.info("Initializing ModelInformationFrame");
         this.ap = ap;
+        this.annUtils = new AnnotationUtils();
         this.petriNet = petriNet;
         this.netViewer = netViewer;
 
@@ -73,7 +70,7 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
         initComponents();
 
-        miModelModel = (DefaultListModel<MiriamWrapper>)miriamIdentifiersModel.getModel();
+        miModelModel = (DefaultListModel<MiriamWrapper>) miriamIdentifiersModel.getModel();
         modelQualifier.removeAllItems();
         modelQualifier.addItem(CVTerm.Qualifier.BQM_IS);
         modelQualifier.addItem(CVTerm.Qualifier.BQM_IS_DERIVED_FROM);
@@ -87,19 +84,20 @@ public class ModelInformationFrame extends javax.swing.JFrame {
         selectedModellerIndex = -1;
         selectedDateIndex = -1;
 
-        if(petriNet.hasProperty(MODEL_NAME)) {
-            modelName.setText( (String) petriNet.getProperty(MODEL_NAME));
+        if (petriNet.hasProperty(AnnotationUtils.MODEL_NAME)) {
+            modelName.setText((String) petriNet.getProperty(AnnotationUtils.MODEL_NAME));
         }
-        if(petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
+        if (petriNet.hasProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS)) {
             LOGGER.debug("Adding MIRIAM model qualifiers");
-            List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
+            List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS);
             int childCount;
-            for(CVTerm cvt : cvts) {
-                childCount =  cvt.getChildCount();
-                if(childCount > 1) {
-                    for(int i=0; i < cvt.getChildCount(); i++) {
-                        if(cvt.getModelQualifierType() == null)
+            for (CVTerm cvt : cvts) {
+                childCount = cvt.getChildCount();
+                if (childCount > 1) {
+                    for (int i = 0; i < cvt.getChildCount(); i++) {
+                        if (cvt.getModelQualifierType() == null) {
                             continue;
+                        }
                         miModelModel.addElement(new MiriamWrapper(cvt.getModelQualifierType(), cvt.getChildAt(i).toString()));
                     }
                 } else {
@@ -108,28 +106,28 @@ public class ModelInformationFrame extends javax.swing.JFrame {
             }
         }
 
-        if(petriNet.hasProperty(HISTORY)) {
+        if (petriNet.hasProperty(AnnotationUtils.HISTORY)) {
             LOGGER.debug("Adding Modeller information");
-            History hist = (History) petriNet.getProperty(HISTORY);
+            History hist = (History) petriNet.getProperty(AnnotationUtils.HISTORY);
 
-            if(hist != null) {
-                if(hist.getCreatorCount() > 0) {
+            if (hist != null) {
+                if (hist.getCreatorCount() > 0) {
                     Creator c;
-                    for(int i = 0; i < hist.getCreatorCount(); i++) {
+                    for (int i = 0; i < hist.getCreatorCount(); i++) {
                         c = hist.getCreator(i);
                         modellersModel.addElement(new ModellerWrapper(c.getGivenName(), c.getFamilyName(), c.getOrganisation(), c.getEmail()));
                     }
                 }
 
-                if(hist.getCreatedDate() != null) {
+                if (hist.getCreatedDate() != null) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(hist.getCreatedDate());
-                    datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH)+1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
+                    datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH) + 1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
 
-                    if(hist.getModifiedDateCount() > 0) {
-                        for(Date d : hist.getListOfModifiedDates()) {
+                    if (hist.getModifiedDateCount() > 0) {
+                        for (Date d : hist.getListOfModifiedDates()) {
                             cal.setTime(d);
-                            datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH)+1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
+                            datesModel.addElement(new DateWrapper(new Integer(cal.get(Calendar.YEAR)).toString(), new Integer(cal.get(Calendar.MONTH) + 1).toString(), new Integer(cal.get(Calendar.DAY_OF_MONTH)).toString()));
                         }
                     }
                 }
@@ -142,8 +140,8 @@ public class ModelInformationFrame extends javax.swing.JFrame {
     public void editMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Editing MIRIAM identifier for model");
         modelQualifier.setSelectedItem(mw.getCVTerm().getModelQualifierType());
-        uriModel.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1));
-        miriamRegistryModel.setSelectedIndex(ap.miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1)));
+        uriModel.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1));
+        miriamRegistryModel.setSelectedIndex(ap.miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1)));
         editMiriamIdentifierModel = true;
         addMiriamIdentifierModel.setText("Save");
         identifierInEditModel = mw;
@@ -152,45 +150,44 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     public void deleteMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Deleting MIRIAM identifier for model");
-        if(identifierInEditModel != null) {
+        if (identifierInEditModel != null) {
             uriModel.setText("");
             editMiriamIdentifierModel = false;
             addMiriamIdentifierModel.setText("Add");
             identifierInEditModel = null;
         }
-
-        ((List<CVTerm>)petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS)).remove(mw.getCVTerm());
+        annUtils.updateCVTerms(petriNet, "remove", AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, mw.getCVTerm());
         miModelModel.removeElement(mw);
         LOGGER.info("Finished deleting MIRIAM identifier for model");
     }
 
     private void saveModelInformations() {
         LOGGER.info("Saving model informations");
-        if(!modelName.getText().isEmpty()) {
-            petriNet.putProperty(MODEL_NAME, modelName.getText());
+        if (!modelName.getText().isEmpty()) {
+            annUtils.addProperty(petriNet, AnnotationUtils.MODEL_NAME, modelName.getText());
         }
 
         History hist = null;
-        if(modellersModel.size() > 0 || datesModel.size() > 0) {
+        if (modellersModel.size() > 0 || datesModel.size() > 0) {
             LOGGER.debug("Creating new History");
             hist = new History();
         }
 
-        if(hist != null && modellersModel.size() > 0) {
+        if (hist != null && modellersModel.size() > 0) {
             LOGGER.debug("Filling history with Creators");
             ModellerWrapper mw;
-            for(int i = 0; i < modellersModel.size(); i++) {
+            for (int i = 0; i < modellersModel.size(); i++) {
                 mw = (ModellerWrapper) modellersModel.getElementAt(i);
                 hist.addCreator(new Creator(mw.getfName(), mw.getlName(), mw.getOrganisation(), mw.getEmail()));
             }
         }
 
-        if(hist != null && datesModel.size() > 0) {
+        if (hist != null && datesModel.size() > 0) {
             LOGGER.debug("Adding dates to history");
             DateWrapper dw;
-            for(int i = 0; i < datesModel.size(); i++) {
+            for (int i = 0; i < datesModel.size(); i++) {
                 dw = (DateWrapper) datesModel.getElementAt(i);
-                if(i == 0) {
+                if (i == 0) {
                     hist.setCreatedDate(dw.getDate());
                 } else {
                     hist.setModifiedDate(dw.getDate());
@@ -198,8 +195,9 @@ public class ModelInformationFrame extends javax.swing.JFrame {
             }
         }
 
-        if(hist != null)
-            petriNet.putProperty(HISTORY, hist);
+        if (hist != null) {
+            annUtils.addProperty(petriNet, AnnotationUtils.HISTORY, hist);
+        }
         LOGGER.info("Finished saving model information");
     }
 
@@ -593,11 +591,11 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void saveModellerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveModellerActionPerformed
         LOGGER.info("Saving Modeller action for model");
-        if(!fName.getText().isEmpty() && !lName.getText().isEmpty() && !organisation.getText().isEmpty() && !email.getText().isEmpty()) {
+        if (!fName.getText().isEmpty() && !lName.getText().isEmpty() && !organisation.getText().isEmpty() && !email.getText().isEmpty()) {
 
-            if(selectedModellerIndex != -1) {
+            if (selectedModellerIndex != -1) {
                 modellersModel.add(selectedModellerIndex, new ModellerWrapper(fName.getText(), lName.getText(), organisation.getText(), email.getText()));
-                modellersModel.remove(selectedModellerIndex+1);
+                modellersModel.remove(selectedModellerIndex + 1);
             } else {
                 modellersModel.addElement(new ModellerWrapper(fName.getText(), lName.getText(), organisation.getText(), email.getText()));
             }
@@ -615,10 +613,10 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void saveDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDateActionPerformed
         LOGGER.info("Saving date action for model");
-        if(!month.getText().isEmpty() && !year.getText().isEmpty() && !day.getText().isEmpty()) {
-            if(selectedDateIndex != -1) {
+        if (!month.getText().isEmpty() && !year.getText().isEmpty() && !day.getText().isEmpty()) {
+            if (selectedDateIndex != -1) {
                 datesModel.add(selectedDateIndex, new DateWrapper(year.getText(), month.getText(), day.getText()));
-                datesModel.remove(selectedDateIndex+1);
+                datesModel.remove(selectedDateIndex + 1);
             } else {
                 datesModel.addElement(new DateWrapper(year.getText(), month.getText(), day.getText()));
             }
@@ -635,104 +633,41 @@ public class ModelInformationFrame extends javax.swing.JFrame {
 
     private void addMiriamIdentifierModelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMiriamIdentifierModelActionPerformed
         LOGGER.info("Adding MIRIAM identifier for model");
-        if(!uriModel.getText().isEmpty()) {
-            if(editMiriamIdentifierModel == true) {
+        if (!uriModel.getText().isEmpty()) {
+            if (editMiriamIdentifierModel == true) {
                 LOGGER.info("Editing a MIRIAM identifier for model");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryModel.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uriModel.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
                 }
-
-                List<CVTerm> cvts = petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
-
-                // Same identifier = update the uri
-                if(identifierInEditModel.getCVTerm().getModelQualifierType().equals((Qualifier) modelQualifier.getSelectedItem())) {
-                    LOGGER.info("Same identifier, updating the uri");
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEditModel.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
-                            cvt.getResources().set(cvt.getResources().indexOf(identifierInEditModel.getURI()), mrw.getURL()+uriModel.getText().trim());
-                            break;
-                        }
-                    }
-                } else { // new identifier = update the identifier and the uri
-                    LOGGER.info("New identifier, updating identifier and uri");
-                    // first: delete the old one
-                    CVTerm toRemove = null;
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEditModel.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
-                            cvt.getResources().remove(cvt.getResources().indexOf(identifierInEditModel.getURI()));
-                            if(cvt.getResourceCount() == 0) {
-                                toRemove = cvt;
-                            }
-                            break;
-                        }
-                    }
-                    if(toRemove != null) {
-                        LOGGER.info("Remove the old one");
-                        cvts.remove(toRemove);
-                        petriNet.putProperty(MIRIAM_MODEL_QUALIFIERS, cvts);
-                    }
-
-                    // now add the new ones
-                    LOGGER.info("Adding new ones");
-                    boolean qualifierWasThere = false;
-                    for(CVTerm cvt : cvts) {
-                        if(((Qualifier) modelQualifier.getSelectedItem()).equals(cvt.getModelQualifierType())) {
-                            qualifierWasThere = true;
-                            cvt.addResource(uriModel.getText().trim());
-                        }
-                        petriNet.putProperty(MIRIAM_MODEL_QUALIFIERS, cvts);
-                    }
-
-                    if(!qualifierWasThere) {
-                        MiriamWrapper mw = new MiriamWrapper((Qualifier) modelQualifier.getSelectedItem(), mrw.getURL()+uriModel.getText().trim());
-                        ((List<CVTerm>)petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS)).add(mw.getCVTerm());
-                    }
-                }
+                annUtils.editMiriamModel(petriNet, identifierInEditModel, mrw, uriModel.getText().trim(), modelQualifier.getSelectedItem());
 
                 identifierInEditModel.setQualifier((Qualifier) modelQualifier.getSelectedItem());
-                identifierInEditModel.setURI(mrw.getURL()+uriModel.getText().trim());
+                identifierInEditModel.setURI(mrw.getURL() + uriModel.getText().trim());
 
                 editMiriamIdentifierModel = false;
                 addMiriamIdentifierModel.setText("Add");
                 identifierInEditModel = null;
                 miriamIdentifiersModel.repaint();
                 LOGGER.info("Finished editing MIRIAM identifier for model");
-            } else if(editMiriamIdentifierModel == false) {
+            } else if (editMiriamIdentifierModel == false) {
                 LOGGER.info("Adding new MIRIAM identifier for model");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryModel.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uriModel.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
                 }
 
-                MiriamWrapper mw = new MiriamWrapper((Qualifier) modelQualifier.getSelectedItem(), mrw.getURL()+uriModel.getText().trim());
+                MiriamWrapper mw = new MiriamWrapper((Qualifier) modelQualifier.getSelectedItem(), mrw.getURL() + uriModel.getText().trim());
                 miModelModel.addElement(mw);
-
-                if(!petriNet.hasProperty(MIRIAM_MODEL_QUALIFIERS)) {
-                    petriNet.putProperty(MIRIAM_MODEL_QUALIFIERS, new ArrayList<CVTerm>());
-                }
-
-                List<CVTerm> cvts = (List<CVTerm>) petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS);
-                boolean qualifierWasThere = false;
-                for(CVTerm cvt : cvts) {
-                    if((mw.getCVTerm().getModelQualifierType()).equals(cvt.getModelQualifierType())) {
-                        qualifierWasThere = true;
-                        cvt.addResource(uriModel.getText().trim());
-                    }
-                    petriNet.putProperty(MIRIAM_MODEL_QUALIFIERS, cvts);
-                }
-
-                if(!qualifierWasThere) {
-                    ((List<CVTerm>)petriNet.getProperty(MIRIAM_MODEL_QUALIFIERS)).add(mw.getCVTerm());
-                }
+                annUtils.addMiriamModel(petriNet, mw, uriModel.getText().trim());
             }
             uriModel.setText("");
         }

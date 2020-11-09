@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +50,7 @@ public class ModellerWrapper {
 
     @Override
     public String toString() {
-        return fName+" "+lName;
+        return fName + " " + lName;
     }
 
 }

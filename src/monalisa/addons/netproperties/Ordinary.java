@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -39,15 +38,15 @@ public class Ordinary extends NetPropertyAlgorithm<Boolean> {
         LOGGER.info("Checks whether net is ordinary");
         algorithmName = "ordinary";
         algorithmValue = true;
-        for(Place p : petriNet.places()) { //checks all Places.
-            for(Transition t : p.inputs()) { //checks all input Transitions of the Place p.
-                if(petriNet.getArc(t, p).weight() != 1) {
+        for (Place p : petriNet.places()) { //checks all Places.
+            for (Transition t : p.inputs()) { //checks all input Transitions of the Place p.
+                if (petriNet.getArc(t, p).weight() != 1) {
                     algorithmValue = false;
                     break;
                 }
             }
-            for(Transition t : p.outputs()) { //checks all output Transitions of the Place p.
-                if(petriNet.getArc(p, t).weight() != 1) {
+            for (Transition t : p.outputs()) { //checks all output Transitions of the Place p.
+                if (petriNet.getArc(p, t).weight() != 1) {
                     algorithmValue = false;
                     break;
                 }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.util;
 
 import java.io.File;
@@ -26,25 +25,23 @@ import org.apache.logging.log4j.LogManager;
 public class FileUtils {
 
     private static final Logger LOGGER = LogManager.getLogger(FileUtils.class);
+
     /**
      * Extracts a resource into a temporary file.
      *
-     * @param resource
-     *            The path to the resource, relative to the
-     *            {@code org/monalisa/resources} directory.
-     * @param prefix
-     *            A prefix to use for the temporary file.
-     * @param suffix
-     *            A suffix to use for the temporary file.
+     * @param resource The path to the resource, relative to the
+     * {@code org/monalisa/resources} directory.
+     * @param prefix A prefix to use for the temporary file.
+     * @param suffix A suffix to use for the temporary file.
      * @return Returns a file instance for the temporary file.
      * @throws IOException
      */
     public static File extractResource(String resource, String prefix,
             String suffix) throws IOException {
         LOGGER.debug("Extracting resource '" + resource + "'");
-        URL resURL =
-            ResourceManager.instance().getResourceUrl(resource);
-        if (resURL == null){
+        URL resURL
+                = ResourceManager.instance().getResourceUrl(resource);
+        if (resURL == null) {
             LOGGER.error("Could not find resource '" + resource + "', throwing exception");
             throw new FileNotFoundException();
         }
@@ -55,12 +52,9 @@ public class FileUtils {
     /**
      * Extracts a resource into a temporary file.
      *
-     * @param resource
-     *            A URL to the resource to extract.
-     * @param prefix
-     *            A prefix to use for the temporary file.
-     * @param suffix
-     *            A suffix to use for the temporary file.
+     * @param resource A URL to the resource to extract.
+     * @param prefix A prefix to use for the temporary file.
+     * @param suffix A suffix to use for the temporary file.
      * @return Returns a file instance for the temporary file.
      * @throws IOException
      */
@@ -77,14 +71,17 @@ public class FileUtils {
 
             byte buffer[] = new byte[1024];
             int i = 0;
-            while ((i = resStream.read(buffer)) != -1)
+            while ((i = resStream.read(buffer)) != -1) {
                 tmpFileStream.write(buffer, 0, i);
-        LOGGER.debug("Successfully extracted resource '" + resource.toString() + "'");
+            }
+            LOGGER.debug("Successfully extracted resource '" + resource.toString() + "'");
         } finally {
-            if (resStream != null)
+            if (resStream != null) {
                 resStream.close();
-            if (tmpFileStream != null)
+            }
+            if (tmpFileStream != null) {
                 tmpFileStream.close();
+            }
         }
 
         return file;
@@ -92,11 +89,13 @@ public class FileUtils {
 
     public static File copyFile(File source, File target) throws IOException {
         LOGGER.debug("Copying file '" + source.getPath() + "' to target '" + target.getPath() + "'");
-        if (target.isDirectory())
+        if (target.isDirectory()) {
             target = new File(target, source.getName());
+        }
 
-        if (source.equals(target))
+        if (source.equals(target)) {
             return target;
+        }
 
         FileInputStream fis = null;
         FileOutputStream fos = null;
@@ -106,14 +105,17 @@ public class FileUtils {
 
             byte buffer[] = new byte[1024];
             int i = 0;
-            while ((i = fis.read(buffer)) != -1)
+            while ((i = fis.read(buffer)) != -1) {
                 fos.write(buffer, 0, i);
+            }
             LOGGER.debug("Successfully copied file '" + source.getPath() + "' to target '" + target.getPath() + "'");
         } finally {
-            if (fis != null)
+            if (fis != null) {
                 fis.close();
-            if (fos != null)
+            }
+            if (fos != null) {
                 fos.close();
+            }
         }
 
         return target;
@@ -121,6 +123,7 @@ public class FileUtils {
 
     /**
      * Read a whole file as-is into a string.
+     *
      * @param file The file to read.
      * @return A string with the whole file contents.
      * @throws FileNotFoundException Thrown if the file doesn't exist.
@@ -131,8 +134,9 @@ public class FileUtils {
         try (Scanner scanner = new Scanner(file)) {
             scanner.useDelimiter("\\Z");
             contents = "";
-            if (scanner.hasNext())
+            if (scanner.hasNext()) {
                 contents = scanner.next();
+            }
         }
         LOGGER.debug("Successfully read file '" + file.getName() + "' to string as is");
         return contents;
@@ -144,8 +148,8 @@ public class FileUtils {
      * extension exists, {@code null} is returned instead.
      *
      * @param file The file object.
-     * @return A string with the file extension, or {@code null} if it
-     *         doesn't exist.
+     * @return A string with the file extension, or {@code null} if it doesn't
+     * exist.
      */
     public static String getExtension(File file) {
         String filename = file.getName();

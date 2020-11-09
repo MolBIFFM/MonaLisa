@@ -7,10 +7,8 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer.transformer;
 
-import monalisa.addons.treeviewer.TreeViewer;
 import monalisa.addons.treeviewer.TreeViewerNode;
 import org.apache.commons.collections15.Transformer;
 
@@ -22,15 +20,15 @@ public class TreeViewerVertexLabelTransformer implements Transformer<TreeViewerN
 
     @Override
     public String transform(TreeViewerNode n) {
-        if(n.getNodeType().equalsIgnoreCase(TreeViewer.CLUSTERNODE)) {
-            if(n.getTinvs().size() == 1) {
-                StringBuilder sb = new StringBuilder();       
+        if (n.getNodeType().equalsIgnoreCase(TreeViewerNode.CLUSTERNODE)) {
+            if (n.getTinvs().size() == 1) {
+                StringBuilder sb = new StringBuilder();
                 sb.append("EM:");
-                sb.append(n.getTinvs().get(0).id()+1);                    
+                sb.append(n.getTinvs().get(0).id() + 1);
                 return sb.toString();
             } else {
                 return "";
-            }            
+            }
         } else {
             return "";
         }

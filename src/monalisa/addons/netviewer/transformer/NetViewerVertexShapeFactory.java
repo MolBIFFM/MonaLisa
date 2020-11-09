@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import edu.uci.ics.jung.visualization.util.VertexShapeFactory;
@@ -17,14 +16,14 @@ import org.apache.commons.collections15.functors.ConstantTransformer;
 
 /**
  * controls the size of a node
+ *
  * @author Jens Einloft
  */
+public class NetViewerVertexShapeFactory extends VertexShapeFactory {
 
-public class NetViewerVertexShapeFactory extends VertexShapeFactory{
-    
     private int size;
-    
-    public NetViewerVertexShapeFactory(int size) {                
+
+    public NetViewerVertexShapeFactory(int size) {
         this(new ConstantTransformer(size), new ConstantTransformer(1.0F));
         this.size = size;
     }
@@ -32,7 +31,7 @@ public class NetViewerVertexShapeFactory extends VertexShapeFactory{
     public NetViewerVertexShapeFactory(Transformer<NetViewerNode, Integer> vsf, Transformer<NetViewerNode, Float> varf) {
         this.vsf = vsf;
         this.varf = varf;
-    }    
+    }
 
     public int getShapeSize() {
         return this.size;

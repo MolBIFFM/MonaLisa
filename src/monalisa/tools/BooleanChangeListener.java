@@ -13,9 +13,11 @@ import java.util.EventListener;
 
 /**
  * The listener interface for update on changes in a boolean property.
+ *
  * @author Konrad Rudolph
  */
 public interface BooleanChangeListener extends EventListener {
+
     /**
      * Invoked to report a change in a boolean property.
      */

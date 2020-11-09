@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.treeviewer;
 
 import monalisa.results.ClusterConfiguration;
@@ -16,7 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * A Wrapper for the class Clustering, needed for the ComboBox in the TreeViewer.
+ * A Wrapper for the class Clustering, needed for the ComboBox in the
+ * TreeViewer.
+ *
  * @author Jens Einloft
  */
 public class ClusteringWrapper {

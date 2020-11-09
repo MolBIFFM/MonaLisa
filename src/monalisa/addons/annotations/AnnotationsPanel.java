@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.awt.Desktop;
@@ -53,12 +52,6 @@ import org.sbml.jsbml.CVTerm.Qualifier;
  */
 public class AnnotationsPanel extends AddonPanel {
 
-    public final static String MIRIAM_BIO_QUALIFIERS = "MIRIAM_BIO_QUALIFIERS";
-    public final static String MIRIAM_MODEL_QUALIFIERS = "MIRIAM_MODEL_QUALIFIERS";
-    public final static String HISTORY = "HISTORY";
-    public final static String MODEL_NAME = "MODEL_NAME";
-    public final static String SBO_TERM = "SBO_TERM";
-
     private final static Logger LOGGER = LogManager.getLogger(AnnotationsPanel.class);
     private DefaultListModel<MiriamWrapper> miModelEntry;
     private NetViewerNode selectedNV;
@@ -67,6 +60,7 @@ public class AnnotationsPanel extends AddonPanel {
     private MiriamWrapper identifierInEditEntry;
 
     private ModelInformationFrame mif;
+    private final AnnotationUtils annUtils;
 
     protected Map<String, Integer> miriamRegistryMap = new HashMap<>();
 
@@ -83,12 +77,13 @@ public class AnnotationsPanel extends AddonPanel {
         initComponents();
 
         mif = new ModelInformationFrame(this, petriNet, netViewer);
+        annUtils = new AnnotationUtils();
 
         identifierInEditEntry = null;
         mif.identifierInEditModel = null;
         LOGGER.debug("Started MIRIAM part");
         // START: MIRIAM
-        miModelEntry = (DefaultListModel<MiriamWrapper>)miriamIdentifiersEntry.getModel();
+        miModelEntry = (DefaultListModel<MiriamWrapper>) miriamIdentifiersEntry.getModel();
         entryQualifier.addItem(Qualifier.BQB_ENCODES);
         entryQualifier.addItem(Qualifier.BQB_HAS_PART);
         entryQualifier.addItem(Qualifier.BQB_HAS_PROPERTY);
@@ -111,41 +106,36 @@ public class AnnotationsPanel extends AddonPanel {
             @Override
             public void itemStateChanged(ItemEvent ie) {
                 LOGGER.debug("Item state changed");
-                if(ie.getStateChange() == ItemEvent.DESELECTED) {
+                if (ie.getStateChange() == ItemEvent.DESELECTED) {
                     LOGGER.debug("Item deselected");
                     vertexNameLabel.setText("");
                     setIdentifierEnabled(false);
                 }
-                if(ie.getStateChange() == ItemEvent.SELECTED) {
+                if (ie.getStateChange() == ItemEvent.SELECTED) {
                     LOGGER.debug("Item selected");
                     miModelEntry.removeAllElements();
                     Set<NetViewerNode> picked = netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().getPicked();
                     // Only one node is selected
-                    if(picked.size() == 1) {
+                    if (picked.size() == 1) {
                         setIdentifierEnabled(true);
 
                         selectedNV = ((NetViewerNode) (netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().getPicked().toArray())[0]).getMasterNode();
 
-                        if(selectedNV.getNodeType().equals(NetViewer.BEND)) {
+                        if (selectedNV.getNodeType().equals(NetViewer.BEND)) {
                             return;
                         }
 
                         vertexNameLabel.setText(selectedNV.getName());
 
-                        UniquePetriNetEntity upe;
-                        if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                            upe = petriNet.findTransition(selectedNV.getId());
-                        } else {
-                            upe = petriNet.findPlace(selectedNV.getId());
-                        }
+                        UniquePetriNetEntity upe = getNode(selectedNV);
 
-                        if(upe.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
-                            fillIdentifierList((List<CVTerm>) upe.getProperty(MIRIAM_BIO_QUALIFIERS));
+                        if (upe.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
+                            fillIdentifierList((List<CVTerm>) upe.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS));
                         }
 
                         sboCb.setSelectedIndex(0);
-                        if(upe.hasProperty(SBO_TERM)) {
-                            sboCb.setSelectedItem(upe.getProperty(SBO_TERM));
+                        if (upe.hasProperty(AnnotationUtils.SBO_TERM)) {
+                            sboCb.setSelectedItem(upe.getProperty(AnnotationUtils.SBO_TERM));
                         } else {
                             sboCb.setSelectedIndex(0);
                         }
@@ -158,7 +148,7 @@ public class AnnotationsPanel extends AddonPanel {
                         setIdentifierEnabled(false);
                     }
                 }
-            LOGGER.debug("Dealt with item state change");
+                LOGGER.debug("Dealt with item state change");
             }
         });
 
@@ -177,8 +167,7 @@ public class AnnotationsPanel extends AddonPanel {
             URL sboURL = ResourceManager.instance().getResourceUrl("SBO_XML.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        }
-        catch (IOException | JDOMException ex) {
+        } catch (IOException | JDOMException ex) {
             LOGGER.error(ex);
         }
         Element root = doc.getRootElement();
@@ -187,10 +176,10 @@ public class AnnotationsPanel extends AddonPanel {
         sboToolTips.add("");
         String toolTip;
         LOGGER.debug("Adding SBO tooltips");
-        for(Object o : root.getChildren() ) {
+        for (Object o : root.getChildren()) {
             e = (Element) o;
-            sboCb.addItem(((Element)e.getContent().get(1)).getValue());
-            toolTip = ((Element)e.getContent().get(3)).getValue();
+            sboCb.addItem(((Element) e.getContent().get(1)).getValue());
+            toolTip = ((Element) e.getContent().get(3)).getValue();
             sboToolTips.add(toolTip);
         }
         sboCbRenderer.setTooltips(sboToolTips);
@@ -208,8 +197,7 @@ public class AnnotationsPanel extends AddonPanel {
             URL sboURL = ResourceManager.instance().getResourceUrl("miriam_registry.xml");
             InputStream istream = sboURL.openStream();
             doc = builder.build(istream);
-        }
-        catch (IOException | JDOMException ex) {
+        } catch (IOException | JDOMException ex) {
             LOGGER.error(ex);
         }
         root = doc.getRootElement();
@@ -218,13 +206,15 @@ public class AnnotationsPanel extends AddonPanel {
         String name, comment, url = "";
         Pattern pattern;
         LOGGER.debug("Adding MIRIAM URLs");
-        for(Object o : root.getChildren() ) {
+        for (Object o : root.getChildren()) {
             e = (Element) o;
 
-            if(e.getAttribute("obsolete") != null)
+            if (e.getAttribute("obsolete") != null) {
                 continue;
-            if(e.getName().equals("listOfTags"))
+            }
+            if (e.getName().equals("listOfTags")) {
                 continue;
+            }
 
             pattern = Pattern.compile(e.getAttributeValue("pattern"));
 
@@ -232,10 +222,10 @@ public class AnnotationsPanel extends AddonPanel {
             comment = e.getChild("definition", e.getNamespace()).getValue();
 
             Element uri;
-            for(Object u : e.getChild("uris", e.getNamespace()).getChildren()) {
+            for (Object u : e.getChild("uris", e.getNamespace()).getChildren()) {
                 uri = (Element) u;
 
-                if(uri.getAttributeValue("type").equals("URL") && uri.getAttribute("deprecated") == null) {
+                if (uri.getAttributeValue("type").equals("URL") && uri.getAttribute("deprecated") == null) {
                     url = uri.getValue();
                     break;
                 }
@@ -244,7 +234,7 @@ public class AnnotationsPanel extends AddonPanel {
             mrw = new MiriamRegistryWrapper(name, url, comment, pattern);
             miriamRegistryEntry.addItem(mrw);
             mif.miriamRegistryModel.addItem(mrw);
-            miriamRegistryToolTips.add("<html>"+mrw.getComment()+"</html>");
+            miriamRegistryToolTips.add("<html>" + mrw.getComment() + "</html>");
             miriamRegistryMap.put(url, counter);
             counter++;
         }
@@ -257,17 +247,13 @@ public class AnnotationsPanel extends AddonPanel {
         LOGGER.info("Successfully initialized AnnotationsPanel");
     }
 
-    static void editCompartmentIdentifiers(Compartment c) {
-
-    }
-
     private void fillIdentifierList(List<CVTerm> cvts) {
         LOGGER.info("Filling identifier list");
         int childCount;
-        for(CVTerm cvt : cvts) {
-            childCount =  cvt.getChildCount();
-            if(childCount > 1) {
-                for(int i=0; i < cvt.getChildCount(); i++) {
+        for (CVTerm cvt : cvts) {
+            childCount = cvt.getChildCount();
+            if (childCount > 1) {
+                for (int i = 0; i < cvt.getChildCount(); i++) {
                     miModelEntry.addElement(new MiriamWrapper(cvt.getBiologicalQualifierType(), cvt.getChildAt(i).toString()));
                 }
             } else {
@@ -287,7 +273,7 @@ public class AnnotationsPanel extends AddonPanel {
         sboCb.setEnabled(state);
         saveSBOTerm.setEnabled(state);
 
-        if(!state) {
+        if (!state) {
             miModelEntry.removeAllElements();
         }
         LOGGER.info("Finished setting identifiers to '" + state + "'");
@@ -295,7 +281,7 @@ public class AnnotationsPanel extends AddonPanel {
 
     public void goToMiriamIdentifier(MiriamWrapper mw) {
         LOGGER.info("Going to MIRIAM identifier");
-        if(Desktop.isDesktopSupported()) {
+        if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI(mw.getCVTerm().getResourceURI(0)));
             } catch (IOException | URISyntaxException ex) {
@@ -306,14 +292,14 @@ public class AnnotationsPanel extends AddonPanel {
 
     public void editMiriamIdentifier(MiriamWrapper mw, JList owner) {
         LOGGER.info("Editing MIRIAM identifier");
-        if(owner.getName().equalsIgnoreCase("entry")) {
+        if (owner.getName().equalsIgnoreCase("entry")) {
             entryQualifier.setSelectedItem(mw.getCVTerm().getBiologicalQualifierType());
-            uriEntry.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1));
-            miriamRegistryEntry.setSelectedIndex(miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/")+1)));
+            uriEntry.setText(mw.getCVTerm().getResourceURI(0).substring(mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1));
+            miriamRegistryEntry.setSelectedIndex(miriamRegistryMap.get(mw.getCVTerm().getResourceURI(0).substring(0, mw.getCVTerm().getResourceURI(0).lastIndexOf("/") + 1)));
             editMiriamIdentifierEntry = true;
             addMiriamIdentifierEntry.setText("Save");
             identifierInEditEntry = mw;
-        } else if(owner.getName().equalsIgnoreCase("model")) {
+        } else if (owner.getName().equalsIgnoreCase("model")) {
             mif.editMiriamIdentifier(mw);
         }
         LOGGER.info("Finished editing MIRIAM identifier");
@@ -321,25 +307,17 @@ public class AnnotationsPanel extends AddonPanel {
 
     public void deleteMiriamIdentifier(MiriamWrapper mw, JList owner) {
         LOGGER.info("Deleting MIRIAM identifier");
-        if(owner.getName().equalsIgnoreCase("entry")) {
-            if(identifierInEditEntry != null) {
+        if (owner.getName().equalsIgnoreCase("entry")) {
+            if (identifierInEditEntry != null) {
                 uriEntry.setText("");
                 editMiriamIdentifierEntry = false;
                 addMiriamIdentifierEntry.setText("Add");
                 identifierInEditEntry = null;
             }
 
-            UniquePetriNetEntity upe;
-
-            if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
-            } else {
-                upe = petriNet.findPlace(selectedNV.getId());
-            }
-
-            ((List<CVTerm>)upe.getProperty(MIRIAM_BIO_QUALIFIERS)).remove(mw.getCVTerm());
+            annUtils.updateCVTerms(getNode(selectedNV), "remove", AnnotationUtils.MIRIAM_BIO_QUALIFIERS, mw.getCVTerm());
             miModelEntry.removeElement(mw);
-        } else if(owner.getName().equalsIgnoreCase("model")) {
+        } else if (owner.getName().equalsIgnoreCase("model")) {
             mif.deleteMiriamIdentifier(mw);
         }
         LOGGER.info("Finished deleting MIRIAM identifier");
@@ -364,6 +342,14 @@ public class AnnotationsPanel extends AddonPanel {
         mif.year.setText(dw.getYear());
         mif.day.setText(dw.getDay());
         LOGGER.info("Finished editing date");
+    }
+
+    private UniquePetriNetEntity getNode(NetViewerNode node) {
+        if (node.getNodeType().equals(NetViewer.TRANSITION)) {
+            return pnf.findTransition(node.getId());
+        } else {
+            return pnf.findPlace(node.getId());
+        }
     }
 
     /**
@@ -395,7 +381,7 @@ public class AnnotationsPanel extends AddonPanel {
         saveSBOTerm = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         helpBox = new javax.swing.JEditorPane("text/html", helpText);
-        jButton2 = new javax.swing.JButton();
+        DeleteSBOTerm = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -576,11 +562,11 @@ public class AnnotationsPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(20, 0, 0, 0);
         jPanel1.add(helpBox, gridBagConstraints);
 
-        jButton2.setText("Delete SBO Term");
-        jButton2.setToolTipText("Delete all made annotations!!!!");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        DeleteSBOTerm.setText("Delete SBO Term");
+        DeleteSBOTerm.setToolTipText("Delete all made annotations!!!!");
+        DeleteSBOTerm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                DeleteSBOTermActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -588,8 +574,8 @@ public class AnnotationsPanel extends AddonPanel {
         gridBagConstraints.gridy = 11;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
-        jPanel1.add(jButton2, gridBagConstraints);
-        jButton2.getAccessibleContext().setAccessibleName("DeleteSBOTerm");
+        jPanel1.add(DeleteSBOTerm, gridBagConstraints);
+        DeleteSBOTerm.getAccessibleContext().setAccessibleName("DeleteSBOTerm");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -602,123 +588,43 @@ public class AnnotationsPanel extends AddonPanel {
 
     private void addMiriamIdentifierEntryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMiriamIdentifierEntryActionPerformed
         LOGGER.info("Trying to add MIRIAM identifier entry");
-        if(!uriEntry.getText().isEmpty() && selectedNV != null) {
-            // Edit a entry
-            if(editMiriamIdentifierEntry == true) {
+        if (!uriEntry.getText().isEmpty() && selectedNV != null) {
+            // Edit an entry
+            if (editMiriamIdentifierEntry == true) {
                 LOGGER.info("Editing an entry");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryEntry.getSelectedItem();
                 Matcher m = mrw.getPattern().matcher(uriEntry.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
                 }
-
-                UniquePetriNetEntity upe;
-
-                if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                    upe = petriNet.findTransition(selectedNV.getId());
-                } else {
-                    upe = petriNet.findPlace(selectedNV.getId());
-                }
-                List<CVTerm> cvts = (List<CVTerm>) upe.getProperty(MIRIAM_BIO_QUALIFIERS);
-                // Same identifier = update the uri
-                if(identifierInEditEntry.getCVTerm().getBiologicalQualifierType().equals((Qualifier) entryQualifier.getSelectedItem())) {
-                    LOGGER.info("Same identifier, updating the uri");
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEditEntry.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                            cvt.getResources().set(cvt.getResources().indexOf(identifierInEditEntry.getURI()), mrw.getURL()+uriEntry.getText().trim());
-                            break;
-                        }
-                    }
-                } else { // new identifier = update the identifier and the uri
-                    LOGGER.info("New identifier, updating identifier and uri");
-                    // first: delete the old one
-                    CVTerm toRemove = null;
-                    for(CVTerm cvt : cvts) {
-                        if((identifierInEditEntry.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                            cvt.getResources().remove(cvt.getResources().indexOf(identifierInEditEntry.getURI()));
-                            if(cvt.getResourceCount() == 0) {
-                                toRemove = cvt;
-                            }
-                            break;
-                        }
-                    }
-                    if(toRemove != null) {
-                        LOGGER.info("Removing old one");
-                        cvts.remove(toRemove);
-                        upe.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                    }
-                    LOGGER.info("Adding new ones");
-                    // now add the new ones
-                    cvts = (List<CVTerm>) upe.getProperty(MIRIAM_BIO_QUALIFIERS);
-                    boolean qualifierWasThere = false;
-                    for(CVTerm cvt : cvts) {
-                        if(((Qualifier) entryQualifier.getSelectedItem()).equals(cvt.getBiologicalQualifierType())) {
-                            qualifierWasThere = true;
-                            cvt.addResource(uriEntry.getText().trim());
-                        }
-                        upe.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                    }
-
-                    if(!qualifierWasThere) {
-                        MiriamWrapper mw = new MiriamWrapper((Qualifier) entryQualifier.getSelectedItem(), mrw.getURL()+uriEntry.getText().trim());
-                        ((List<CVTerm>)upe.getProperty(MIRIAM_BIO_QUALIFIERS)).add(mw.getCVTerm());
-                    }
-
-                }
+                annUtils.editMiriam(getNode(selectedNV), identifierInEditEntry, mrw, uriEntry.getText().trim(), entryQualifier.getSelectedItem());
 
                 identifierInEditEntry.setQualifier((Qualifier) entryQualifier.getSelectedItem());
-                identifierInEditEntry.setURI(mrw.getURL()+uriEntry.getText().trim());
+                identifierInEditEntry.setURI(mrw.getURL() + uriEntry.getText().trim());
 
                 editMiriamIdentifierEntry = false;
                 addMiriamIdentifierEntry.setText("Add");
                 identifierInEditEntry = null;
                 miriamIdentifiersEntry.repaint();
                 LOGGER.info("Finished editing entry");
-            }
-            else if(editMiriamIdentifierEntry == false) {
+            } else if (editMiriamIdentifierEntry == false) {
                 LOGGER.info("Adding new entry");
                 MiriamRegistryWrapper mrw = (MiriamRegistryWrapper) miriamRegistryEntry.getSelectedItem();
 
                 Matcher m = mrw.getPattern().matcher(uriEntry.getText().trim());
-                if(!m.matches()) {
+                if (!m.matches()) {
                     LOGGER.warn("Invalid accession number");
                     JOptionPane.showMessageDialog(this.netViewer, "Invalid accession number");
                     return;
                 }
 
-                MiriamWrapper mw = new MiriamWrapper((Qualifier) entryQualifier.getSelectedItem(), mrw.getURL()+uriEntry.getText().trim());
+                MiriamWrapper mw = new MiriamWrapper((Qualifier) entryQualifier.getSelectedItem(), mrw.getURL() + uriEntry.getText().trim());
                 miModelEntry.addElement(mw);
-
-                UniquePetriNetEntity upe;
-
-                if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                    upe = petriNet.findTransition(selectedNV.getId());
-                } else {
-                    upe = petriNet.findPlace(selectedNV.getId());
-                }
-
-                if(!upe.hasProperty(MIRIAM_BIO_QUALIFIERS)) {
-                    upe.putProperty(MIRIAM_BIO_QUALIFIERS, new ArrayList<CVTerm>());
-                }
-
-                List<CVTerm> cvts = (List<CVTerm>) upe.getProperty(MIRIAM_BIO_QUALIFIERS);
-                boolean qualifierWasThere = false;
-                for(CVTerm cvt : cvts) {
-                    if((mw.getCVTerm().getBiologicalQualifierType()).equals(cvt.getBiologicalQualifierType())) {
-                        qualifierWasThere = true;
-                        cvt.addResource(uriEntry.getText().trim());
-                    }
-                    upe.putProperty(MIRIAM_BIO_QUALIFIERS, cvts);
-                }
-
-                if(!qualifierWasThere) {
-                    ((List<CVTerm>)upe.getProperty(MIRIAM_BIO_QUALIFIERS)).add(mw.getCVTerm());
-                }
-            LOGGER.info("Finished adding new entry");
+                annUtils.addMiriam(getNode(selectedNV), mw, uriEntry.getText().trim());
+                LOGGER.info("Finished adding new entry");
             }
-
             uriEntry.setText("");
         }
         LOGGER.info("Finished adding MIRIAM identifier entry");
@@ -726,16 +632,8 @@ public class AnnotationsPanel extends AddonPanel {
 
     private void saveSBOTermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSBOTermActionPerformed
         LOGGER.info("Adding SBO term");
-        if(sboCb.getSelectedItem() != null && selectedNV != null && sboCb.getSelectedIndex() > 0) {
-
-            UniquePetriNetEntity upe;
-            if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
-            } else {
-                upe = petriNet.findPlace(selectedNV.getId());
-            }
-
-            upe.putProperty(SBO_TERM, (String)sboCb.getSelectedItem());
+        if (sboCb.getSelectedItem() != null && selectedNV != null && sboCb.getSelectedIndex() > 0) {
+            annUtils.addProperty(getNode(selectedNV), AnnotationUtils.SBO_TERM, (String) sboCb.getSelectedItem());
         }
         LOGGER.info("Successfully added SBO term");
     }//GEN-LAST:event_saveSBOTermActionPerformed
@@ -744,28 +642,20 @@ public class AnnotationsPanel extends AddonPanel {
         this.netViewer.displayMenu(mif.getContentPane(), "mif");
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void DeleteSBOTermActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteSBOTermActionPerformed
         LOGGER.info("Removing SBO term");
-        if(sboCb.getSelectedItem() != null && selectedNV != null && sboCb.getSelectedIndex() > 0) {
-
-            UniquePetriNetEntity upe;
-            if(selectedNV.getNodeType().equals(NetViewer.TRANSITION)) {
-                upe = petriNet.findTransition(selectedNV.getId());
-            } else {
-                upe = petriNet.findPlace(selectedNV.getId());
-            }
-
-            upe.removeProperty(SBO_TERM);
+        if (sboCb.getSelectedItem() != null && selectedNV != null && sboCb.getSelectedIndex() > 0) {
+            annUtils.removeProperty(getNode(selectedNV), AnnotationUtils.SBO_TERM);
         }
         LOGGER.info("Finished removing SBO term");
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_DeleteSBOTermActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton DeleteSBOTerm;
     private javax.swing.JButton addMiriamIdentifierEntry;
     private javax.swing.JComboBox<Qualifier> entryQualifier;
     private javax.swing.JEditorPane helpBox;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.text.ParseException;
@@ -39,7 +38,7 @@ public class DateWrapper {
         long timestamp = 0;
         try {
             LOGGER.debug("Generating timestamp");
-            timestamp = dateFormat.parse(day+"/"+month+"/"+year+" 12:00:00").getTime();
+            timestamp = dateFormat.parse(day + "/" + month + "/" + year + " 12:00:00").getTime();
         } catch (ParseException ex) {
             LOGGER.error(ex);
         }
@@ -66,7 +65,7 @@ public class DateWrapper {
 
     @Override
     public String toString() {
-        return this.year+"-"+this.month+"-"+this.day;
+        return this.year + "-" + this.month + "-" + this.day;
     }
 
 }

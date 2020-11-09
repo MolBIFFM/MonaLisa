@@ -5,16 +5,12 @@
  */
 package monalisa.addons.netviewer;
 
-import monalisa.addons.netviewer.listener.PinvSelectionListener;
 import monalisa.addons.netviewer.listener.MctsItemListener;
-import monalisa.addons.netviewer.listener.TinvSelectionListener;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -50,16 +46,16 @@ public class ToolBar extends javax.swing.JPanel {
 
     private final NetViewer netViewer;
     private final NetViewerKeyListener nvkl;
-    
+
     protected DefaultListModel allInvList;
     protected DefaultListModel trivialInvList;
     protected DefaultListModel cyclicInvList;
     protected DefaultListModel ioInvList;
     protected DefaultListModel inputInvList;
     protected DefaultListModel outputInvList;
-    
+
     protected DefaultListModel MinvList;
-    
+
     protected DefaultListModel PinvList;
 
     private int lastValue;
@@ -78,31 +74,30 @@ public class ToolBar extends javax.swing.JPanel {
         this.blockSpinner = false;
 
         this.addKeyListener(nvkl);
-        
+
         allInvList = new DefaultListModel();
-        trivialInvList= new DefaultListModel();
+        trivialInvList = new DefaultListModel();
         cyclicInvList = new DefaultListModel();
         ioInvList = new DefaultListModel();
         inputInvList = new DefaultListModel();
         outputInvList = new DefaultListModel();
-        
+
         MinvList = new DefaultListModel();
-        
+
         PinvList = new DefaultListModel();
-        
+
         blockMenuPaneChangeListener = true;
         initComponents();
 
         this.showCompartmentsCb.addItemListener(new ItemListener() {
 
-        Boolean showMe;
+            Boolean showMe;
 
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.DESELECTED) {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(false);
-                }
-                else if(e.getStateChange() == ItemEvent.SELECTED) {
+                } else if (e.getStateChange() == ItemEvent.SELECTED) {
                     netViewer.getVertexDrawPaintTransformer().setShowCompartments(true);
                 }
                 netViewer.repaint();
@@ -112,36 +107,36 @@ public class ToolBar extends javax.swing.JPanel {
         this.compartmentCb.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent ie) {
-                if(ie.getStateChange() == ItemEvent.SELECTED) {
+                if (ie.getStateChange() == ItemEvent.SELECTED) {
                     editCompartmentButton.setEnabled(true);
                     deleteCompartmentButton.setEnabled(true);
                 }
             }
         });
 
-        if(!this.netViewer.getProject().getPetriNet().getCompartments().isEmpty()) {
-            for(Compartment c : this.netViewer.getProject().getPetriNet().getCompartments()) {
+        if (!this.netViewer.getProject().getPetriNet().getCompartments().isEmpty()) {
+            for (Compartment c : this.netViewer.getProject().getPetriNet().getCompartments()) {
                 this.compartmentCb.addItem(c);
             }
         }
 
-        if(this.netViewer.getProject().hasProperty("fontSize")) {
+        if (this.netViewer.getProject().hasProperty("fontSize")) {
             int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");
             this.netViewer.setFontSize(fontSize);
             this.fontSizeSpinner.setValue(fontSize);
         }
 
-        if(this.netViewer.getProject().hasProperty("arrowSize")) {
+        if (this.netViewer.getProject().hasProperty("arrowSize")) {
             double arrowSize = (double) this.netViewer.getProject().getProperty("arrowSize");
             this.arrowSizeSpinner.setValue(arrowSize);
         }
 
-        if(this.netViewer.getProject().hasProperty("edgeSize")) {
+        if (this.netViewer.getProject().hasProperty("edgeSize")) {
             int edgeSize = (int) this.netViewer.getProject().getProperty("edgeSize");
             this.edgeSizeSpinner.setValue(edgeSize);
         }
 
-        if(this.netViewer.getProject().hasProperty("iconSize")) {
+        if (this.netViewer.getProject().hasProperty("iconSize")) {
             int iconSize = (int) this.netViewer.getProject().getProperty("iconSize");
             this.iconSizeSpinner.setValue(iconSize);
         }
@@ -159,10 +154,12 @@ public class ToolBar extends javax.swing.JPanel {
         LOGGER.debug("Succssfully set ZoomSpinner value");
     }
 
-     /**
+    /**
      * Add a new Tab to the Menu Bar of the NetViewer
+     *
      * @param name The name of the tab, shown in the header of the tab
-     * @param tab The Component which is shown in the Tab. (Panel or ToolBar). Please use a TableLayout.
+     * @param tab The Component which is shown in the Tab. (Panel or ToolBar).
+     * Please use a TableLayout.
      */
     public void addTabToMenuBar(String name, Component tab) {
         LOGGER.debug("Adding tab to MenuBar");
@@ -1043,7 +1040,7 @@ public class ToolBar extends javax.swing.JPanel {
         LOGGER.debug("Highlighting Button in ToolBar used");
         Boolean value = this.netViewer.hideColor();
 
-        if(value) {
+        if (value) {
             LOGGER.debug("Changing ToolBar button to ShowColor");
             enableHighlightingButton.setIcon(resources.getIcon("sw.png"));
             enableHighlightingButton.setToolTipText(strings.get("NVShowColor"));
@@ -1058,7 +1055,7 @@ public class ToolBar extends javax.swing.JPanel {
     private void enableLabelsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableLabelsButtonActionPerformed
         LOGGER.debug("Label button in ToolBar used");
         Boolean value = this.netViewer.showLabels();
-        if(value) {
+        if (value) {
             LOGGER.debug("Changing ToolBar button to HideAllLabels");
             enableLabelsButton.setIcon(resources.getIcon("hide_labels.png"));
             enableLabelsButton.setToolTipText(strings.get("NVHideAllLabels"));
@@ -1152,7 +1149,7 @@ public class ToolBar extends javax.swing.JPanel {
         this.compartmentCb.removeItem(c);
         this.netViewer.getProject().getPetriNet().removeCompartment(c);
 
-        if(this.compartmentCb.getItemCount() == 0) {
+        if (this.compartmentCb.getItemCount() == 0) {
             LOGGER.debug("No Compartments left, disabling EditCompartment and DeleteCompartment button");
             this.editCompartmentButton.setEnabled(false);
             this.deleteCompartmentButton.setEnabled(false);
@@ -1164,7 +1161,7 @@ public class ToolBar extends javax.swing.JPanel {
 
     private void heatmapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatmapButtonActionPerformed
         LOGGER.debug("HeatMap button used from ToolBar");
-        if(this.netViewer.heatMap()) {
+        if (this.netViewer.heatMap()) {
             LOGGER.debug("Changing ToolBar button to HeatMapOff");
             heatmapButton.setIcon(resources.getIcon("map_sw.png"));
             heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
@@ -1180,7 +1177,7 @@ public class ToolBar extends javax.swing.JPanel {
         LOGGER.debug("AllMcts button used from ToolBar");
         int numberOfElements = mctsCb.getItemCount();
 
-        if(numberOfElements > ColorCollection.colors.size()) {
+        if (numberOfElements > ColorCollection.colors.size()) {
             JOptionPane.showMessageDialog(netViewer.vv, "Too many MCTS");
             return;
         }
@@ -1188,9 +1185,9 @@ public class ToolBar extends javax.swing.JPanel {
         TInvariant mcts;
         Set<Transition> transitions;
         Iterator<Transition> it;
-        for(int i = 0; i < numberOfElements; i++) {
-            if(mctsCb.getItemAt(i).getClass().equals(MctsWrapper.class)) {
-                netViewer.colorTransitions(((MctsWrapper)mctsCb.getItemAt(i)).getMcts().transitions(), ColorCollection.colors.get(i));
+        for (int i = 0; i < numberOfElements; i++) {
+            if (mctsCb.getItemAt(i).getClass().equals(MctsWrapper.class)) {
+                netViewer.colorTransitions(((MctsWrapper) mctsCb.getItemAt(i)).getMcts().transitions(), ColorCollection.colors.get(i));
             }
         }
 
@@ -1199,29 +1196,30 @@ public class ToolBar extends javax.swing.JPanel {
     }//GEN-LAST:event_allMctsButtonActionPerformed
 
     private void computeInvsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeInvsButtonActionPerformed
-    if(heatMap_CheckBox.isSelected())
-        netViewer.heatMap = true;
-    
-    else
-        netViewer.heatMap = false;
-    
-    ArrayList<String> toolslist = new ArrayList<>();
-    
-    if(TinvCheckBox.isSelected())
-        toolslist.add(TInvariantTool.class.getName());
-    if(MinvCheckBox.isSelected()){
-        toolslist.add(MInvariantTool.class.getName());
-    }
-    if(PinvCheckBox.isSelected())
-        toolslist.add(PInvariantTool.class.getName());
-      
-    netViewer.calcTools(toolslist);
-    
-    // check if the net is CTI
-    //    TInvariantTool TTool  = new TInvariantTool();
-        
-    //    CTILabel.setText(TTool.cti.getText());
-    
+        if (heatMap_CheckBox.isSelected()) {
+            netViewer.heatMap = true;
+        } else {
+            netViewer.heatMap = false;
+        }
+
+        ArrayList<String> toolslist = new ArrayList<>();
+
+        if (TinvCheckBox.isSelected()) {
+            toolslist.add(TInvariantTool.class.getName());
+        }
+        if (MinvCheckBox.isSelected()) {
+            toolslist.add(MInvariantTool.class.getName());
+        }
+        if (PinvCheckBox.isSelected()) {
+            toolslist.add(PInvariantTool.class.getName());
+        }
+
+        netViewer.calcTools(toolslist);
+
+        // check if the net is CTI
+        //    TInvariantTool TTool  = new TInvariantTool();
+        //    CTILabel.setText(TTool.cti.getText());
+
     }//GEN-LAST:event_computeInvsButtonActionPerformed
 
     private void reset_color_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reset_color_buttonActionPerformed

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
@@ -44,6 +43,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class ExportDialog extends JDialog implements ActionListener {
+
     private static final long serialVersionUID = -28986325585509046L;
     private static final String ACTION_CANCEL = "ACTION_CANCEL";
     private static final String ACTION_EXPORT = "ACTION_EXPORT";
@@ -65,8 +65,8 @@ public final class ExportDialog extends JDialog implements ActionListener {
     private final Project project;
     private final List<Class<? extends Tool>> exklusivExport;
 
-    private static final StringResources strings =
-        ResourceManager.instance().getDefaultStrings();
+    private static final StringResources strings
+            = ResourceManager.instance().getDefaultStrings();
 
     private static final Logger LOGGER = LogManager.getLogger(ExportDialog.class);
 
@@ -96,8 +96,8 @@ public final class ExportDialog extends JDialog implements ActionListener {
     }
 
     private void initComponent() {
-        this.setSize(new Dimension(650,350));
-        this.setPreferredSize(new Dimension(650,350));
+        this.setSize(new Dimension(650, 350));
+        this.setPreferredSize(new Dimension(650, 350));
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 
@@ -105,18 +105,22 @@ public final class ExportDialog extends JDialog implements ActionListener {
             String displayTag = strings.get("Export" + toolType.getSimpleName());
             TaggedTreeNode toolNode = new TaggedTreeNode(toolType, displayTag);
 
-            for (Configuration config : project.getResults(toolType).keySet()) {
-                if(!config.isExportable())
+            for (Configuration config : project.getToolManager().getResults(toolType).keySet()) {
+                if (!config.isExportable()) {
                     continue;
-                if(exklusivExport != null)
-                    if(!exklusivExport.contains(toolType))
+                }
+                if (exklusivExport != null) {
+                    if (!exklusivExport.contains(toolType)) {
                         continue;
+                    }
+                }
                 TaggedTreeNode configNode = new TaggedTreeNode(config, config.toString(strings));
                 toolNode.add(configNode);
             }
 
-            if (toolNode.getChildCount() > 0)
+            if (toolNode.getChildCount() > 0) {
                 root.add(toolNode);
+            }
         }
 
         tree = new CheckboxTree(root);
@@ -156,24 +160,24 @@ public final class ExportDialog extends JDialog implements ActionListener {
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane)
-            .addComponent(samePathForAll)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pathField)
-                .addComponent(pathButton))
-            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(cancelButton)
-                .addComponent(exportButton)));
+                .addComponent(scrollPane)
+                .addComponent(samePathForAll)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(pathField)
+                        .addComponent(pathButton))
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(cancelButton)
+                        .addComponent(exportButton)));
 
         layout.setVerticalGroup(layout.createSequentialGroup()
-            .addComponent(scrollPane)
-            .addComponent(samePathForAll)
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(pathField)
-                .addComponent(pathButton))
-            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(cancelButton)
-                .addComponent(exportButton)));
+                .addComponent(scrollPane)
+                .addComponent(samePathForAll)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(pathField)
+                        .addComponent(pathButton))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(cancelButton)
+                        .addComponent(exportButton)));
 
         layout.linkSize(SwingConstants.VERTICAL, pathField, pathButton);
 
@@ -211,8 +215,9 @@ public final class ExportDialog extends JDialog implements ActionListener {
     private void selectPath() {
         LOGGER.debug("Selecting path for exporting tool results");
         MonaLisaFileChooser chooser = new MonaLisaFileChooser(pathField.getText());
-        if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION)
+        if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
+        }
         File file = chooser.getSelectedFile();
         String filename = stripExtension(file);
         pathField.setText(filename);
@@ -228,7 +233,10 @@ public final class ExportDialog extends JDialog implements ActionListener {
         pathField.setEnabled(enabled);
         pathButton.setEnabled(enabled);
         if (enabled && "".equals(pathField.getText())) {
-            pathField.setText(project.getPath().getParent());
+            // Only set pathField if project has a path.
+            if (project.getPath() != null) {
+                pathField.setText(project.getPath().getParent());
+            }
         }
     }
 
@@ -241,8 +249,9 @@ public final class ExportDialog extends JDialog implements ActionListener {
 
         for (TreePath path : tree.getCheckingPaths()) {
             // Ignore tools node (1st layer), only consider configurations (2nd layer).
-            if (path.getPathCount() != 3)
+            if (path.getPathCount() != 3) {
                 continue;
+            }
 
             DefaultMutableTreeNode toolNode = (DefaultMutableTreeNode) path.getPathComponent(1);
             DefaultMutableTreeNode configNode = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -254,9 +263,9 @@ public final class ExportDialog extends JDialog implements ActionListener {
 
         if (exports.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                strings.get("NoExportsSelectedMessage"),
-                strings.get("NoExportsSelectedTitle"),
-                JOptionPane.INFORMATION_MESSAGE);
+                    strings.get("NoExportsSelectedMessage"),
+                    strings.get("NoExportsSelectedTitle"),
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -277,14 +286,13 @@ public final class ExportDialog extends JDialog implements ActionListener {
                 // Assume that the user wants to use the current working directory.
                 containingFolder = new File("").getAbsoluteFile();
                 basePath = new File(containingFolder, pathField.getText());
-            }
-            else if (!containingFolder.exists()) {
+            } else if (!containingFolder.exists()) {
                 // Invalid folder location, abort.
                 JOptionPane.showMessageDialog(
-                    this,
-                    strings.get("InvalidExportPathMessage"),
-                    strings.get("InvalidExportPathTitle"),
-                    JOptionPane.ERROR_MESSAGE);
+                        this,
+                        strings.get("InvalidExportPathMessage"),
+                        strings.get("InvalidExportPathTitle"),
+                        JOptionPane.ERROR_MESSAGE);
 
                 pathField.grabFocus();
                 pathField.setSelectionStart(0);
@@ -295,18 +303,19 @@ public final class ExportDialog extends JDialog implements ActionListener {
             if (isDir && !basePath.exists()) {
                 // Folder (case 1) doesn't exist -- create it?
                 int result = JOptionPane.showConfirmDialog(
-                    this,
-                    strings.get("CreateExportDirectoryMessage", containingFolder.getName()),
-                    strings.get("CreateExportDirectoryTitle"),
-                    JOptionPane.YES_NO_OPTION);
-                if (result != JOptionPane.YES_OPTION)
+                        this,
+                        strings.get("CreateExportDirectoryMessage", containingFolder.getName()),
+                        strings.get("CreateExportDirectoryTitle"),
+                        JOptionPane.YES_NO_OPTION);
+                if (result != JOptionPane.YES_OPTION) {
                     return;
+                }
 
-                if(!containingFolder.mkdir()) {
+                if (!containingFolder.mkdir()) {
                     JOptionPane.showMessageDialog(this,
-                                strings.get("CreateDirectoryErrorMessage"),
-                                strings.get("CreateDirectoryErrorTitle"),
-                                JOptionPane.ERROR_MESSAGE);
+                            strings.get("CreateDirectoryErrorMessage"),
+                            strings.get("CreateDirectoryErrorTitle"),
+                            JOptionPane.ERROR_MESSAGE);
 
                     pathField.grabFocus();
                     pathField.setSelectionStart(0);
@@ -318,26 +327,25 @@ public final class ExportDialog extends JDialog implements ActionListener {
             String delimiter = isDir ? File.separator : "-";
 
             for (Pair<Class<? extends Tool>, Configuration> export : exports) {
-                Result result = project.getResult(export.first(), export.second());
+                Result result = project.getToolManager().getResult(export.first(), export.second());
                 String path = basePath.getAbsolutePath() + delimiter
-                    + escapePathName(export.second().toString()) + "."
-                    + result.filenameExtension();
+                        + escapePathName(export.second().toString()) + "."
+                        + result.filenameExtension();
                 exportPaths.put(export, path);
             }
-        }
-        else {
+        } else {
             LOGGER.info("All tool results will be exported to individual paths");
             // Gather export file names manually.
 
             for (Pair<Class<? extends Tool>, Configuration> export : exports) {
-                final Result result = project.getResult(export.first(), export.second());
+                final Result result = project.getToolManager().getResult(export.first(), export.second());
                 MonaLisaFileChooser fileChooser = new MonaLisaFileChooser(project.getPath());
                 fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
                     @Override
                     public boolean accept(File f) {
                         return f.isDirectory()
-                            || result.filenameExtension().equalsIgnoreCase(
-                                FileUtils.getExtension(f));
+                                || result.filenameExtension().equalsIgnoreCase(
+                                        FileUtils.getExtension(f));
                     }
 
                     @Override
@@ -346,13 +354,14 @@ public final class ExportDialog extends JDialog implements ActionListener {
                     }
                 });
 
-                if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION)
+                if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
                     return;
+                }
 
                 String filename = result.filenameExtension().equalsIgnoreCase(
-                        FileUtils.getExtension(fileChooser.getSelectedFile())) ?
-                    fileChooser.getSelectedFile().getAbsolutePath() :
-                    fileChooser.getSelectedFile().getAbsolutePath()
+                        FileUtils.getExtension(fileChooser.getSelectedFile()))
+                        ? fileChooser.getSelectedFile().getAbsolutePath()
+                        : fileChooser.getSelectedFile().getAbsolutePath()
                         + "." + result.filenameExtension();
 
                 exportPaths.put(export, filename);

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -44,7 +43,6 @@ public class MiriamIdentifiersMouseListener extends AbstractPopupGraphMousePlugi
                 ap.goToMiriamIdentifier(selectedValue.get(0));
             }
         });
-
 
         popup.add(new AbstractAction("Edit") {
             @Override

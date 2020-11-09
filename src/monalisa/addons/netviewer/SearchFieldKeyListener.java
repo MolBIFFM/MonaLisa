@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.awt.event.KeyEvent;
@@ -20,6 +19,7 @@ import javax.swing.JTextField;
 
 /**
  * KeyListener for the search field in the SearchBar
+ *
  * @author Jens Einloft
  */
 public class SearchFieldKeyListener implements KeyListener {
@@ -31,10 +31,10 @@ public class SearchFieldKeyListener implements KeyListener {
     public SearchFieldKeyListener(NetViewer nv, JTextField owner) {
         this.owner = owner;
         this.nv = nv;
-        
+
         this.nvToName = new HashMap<>();
-        for(NetViewerNode nvNode : nv.getAllVertices()) {
-            if(!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
+        for (NetViewerNode nvNode : nv.getAllVertices()) {
+            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                 nvToName.put(nvNode, nvNode.getName());
             }
         }
@@ -43,24 +43,27 @@ public class SearchFieldKeyListener implements KeyListener {
     @Override
     public void keyReleased(KeyEvent ke) {
         Collection<NetViewerNode> toShow = new ArrayList<>();
-        
-        if(owner.getText().isEmpty()) {            
-            toShow = new ArrayList(this.nvToName.keySet());          
+
+        if (owner.getText().isEmpty()) {
+            toShow = new ArrayList(this.nvToName.keySet());
         } else {
             // Check every name for match
-            for(NetViewerNode nvNode : this.nvToName.keySet()) {
-                if(nvNode.getName().toLowerCase().contains(owner.getText().toLowerCase()))
+            for (NetViewerNode nvNode : this.nvToName.keySet()) {
+                if (nvNode.getName().toLowerCase().contains(owner.getText().toLowerCase())) {
                     toShow.add(nvNode);
-            }            
-        }            
-        
+                }
+            }
+        }
+
         nv.updateSearchBar(toShow);
     }
 
     @Override
-    public void keyTyped(KeyEvent ke) { }
+    public void keyTyped(KeyEvent ke) {
+    }
 
     @Override
-    public void keyPressed(KeyEvent ke) { }
+    public void keyPressed(KeyEvent ke) {
+    }
 
 }

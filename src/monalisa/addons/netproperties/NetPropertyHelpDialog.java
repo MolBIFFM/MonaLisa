@@ -18,43 +18,43 @@ import monalisa.util.MonaLisaHyperlinkListener;
 public class NetPropertyHelpDialog extends javax.swing.JFrame {
 
     private static final ResourceManager resources = ResourceManager.instance();
-    private static final StringResources strings = resources.getDefaultStrings();    
-    
-    private final StringBuilder helpText;    
-    
+    private static final StringResources strings = resources.getDefaultStrings();
+
+    private final StringBuilder helpText;
+
     /**
      * Creates new form HelpDialog
      */
     public NetPropertyHelpDialog() {
-        setPreferredSize(new Dimension(400,500));
-        setSize(new Dimension(400,500));
+        setPreferredSize(new Dimension(400, 500));
+        setSize(new Dimension(400, 500));
         setTitle("NetProperties - Help");
         setIconImage(resources.getImage("icon-16.png"));
-        
+
         helpText = new StringBuilder();
-        
+
         helpText.append("<html>");
-        
+
         helpText.append(HELP.get("ordinary"));
-        
+
         helpText.append(HELP.get("homogenous"));
-        
-        helpText.append(HELP.get("non-blocking multiplicity")); 
-        
-        helpText.append(HELP.get("pure"));           
-                   
-        helpText.append(HELP.get("conservative")); 
-        
+
+        helpText.append(HELP.get("non-blocking multiplicity"));
+
+        helpText.append(HELP.get("pure"));
+
+        helpText.append(HELP.get("conservative"));
+
         helpText.append(HELP.get("subConservative"));
-        
+
         helpText.append(HELP.get("staticConflictFree"));
-        
+
         helpText.append(HELP.get("connected"));
 
         helpText.append(HELP.get("stronglyConnected"));
-        
+
         helpText.append(HELP.get("sources"));
-        
+
         helpText.append("</html>");
 
         initComponents();

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -19,10 +18,10 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  * Transformer for the color of an edge
+ *
  * @author Jens Einloft
  */
-
-public class EdgePaintTransformer implements Transformer<NetViewerEdge, Paint>{
+public class EdgePaintTransformer implements Transformer<NetViewerEdge, Paint> {
 
     private final VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
     private Boolean hideColor = false;
@@ -33,12 +32,14 @@ public class EdgePaintTransformer implements Transformer<NetViewerEdge, Paint>{
 
     @Override
     public Paint transform(NetViewerEdge e) {
-        if(vv.getRenderContext().getPickedEdgeState().getPicked().contains(e))
+        if (vv.getRenderContext().getPickedEdgeState().getPicked().contains(e)) {
             return Color.CYAN;
-        if(hideColor)
+        }
+        if (hideColor) {
             return Color.BLACK;
-        else
+        } else {
             return e.getColor();
+        }
     }
 
     public Boolean getHideColor() {

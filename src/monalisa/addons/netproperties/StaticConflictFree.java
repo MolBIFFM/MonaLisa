@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -17,9 +16,9 @@ import org.apache.logging.log4j.LogManager;
 
 /**
  * Checks if a net is static conflict free.
+ *
  * @author daniel
  */
-
 public class StaticConflictFree extends NetPropertyAlgorithm<Boolean> {
 
     private static final Logger LOGGER = LogManager.getLogger(StaticConflictFree.class);
@@ -27,7 +26,6 @@ public class StaticConflictFree extends NetPropertyAlgorithm<Boolean> {
     public StaticConflictFree(PetriNetFacade pn) {
         super(pn);
     }
-
 
     /**
      * If every place has just one post transition, the net is static conflict
@@ -38,8 +36,8 @@ public class StaticConflictFree extends NetPropertyAlgorithm<Boolean> {
         LOGGER.info("Checking whether network is free of static conflicts");
         algorithmName = "static conflict free";
         algorithmValue = true;
-        for(Place p : petriNet.places()) { //checks all Places.
-            if(p.outputs().size() >= 2){
+        for (Place p : petriNet.places()) { //checks all Places.
+            if (p.outputs().size() >= 2) {
                 algorithmValue = false;
                 break;
             }

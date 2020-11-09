@@ -7,9 +7,7 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.mcts;
-
 
 import java.util.*;
 import monalisa.data.pn.PetriNetFacade;
@@ -20,6 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MCTSFactory {
+
     private final int[][] occMatrix;
     private final List<Transition> transitions;
     private final List<TInvariant> invariants;
@@ -46,13 +45,15 @@ public class MCTSFactory {
         int nbr_of_transitions = transitions.size();
         int nbr_of_invariants = invariants.size();
 
-        if(nbr_of_invariants == 0)
+        if (nbr_of_invariants == 0) {
             return null;
+        }
 
         boolean sameDts, hasI, hasN, allwaysNull;
         for (int i = 0; i < nbr_of_transitions; i++) {
-            if (alreadyDone.contains(i))
+            if (alreadyDone.contains(i)) {
                 continue;
+            }
 
             alreadyDone.add(i);
             Transition transition = transitions.get(i);
@@ -69,7 +70,7 @@ public class MCTSFactory {
                     hasI = occMatrix[j][i] >= 1;
                     hasN = occMatrix[j][n] >= 1;
 
-                    if(hasI == hasN && hasI == true) {
+                    if (hasI == hasN && hasI == true) {
                         allwaysNull = false;
                     }
 
@@ -84,10 +85,11 @@ public class MCTSFactory {
                 }
             }
 
-            if(builder.getSize() > 1)
+            if (builder.getSize() > 1) {
                 ret.add(builder.buildAndClear());
-            else
+            } else {
                 mctsId--;
+            }
         }
         LOGGER.debug("Successfully got MCTS support");
         return ret;
@@ -100,18 +102,20 @@ public class MCTSFactory {
         int mctsId = 0;
         List<TInvariant> supports = mctsSupport();
 
-        if(invariants.isEmpty())
+        if (invariants.isEmpty()) {
             return null;
+        }
 
         for (TInvariant support : supports) {
             alreadyDone.clear();
 
             for (Transition transT : support) {
-                if (alreadyDone.contains(transT.id()))
+                if (alreadyDone.contains(transT.id())) {
                     continue;
+                }
 
                 alreadyDone.add(transT.id());
-                InvariantBuilder builder = new InvariantBuilder(pnf,"TI");
+                InvariantBuilder builder = new InvariantBuilder(pnf, "TI");
                 builder.setId(mctsId++);
                 int transNum = 0;
                 builder.add(transT, 1);
@@ -120,20 +124,22 @@ public class MCTSFactory {
                 boolean sameDts, allwaysNull;
 
                 for (Transition transS : support) {
-                    if (transS == transT)
+                    if (transS == transT) {
                         continue;
+                    }
 
                     sameDts = true;
                     float relation = 0;
                     for (TInvariant inv : invariants) {
                         int occ = inv.factor(transT);
-                        if (occ == 0)
+                        if (occ == 0) {
                             continue;
+                        }
                         invWithNewMcts = inv;
                         float actRel = (float) occ / inv.factor(transS);
-                        if (relation == 0)
+                        if (relation == 0) {
                             relation = actRel;
-                        else if (relation != actRel) {
+                        } else if (relation != actRel) {
                             sameDts = false;
                             break;
                         }
@@ -150,14 +156,17 @@ public class MCTSFactory {
                 TInvariant resultInvariant = builder.build();
 
                 if (invWithNewMcts != null) {
-                    for (Transition trans : resultInvariant)
+                    for (Transition trans : resultInvariant) {
                         builder.add(trans, invWithNewMcts.factor(trans));
+                    }
 
                     resultInvariant = builder.build();
                     int theGcd = gcdVector(resultInvariant.asVector());
-                    if (theGcd > 1)
-                        for (Transition trans : resultInvariant)
+                    if (theGcd > 1) {
+                        for (Transition trans : resultInvariant) {
                             builder.add(trans, resultInvariant.factor(trans) / theGcd);
+                        }
+                    }
 
                     resultInvariant = builder.build();
                 }
@@ -172,8 +181,9 @@ public class MCTSFactory {
     private static int gcdVector(List<Integer> vector) {
         int ret = 0;
 
-        for (int i : vector)
+        for (int i : vector) {
             ret = gcd(ret, i);
+        }
 
         return ret;
     }

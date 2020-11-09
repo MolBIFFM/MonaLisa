@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -18,9 +17,10 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Checks if a net is pure.
+ *
  * @author daniel
  */
-public class Pure extends NetPropertyAlgorithm<Boolean>{
+public class Pure extends NetPropertyAlgorithm<Boolean> {
 
     private static final Logger LOGGER = LogManager.getLogger(Pure.class);
 
@@ -37,9 +37,9 @@ public class Pure extends NetPropertyAlgorithm<Boolean>{
         LOGGER.info("Checking whether net is pure");
         algorithmName = "pure";
         algorithmValue = true;
-        for(Transition t : petriNet.transitions()) { //checks all Transitions.
-            for(Place p : t.inputs()) { //checks all input Places of the Transition t.
-                if(t.outputs().contains(p)) {
+        for (Transition t : petriNet.transitions()) { //checks all Transitions.
+            for (Place p : t.inputs()) { //checks all input Places of the Transition t.
+                if (t.outputs().contains(p)) {
                     algorithmValue = false;
                     break;
                 }

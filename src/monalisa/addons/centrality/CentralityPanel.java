@@ -58,38 +58,38 @@ public class CentralityPanel extends AddonPanel {
         LOGGER.info("Initializing CentralityPanel");
         initComponents();
 
-        placesTable.addMouseListener(new MouseAdapter(){
+        placesTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 LOGGER.debug("Place selected in CentralityPanel");
                 //get the selected column
                 int col = placesTable.columnAtPoint(e.getPoint());
                 int row = placesTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
-                if (col == 0){
-                    if(e.getClickCount() == 1) {
+                if (col == 0) {
+                    if (e.getClickCount() == 1) {
                         LOGGER.debug("Reflecting place selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode() , true);
+                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) placesTable.getValueAt(row, col)).getMasterNode(), true);
                     }
                 }
                 LOGGER.debug("Handled place selection in CentralityPanel");
             }
         });
 
-        transitionsTable.addMouseListener(new MouseAdapter(){
+        transitionsTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 LOGGER.debug("Transition selected in CentralityPanel");
                 //get the selected column
                 int col = transitionsTable.columnAtPoint(e.getPoint());
                 int row = transitionsTable.rowAtPoint(e.getPoint());
                 //respond only if fist column is selected + double click
-                if (col == 0){
-                    if(e.getClickCount() == 1) {
+                if (col == 0) {
+                    if (e.getClickCount() == 1) {
                         LOGGER.debug("Reflecting transition selection in NetViewer");
                         netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().clear();
-                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode() , true);
+                        netViewer.getVisualizationViewer().getRenderContext().getPickedVertexState().pick(((NetViewerNode) transitionsTable.getValueAt(row, col)).getMasterNode(), true);
                     }
                 }
                 LOGGER.debug("Handled transition selection in CentralityPanel");
@@ -452,16 +452,16 @@ public class CentralityPanel extends AddonPanel {
      */
     private void computeRankingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeRankingButtonActionPerformed
         LOGGER.info("Computing rankings of nodes");
-        adjMatrixPlaces = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.PLACES);
-        adjMatrixTransitions = new AdjacencyMatrix(this.petriNet.places(), this.petriNet.transitions(), AdjacencyMatrix.TRANSITIONS);
+        adjMatrixPlaces = new AdjacencyMatrix(this.pnf.places(), this.pnf.transitions(), AdjacencyMatrix.PLACES);
+        adjMatrixTransitions = new AdjacencyMatrix(this.pnf.places(), this.pnf.transitions(), AdjacencyMatrix.TRANSITIONS);
 
-        cc = new ClosenessCentrality(this.petriNet);
+        cc = new ClosenessCentrality(this.pnf);
         cc.calculate();
-        ecc = new EccentricityCentrality(this.petriNet);
+        ecc = new EccentricityCentrality(this.pnf);
         ecc.calculate();
-        bc = new BetweennessCentrality(this.petriNet);
+        bc = new BetweennessCentrality(this.pnf);
         bc.calculate();
-        ec = new EigenvectorCentrality(this.petriNet);
+        ec = new EigenvectorCentrality(this.pnf);
         ec.calculate();
 
         int pL = adjMatrixPlaces.getLength();
@@ -470,13 +470,13 @@ public class CentralityPanel extends AddonPanel {
         modelPlaces = (DefaultTableModel) placesTable.getModel();
         modelTransitions = (DefaultTableModel) transitionsTable.getModel();
 
-        if(modelPlaces.getRowCount() > 0) {
+        if (modelPlaces.getRowCount() > 0) {
             for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                 modelPlaces.removeRow(i);
             }
         }
 
-        if(modelTransitions.getRowCount() > 0) {
+        if (modelTransitions.getRowCount() > 0) {
             for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                 modelTransitions.removeRow(i);
             }
@@ -525,11 +525,11 @@ public class CentralityPanel extends AddonPanel {
                 }
 
                 if (!file.exists()) {
-                    SaveResults.saveResults(file, placesTable, transitionsTable);
+                    SaveResults.saveResults(file, cc, ecc, bc, ec, pnf);
                 } else {
                     int option = JOptionPane.showConfirmDialog(this.netViewer, "The file already exists. Do you want to overwrite this file?", "Save", JOptionPane.OK_CANCEL_OPTION, 2);
                     if (option == JOptionPane.OK_OPTION) {
-                        SaveResults.saveResults(file, placesTable, transitionsTable);
+                        SaveResults.saveResults(file, cc, ecc, bc, ec, pnf);
                     }
                 }
                 LOGGER.info("Successfully exported centralities");
@@ -554,7 +554,7 @@ public class CentralityPanel extends AddonPanel {
         //Why do we calculate these again on every seletion?
         if (getComboElement().equals("Closeness")) {
             LOGGER.info("New centrality for heatmap will be closeness");
-            cc = new ClosenessCentrality(this.petriNet);
+            cc = new ClosenessCentrality(this.pnf);
             cc.calculate();
             Map<Integer, Double> rankingTransitions = cc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = cc.getRankingForPlaces();
@@ -562,7 +562,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to closeness");
         } else if (getComboElement().equals("Eccentricity")) {
             LOGGER.info("New centrality for heatmap will be eccentricity");
-            ecc = new EccentricityCentrality(this.petriNet);
+            ecc = new EccentricityCentrality(this.pnf);
             ecc.calculate();
             Map<Integer, Double> rankingTransitions = ecc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ecc.getRankingForPlaces();
@@ -570,7 +570,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to eccentricity");
         } else if (getComboElement().equals("Betweenness")) {
             LOGGER.info("New centrality for heatmap will be betweenness");
-            bc = new BetweennessCentrality(this.petriNet);
+            bc = new BetweennessCentrality(this.pnf);
             bc.calculate();
             Map<Integer, Double> rankingTransitions = bc.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = bc.getRankingForPlaces();
@@ -578,7 +578,7 @@ public class CentralityPanel extends AddonPanel {
             LOGGER.info("Successfully changed heatmap centrality to betweenness");
         } else if (getComboElement().equals("Eigenvector")) {
             LOGGER.info("New centrality for heatmap is eigenvector");
-            ec = new EigenvectorCentrality(this.petriNet);
+            ec = new EigenvectorCentrality(this.pnf);
             ec.calculate();
             Map<Integer, Double> rankingTransitions = ec.getRankingForTransitions();
             Map<Integer, Double> rankingPlaces = ec.getRankingForPlaces();
@@ -608,15 +608,15 @@ public class CentralityPanel extends AddonPanel {
     @Override
     public void netChanged() {
         LOGGER.debug("Handling net change for CentralityPanel");
-        if(cc != null) {
+        if (cc != null) {
             LOGGER.debug("Resetting model because of net change");
-            if(modelPlaces.getRowCount() > 0) {
+            if (modelPlaces.getRowCount() > 0) {
                 for (int i = modelPlaces.getRowCount() - 1; i > -1; i--) {
                     modelPlaces.removeRow(i);
                 }
             }
 
-            if(modelTransitions.getRowCount() > 0) {
+            if (modelTransitions.getRowCount() > 0) {
                 for (int i = modelTransitions.getRowCount() - 1; i > -1; i--) {
                     modelTransitions.removeRow(i);
                 }

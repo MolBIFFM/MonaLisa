@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.visualization.Layer;
@@ -20,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Variation of a JUNG class CrossoverScalingControl.
+ *
  * @author JUNG Library, modified by Jens Einloft
  */
 public class NetViewerCrossoverScalingControl implements ScalingControl {
@@ -32,7 +32,7 @@ public class NetViewerCrossoverScalingControl implements ScalingControl {
     }
 
     public double getCrossover() {
-      return this.crossover;
+        return this.crossover;
     }
 
     @Override

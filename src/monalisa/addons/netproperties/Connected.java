@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import java.util.ArrayList;
@@ -44,7 +43,6 @@ public class Connected extends NetPropertyAlgorithm<Boolean> {
         for (Place p : petriNet.places()) {
             placeArray.add(p);
         }
-
 
         while (!placeArray.isEmpty()) {
             LOGGER.debug("Starting depth first search");

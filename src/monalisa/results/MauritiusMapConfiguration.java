@@ -7,12 +7,12 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import monalisa.resources.StringResources;
 
 public class MauritiusMapConfiguration implements Configuration {
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -21,12 +21,12 @@ public class MauritiusMapConfiguration implements Configuration {
         // all resolve to the same.
         return obj.getClass() == getClass();
     }
-    
+
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-    
+
     @Override
     public String toString() {
         return "MauritiusMap";

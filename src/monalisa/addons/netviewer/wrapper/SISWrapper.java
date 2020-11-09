@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.wrapper;
 
 import java.io.Serializable;
@@ -22,6 +21,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jens
  */
 public class SISWrapper implements Serializable {
+
     private static final long serialVersionUID = -1653518945518597091L;
 
     private TInvariants sis;
@@ -35,15 +35,18 @@ public class SISWrapper implements Serializable {
         this.originalTransitions = originalTransitions;
         this.addedTransitions = addedTransitions;
 
-        for(NetViewerNode n : originalTransitions)
-            name += n.getName()+"+";
-        if(!addedTransitions.isEmpty()) {
+        for (NetViewerNode n : originalTransitions) {
+            name += n.getName() + "+";
+        }
+        if (!addedTransitions.isEmpty()) {
             name += "[";
-            for(NetViewerNode n : addedTransitions)
-                name += n.getName()+"+";
-            name = name.substring(0,name.length()-1)+"]";
-        } else
-            name = name = name.substring(0,name.length()-1);
+            for (NetViewerNode n : addedTransitions) {
+                name += n.getName() + "+";
+            }
+            name = name.substring(0, name.length() - 1) + "]";
+        } else {
+            name = name = name.substring(0, name.length() - 1);
+        }
         LOGGER.debug("Created new SISWrapper " + name);
     }
 

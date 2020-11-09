@@ -10,7 +10,9 @@ import monalisa.resources.StringResources;
 /**
  *
  * @author daniel
- */public final class MInvariantsConfiguration implements Configuration {
+ */
+public final class MInvariantsConfiguration implements Configuration {
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -19,12 +21,12 @@ import monalisa.resources.StringResources;
         // all resolve to the same.
         return obj.getClass() == getClass();
     }
-    
+
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-    
+
     @Override
     public String toString() {
         return "Manatee Invariants";

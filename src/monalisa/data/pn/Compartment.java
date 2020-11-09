@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.pn;
 
 import java.io.IOException;
@@ -19,40 +18,43 @@ import java.io.Serializable;
  *
  * @author Jens Einloft
  */
-public class Compartment extends AbstractPetriNetEntity implements Serializable {    
+public class Compartment extends AbstractPetriNetEntity implements Serializable {
+
     private static final long serialVersionUID = -9006955431884512984L;
-    
+
     private String name;
-    
+
     public Compartment() {
         this.name = "default";
     }
-    
+
     public Compartment(String name) {
         this.name = name;
     }
-    
+
     /**
      * Returns the name of the compartment
-     * @return 
+     *
+     * @return
      */
     public String getName() {
         return this.name;
-    }      
-    
+    }
+
     /**
      * Set the name for the compartment
-     * @param name 
+     *
+     * @param name
      */
     public void setName(String name) {
         this.name = name;
     }
-    
+
     @Override
     public String toString() {
         return this.name;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -64,5 +66,5 @@ public class Compartment extends AbstractPetriNetEntity implements Serializable 
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         out.writeObject(this.name);
-    }        
+    }
 }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa;
 
 import com.pagosoft.plaf.PgsLookAndFeel;
@@ -18,7 +17,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.logging.log4j.*;
 import monalisa.gui.MainDialog;
-import org.apache.logging.log4j.core.appender.FileAppender;
 
 /**
  * Application entry point class for MonaLisa.
@@ -26,6 +24,7 @@ import org.apache.logging.log4j.core.appender.FileAppender;
  * @author Konrad Rudolph
  */
 public final class MonaLisa implements Runnable {
+
     private static final Logger LOGGER = LogManager.getLogger(MonaLisa.class);
     private static final String OS_NAME = System.getProperty("os.name");
     public static final boolean IS_MACOSX = OS_NAME.toLowerCase(Locale.ENGLISH).startsWith("mac os x");
@@ -40,7 +39,8 @@ public final class MonaLisa implements Runnable {
         return applicationMainWindow;
     }
 
-    private MonaLisa() { }
+    private MonaLisa() {
+    }
 
     /**
      * Application entry point
@@ -55,9 +55,9 @@ public final class MonaLisa implements Runnable {
         LOGGER.info("Logging Start");
         try {
             if (IS_MACOSX) {
-            // Set system properties for correct styling under OS X.
+                // Set system properties for correct styling under OS X.
                 System.setProperty("apple.laf.useScreenMenuBar", "true");
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE)    ;
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", APPLICATION_TITLE);
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
 
@@ -66,13 +66,12 @@ public final class MonaLisa implements Runnable {
             SwingUtilities.invokeLater(new MonaLisa());
 
             // First start of MonaLisa? Then write the config file for the settings
-            if(!Settings.load()){
-               LOGGER.warn("No config file found. Creating new config file.");
-               Settings.createDefaultConfigFile();
+            if (!Settings.load()) {
+                LOGGER.warn("No config file found. Creating new config file.");
+                Settings.createDefaultConfigFile();
             }
             ToolTipManager.sharedInstance().setDismissDelay(12000);
-        }
-        catch(ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             LOGGER.error("Error during startup", e.getMessage());
         }
 

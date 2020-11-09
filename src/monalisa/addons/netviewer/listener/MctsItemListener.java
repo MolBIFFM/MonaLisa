@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.listener;
 
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
@@ -23,9 +22,11 @@ import org.apache.logging.log4j.LogManager;
 
 /**
  * Controls the selection of a MCT Set
+ *
  * @author Jens Einloft
  */
 public class MctsItemListener implements ItemListener {
+
     private final JComboBox cb;
     private final NetViewer nv;
     private final ToolBar tb;
@@ -39,23 +40,25 @@ public class MctsItemListener implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent ie) {
-        if(ie.getStateChange() == ItemEvent.SELECTED) {
+        if (ie.getStateChange() == ItemEvent.SELECTED) {
             LOGGER.debug("New MCTS-Item selected, changing colouring");
-            if(cb.getSelectedItem() == null)
+            if (cb.getSelectedItem() == null) {
                 return;
-            if(cb.getSelectedIndex() == 0) {
+            }
+            if (cb.getSelectedIndex() == 0) {
                 nv.resetColor();
                 return;
             }
-            if(!cb.getSelectedItem().getClass().getSimpleName().equalsIgnoreCase("MctsWrapper"))
+            if (!cb.getSelectedItem().getClass().getSimpleName().equalsIgnoreCase("MctsWrapper")) {
                 return;
+            }
 
-            if(!tb.stackSelection()) {
+            if (!tb.stackSelection()) {
                 nv.resetColor();
             }
 
             Color chosenColor;
-            if(tb.manuellColorSelection()) {
+            if (tb.manuellColorSelection()) {
                 chosenColor = JColorChooser.showDialog(null, "Select color", null);
             } else {
                 chosenColor = NetViewer.MCTS_COLOR;
@@ -63,7 +66,7 @@ public class MctsItemListener implements ItemListener {
 
             nv.resetMessageLabel();
 
-            nv.colorTransitions(((MctsWrapper)cb.getSelectedItem()).getMcts().transitions(), chosenColor);
+            nv.colorTransitions(((MctsWrapper) cb.getSelectedItem()).getMcts().transitions(), chosenColor);
 
             nv.getVisualizationViewer().repaint();
             LOGGER.debug("Successfully changed colouring on new MCS-Item selection");

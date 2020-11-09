@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -39,29 +38,33 @@ public class Pipe4OutputHandler implements OutputHandler {
 
     public void save(FileOutputStream fileOutputStream, PetriNet pn) {
         LOGGER.info("Exporting Petri net to PIPE4 format");
-        Double minX = 0.0 , minY = 0.0, x, y;
-        for(Place p : pn.places()) {
+        Double minX = 0.0, minY = 0.0, x, y;
+        for (Place p : pn.places()) {
             x = (Double) p.getProperty("posX");
             y = (Double) p.getProperty("posY");
 
-            if(x < minX)
+            if (x < minX) {
                 minX = x;
-            if(y < minY)
+            }
+            if (y < minY) {
                 minY = y;
+            }
         }
 
-        for(Transition t : pn.transitions()) {
+        for (Transition t : pn.transitions()) {
             x = (Double) t.getProperty("posX");
             y = (Double) t.getProperty("posY");
 
-            if(x < minX)
+            if (x < minX) {
                 minX = x;
-            if(y < minY)
+            }
+            if (y < minY) {
                 minY = y;
+            }
         }
 
-        Double corectX = Math.abs(minX)+10.0;
-        Double corectY = Math.abs(minY)+10.0;
+        Double corectX = Math.abs(minX) + 10.0;
+        Double corectY = Math.abs(minY) + 10.0;
 
         Element root = new Element("pnml");
 
@@ -69,30 +72,29 @@ public class Pipe4OutputHandler implements OutputHandler {
         net.setAttribute("id", "Net-One");
         net.setAttribute("type", "P/T net");
 
-
         Element tokenclass = new Element("token");
-        tokenclass.setAttribute("id","Default");
-        tokenclass.setAttribute("enabled","true");
-        tokenclass.setAttribute("red","0");
-        tokenclass.setAttribute("green","0");
-        tokenclass.setAttribute("blue","0");
+        tokenclass.setAttribute("id", "Default");
+        tokenclass.setAttribute("enabled", "true");
+        tokenclass.setAttribute("red", "0");
+        tokenclass.setAttribute("green", "0");
+        tokenclass.setAttribute("blue", "0");
         net.addContent(tokenclass);
 
-        Element place = null, graphicsMain = null, position = null,graphicsSub = null,
+        Element place = null, graphicsMain = null, position = null, graphicsSub = null,
                 name = null, initialMarking = null, capacity = null, value = null, offset = null;
         String placeName;
         List<Element> arcList = new ArrayList<>();
-        for(Place p : pn.places()) {
+        for (Place p : pn.places()) {
             place = new Element("place");
 
-            place.setAttribute("id", "P"+p.id());
+            place.setAttribute("id", "P" + p.id());
 
             graphicsMain = new Element("graphics");
             position = new Element("position");
             x = ((Double) p.getProperty("posX")) + corectX;
             y = ((Double) p.getProperty("posY")) + corectY;
-            position.setAttribute("x", ""+x);
-            position.setAttribute("y", ""+y);
+            position.setAttribute("x", "" + x);
+            position.setAttribute("y", "" + y);
             graphicsMain.addContent(position);
 
             place.addContent(graphicsMain);
@@ -104,8 +106,8 @@ public class Pipe4OutputHandler implements OutputHandler {
             name.addContent(value);
             graphicsSub = new Element("graphics");
             offset = new Element("offset");
-            offset.setAttribute("x","0");
-            offset.setAttribute("y","0");
+            offset.setAttribute("x", "0");
+            offset.setAttribute("y", "0");
             graphicsSub.addContent(offset);
             name.addContent(graphicsSub);
 
@@ -113,12 +115,12 @@ public class Pipe4OutputHandler implements OutputHandler {
 
             initialMarking = new Element("initialMarking");
             value = new Element("value");
-            value.addContent("Default,"+0);
+            value.addContent("Default," + 0);
             initialMarking.addContent(value);
             graphicsSub = new Element("graphics");
             offset = new Element("offset");
-            offset.setAttribute("x","0");
-            offset.setAttribute("y","0");
+            offset.setAttribute("x", "0");
+            offset.setAttribute("y", "0");
             graphicsSub.addContent(offset);
             initialMarking.addContent(graphicsSub);
 
@@ -138,16 +140,16 @@ public class Pipe4OutputHandler implements OutputHandler {
                 infiniteServer = null, priority = null;
         Element arc = null, inscription = null, tagged = null, type = null;
         String transitionName, arcName;
-        for(Transition t : pn.transitions()) {
+        for (Transition t : pn.transitions()) {
             transition = new Element("transition");
-            transition.setAttribute("id", "T"+t.id());
+            transition.setAttribute("id", "T" + t.id());
 
             graphicsMain = new Element("graphics");
             position = new Element("position");
             x = ((Double) t.getProperty("posX")) + corectX;
             y = ((Double) t.getProperty("posY")) + corectY;
-            position.setAttribute("x", ""+x);
-            position.setAttribute("y", ""+y);
+            position.setAttribute("x", "" + x);
+            position.setAttribute("y", "" + y);
             graphicsMain.addContent(position);
 
             transition.addContent(graphicsMain);
@@ -159,8 +161,8 @@ public class Pipe4OutputHandler implements OutputHandler {
             name.addContent(value);
             graphicsSub = new Element("graphics");
             offset = new Element("offset");
-            offset.setAttribute("x","0");
-            offset.setAttribute("y","0");
+            offset.setAttribute("x", "0");
+            offset.setAttribute("y", "0");
             graphicsSub.addContent(offset);
             name.addContent(graphicsSub);
 
@@ -201,16 +203,16 @@ public class Pipe4OutputHandler implements OutputHandler {
 
             transition.addContent(priority);
 
-            for(Place p : t.inputs()) {
+            for (Place p : t.inputs()) {
                 arc = new Element("arc");
-                arcName = "P"+p.id()+" to T"+t.id();
+                arcName = "P" + p.id() + " to T" + t.id();
                 arc.setAttribute("id", arcName);
-                arc.setAttribute("source", "P"+p.id());
-                arc.setAttribute("target", "T"+t.id());
+                arc.setAttribute("source", "P" + p.id());
+                arc.setAttribute("target", "T" + t.id());
 
                 inscription = new Element("inscription");
                 value = new Element("value");
-                value.addContent("Default,"+new Integer(pn.getArc(p, t).weight()).toString());
+                value.addContent("Default," + new Integer(pn.getArc(p, t).weight()).toString());
                 inscription.addContent(value);
                 graphicsSub = new Element("graphics");
                 inscription.addContent(graphicsSub);
@@ -225,23 +227,23 @@ public class Pipe4OutputHandler implements OutputHandler {
                 arc.addContent(tagged);
 
                 type = new Element("type");
-                type.setAttribute("value","normal");
+                type.setAttribute("value", "normal");
 
                 arc.addContent(type);
 
                 arcList.add(arc);
             }
 
-            for(Place p : t.outputs()) {
+            for (Place p : t.outputs()) {
                 arc = new Element("arc");
-                arcName = "T"+t.id()+" to P"+p.id();
+                arcName = "T" + t.id() + " to P" + p.id();
                 arc.setAttribute("id", arcName);
-                arc.setAttribute("source","T"+t.id());
-                arc.setAttribute("target", "P"+p.id());
+                arc.setAttribute("source", "T" + t.id());
+                arc.setAttribute("target", "P" + p.id());
 
                 inscription = new Element("inscription");
                 value = new Element("value");
-                value.addContent("Default,"+new Integer(pn.getArc(t, p).weight()).toString());
+                value.addContent("Default," + new Integer(pn.getArc(t, p).weight()).toString());
                 inscription.addContent(value);
                 graphicsSub = new Element("graphics");
                 inscription.addContent(graphicsSub);
@@ -256,7 +258,7 @@ public class Pipe4OutputHandler implements OutputHandler {
                 arc.addContent(tagged);
 
                 type = new Element("type");
-                type.setAttribute("value","normal");
+                type.setAttribute("value", "normal");
 
                 arc.addContent(type);
 
@@ -266,7 +268,7 @@ public class Pipe4OutputHandler implements OutputHandler {
             net.addContent(transition);
         }
 
-        for(Element e : arcList) {
+        for (Element e : arcList) {
             net.addContent(e);
         }
 
@@ -283,8 +285,9 @@ public class Pipe4OutputHandler implements OutputHandler {
 
     public boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file is in PIPE4 format");
-        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             return false;
+        }
 
         SAXBuilder builder = new SAXBuilder();
         Document doc;
@@ -298,22 +301,25 @@ public class Pipe4OutputHandler implements OutputHandler {
 
         // Pipe 4 uses PNML but doesn't a proper net type. We assume P/T
         // networks.
-
-        if (!root.getName().equals("pnml"))
+        if (!root.getName().equals("pnml")) {
             return false;
+        }
         Element netNode = root.getChild("net");
-        if (netNode == null)
+        if (netNode == null) {
             return false;
+        }
         // Pipe4?
-        if (!netNode.getChildren("token").isEmpty())
+        if (!netNode.getChildren("token").isEmpty()) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     public File checkFileNameForExtension(File file) {
-        if(!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".xml");
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".xml");
+        }
         return file;
     }
 

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.visualization.Layer;
@@ -19,14 +18,15 @@ import java.awt.geom.Point2D;
 
 /**
  * Zoom in: on mouse, zoom out: at center
+ *
  * @author JUNG Library, modified by Jens Einloft
  */
 public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
-    
+
     private NetViewer owner;
-    
+
     double newViewScale, newLayoutScale;
-    
+
     public NetViewerScalingGraphMousePlugin(ScalingControl scaler, int modifiers) {
         super(scaler, modifiers, 1.1F, 0.9090909F);
     }
@@ -38,29 +38,30 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        
+
         boolean accepted = checkModifiers(e);
-        if (accepted == true) {        
+        if (accepted == true) {
             VisualizationViewer vv = (VisualizationViewer) e.getSource();
             Point2D mouse = e.getPoint();
             Point2D center = vv.getCenter();
-            int amount = e.getWheelRotation();           
-            
-            if(amount > 0)
+            int amount = e.getWheelRotation();
+
+            if (amount > 0) {
                 this.scaler.scale(vv, this.in, center);
-            else if(amount < 0)
+            } else if (amount < 0) {
                 this.scaler.scale(vv, this.out, mouse);
+            }
 
             newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
-            newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();                   
-            
-            owner.setZoomScale((newViewScale*newLayoutScale)*100);                
+            newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
+
+            owner.setZoomScale((newViewScale * newLayoutScale) * 100);
 
             e.consume();
             vv.repaint();
         }
     }
-    
+
     @Override
     public ScalingControl getScaler() {
         return this.scaler;

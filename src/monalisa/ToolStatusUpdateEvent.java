@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa;
 
 import java.util.EventObject;
@@ -16,13 +15,16 @@ import monalisa.tools.Tool;
 
 /**
  * An event object holding a {@link Tool} execution status update.
+ *
  * @author Konrad Rudolph
  */
 public class ToolStatusUpdateEvent extends EventObject {
+
     private static final long serialVersionUID = -4360345569897963921L;
 
     /**
      * The kind of status update.
+     *
      * @author Konrad Rudolph
      */
     public enum Status {
@@ -55,7 +57,7 @@ public class ToolStatusUpdateEvent extends EventObject {
     public String getToolName() {
         return toolName;
     }
-    
+
     public Status getStatus() {
         return status;
     }

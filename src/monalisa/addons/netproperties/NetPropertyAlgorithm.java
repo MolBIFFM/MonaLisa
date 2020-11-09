@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netproperties;
 
 import monalisa.data.pn.PetriNetFacade;
@@ -26,10 +25,9 @@ public abstract class NetPropertyAlgorithm<T> implements NetPropertyInterface<T>
         this.petriNet = pn;
     }
 
-
     /**
-     * The return function returns the Value of the Algorithm. The return Type depends on the input value.
-     * It's used by all netProperti - Algorithms.
+     * The return function returns the Value of the Algorithm. The return Type
+     * depends on the input value. It's used by all netProperti - Algorithms.
      */
     @Override
     public T returnAlgorithmValue() {

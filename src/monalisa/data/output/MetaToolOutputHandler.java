@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.output;
 
 import java.io.File;
@@ -26,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Output handler for MetaTool format
+ *
  * @author Jens Einloft
  */
 public class MetaToolOutputHandler implements OutputHandler {
@@ -34,24 +34,24 @@ public class MetaToolOutputHandler implements OutputHandler {
     private static final StringResources strings = resources.getDefaultStrings();
     private static final Logger LOGGER = LogManager.getLogger(MetaToolOutputHandler.class);
 
-
     public void save(FileOutputStream fos, PetriNet pn) {
         LOGGER.info("Exporting Petri net to MetaTool format");
         try (PrintStream ps = new PrintStream(fos)) {
-            ps.println("Generated with MonaLisa Version "+strings.get("CurrentVersion"));
+            ps.println("Generated with MonaLisa Version " + strings.get("CurrentVersion"));
 
             ps.println("-ENZREV\n");
 
             ps.println("-ENZIRREV");
 
-            for(Transition t : pn.transitions())
-                ps.print(t.getProperty("name")+" ");
+            for (Transition t : pn.transitions()) {
+                ps.print(t.getProperty("name") + " ");
+            }
             ps.println("\n");
 
             ps.println("-METINT");
 
-            for(Place p : pn.places()) {
-                ps.print(p.getProperty("name")+" ");
+            for (Place p : pn.places()) {
+                ps.print(p.getProperty("name") + " ");
             }
             ps.println();
 
@@ -61,37 +61,41 @@ public class MetaToolOutputHandler implements OutputHandler {
             String weight = "";
             Arc arc;
             int i, len;
-            for(Transition t : pn.transitions()) {
-                ps.print(t.getProperty("name")+" : ");
+            for (Transition t : pn.transitions()) {
+                ps.print(t.getProperty("name") + " : ");
 
                 i = 0;
-                len =  t.inputs().size();
-                for(Place p : t.inputs()) {
+                len = t.inputs().size();
+                for (Place p : t.inputs()) {
                     i++;
-                    arc = pn.getArc(p,t);
-                    if(arc.weight() == 1)
+                    arc = pn.getArc(p, t);
+                    if (arc.weight() == 1) {
                         weight = "";
-                    else
-                        weight = ""+arc.weight()+" ";
-                    ps.print(weight+p.getProperty("name")+" ");
-                    if(i < len)
+                    } else {
+                        weight = "" + arc.weight() + " ";
+                    }
+                    ps.print(weight + p.getProperty("name") + " ");
+                    if (i < len) {
                         ps.print("+ ");
+                    }
                 }
 
                 ps.print("= ");
 
                 i = 0;
-                len =  t.outputs().size();
-                for(Place p : t.outputs()) {
+                len = t.outputs().size();
+                for (Place p : t.outputs()) {
                     i++;
-                    arc = pn.getArc(t,p);
-                    if(arc.weight() == 1)
+                    arc = pn.getArc(t, p);
+                    if (arc.weight() == 1) {
                         weight = "";
-                    else
-                        weight = ""+arc.weight()+" ";
-                    ps.print(weight+p.getProperty("name")+" ");
-                    if(i < len)
+                    } else {
+                        weight = "" + arc.weight() + " ";
+                    }
+                    ps.print(weight + p.getProperty("name") + " ");
+                    if (i < len) {
                         ps.print("+ ");
+                    }
                 }
                 ps.println(".");
             }
@@ -105,8 +109,9 @@ public class MetaToolOutputHandler implements OutputHandler {
     }
 
     public File checkFileNameForExtension(File file) {
-        if(!"dat".equalsIgnoreCase(FileUtils.getExtension(file)))
-            file = new File(file.getAbsolutePath()+".xml");
+        if (!"dat".equalsIgnoreCase(FileUtils.getExtension(file))) {
+            file = new File(file.getAbsolutePath() + ".xml");
+        }
         return file;
     }
 

@@ -14,11 +14,13 @@ import java.awt.Component;
 import javax.swing.JPanel;
 
 public final class Components {
+
     public static void setEnabled(JPanel panel, boolean enabled) {
         for (Component c : panel.getComponents()) {
             c.setEnabled(enabled);
-            if (c instanceof JPanel)
+            if (c instanceof JPanel) {
                 setEnabled((JPanel) c, enabled);
+            }
         }
     }
 }

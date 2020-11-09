@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.awt.Component;
@@ -18,19 +17,21 @@ import javax.swing.ListCellRenderer;
 
 /**
  * Renderer to show the LabelName of a node and not its name.
+ *
  * @author Jens Einloft
  */
 public class LogicalPlacesListCellRenderer implements ListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetViewerNode node = (NetViewerNode)value;
+        NetViewerNode node = (NetViewerNode) value;
         DefaultListCellRenderer defaultRenderer = new DefaultListCellRenderer();
-        JLabel renderer = (JLabel)defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        if(node.getLogicalPlaces().size() < 2 || node.getNodeType().equalsIgnoreCase((NetViewer.TRANSITION)))
+        JLabel renderer = (JLabel) defaultRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (node.getLogicalPlaces().size() < 2 || node.getNodeType().equalsIgnoreCase((NetViewer.TRANSITION))) {
             renderer.setText(node.getName());
-        else
-            renderer.setText(node.getName()+" ("+node.getLogicalPlaces().size()+" logical species)");
+        } else {
+            renderer.setText(node.getName() + " (" + node.getLogicalPlaces().size() + " logical species)");
+        }
         renderer.setForeground(node.getSearchBarColor());
         return renderer;
     }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -54,7 +53,7 @@ public class ModellersMouseListener extends AbstractPopupGraphMousePlugin implem
             @Override
             public void actionPerformed(ActionEvent ae) {
                 LOGGER.info("Deleting Modeller value in AnnotationsPanel");
-                ((DefaultListModel)owner.getModel()).removeElement(selectedValue.get(0));
+                ((DefaultListModel) owner.getModel()).removeElement(selectedValue.get(0));
             }
         });
 

@@ -23,6 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class McsAlgorithm {
+
     private final List<TInvariant> tInvariants;
     private final List<Transition> transitions;
     private List<Set<Transition>> mcs;
@@ -32,9 +33,11 @@ public final class McsAlgorithm {
     public McsAlgorithm(PetriNetFacade petriNet, TInvariants allTInvariants, Transition objective) {
         LOGGER.info("Initializing MCS algorithm");
         this.tInvariants = new ArrayList<>();
-        for (TInvariant tinv : allTInvariants)
-            if (tinv.contains(objective))
+        for (TInvariant tinv : allTInvariants) {
+            if (tinv.contains(objective)) {
                 tInvariants.add(tinv);
+            }
+        }
 
         transitions = new ArrayList<>(petriNet.transitions());
         Collections.sort(transitions);
@@ -46,21 +49,22 @@ public final class McsAlgorithm {
         LOGGER.info("Determining all MCS");
         List<Set<Transition>> newPrecutsets = null;
 
-        for(int k = 2; k <= maxCutSetSize; k++) {
+        for (int k = 2; k <= maxCutSetSize; k++) {
             newPrecutsets = new ArrayList<>();
 
             for (Transition j : transitions) {
                 precutsets = removeSetsContaining(j, precutsets);
-                List<Set<Transition>> tempPrecutsets =
-                    calculatePreliminaryCutsets(precutsets, j);
+                List<Set<Transition>> tempPrecutsets
+                        = calculatePreliminaryCutsets(precutsets, j);
                 tempPrecutsets = removeNonMinimalSets(tempPrecutsets);
                 newPrecutsets.addAll(yieldIncompleteSets(tempPrecutsets));
             }
 
-            if (newPrecutsets.isEmpty())
+            if (newPrecutsets.isEmpty()) {
                 break;
-            else
+            } else {
                 precutsets = newPrecutsets;
+            }
         }
         LOGGER.info("Successfully determined all MCS");
         return mcs;
@@ -75,10 +79,11 @@ public final class McsAlgorithm {
         for (Transition t : transitions) {
             Set<Transition> tSet = new HashSet<>();
             tSet.add(t);
-            if (coversAllTInvariants(t))
+            if (coversAllTInvariants(t)) {
                 mcs.add(tSet);
-            else
+            } else {
                 precutsets.add(tSet);
+            }
         }
     }
 
@@ -88,8 +93,9 @@ public final class McsAlgorithm {
         List<Set<Transition>> newPrecutsets = new ArrayList<>();
 
         for (Set<Transition> precutset : precutsets) {
-            if (intersectsAnyInvariantContaining(j, precutset))
+            if (intersectsAnyInvariantContaining(j, precutset)) {
                 continue;
+            }
 
             Set<Transition> newPrecutset = new HashSet<>(precutset);
             newPrecutset.add(j);
@@ -100,9 +106,11 @@ public final class McsAlgorithm {
     }
 
     private boolean intersectsAnyInvariantContaining(Transition j, Set<Transition> set) {
-        for (TInvariant tinv : tInvariants)
-            if (tinv.contains(j) && !intersection(tinv, set).isEmpty())
+        for (TInvariant tinv : tInvariants) {
+            if (tinv.contains(j) && !intersection(tinv, set).isEmpty()) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -110,9 +118,11 @@ public final class McsAlgorithm {
         LOGGER.debug("Removing all sets containing transition '" + t.getProperty("name") + "'");
         List<Set<Transition>> ret = new ArrayList<>();
 
-        for (Set<Transition> set : sets)
-            if (!set.contains(t))
+        for (Set<Transition> set : sets) {
+            if (!set.contains(t)) {
                 ret.add(set);
+            }
+        }
         LOGGER.debug("Successfully removed all sets containing transition '" + t.getProperty("name") + "'");
         return ret;
     }
@@ -130,8 +140,9 @@ public final class McsAlgorithm {
                 }
             }
 
-            if (minimal)
+            if (minimal) {
                 minimalPreCutSets.add(precutset);
+            }
         }
         LOGGER.debug("Successfully removed all non-minimal sets");
         return minimalPreCutSets;
@@ -141,26 +152,30 @@ public final class McsAlgorithm {
         List<Set<Transition>> incomplete = new ArrayList<>();
 
         for (Set<Transition> set : sets) {
-            if (coversAllTInvariants(set))
+            if (coversAllTInvariants(set)) {
                 mcs.add(set);
-            else
+            } else {
                 incomplete.add(set);
+            }
         }
 
         return incomplete;
     }
 
     private boolean coversAllTInvariants(Transition t) {
-        for (TInvariant tinv : tInvariants)
-            if (!tinv.contains(t))
+        for (TInvariant tinv : tInvariants) {
+            if (!tinv.contains(t)) {
                 return false;
+            }
+        }
         return true;
     }
 
     private boolean coversAllTInvariants(Set<Transition> set) {
         for (TInvariant tinv : tInvariants) {
-            if (intersection(tinv, set).isEmpty())
+            if (intersection(tinv, set).isEmpty()) {
                 return false;
+            }
         }
 
         return true;

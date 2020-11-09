@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import java.awt.Dimension;
@@ -36,19 +35,19 @@ public class AboutDialog extends JFrame implements ActionListener {
     private JEditorPane jep;
     private String text;
 
-    public AboutDialog() {        
-        setSize(new Dimension(450,430));
+    public AboutDialog() {
+        setSize(new Dimension(450, 430));
         setMinimumSize(getSize());
         setIconImage(resources.getImage("icon-16.png"));
         setTitle(strings.get("AboutTitle"));
 
-        initComponent();        
+        initComponent();
     }
 
     private void initComponent() {
-        double size[][] =
-        {{15, TableLayout.FILL, 5, TableLayout.PREFERRED, 5, TableLayout.FILL, 15,},
-        {15, TableLayout.FILL, 5, TableLayout.PREFERRED, 15}};
+        double size[][]
+                = {{15, TableLayout.FILL, 5, TableLayout.PREFERRED, 5, TableLayout.FILL, 15,},
+                {15, TableLayout.FILL, 5, TableLayout.PREFERRED, 15}};
 
         setLayout(new TableLayout(size));
 
@@ -60,7 +59,7 @@ public class AboutDialog extends JFrame implements ActionListener {
                 + " and depence on non-free software."
                 + " This is a free software license which is <a href=\"http://www.gnu.org/licenses/license-list.html#ArtisticLicense2\">compatible with the GPL according to the FSF</a>."
                 + " It is the same license that is used by the Perl programming language.<br /><br />"
-                + "Version: "+strings.get("CurrentVersion")+"<br /><br />"
+                + "Version: " + strings.get("CurrentVersion") + "<br /><br />"
                 + "(c) <a href=\"http://www.bioinformatik.uni-frankfurt.de/\">Molekulare Bioinformatik</a>, Goethe University Frankfurt, Frankfurt am Main, Germany<br /><br />"
                 + "Project members in alphabetical order (recent and former):<br /><br />"
                 + "Anja Thormann, Daniel Noll, Ina Koch, Jens Einloft, Jennifer Scheidel, Joachim Nöthen, Jörg Ackermann, Leonie Amstein, Lilya Mirzoyan, Pavel Balazki, Stefan Marchi<br /><br />"
@@ -78,8 +77,9 @@ public class AboutDialog extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         final String action = e.getActionCommand();
 
-        if(action == CLOSE_ACTION)
+        if (action == CLOSE_ACTION) {
             closeDialog();
+        }
     }
 
     private void closeDialog() {

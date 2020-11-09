@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.knockout;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Knock-outs a set of transition
+ *
  * @author Jens Einloft
  */
 public class MultiTransitionKnockout extends KnockoutAlgorithm {
@@ -44,7 +44,7 @@ public class MultiTransitionKnockout extends KnockoutAlgorithm {
         PetriNet copy = getPetriNetFacade().getPNCopy();
 
         currentKnockouts = new ArrayList<>();
-        for(Transition t : toKnockout) {
+        for (Transition t : toKnockout) {
             copy.removeTransition(t);
             currentKnockouts.add(t);
         }
@@ -55,10 +55,11 @@ public class MultiTransitionKnockout extends KnockoutAlgorithm {
     @Override
     protected boolean hasNextKnockOutNetwork() {
         knockOutCounter++;
-        if(knockOutCounter == 1)
+        if (knockOutCounter == 1) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     @Override

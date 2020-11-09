@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.util.Comparator;
@@ -16,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 
 /**
  * Sorts a List of NetViewerNodes by their LabelNames
+ *
  * @author Jens Einloft
  */
 public class NetViewerStringComparator implements Comparator {
@@ -25,7 +25,7 @@ public class NetViewerStringComparator implements Comparator {
     @Override
     public int compare(Object o1, Object o2) {
         String s1 = ((NetViewerNode) o1).getName();
-        String s2 = ((NetViewerNode)o2).getName();
+        String s2 = ((NetViewerNode) o2).getName();
         int n1 = s1.length();
         int n2 = s2.length();
         int min = Math.min(n1, n2);

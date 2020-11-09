@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.*;
@@ -21,7 +20,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Handler to read APNN files http://ls4-www.cs.tu-dortmund.de/APNN-TOOLBOX/grammars/apnn.html
+ * Handler to read APNN files
+ * http://ls4-www.cs.tu-dortmund.de/APNN-TOOLBOX/grammars/apnn.html
+ *
  * @author Jens Einloft
  */
 public class ApnnInputHandler implements InputHandler {
@@ -31,7 +32,6 @@ public class ApnnInputHandler implements InputHandler {
     private int placeCounter;
     private int transitionCounter;
     private static final Logger LOGGER = LogManager.getLogger(ApnnInputHandler.class);
-
 
     @Override
     public PetriNet load(InputStream in) throws IOException {
@@ -47,43 +47,46 @@ public class ApnnInputHandler implements InputHandler {
             String tmp, from, to;
             int weight = 0;
 
-            while(true) {
+            while (true) {
                 line = reader.readLine();
                 System.out.println(line);
-                if(line == null)
+                if (line == null) {
                     break;
-                if(line.equals(""))
+                }
+                if (line.equals("")) {
                     continue;
+                }
 
-               if(line.startsWith("\\beginnet") || line.startsWith("\\inputnet")) {
-                   pn.putProperty("name", line.substring(line.indexOf("{")+1, line.indexOf("}")));
-               }
+                if (line.startsWith("\\beginnet") || line.startsWith("\\inputnet")) {
+                    pn.putProperty("name", line.substring(line.indexOf("{") + 1, line.indexOf("}")));
+                }
 
-               if(line.startsWith("\\place")) {
-                   tmp = line.substring(line.indexOf("\\name"), line.length());
-                   findPlace(line.substring(line.indexOf("{")+1, line.indexOf("}")), tmp.subSequence(tmp.indexOf("{")+1, tmp.indexOf("}")).toString(), pn);
-               }
+                if (line.startsWith("\\place")) {
+                    tmp = line.substring(line.indexOf("\\name"), line.length());
+                    findPlace(line.substring(line.indexOf("{") + 1, line.indexOf("}")), tmp.subSequence(tmp.indexOf("{") + 1, tmp.indexOf("}")).toString(), pn);
+                }
 
-               if(line.startsWith("\\transition")) {
-                   tmp = line.substring(line.indexOf("\\name"), line.length());
-                   findTransition(line.substring(line.indexOf("{")+1, line.indexOf("}")), tmp.subSequence(tmp.indexOf("{")+1, tmp.indexOf("}")).toString(), pn);
-               }
+                if (line.startsWith("\\transition")) {
+                    tmp = line.substring(line.indexOf("\\name"), line.length());
+                    findTransition(line.substring(line.indexOf("{") + 1, line.indexOf("}")), tmp.subSequence(tmp.indexOf("{") + 1, tmp.indexOf("}")).toString(), pn);
+                }
 
-               if(line.startsWith("\\arc")) {
-                   tmp = line.substring(line.indexOf("\\from"), line.length());
-                   from = tmp.substring(tmp.indexOf("{")+1, tmp.indexOf("}"));
+                if (line.startsWith("\\arc")) {
+                    tmp = line.substring(line.indexOf("\\from"), line.length());
+                    from = tmp.substring(tmp.indexOf("{") + 1, tmp.indexOf("}"));
 
-                   tmp = line.substring(line.indexOf("\\to"), line.length());
-                   to = tmp.substring(tmp.indexOf("{")+1, tmp.indexOf("}"));
+                    tmp = line.substring(line.indexOf("\\to"), line.length());
+                    to = tmp.substring(tmp.indexOf("{") + 1, tmp.indexOf("}"));
 
-                   tmp = line.substring(line.indexOf("\\weight"), line.length());
-                   weight = new Integer(tmp.substring(tmp.indexOf("{")+1, tmp.indexOf("}")));
+                    tmp = line.substring(line.indexOf("\\weight"), line.length());
+                    weight = new Integer(tmp.substring(tmp.indexOf("{") + 1, tmp.indexOf("}")));
 
-                   if(places.containsKey(from))
-                       pn.addArc(places.get(from), transitions.get(to), weight);
-                   else
-                       pn.addArc(transitions.get(from), places.get(to), weight);
-               }
+                    if (places.containsKey(from)) {
+                        pn.addArc(places.get(from), transitions.get(to), weight);
+                    } else {
+                        pn.addArc(transitions.get(from), places.get(to), weight);
+                    }
+                }
 
             }
         }

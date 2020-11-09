@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,11 +33,11 @@ public class MiriamWrapper {
 
         this.cvt = new CVTerm();
 
-        if(qualifier.isBiologicalQualifier()) {
+        if (qualifier.isBiologicalQualifier()) {
             LOGGER.debug("Qualifier type is biological");
             this.cvt.setQualifierType(Type.BIOLOGICAL_QUALIFIER);
             this.cvt.setBiologicalQualifierType(qualifier);
-        } else if(qualifier.isModelQualifier()) {
+        } else if (qualifier.isModelQualifier()) {
             LOGGER.debug("Qualifier type is model");
             this.cvt.setQualifierType(Type.MODEL_QUALIFIER);
             this.cvt.setModelQualifierType(qualifier);
@@ -48,7 +47,7 @@ public class MiriamWrapper {
 
     public MiriamWrapper(CVTerm cvt) {
         LOGGER.debug("Creating new MiriamWrapper for CVTerm '" + cvt.toString());
-        if(cvt.getQualifierType().equals(Type.BIOLOGICAL_QUALIFIER)) {
+        if (cvt.getQualifierType().equals(Type.BIOLOGICAL_QUALIFIER)) {
             LOGGER.debug("Qualifier type is biological");
             this.qualifier = cvt.getBiologicalQualifierType();
         } else {
@@ -72,10 +71,10 @@ public class MiriamWrapper {
         this.uri = uri;
 
         this.cvt = new CVTerm();
-        if(this.qualifier.isBiologicalQualifier()) {
+        if (this.qualifier.isBiologicalQualifier()) {
             this.cvt.setQualifierType(Type.BIOLOGICAL_QUALIFIER);
             this.cvt.setBiologicalQualifierType(qualifier);
-        } else if(this.qualifier.isModelQualifier()) {
+        } else if (this.qualifier.isModelQualifier()) {
             this.cvt.setQualifierType(Type.MODEL_QUALIFIER);
             this.cvt.setModelQualifierType(qualifier);
         }
@@ -89,7 +88,7 @@ public class MiriamWrapper {
 
     @Override
     public String toString() {
-        return this.qualifier.name()+" : "+this.uri.substring(this.uri.lastIndexOf("/")+1);
+        return this.qualifier.name() + " : " + this.uri.substring(this.uri.lastIndexOf("/") + 1);
     }
 
 }

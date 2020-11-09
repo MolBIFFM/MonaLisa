@@ -7,17 +7,18 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools;
 
 import java.util.EventListener;
 
 /**
- * The listener interface for receiving progess events. 
+ * The listener interface for receiving progess events.
+ *
  * @author Anja Thormann
  * @author Konrad Rudolph
  */
 public interface ProgressListener extends EventListener {
+
     /**
      * Invoked to report progress.
      */

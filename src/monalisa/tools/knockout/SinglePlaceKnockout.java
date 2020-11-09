@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.tools.knockout;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class SinglePlaceKnockout extends KnockoutAlgorithm {
     private List<UniquePetriNetEntity> currentKnockouts;
     private static final Logger LOGGER = LogManager.getLogger(SinglePlaceKnockout.class);
 
-    public SinglePlaceKnockout(PetriNetFacade pn){
+    public SinglePlaceKnockout(PetriNetFacade pn) {
         super(pn);
         LOGGER.info("Initializing SinglePlaceKnockout algorithm");
         iterator = pn.places().iterator();
@@ -50,11 +49,13 @@ public class SinglePlaceKnockout extends KnockoutAlgorithm {
         currentKnockouts = new ArrayList<>();
         currentKnockouts.add(place);
 
-        for(Transition t : place.outputs())
+        for (Transition t : place.outputs()) {
             copy.removeTransition(t);
+        }
 
-        for(Transition t : place.inputs())
+        for (Transition t : place.inputs()) {
             copy.removeTransition(t);
+        }
 
         copy.removePlace(place);
         LOGGER.debug("Successfully got next KnockoutNetwork for SinglePlaceKnockout algorithm");

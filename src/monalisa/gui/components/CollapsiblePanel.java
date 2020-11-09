@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui.components;
 
 import java.awt.Color;
@@ -18,6 +17,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class CollapsiblePanel extends JPanel {
+
     private static final long serialVersionUID = 7667885216918700635L;
 
     private final CollapsiblePanelBorder border;
@@ -49,8 +49,9 @@ public class CollapsiblePanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     int titleHeight = border.getBorderInsets(CollapsiblePanel.this).top;
-                    if (e.getPoint().y <= titleHeight)
+                    if (e.getPoint().y <= titleHeight) {
                         setCollapsed(!isCollapsed());
+                    }
                 }
                 super.mouseClicked(e);
             }
@@ -62,8 +63,9 @@ public class CollapsiblePanel extends JPanel {
     }
 
     public void setCollapsed(boolean collapsed) {
-        if (collapsed == this.collapsed)
+        if (collapsed == this.collapsed) {
             return;
+        }
 
         this.collapsed = collapsed;
 
@@ -78,8 +80,7 @@ public class CollapsiblePanel extends JPanel {
             setMinimumSize(new Dimension(getMinimumSize().width, collapsedHeight));
             setPreferredSize(new Dimension(getPreferredSize().width, collapsedHeight));
             setSize(getWidth(), collapsedHeight);
-        }
-        else {
+        } else {
             // Restore the panel's height.
             setSize(expandedSize);
             setPreferredSize(expandedPreferredSize);
@@ -87,10 +88,11 @@ public class CollapsiblePanel extends JPanel {
             setMaximumSize(expandedMaximumSize);
         }
 
-        if (getParent() instanceof JComponent)
+        if (getParent() instanceof JComponent) {
             ((JComponent) getParent()).revalidate();
-        else
+        } else {
             getParent().validate();
+        }
         border.setCollapsed(collapsed);
         repaint();
         firePropertyChange("collapsed", !collapsed, collapsed);

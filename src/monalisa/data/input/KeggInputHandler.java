@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.BufferedReader;
@@ -18,9 +17,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
-import monalisa.addons.annotations.AnnotationsPanel;
-import static monalisa.addons.annotations.AnnotationsPanel.MIRIAM_BIO_QUALIFIERS;
-
+import monalisa.addons.annotations.AnnotationUtils;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -35,25 +32,12 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 /**
- * Import KEGG networks in xml-format.
- * http://www.kegg.jp/kegg/xml/docs/
- * There are interaction (regulation) and reaction (metabolism) networks.
+ * Import KEGG networks in xml-format. http://www.kegg.jp/kegg/xml/docs/ There
+ * are interaction (regulation) and reaction (metabolism) networks.
  *
- * entry: - id
- *        - name
- *        - type
- *        - reaction
- *        - graphics: - name
- *                    - x, y, width, height
- * relation: - entry1
- *           - entry2
- *           - type
- *           - subtype: - name
- *                      - value
- * reaction: - name
- *           - type
- *           - substrate: - name
- *           - product: - name
+ * entry: - id - name - type - reaction - graphics: - name - x, y, width, height
+ * relation: - entry1 - entry2 - type - subtype: - name - value reaction: - name
+ * - type - substrate: - name - product: - name
  *
  * @author Jens Einloft
  */
@@ -65,24 +49,23 @@ public class KeggInputHandler implements InputHandler {
     private final Map<String, Place> places = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(KeggInputHandler.class);
 
-
     @Override
     public boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file is in KGML format");
-        if(!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             return false;
+        }
         try {
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build(file);
             Element root = doc.getRootElement();
             String image = root.getAttributeValue("image");
             return image != null && image.contains("kegg");
-        } catch(JDOMException ex){
+        } catch (JDOMException ex) {
             LOGGER.debug("Caught JDOMException while checking for KGML format: ", ex);
             return false;
         }
     }
-
 
     @Override
     public PetriNet load(InputStream in) throws IOException {
@@ -96,8 +79,7 @@ public class KeggInputHandler implements InputHandler {
 
         try {
             keggCompoundDefinitions = readDefinitions(ResourceManager.instance().getResourceUrl("kegg/keggCompoundDefinition.txt"));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOGGER.error("Unable to read KEGG compound definition file", e);
             throw new IOException("Unable to read KEGG compound definition file", e);
         }
@@ -112,17 +94,17 @@ public class KeggInputHandler implements InputHandler {
         }
         Element root = doc.getRootElement();
 
-        ret.putProperty(AnnotationsPanel.MODEL_NAME, root.getAttributeValue("title"));
+        ret.putProperty(AnnotationUtils.MODEL_NAME, root.getAttributeValue("title"));
         List<CVTerm> cvts = new ArrayList<>();
-        CVTerm cvt= new CVTerm();
+        CVTerm cvt = new CVTerm();
         cvt.setQualifierType(CVTerm.Type.MODEL_QUALIFIER);
         cvt.setModelQualifierType(CVTerm.Qualifier.BQM_IS);
-        cvt.addResourceURI("http://identifiers.org/kegg.pathway/"+root.getAttributeValue("name").split(":")[1]);
+        cvt.addResourceURI("http://identifiers.org/kegg.pathway/" + root.getAttributeValue("name").split(":")[1]);
         cvts.add(cvt);
-        ret.putProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS, cvts);
+        ret.putProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, cvts);
 
         Map<String, Element> entryMap = new HashMap<>();
-        for(Element element : root.getChildren("entry")) {
+        for (Element element : root.getChildren("entry")) {
             entryMap.put(element.getAttributeValue("id"), element);
         }
 
@@ -131,34 +113,34 @@ public class KeggInputHandler implements InputHandler {
         boolean reversible;
         String id;
         Element rev;
-        for(Element reaction : root.getChildren("reaction")) {
+        for (Element reaction : root.getChildren("reaction")) {
             t = findTransition(entryMap.get(reaction.getAttributeValue("id")), ret);
 
             reversible = reaction.getAttributeValue("type").equals("reversible");
 
-            if(reversible) {
+            if (reversible) {
                 id = reaction.getAttributeValue("id");
                 rev = entryMap.get(reaction.getAttributeValue("id"));
-                rev.setAttribute("id", id+"_rev");
-                t_rev = findTransition(rev , ret);
-                t_rev.putProperty("name", ((String)t.getProperty("name"))+"_rev");
+                rev.setAttribute("id", id + "_rev");
+                t_rev = findTransition(rev, ret);
+                t_rev.putProperty("name", ((String) t.getProperty("name")) + "_rev");
             }
 
-            for(Element s : reaction.getChildren("substrate")) {
+            for (Element s : reaction.getChildren("substrate")) {
                 substrate = findPlace(entryMap.get(s.getAttributeValue("id")), ret);
                 ret.addArc(substrate, t);
 
-                if(reversible) {
+                if (reversible) {
                     ret.addArc(t_rev, substrate);
                 }
 
             }
 
-            for(Element p : reaction.getChildren("product")) {
+            for (Element p : reaction.getChildren("product")) {
                 product = findPlace(entryMap.get(p.getAttributeValue("id")), ret);
                 ret.addArc(t, product);
 
-                if(reversible) {
+                if (reversible) {
                     ret.addArc(product, t_rev);
                 }
             }
@@ -214,7 +196,7 @@ public class KeggInputHandler implements InputHandler {
         String id = e.getAttributeValue("id");
         Transition t = transitions.get(id);
 
-        if(t == null) {
+        if (t == null) {
             LOGGER.debug("Creating new transition with id '" + id + "' and name '" + e.getAttributeValue("name").replace(" ", "") + "'");
             t = new Transition(transitionCount++);
             transitions.put(id, t);
@@ -226,17 +208,17 @@ public class KeggInputHandler implements InputHandler {
 //                    t.putProperty("name", e.getAttributeValue("name").replace(" ", ""));
 //                }
 //            } else {
-                t.putProperty("name", e.getAttributeValue("name").replace(" ", ""));
+            t.putProperty("name", e.getAttributeValue("name").replace(" ", ""));
 //            }
 
-            if(e.getChild("graphics") != null) {
-                if(e.getChild("graphics").getAttributeValue("x") != null) {
+            if (e.getChild("graphics") != null) {
+                if (e.getChild("graphics").getAttributeValue("x") != null) {
                     t.putProperty("posX", new Double(e.getChild("graphics").getAttributeValue("x")));
                     t.putProperty("posY", new Double(e.getChild("graphics").getAttributeValue("y")));
                 }
             }
 
-            t.putProperty(MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
+            t.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
 
             pn.addTransition(t);
         }
@@ -248,7 +230,7 @@ public class KeggInputHandler implements InputHandler {
         String id = e.getAttributeValue("id");
         Place p = places.get(id);
 
-        if(p == null) {
+        if (p == null) {
             LOGGER.debug("Creating new place with id '" + id + "' and name '" + e.getAttributeValue("name").replace(" ", "_") + "'");
             p = new Place(placeCount++);
             places.put(id, p);
@@ -260,16 +242,16 @@ public class KeggInputHandler implements InputHandler {
 //                    p.putProperty("name", e.getAttributeValue("name").replace(" ", "_"));
 //                }
 //            } else {
-                p.putProperty("name", e.getAttributeValue("name").replace(" ", "_"));
+            p.putProperty("name", e.getAttributeValue("name").replace(" ", "_"));
 //            }
 
-            if(e.getChild("graphics") != null) {
-                if(e.getChild("graphics").getAttributeValue("x") != null) {
+            if (e.getChild("graphics") != null) {
+                if (e.getChild("graphics").getAttributeValue("x") != null) {
                     p.putProperty("posX", new Double(e.getChild("graphics").getAttributeValue("x")));
                     p.putProperty("posY", new Double(e.getChild("graphics").getAttributeValue("y")));
                 }
             }
-            p.putProperty(MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
+            p.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, getCVTerms(e));
 
             pn.addPlace(p);
         }
@@ -277,62 +259,57 @@ public class KeggInputHandler implements InputHandler {
         return p;
     }
 
-
     private List<CVTerm> getCVTerms(Element e) {
         LOGGER.debug("Getting CV terms for element '" + e.getAttributeValue("name") + "'");
         List<CVTerm> cvts = new ArrayList<>();
 
-        if(e.getAttributeValue("type").equals("gene")) {
-            for(String s : e.getAttributeValue("name").split(" ")) {
+        if (e.getAttributeValue("type").equals("gene")) {
+            for (String s : e.getAttributeValue("name").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS);
-                cvt.addResourceURI("http://identifiers.org/kegg.genes/"+s);
+                cvt.addResourceURI("http://identifiers.org/kegg.genes/" + s);
                 cvts.add(cvt);
             }
-        }
-        else if(e.getAttributeValue("type").equals("ortholog")) {
-            for(String s : e.getAttributeValue("name").split(" ")) {
+        } else if (e.getAttributeValue("type").equals("ortholog")) {
+            for (String s : e.getAttributeValue("name").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS);
-                cvt.addResourceURI("http://identifiers.org/kegg.orthology/"+s.split(":")[1]);
+                cvt.addResourceURI("http://identifiers.org/kegg.orthology/" + s.split(":")[1]);
                 cvts.add(cvt);
             }
-        }
-        else if(e.getAttributeValue("type").equals("enzyme") || e.getAttributeValue("type").equals("reaction")) {
-            for(String s : e.getAttributeValue("name").split(" ")) {
+        } else if (e.getAttributeValue("type").equals("enzyme") || e.getAttributeValue("type").equals("reaction")) {
+            for (String s : e.getAttributeValue("name").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS);
-                cvt.addResourceURI("http://identifiers.org/kegg.reaction/"+s.split(":")[1]);
+                cvt.addResourceURI("http://identifiers.org/kegg.reaction/" + s.split(":")[1]);
                 cvts.add(cvt);
             }
-        }
-        else if(e.getAttributeValue("type").equals("compound")) {
-            for(String s : e.getAttributeValue("name").split(" ")) {
+        } else if (e.getAttributeValue("type").equals("compound")) {
+            for (String s : e.getAttributeValue("name").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS);
-                cvt.addResourceURI("http://identifiers.org/kegg.compound/"+s.split(":")[1]);
+                cvt.addResourceURI("http://identifiers.org/kegg.compound/" + s.split(":")[1]);
                 cvts.add(cvt);
             }
-        }
-        else if(e.getAttributeValue("type").equals("map")) {
-            for(String s : e.getAttributeValue("name").split(" ")) {
+        } else if (e.getAttributeValue("type").equals("map")) {
+            for (String s : e.getAttributeValue("name").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS);
-                cvt.addResourceURI("http://identifiers.org/kegg.pathway/"+s.split(":")[1]);
+                cvt.addResourceURI("http://identifiers.org/kegg.pathway/" + s.split(":")[1]);
                 cvts.add(cvt);
             }
         }
-        if(e.getAttributeValue("reaction") != null) {
-            for(String s : e.getAttributeValue("reaction").split(" ")) {
+        if (e.getAttributeValue("reaction") != null) {
+            for (String s : e.getAttributeValue("reaction").split(" ")) {
                 CVTerm cvt = new CVTerm();
                 cvt.setQualifierType(CVTerm.Type.BIOLOGICAL_QUALIFIER);
                 cvt.setBiologicalQualifierType(CVTerm.Qualifier.BQB_IS_VERSION_OF);
-                cvt.addResourceURI("http://identifiers.org/kegg.reaction/"+s.split(":")[1]);
+                cvt.addResourceURI("http://identifiers.org/kegg.reaction/" + s.split(":")[1]);
                 cvts.add(cvt);
             }
         }
@@ -348,12 +325,12 @@ public class KeggInputHandler implements InputHandler {
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String line;
             StringTokenizer st;
-            while ((line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 st = new StringTokenizer(line);
                 String name = st.nextToken();
                 String definition = "";
-                while(st.hasMoreTokens()){
-                    definition = definition.concat(st.nextToken()+" ");
+                while (st.hasMoreTokens()) {
+                    definition = definition.concat(st.nextToken() + " ");
                 }
                 String[] split = definition.split(";");
                 ret.put(name, split[0].trim());

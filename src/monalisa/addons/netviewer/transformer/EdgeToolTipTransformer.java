@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import monalisa.addons.netviewer.NetViewerEdge;
@@ -15,14 +14,16 @@ import org.apache.commons.collections15.Transformer;
 
 /**
  * Adds a ToolTip to a vertex
+ *
  * @author Jens Einloft
  */
 public class EdgeToolTipTransformer implements Transformer<NetViewerEdge, String> {
 
     @Override
     public String transform(NetViewerEdge e) {
-        if(e.hasProperty("toolTip"))
+        if (e.hasProperty("toolTip")) {
             return e.getProperty("toolTip");
+        }
         return null;
     }
 

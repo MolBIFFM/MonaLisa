@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
@@ -56,26 +55,27 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
                 this.vertex = pickSupport.getVertex(layout, ip.getX(), ip.getY());
                 if (this.vertex != null) {
-                    if(!pickedVertexState.isPicked(this.vertex)) {
+                    if (!pickedVertexState.isPicked(this.vertex)) {
                         pickedVertexState.clear();
                         pickedVertexState.pick(this.vertex, true);
-                    }                  
-   
+                    }
+
                     Point2D q = (Point2D) layout.transform(this.vertex);
                     Point2D gp = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(Layer.LAYOUT, ip);
                     this.offsetx = (float) (gp.getX() - q.getX());
-                    this.offsety = (float) (gp.getY() - q.getY());                    
-                } else if((this.edge = pickSupport.getEdge(layout, ip.getX(), ip.getY())) != null) {
+                    this.offsety = (float) (gp.getY() - q.getY());
+                } else if ((this.edge = pickSupport.getEdge(layout, ip.getX(), ip.getY())) != null) {
                     pickedEdgeState.clear();
                     pickedEdgeState.pick(edge, true);
-                    if(((NetViewerEdge)edge).getMasterEdge().getBendEdges().size() > 0 && gpmp.getMouseMode().equalsIgnoreCase(GraphPopupMousePlugin.NORMAL))
-                        try  {
-                            for(NetViewerEdge nvEdge : ((NetViewerEdge)edge).getMasterEdge().getBendEdges())
-                                pickedEdgeState.pick(nvEdge, true);
+                    if (((NetViewerEdge) edge).getMasterEdge().getBendEdges().size() > 0 && gpmp.getMouseMode().equalsIgnoreCase(GraphPopupMousePlugin.NORMAL))
+                        try {
+                        for (NetViewerEdge nvEdge : ((NetViewerEdge) edge).getMasterEdge().getBendEdges()) {
+                            pickedEdgeState.pick(nvEdge, true);
                         }
-                        catch(ConcurrentModificationException cme) { }
-                    else
+                    } catch (ConcurrentModificationException cme) {
+                    } else {
                         pickedEdgeState.pick(edge, true);
+                    }
                 } else {
                     vv.addPostRenderPaintable(this.lensPaintable);
                     pickedEdgeState.clear();
@@ -105,46 +105,48 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
             e.consume();
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(locked == false) {
-            VisualizationViewer<V,E> vv = (VisualizationViewer)e.getSource();
-            if(vertex != null) {
+        if (locked == false) {
+            VisualizationViewer<V, E> vv = (VisualizationViewer) e.getSource();
+            if (vertex != null) {
                 Point p = e.getPoint();
                 Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
                 Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
-                Layout<V,E> layout = vv.getGraphLayout();
-                double dx = graphPoint.getX()-graphDown.getX();
-                double dy = graphPoint.getY()-graphDown.getY();
+                Layout<V, E> layout = vv.getGraphLayout();
+                double dx = graphPoint.getX() - graphDown.getX();
+                double dy = graphPoint.getY() - graphDown.getY();
                 PickedState<V> ps = vv.getPickedVertexState();
-                
-                for(V v : ps.getPicked()) {
+
+                for (V v : ps.getPicked()) {
                     Point2D vp = layout.transform(v);
-                    vp.setLocation(vp.getX()+dx, vp.getY()+dy);
+                    vp.setLocation(vp.getX() + dx, vp.getY() + dy);
                     layout.setLocation(v, vp);
                 }
                 down = p;
 
             } else {
                 Point2D out = e.getPoint();
-                if(e.getModifiers() == this.addToSelectionModifiers ||
-                        e.getModifiers() == modifiers) {
-                    rect.setFrameFromDiagonal(down,out);
+                if (e.getModifiers() == this.addToSelectionModifiers
+                        || e.getModifiers() == modifiers) {
+                    rect.setFrameFromDiagonal(down, out);
                 }
             }
-            if(vertex != null) e.consume();
+            if (vertex != null) {
+                e.consume();
+            }
             vv.repaint();
         }
-    }    
-    
+    }
+
     /**
      * @param locked The locked to set.
      */
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
-    }    
-    
+    }
+
 }

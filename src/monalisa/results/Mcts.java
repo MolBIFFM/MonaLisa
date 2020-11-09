@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.results;
 
 import java.io.File;
@@ -29,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class Mcts implements Result, Collection<TInvariant> {
+
     private static final long serialVersionUID = -2642935086875477004L;
     private final List<TInvariant> mcts;
     private static final Logger LOGGER = LogManager.getLogger(Mcts.class);
@@ -136,7 +136,7 @@ public final class Mcts implements Result, Collection<TInvariant> {
             sb.append("# reaction_id:name\n");
 
             int i = 1;
-            for(Transition t : transitions) {
+            for (Transition t : transitions) {
                 transitionMap.put(t, i);
                 sb.append(i++);
                 sb.append(":");
@@ -155,8 +155,9 @@ public final class Mcts implements Result, Collection<TInvariant> {
                 sb.append(":");
 
                 for (int j = 0; j < values.size(); j++) {
-                    if (values.get(j) == 0)
+                    if (values.get(j) == 0) {
                         continue;
+                    }
                     t = transitions.get(j);
                     sb.append(transitionMap.get(t));
                     sb.append(";");

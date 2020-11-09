@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.File;
@@ -27,6 +26,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jens Einloft
  */
 public final class TInputHandlers {
+
     private static final List<TInputHandler> handlers = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger(TInputHandlers.class);
 
@@ -34,7 +34,8 @@ public final class TInputHandlers {
         handlers.add(new ResTInputHandler());
     }
 
-    private TInputHandlers() { }
+    private TInputHandlers() {
+    }
 
     public static Result load(File file, PetriNet petriNet) throws IOException {
         return load(file, autoDetectHandler(file), petriNet);
@@ -50,11 +51,12 @@ public final class TInputHandlers {
 
     public static boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file '" + file.getName() + "' is in supported format");
-        for (TInputHandler handler : getHandlers())
-            if (handler.isKnownFile(file)){
+        for (TInputHandler handler : getHandlers()) {
+            if (handler.isKnownFile(file)) {
                 LOGGER.debug("File '" + file.getName() + "' is in supported format");
                 return true;
             }
+        }
         LOGGER.debug("File '" + file.getName() + "' is not in supported format");
         return false;
     }

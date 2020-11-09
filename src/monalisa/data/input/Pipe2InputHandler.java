@@ -32,11 +32,12 @@ import org.apache.logging.log4j.LogManager;
 // * transition orientation
 // * transition priority
 // * arc path
-
 /**
  * An input handler for the Pipe 2 PNML format.
+ *
  * @author Konrad Rudolph
- * @see <a href="http://pipe2.sourceforge.net/">Platform Independent Petri net Editor 2</a>
+ * @see <a href="http://pipe2.sourceforge.net/">Platform Independent Petri net
+ * Editor 2</a>
  */
 public class Pipe2InputHandler implements InputHandler {
 
@@ -45,8 +46,9 @@ public class Pipe2InputHandler implements InputHandler {
     @Override
     public boolean isKnownFile(File file) throws IOException {
         LOGGER.debug("Checking whether file is in PIPE2 format");
-        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file)))
+        if (!"xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             return false;
+        }
         SAXBuilder builder = new SAXBuilder();
         Document doc;
         try {
@@ -59,18 +61,21 @@ public class Pipe2InputHandler implements InputHandler {
 
         // Pipe 2 uses PNML but doesn't a proper net type. We assume P/T
         // networks.
-
-        if (!root.getName().equals("pnml"))
+        if (!root.getName().equals("pnml")) {
             return false;
+        }
         Element netNode = root.getChild("net");
-        if (netNode == null)
+        if (netNode == null) {
             return false;
+        }
         // Pipe3?
-        if (!netNode.getChildren("token").isEmpty())
+        if (!netNode.getChildren("token").isEmpty()) {
             return false;
+        }
         // Pipe4?
-        if (!netNode.getChildren("tokenclass").isEmpty())
+        if (!netNode.getChildren("tokenclass").isEmpty()) {
             return false;
+        }
 
         return "P/T net".equals(netNode.getAttributeValue("type"));
     }
@@ -113,24 +118,25 @@ public class Pipe2InputHandler implements InputHandler {
 
             String capacity = tryGetString(placeNode, "capacity", "value");
 
-            if (capacity != null)
+            if (capacity != null) {
                 place.putProperty("capacity", Integer.parseInt(capacity));
+            }
 
             petriNet.addPlace(place);
-            Long tokens =
-                Long.parseLong(string(placeNode, "initialMarking", "value"));
+            Long tokens
+                    = Long.parseLong(string(placeNode, "initialMarking", "value"));
             petriNet.setTokens(place, tokens);
         }
 
-        List<Element> transitionNodes =
-            (List<Element>) netNode.getChildren("transition");
+        List<Element> transitionNodes
+                = (List<Element>) netNode.getChildren("transition");
 
         for (Element transitionNode : transitionNodes) {
             int id = getId(transitionNode, "T");
             Transition transition = new Transition(id);
             transitionMap.put(id, transition);
             transition.putProperty("name", string(transitionNode, "name",
-                "value"));
+                    "value"));
 
             Element position = child(transitionNode, "graphics", "position");
             float x = Float.parseFloat(position.getAttributeValue("x"));
@@ -138,14 +144,15 @@ public class Pipe2InputHandler implements InputHandler {
             transition.putProperty("posX", x);
             transition.putProperty("posY", y);
             transition.putProperty("rate", Float.parseFloat(string(
-                transitionNode, "rate", "value")));
+                    transitionNode, "rate", "value")));
             transition.putProperty("isTimed", Boolean.parseBoolean(string(
-                transitionNode, "timed", "value")));
+                    transitionNode, "timed", "value")));
 
             String priority = tryGetString(transitionNode, "priority", "value");
 
-            if (priority != null)
+            if (priority != null) {
                 transition.putProperty("priority", Integer.parseInt(priority));
+            }
 
             petriNet.addTransition(transition);
         }
@@ -155,14 +162,13 @@ public class Pipe2InputHandler implements InputHandler {
         Object from, to;
         for (Element arcNode : arcNodes) {
             boolean isInArc = arcNode.getAttributeValue("source").startsWith("P");
-            if(isInArc) {
+            if (isInArc) {
                 source = getId(arcNode, "source", "P");
                 target = getId(arcNode, "target", "T");
                 weight = Integer.parseInt(string(arcNode, "inscription", "value"));
                 from = placeMap.get(source);
                 to = transitionMap.get(target);
-            }
-            else {
+            } else {
                 source = getId(arcNode, "source", "T");
                 target = getId(arcNode, "target", "P");
                 weight = Integer.parseInt(string(arcNode, "inscription", "value"));
@@ -172,15 +178,17 @@ public class Pipe2InputHandler implements InputHandler {
             Arc arc = new Arc(from, to, weight);
 
             Element type = arcNode.getChild("type");
-            if (type != null && "inhibitor".equals(type.getAttribute("value")))
+            if (type != null && "inhibitor".equals(type.getAttribute("value"))) {
                 arc.putProperty("isInhibitor", true);
+            }
 
-            if (isInArc)
+            if (isInArc) {
                 petriNet.addArc(petriNet.findPlace(source),
-                    petriNet.findTransition(target), arc);
-            else
+                        petriNet.findTransition(target), arc);
+            } else {
                 petriNet.addArc(petriNet.findTransition(source),
-                    petriNet.findPlace(target), arc);
+                        petriNet.findPlace(target), arc);
+            }
         }
         LOGGER.info("Successfully loaded Petri net from PIPE2 file");
         return petriNet;
@@ -195,29 +203,34 @@ public class Pipe2InputHandler implements InputHandler {
     }
 
     private static Element child(Element node, String... path) {
-        for (int i = 0; i < path.length; i++)
+        for (int i = 0; i < path.length; i++) {
             node = node.getChild(path[i]);
+        }
         return node;
     }
 
     private static String string(Element node, String... path) {
-        if (path.length == 0)
+        if (path.length == 0) {
             return node.getValue();
-        for (int i = 0; i < path.length - 1; i++)
+        }
+        for (int i = 0; i < path.length - 1; i++) {
             node = node.getChild(path[i]);
+        }
 
         return node.getChildText(path[path.length - 1]);
     }
 
     private static String tryGetString(Element node, String... path) {
-        if (path.length == 0)
+        if (path.length == 0) {
             return node.getValue();
+        }
         for (int i = 0; i < path.length - 1; i++) {
             Element child = node.getChild(path[i]);
-            if (child == null)
+            if (child == null) {
                 return null;
-            else
+            } else {
                 node = child;
+            }
         }
 
         return node.getChildText(path[path.length - 1]);

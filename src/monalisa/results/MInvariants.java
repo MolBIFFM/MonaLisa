@@ -21,12 +21,14 @@ import monalisa.data.pn.MInvariant;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author daniel
  */
 
 public final class MInvariants implements Result, Collection<MInvariant> {
+
     private static final long serialVersionUID = 8293263678484610772L;
     private final List<MInvariant> minvariants;
     private static final Logger LOGGER = LogManager.getLogger(TInvariants.class);
@@ -45,7 +47,7 @@ public final class MInvariants implements Result, Collection<MInvariant> {
             sb.append("# reaction_id:name\n");
 
             int i = 1;
-            for(Transition t : project.getPetriNet().transitions()) {
+            for (Transition t : project.getPetriNet().transitions()) {
                 transitionMap.put(t, i);
                 sb.append(i++);
                 sb.append(":");
@@ -55,11 +57,11 @@ public final class MInvariants implements Result, Collection<MInvariant> {
 
             sb.append("\n# em_id:factor*reaction_id; ...\n");
 
-            for(MInvariant minv : minvariants) {
-                sb.append(minv.id()+1);
+            for (MInvariant minv : minvariants) {
+                sb.append(minv.id() + 1);
                 sb.append(":");
 
-                for(Transition t : minv.transitions()) {
+                for (Transition t : minv.transitions()) {
                     sb.append(minv.factor(t));
                     sb.append("*");
                     sb.append(transitionMap.get(t));
@@ -85,17 +87,20 @@ public final class MInvariants implements Result, Collection<MInvariant> {
         boolean first = true;
 
         for (Transition transition : tinvariant) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 ret.append(" ");
-            if (tinvariant.factor(transition) != 1)
+            }
+            if (tinvariant.factor(transition) != 1) {
                 ret.append(String.format("%d*", tinvariant.factor(transition)));
+            }
 
-            if(printId)
-                ret.append(transition.id()+1);
-            else
+            if (printId) {
+                ret.append(transition.id() + 1);
+            } else {
                 ret.append(((String) transition.getProperty("name")).replace(" ", "_"));
+            }
         }
 
         return ret.toString();
@@ -111,12 +116,13 @@ public final class MInvariants implements Result, Collection<MInvariant> {
             // to the beginning of the current word.
             int prev = startPos;
             startPos += lineLength;
-            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev)
+            while (!Character.isWhitespace(text.charAt(startPos)) && startPos >= prev) {
                 startPos--;
+            }
             // Failsafe if the line has no spaces:
-            if (startPos == prev)
+            if (startPos == prev) {
                 startPos += lineLength; // Don't care: cut the word.
-
+            }
             ret.add(indent + text.substring(prev, startPos));
             startPos++; // Skip whitespace.
 
@@ -126,8 +132,9 @@ public final class MInvariants implements Result, Collection<MInvariant> {
         }
 
         // Add the dangling line.
-        if (startPos < text.length())
+        if (startPos < text.length()) {
             ret.add(indent + text.substring(startPos));
+        }
 
         return ret;
     }

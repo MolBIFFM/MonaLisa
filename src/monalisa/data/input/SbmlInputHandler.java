@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.data.input;
 
 import java.io.File;
@@ -16,7 +15,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
@@ -25,7 +23,7 @@ import monalisa.data.pn.Transition;
 import monalisa.util.FileUtils;
 
 import javax.xml.stream.XMLStreamException;
-import monalisa.addons.annotations.AnnotationsPanel;
+import monalisa.addons.annotations.AnnotationUtils;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +33,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.sbml.jsbml.AbstractTreeNode;
 import org.sbml.jsbml.CVTerm;
-import org.sbml.jsbml.Creator;
 import org.sbml.jsbml.History;
 import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.SBMLDocument;
@@ -48,12 +45,12 @@ import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.ext.layout.*;
 import org.sbml.jsbml.ext.SBasePlugin;
 
-
 /**
- * Input handler for the SBML format.
- * This class parses a SBML-file.
- * Supports SBML all Versions and Levels specified in <a href="http://sbml.org/Documents/Specifications">http://sbml.org/Documents/Specifications</a>
- **/
+ * Input handler for the SBML format. This class parses a SBML-file. Supports
+ * SBML all Versions and Levels specified in
+ * <a href="http://sbml.org/Documents/Specifications">http://sbml.org/Documents/Specifications</a>
+ *
+ */
 public final class SbmlInputHandler implements InputHandler {
 
     private final Map<Integer, Place> places = new HashMap<>();
@@ -68,7 +65,7 @@ public final class SbmlInputHandler implements InputHandler {
             return true;
         }
 
-        if("xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
+        if ("xml".equalsIgnoreCase(FileUtils.getExtension(file))) {
             SAXBuilder builder = new SAXBuilder();
             Document doc;
             try {
@@ -84,8 +81,7 @@ public final class SbmlInputHandler implements InputHandler {
             Element root = doc.getRootElement();
             if (!root.getName().equals("sbml")) {
                 return false;
-            }
-            else {
+            } else {
                 return true;
             }
         }
@@ -119,23 +115,23 @@ public final class SbmlInputHandler implements InputHandler {
         Layout layout = null;
         Boolean hasLayout = false;
 
-        if(model.isSetPlugin(LayoutConstants.getNamespaceURI(3, 1))){
-            mplugin = model.getExtension(LayoutConstants.getNamespaceURI(3, 1));          
-            LayoutModelPlugin layplugin = (LayoutModelPlugin)mplugin;
+        if (model.isSetPlugin(LayoutConstants.getNamespaceURI(3, 1))) {
+            mplugin = model.getExtension(LayoutConstants.getNamespaceURI(3, 1));
+            LayoutModelPlugin layplugin = (LayoutModelPlugin) mplugin;
             layout = layplugin.getLayout(0);
-            
+
             //check if the layout is not empty  
-            if(layout.getReactionGlyphCount()!= 0 && layout.getSpeciesGlyphCount() != 0){
+            if (layout.getReactionGlyphCount() != 0 && layout.getSpeciesGlyphCount() != 0) {
                 hasLayout = true;
             }
         }
-        
+
         model.removeAllTreeNodeChangeListeners(true);
 
         model.getListOfTreeNodeChangeListeners().clear();
 
         History history = model.getHistory();
-      
+
         /*History history = model.getHistory();
         /*List<Creator> creators = history.getListOfCreators();
         for(int i = 0; i < history.getCreatorCount(); i++) {
@@ -144,27 +140,26 @@ public final class SbmlInputHandler implements InputHandler {
         for(Creator c : creators) {;
             history.addCreator(c);
         }*/
+        petriNet.putProperty(AnnotationUtils.HISTORY, history);
+        petriNet.putProperty(AnnotationUtils.MODEL_NAME, model.getName());
 
-        petriNet.putProperty(AnnotationsPanel.HISTORY, history);
-        petriNet.putProperty(AnnotationsPanel.MODEL_NAME, model.getName());
-
-        if(model.getCVTermCount() > 0) {
-            tmp =  model.getCVTerms();
-            petriNet.putProperty(AnnotationsPanel.MIRIAM_MODEL_QUALIFIERS, tmp);
+        if (model.getCVTermCount() > 0) {
+            tmp = model.getCVTerms();
+            petriNet.putProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, tmp);
         }
 
         Map<org.sbml.jsbml.Compartment, monalisa.data.pn.Compartment> compartmentMap = new HashMap<>();
-        if(!model.getListOfCompartments().isEmpty()) {
-            for(org.sbml.jsbml.Compartment c : model.getListOfCompartments()) {
+        if (!model.getListOfCompartments().isEmpty()) {
+            for (org.sbml.jsbml.Compartment c : model.getListOfCompartments()) {
                 monalisa.data.pn.Compartment pnComp = new monalisa.data.pn.Compartment(c.getName());
                 pnComp.putProperty("size", c.getSize());
                 pnComp.putProperty("constant", c.getConstant());
                 pnComp.putProperty("spatialDimensions", c.getSpatialDimensions());
-                pnComp.putProperty(AnnotationsPanel.SBO_TERM, c.getSBOTermID());
+                pnComp.putProperty(AnnotationUtils.SBO_TERM, c.getSBOTermID());
                 tmp = c.getCVTerms();
-                pnComp.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+                pnComp.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
                 petriNet.addCompartment(pnComp);
-                compartmentMap.put(c,pnComp);
+                compartmentMap.put(c, pnComp);
             }
         }
 
@@ -177,35 +172,35 @@ public final class SbmlInputHandler implements InputHandler {
         Place place;
         Transition transition, transition_rev = null;
 
-        for(Species s : model.getListOfSpecies()) {
+        for (Species s : model.getListOfSpecies()) {
             name = s.getName();
             id = s.getId();
-            
-            if(hasLayout){
-                posX = layout.getSpeciesGlyph("SG"+id).getBoundingBox().getPosition().getX();
-                posY = layout.getSpeciesGlyph("SG"+id).getBoundingBox().getPosition().getY();
+
+            if (hasLayout) {
+                posX = layout.getSpeciesGlyph("SG" + id).getBoundingBox().getPosition().getX();
+                posY = layout.getSpeciesGlyph("SG" + id).getBoundingBox().getPosition().getY();
             }
-            
-            if(name.equals("")) {
+
+            if (name.equals("")) {
                 name = id;
             }
             tokens = new Double(s.getInitialAmount()).longValue();
             place = findPlace(countPlaces, petriNet);
             place.putProperty("name", name);
-            if(hasLayout){
+            if (hasLayout) {
                 place.putProperty("posX", posX);
                 place.putProperty("posY", posY);
             }
 
-            if(!s.getSBOTermID().isEmpty()) {
-                place.putProperty(AnnotationsPanel.SBO_TERM, s.getSBOTermID());
+            if (!s.getSBOTermID().isEmpty()) {
+                place.putProperty(AnnotationUtils.SBO_TERM, s.getSBOTermID());
             } else {
-                place.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                place.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
             }
             tmp = s.getCVTerms();
-            place.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+            place.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
-            if(s.getCompartmentInstance() != null) {
+            if (s.getCompartmentInstance() != null) {
                 petriNet.setCompartment(place, compartmentMap.get(s.getCompartmentInstance()));
             }
 
@@ -215,23 +210,24 @@ public final class SbmlInputHandler implements InputHandler {
         }
 
         boolean doubleName = false;
-        for(Place p1 : petriNet.places()) {
-            for(Place p2 : petriNet.places()) {
-                if(p1.equals(p2))
+        for (Place p1 : petriNet.places()) {
+            for (Place p2 : petriNet.places()) {
+                if (p1.equals(p2)) {
                     continue;
+                }
 
-                if(p1.getProperty("name").equals(p2.getProperty("name"))) {
-                    if(p2.getCompartment() != null) {
+                if (p1.getProperty("name").equals(p2.getProperty("name"))) {
+                    if (p2.getCompartment() != null) {
                         doubleName = true;
-                        p2.putProperty("name", p2.getProperty("name")+"_"+p2.getCompartment().getName());
+                        p2.putProperty("name", p2.getProperty("name") + "_" + p2.getCompartment().getName());
                     }
                 }
             }
-            if(doubleName) {
-               if(p1.getCompartment() != null) {
-                   p1.putProperty("name", p1.getProperty("name")+"_"+p1.getCompartment().getName());
-                   doubleName = false;
-               }
+            if (doubleName) {
+                if (p1.getCompartment() != null) {
+                    p1.putProperty("name", p1.getProperty("name") + "_" + p1.getCompartment().getName());
+                    doubleName = false;
+                }
             }
         }
 
@@ -244,13 +240,13 @@ public final class SbmlInputHandler implements InputHandler {
         for (Reaction r : model.getListOfReactions()) {
             name = r.getName();
             id = r.getId();
-            
-            if(hasLayout){
-                posX = layout.getReactionGlyph("RG"+id).getBoundingBox().getPosition().getX();
-                posY = layout.getReactionGlyph("RG"+id).getBoundingBox().getPosition().getY();
+
+            if (hasLayout) {
+                posX = layout.getReactionGlyph("RG" + id).getBoundingBox().getPosition().getX();
+                posY = layout.getReactionGlyph("RG" + id).getBoundingBox().getPosition().getY();
             }
-            
-            if(name.equals("")) {
+
+            if (name.equals("")) {
                 name = id;
             }
             reversible = r.getReversible();
@@ -259,61 +255,61 @@ public final class SbmlInputHandler implements InputHandler {
 
             transition = findTransition(countTransitions, petriNet);
             transition.putProperty("name", name);
-            
-            if(hasLayout){
+
+            if (hasLayout) {
                 transition.putProperty("posX", posX);
                 transition.putProperty("posY", posY);
             }
 
-            if(r.getCompartmentInstance() != null) {
+            if (r.getCompartmentInstance() != null) {
                 petriNet.setCompartment(transition, compartmentMap.get(r.getCompartmentInstance()));
             }
 
-            if(!r.getSBOTermID().isEmpty()) {
-                transition.putProperty(AnnotationsPanel.SBO_TERM, r.getSBOTermID());
+            if (!r.getSBOTermID().isEmpty()) {
+                transition.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
             } else {
-                transition.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                transition.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
             }
             tmp = r.getCVTerms();
-            transition.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+            transition.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
-            if(reversible) {
+            if (reversible) {
                 countTransitions++;
                 transition_rev = findTransition(countTransitions, petriNet);
-                transition_rev.putProperty("name", name+"_rev");
+                transition_rev.putProperty("name", name + "_rev");
 
-                if(r.getCompartmentInstance() != null) {
+                if (r.getCompartmentInstance() != null) {
                     petriNet.setCompartment(transition_rev, compartmentMap.get(r.getCompartmentInstance()));
                 }
 
-                if(!r.getSBOTermID().isEmpty()) {
-                    transition_rev.putProperty(AnnotationsPanel.SBO_TERM, r.getSBOTermID());
+                if (!r.getSBOTermID().isEmpty()) {
+                    transition_rev.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
                 } else {
-                    transition_rev.putProperty(AnnotationsPanel.SBO_TERM, "SBO:0000000");
+                    transition_rev.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
                 }
                 tmp = r.getCVTerms();
-                transition_rev.putProperty(AnnotationsPanel.MIRIAM_BIO_QUALIFIERS, tmp);
+                transition_rev.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
             }
 
-            for(SpeciesReference spr : r.getListOfReactants()) {
+            for (SpeciesReference spr : r.getListOfReactants()) {
                 weighString = Double.toString(spr.getStoichiometry());
                 indexOfPoint = weighString.indexOf(".");
-                subLen = weighString.substring(indexOfPoint+1, weighString.length()).length();
-                if(subLen > 1 || !weighString.substring(indexOfPoint+1, weighString.length()).equals("0")) {
+                subLen = weighString.substring(indexOfPoint + 1, weighString.length()).length();
+                if (subLen > 1 || !weighString.substring(indexOfPoint + 1, weighString.length()).equals("0")) {
                     floatWeighs = true;
-                    if(subLen > multiplikator) {
+                    if (subLen > multiplikator) {
                         multiplikator = subLen;
                     }
                 }
             }
 
-            for(SpeciesReference spr : r.getListOfProducts()) {
+            for (SpeciesReference spr : r.getListOfProducts()) {
                 weighString = Double.toString(spr.getStoichiometry());
                 indexOfPoint = weighString.indexOf(".");
-                subLen = weighString.substring(indexOfPoint+1, weighString.length()).length();
-                if(subLen > 1 || !weighString.substring(indexOfPoint+1, weighString.length()).equals("0")) {
+                subLen = weighString.substring(indexOfPoint + 1, weighString.length()).length();
+                if (subLen > 1 || !weighString.substring(indexOfPoint + 1, weighString.length()).equals("0")) {
                     floatWeighs = true;
-                    if(subLen > multiplikator) {
+                    if (subLen > multiplikator) {
                         multiplikator = subLen;
                     }
                 }
@@ -322,78 +318,79 @@ public final class SbmlInputHandler implements InputHandler {
             multiplikator = (int) Math.pow(10.0, (double) multiplikator);
             Object source, aim;
             // input arcs: (place = reactant) --> transition
-            for(SpeciesReference spr : r.getListOfReactants()) {
+            for (SpeciesReference spr : r.getListOfReactants()) {
 
                 reactantName = spr.getSpecies();
                 weight = spr.getStoichiometry();
 
-                if(floatWeighs) {
+                if (floatWeighs) {
                     weight *= multiplikator;
                 }
 
                 source = findPlace(species.get(reactantName), petriNet);
                 aim = transition;
 
-                petriNet.addArc((Place)source, (Transition)aim, new Arc(source, aim, weight.intValue()));
+                petriNet.addArc((Place) source, (Transition) aim, new Arc(source, aim, weight.intValue()));
 
-                if(reversible) {
+                if (reversible) {
                     source = transition_rev;
                     aim = findPlace(species.get(reactantName), petriNet);
-                    petriNet.addArc((Transition)source, (Place)aim, new Arc(aim, source, weight.intValue()));
+                    petriNet.addArc((Transition) source, (Place) aim, new Arc(aim, source, weight.intValue()));
                 }
             }
             // output arcs: transition --> (place = product)
-            for(SpeciesReference spr : r.getListOfProducts()) {
+            for (SpeciesReference spr : r.getListOfProducts()) {
                 productName = spr.getSpecies();
                 weight = spr.getStoichiometry();
 
-                if(floatWeighs) {
+                if (floatWeighs) {
                     weight *= multiplikator;
                 }
 
                 source = transition;
                 aim = findPlace(species.get(productName), petriNet);
 
-                petriNet.addArc((Transition)source, (Place)aim, new Arc(source, aim, weight.intValue()));
+                petriNet.addArc((Transition) source, (Place) aim, new Arc(source, aim, weight.intValue()));
 
-                if(reversible) {
+                if (reversible) {
                     source = findPlace(species.get(productName), petriNet);
                     aim = transition_rev;
-                    petriNet.addArc((Place)source, (Transition)aim, new Arc(aim, source, weight.intValue()));
+                    petriNet.addArc((Place) source, (Transition) aim, new Arc(aim, source, weight.intValue()));
                 }
             }
             // Modifier
-            for(ModifierSpeciesReference msr : r.getListOfModifiers()) {
+            for (ModifierSpeciesReference msr : r.getListOfModifiers()) {
                 weight = 1.0;
                 productName = msr.getSpecies();
 
                 source = transition;
                 aim = findPlace(species.get(productName), petriNet);
-                petriNet.addArc((Transition)source, (Place)aim, new Arc(source, aim, weight.intValue()));
-                petriNet.addArc((Place)aim, (Transition)source, new Arc(source, aim, weight.intValue()));
+                petriNet.addArc((Transition) source, (Place) aim, new Arc(source, aim, weight.intValue()));
+                petriNet.addArc((Place) aim, (Transition) source, new Arc(source, aim, weight.intValue()));
             }
 
             countTransitions++;
         }
 
         doubleName = false;
-        for(Transition t1 : petriNet.transitions()) {
-            for(Transition t2 : petriNet.transitions()) {
-                if(t1.equals(t2))
+        for (Transition t1 : petriNet.transitions()) {
+            for (Transition t2 : petriNet.transitions()) {
+                if (t1.equals(t2)) {
                     continue;
+                }
 
-                if(t1.getProperty("name").equals(t2.getProperty("name"))) {
-                    if(t2.getCompartment() != null) {
+                if (t1.getProperty("name").equals(t2.getProperty("name"))) {
+                    if (t2.getCompartment() != null) {
                         doubleName = true;
-                        t2.putProperty("name", t2.getProperty("name")+"_"+t2.getCompartment().getName());
+                        t2.putProperty("name", t2.getProperty("name") + "_" + t2.getCompartment().getName());
                     }
                 }
             }
-            if(doubleName) {
-               if(t1.getCompartment() != null) {
-                   t1.putProperty("name", t1.getProperty("name")+"_"+t1.getCompartment().getName());
-                   doubleName = false;
-               }
+            if (doubleName) {
+                if (t1.getCompartment() != null) {
+                    t1.putProperty("name", t1.getProperty("name") + "_" + t1.getCompartment().getName());
+                    doubleName = false;
+                }
             }
         }
 

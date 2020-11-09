@@ -29,7 +29,6 @@ import monalisa.results.TInvariants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
 /**
  * @author Jens Einloft
  */
@@ -58,8 +57,8 @@ public final class ResTInputHandler implements TInputHandler {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line = null;
         while ((line = reader.readLine()) != null) {
-            if(linecounter > 3) {
-                if(line.contains("@") || line.isEmpty() ) {
+            if (linecounter > 3) {
+                if (line.contains("@") || line.isEmpty()) {
                     invariants.add(invBuilder.buildAndClear());
                     LOGGER.info("Successfully loaded T-Invariants from .res file");
                     break;
@@ -70,8 +69,8 @@ public final class ResTInputHandler implements TInputHandler {
                 line_parts = line.split("\\|");
 
                 // Start of a new T Invariant
-                if(!line_parts[0].equalsIgnoreCase("")) {
-                    if(!invBuilder.isEmpty()) {
+                if (!line_parts[0].equalsIgnoreCase("")) {
+                    if (!invBuilder.isEmpty()) {
                         invariants.add(invBuilder.buildAndClear());
                     }
                     invBuilder.setId(Integer.parseInt(line_parts[0]));
@@ -81,10 +80,11 @@ public final class ResTInputHandler implements TInputHandler {
                 tid = Integer.parseInt(name_parts[0]);
                 name = name_parts[1].split(":")[0];
                 transition = petriNet.findTransition(tid);
-                if(transition == null)
+                if (transition == null) {
                     LOGGER.warn("Transition with ID '" + tid + "' could not be found.");
-                if(!transition.getProperty("name").equals(name)) {
-                    if(!badTransitions.contains(name)) {
+                }
+                if (!transition.getProperty("name").equals(name)) {
+                    if (!badTransitions.contains(name)) {
                         badTransitions.add(name);
                         LOGGER.warn("Transition with ID '" + tid + "' has name '"
                                 + transition.getProperty("name") + ", but name in T-Invariant file is '" + name

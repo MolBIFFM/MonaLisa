@@ -7,31 +7,32 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.wrapper;
+
 import monalisa.data.pn.TInvariant;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
  * Wrapper Class for Tinv List Items
+ *
  * @author Jens Einloft
  */
 public class TinvWrapper {
+
     private final TInvariant tinv;
     private String name;
     private static final Logger LOGGER = LogManager.getLogger(TinvWrapper.class);
 
-    
     public TinvWrapper(TInvariant input, String TinvType) {
         this.tinv = input;
         this.name = TinvType;
-        LOGGER.debug("Created new TinvWrapper " + (this.tinv.id()+1)+" ("+this.tinv.size()+")");
+        LOGGER.debug("Created new TinvWrapper " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")");
     }
-    
+
     public TinvWrapper(TInvariant input) {
         this.tinv = input;
-        LOGGER.debug("Created new TinvWrapper " + (this.tinv.id()+1)+" ("+this.tinv.size()+")");
+        LOGGER.debug("Created new TinvWrapper " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")");
     }
 
     public TInvariant getTinv() {
@@ -40,9 +41,10 @@ public class TinvWrapper {
 
     @Override
     public String toString() {
-        if(this.tinv.id() >= 0)
-            return "Elementary mode "+(this.tinv.id()+1)+" ("+this.tinv.size()+")";
-        else
+        if (this.tinv.id() >= 0) {
+            return "Elementary mode " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")";
+        } else {
             return name;
+        }
     }
 }

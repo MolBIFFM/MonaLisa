@@ -18,8 +18,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * A modified version of the {@link java.io.ObjectInputStream} to avoid ClassNotFoundExeptions (of not longer existing classes) during de-serialization.
- * Found: http://stackoverflow.com/questions/20543100/how-to-bypass-classnotfoundexception-while-objectinputstream-readobject
+ * A modified version of the {@link java.io.ObjectInputStream} to avoid
+ * ClassNotFoundExeptions (of not longer existing classes) during
+ * de-serialization. Found:
+ * http://stackoverflow.com/questions/20543100/how-to-bypass-classnotfoundexception-while-objectinputstream-readobject
+ *
  * @author Jens Einloft
  */
 public class MonaLisaObjectInputStream extends ObjectInputStream {

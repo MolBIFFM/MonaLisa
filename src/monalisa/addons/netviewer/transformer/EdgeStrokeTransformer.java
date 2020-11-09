@@ -25,15 +25,15 @@ public class EdgeStrokeTransformer implements Transformer<NetViewerEdge, Stroke>
     public EdgeStrokeTransformer(int strokeFactor) {
         this.strokeFactor = strokeFactor;
     }
-    
+
     public int getStrokeFactor() {
         return this.strokeFactor;
     }
-    
+
     public void setStrokeFactor(int strokeFactor) {
         this.strokeFactor = strokeFactor;
     }
-    
+
     @Override
     public Stroke transform(NetViewerEdge i) {
         return new BasicStroke(strokeFactor);

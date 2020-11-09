@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.listener;
 
 import java.awt.Color;
@@ -23,9 +22,11 @@ import org.apache.logging.log4j.LogManager;
 
 /**
  * Controls the selection of a MCT Set
+ *
  * @author Jens Einloft
  */
 public class McsItemListener implements ItemListener {
+
     private final JComboBox cb;
     private final NetViewer nv;
     private final ToolBar tb;
@@ -39,24 +40,25 @@ public class McsItemListener implements ItemListener {
 
     @Override
     public void itemStateChanged(ItemEvent ie) {
-        if(ie.getStateChange() == ItemEvent.SELECTED) {
+        if (ie.getStateChange() == ItemEvent.SELECTED) {
             LOGGER.debug("New MCS-Item selected, changing colouring");
-            if(cb.getSelectedItem() == null)
+            if (cb.getSelectedItem() == null) {
                 return;
-            if(cb.getSelectedIndex() == 0) {
+            }
+            if (cb.getSelectedIndex() == 0) {
                 nv.resetColor();
                 return;
             }
-            if(!cb.getSelectedItem().getClass().getSimpleName().equalsIgnoreCase("McsWrapper")) {
+            if (!cb.getSelectedItem().getClass().getSimpleName().equalsIgnoreCase("McsWrapper")) {
                 return;
             }
 
-            if(!tb.stackSelection()) {
+            if (!tb.stackSelection()) {
                 nv.resetColor();
             }
 
             Color chosenColor;
-            if(tb.manuellColorSelection()) {
+            if (tb.manuellColorSelection()) {
                 chosenColor = JColorChooser.showDialog(null, "Select color", null);
             } else {
                 chosenColor = NetViewer.MCS_COLOR;
@@ -64,7 +66,7 @@ public class McsItemListener implements ItemListener {
 
             nv.resetMessageLabel();
 
-            McsWrapper mcsWrapper = (McsWrapper)cb.getSelectedItem();
+            McsWrapper mcsWrapper = (McsWrapper) cb.getSelectedItem();
 
             nv.colorTransitions(NetViewer.MCSOBJECTIV_COLOR, mcsWrapper.getObjective());
             nv.colorTransitions(mcsWrapper.getMcs(), chosenColor);

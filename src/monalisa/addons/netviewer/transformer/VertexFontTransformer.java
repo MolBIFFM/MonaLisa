@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer.transformer;
 
 import java.awt.Font;
@@ -21,15 +20,15 @@ import org.apache.commons.collections15.Transformer;
 public class VertexFontTransformer implements Transformer<NetViewerNode, Font> {
 
     private Font font;
-    
+
     public VertexFontTransformer(Font font) {
         this.font = font;
-    }        
-    
+    }
+
     public int getFontSize() {
         return this.font.getSize();
     }
-    
+
     public void setFontSize(int fontSize) {
         this.font = new Font("Helvetica", Font.BOLD, fontSize);
     }
@@ -38,5 +37,5 @@ public class VertexFontTransformer implements Transformer<NetViewerNode, Font> {
     public Font transform(NetViewerNode n) {
         return this.font;
     }
-    
+
 }

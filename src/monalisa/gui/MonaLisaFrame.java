@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.gui;
 
 import monalisa.resources.ResourceManager;
@@ -20,14 +19,14 @@ import monalisa.resources.StringResources;
 public class MonaLisaFrame extends javax.swing.JFrame {
 
     protected static final ResourceManager resources = ResourceManager.instance();
-    protected static final StringResources strings = resources.getDefaultStrings();    
-    
+    protected static final StringResources strings = resources.getDefaultStrings();
+
     /**
      * Creates new form MonaLisaFrame
      */
     public MonaLisaFrame() {
         setIconImage(resources.getImage("icon-16.png"));
-        
+
         initComponents();
     }
 

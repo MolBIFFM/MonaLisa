@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.centrality;
 
 import java.util.Collection;
@@ -19,9 +18,11 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Calculates the eccentricity centrality of every node in a Petri net
+ *
  * @author Lilya Mirzoyan
  */
 public class EccentricityCentrality extends CentralityAbstract {
+
     private static final Logger LOGGER = LogManager.getLogger(EccentricityCentrality.class);
     private final int[][] splMatrixPlaces;
     private final int[][] splMatrixTransitions;
@@ -29,61 +30,60 @@ public class EccentricityCentrality extends CentralityAbstract {
     Collection<Transition> transitions;
 
     /**
-     * Executes the Floyd-Warshall algorithm to compute the distance matrices for
-     * places and transitions
+     * Executes the Floyd-Warshall algorithm to compute the distance matrices
+     * for places and transitions
+     *
      * @param petriNet
      */
     public EccentricityCentrality(PetriNetFacade petriNet) {
-       super(petriNet);
-       LOGGER.info("Initializing for eccentricity centrality");
-       places = petriNet.places();
-       transitions = petriNet.transitions();
+        super(petriNet);
+        LOGGER.info("Initializing for eccentricity centrality");
+        places = petriNet.places();
+        transitions = petriNet.transitions();
 
-       splMatrixPlaces = new FloydWarshall(adjMatrixPlaces).getDistMatrix();
-       splMatrixTransitions = new FloydWarshall(adjMatrixTransitions).getDistMatrix();
-       LOGGER.info("Finished initialization for eccentricity centrality)");
+        splMatrixPlaces = new FloydWarshall(adjMatrixPlaces).getDistMatrix();
+        splMatrixTransitions = new FloydWarshall(adjMatrixTransitions).getDistMatrix();
+        LOGGER.info("Finished initialization for eccentricity centrality)");
     }
 
     /**
-     * Calculates the ranking for every place and every transition in a Petri net
-     * on the basis of eccentricity centrality
+     * Calculates the ranking for every place and every transition in a Petri
+     * net on the basis of eccentricity centrality
      */
     @Override
     public void calculate() {
         LOGGER.info("Beginning calculation of eccentricity centrality");
         LOGGER.debug("Calculating eccentricity centrality for places");
-        for (Place p : places){
+        for (Place p : places) {
             int max = 0;
             double eccentricity;
-            for (int i = 0; i < splMatrixPlaces.length; i++){
-                if (splMatrixPlaces[adjMatrixPlaces.getIndexForId(p.id())][i] > max){
+            for (int i = 0; i < splMatrixPlaces.length; i++) {
+                if (splMatrixPlaces[adjMatrixPlaces.getIndexForId(p.id())][i] > max) {
                     max = splMatrixPlaces[adjMatrixPlaces.getIndexForId(p.id())][i];
                 }
             }
-            if (max == 0){
+            if (max == 0) {
                 eccentricity = 1.0;
+            } else {
+                eccentricity = 1 / (double) max;
             }
-            else {
-                eccentricity = 1/(double) max;
-            }
-           rankingPlaces.put(p.id(), eccentricity);
+            rankingPlaces.put(p.id(), eccentricity);
         }
         LOGGER.debug("Finished calculating eccentricity centrality for places");
         LOGGER.debug("Calculating eccentricity centrality for transitions");
-        for (Transition t : transitions){
+        for (Transition t : transitions) {
             int max = 0;
             double eccentricity;
-            for (int i = 0; i < splMatrixTransitions.length; i++){
+            for (int i = 0; i < splMatrixTransitions.length; i++) {
 
-                if (splMatrixTransitions[adjMatrixTransitions.getIndexForId(t.id())][i] > max){
-                   max = splMatrixTransitions[adjMatrixTransitions.getIndexForId(t.id())][i];
+                if (splMatrixTransitions[adjMatrixTransitions.getIndexForId(t.id())][i] > max) {
+                    max = splMatrixTransitions[adjMatrixTransitions.getIndexForId(t.id())][i];
                 }
             }
-            if (max == 0){
+            if (max == 0) {
                 eccentricity = 1.0;
-            }
-            else {
-                eccentricity = 1/(double) max;
+            } else {
+                eccentricity = 1 / (double) max;
             }
             rankingTransitions.put(t.id(), eccentricity);
         }

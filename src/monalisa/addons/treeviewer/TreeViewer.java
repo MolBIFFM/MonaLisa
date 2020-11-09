@@ -11,16 +11,18 @@ package monalisa.addons.treeviewer;
 
 import edu.uci.ics.jung.algorithms.layout.TreeLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
@@ -58,12 +60,6 @@ public final class TreeViewer extends MonaLisaFrame {
 
     private final Project project;
 
-    public final static String CLUSTERNODE = "cn";
-    public final static String BENDNODE = "bn";
-
-    public final static String CLUSTEREDGE = "ce";
-    public final static String BENDEDGE = "be";
-
     private final DefaultComboBoxModel<ClusteringWrapper> clusterModel;
     private final ClusterComboBoxItemListener ccbl;
 
@@ -74,6 +70,7 @@ public final class TreeViewer extends MonaLisaFrame {
 
     /**
      * Creates new form TreeViewer
+     *
      * @param project
      */
     public TreeViewer(Project project) {
@@ -86,10 +83,10 @@ public final class TreeViewer extends MonaLisaFrame {
         this.layout = new TreeLayout(forest);
 
         ClusterConfiguration config;
-        for (Map.Entry<Configuration, Result> entry : this.project.getResults(ClusterTool.class).entrySet()) {
+        for (Map.Entry<Configuration, Result> entry : this.project.getToolManager().getResults(ClusterTool.class).entrySet()) {
             config = (ClusterConfiguration) entry.getKey();
             try {
-                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getResult(new ClusterTool(), config)),  config));
+                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)), config));
             } catch (ClassCastException e) {
                 LOGGER.error("Issue while initializing TreeViewer: ", e);
             }
@@ -155,13 +152,13 @@ public final class TreeViewer extends MonaLisaFrame {
 
     public void updateClusterResults() {
         LOGGER.info("Updating clustering results");
-        if (this.project.hasResults(ClusterTool.class)) {
+        if (this.project.getToolManager().hasResults(ClusterTool.class)) {
             ccbl.setDisabled(true);
             clusterModel.removeAllElements();
             ClusterConfiguration config;
-            for (Map.Entry<Configuration, Result> entry : this.project.getResults(ClusterTool.class).entrySet()) {
+            for (Map.Entry<Configuration, Result> entry : this.project.getToolManager().getResults(ClusterTool.class).entrySet()) {
                 config = (ClusterConfiguration) entry.getKey();
-                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getResult(new ClusterTool(), config)), config));
+                clusterModel.addElement(new ClusteringWrapper(((Clustering) project.getToolManager().getResult(new ClusterTool(), config)), config));
             }
             ccbl.setDisabled(false);
             showClustering(clusterModel.getElementAt(0));
@@ -176,7 +173,7 @@ public final class TreeViewer extends MonaLisaFrame {
         this.layout = new TreeLayout(this.forest);
         this.layout.initialize();
         ((VisualizationViewer<TreeViewerNode, TreeViewerEdge>) this.vv).setGraphLayout(this.layout);
-        this.forest.redraw(this.layout);
+        redraw(this.layout, this.forest);
         this.vv.repaint();
         ccbl.setDisabled(false);
         LOGGER.debug("Successfully displaying clustering");
@@ -374,5 +371,113 @@ public final class TreeViewer extends MonaLisaFrame {
     private javax.swing.JLabel transitionLabel;
     private javax.swing.JPanel vv;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * redraw changes the look of the tree, without changing the structure or
+     * the order of the tree
+     *
+     * @param layout
+     * @param clusterTreeImpl
+     */
+    public void redraw(TreeLayout<TreeViewerNode, TreeViewerEdge> layout, ClusterTreeImpl clusterTreeImpl) {
+        if (clusterTreeImpl.isRedrawn() == false) {
+            clusterTreeImpl.setRedrawn(true);
+            LOGGER.info("Redrawing tree");
+            //Set Nodes on Distance to Root
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllNodes()) {
+                Point2D tvP = layout.transform(tvn);
+                Point.Double newcluster = new Point.Double();
+                //Distance is really small and +30 because root is 0.0
+                double parentY = tvn.getHeight() + 30;
+                newcluster.y = parentY;
+                newcluster.x = tvP.getX();
+                layout.setLocation(tvn, newcluster);
+            }
+            // get max Y value to set leafs on the same line (important for threshold after calculating
+            // to set leaves at same level)
+            double maxY = 0.0;
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllTreeLeaves()) {
+                Point2D tvL = layout.transform(tvn);
+                double pointer = tvL.getY();
+                if (maxY <= pointer) {
+                    maxY = pointer;
+                }
+            }
+            //set all Leaves on max-Y (put them in one line after threshold)
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllTreeLeaves()) {
+                Point2D tvL = layout.transform(tvn);
+                Point.Double newPointLeaf = new Point.Double();
+                if (tvL.getY() < maxY) {
+                    newPointLeaf.y = maxY;
+                    newPointLeaf.x = tvL.getX();
+                    layout.setLocation(tvn, newPointLeaf);
+                }
+            }
+            Double beforeNodeA = 0.0;
+            Double beforeNodeB = 0.0;
+            TreeViewerNode beforeTvnA = null;
+            TreeViewerNode beforeTvnB = null;
+            int counter = 0;
+            //create new list for edges which get delete
+            List<TreeViewerEdge> toDelete = new ArrayList<>();
+            Point.Double newPointNode1;
+            Point.Double newPointNode2;
+            Point.Double newPointOldNode;
+            Point2D tvnCTransform;
+            TreeViewerNode newNode1;
+            TreeViewerNode newNode2;
+            TreeViewerEdge findEdge;
+            for (TreeViewerNode tvn : clusterTreeImpl.getAllClusterNodes()) {
+                Point2D tvnTransform = layout.transform(tvn);
+                Collection<TreeViewerNode> children = clusterTreeImpl.getChildren(tvn);
+                //get Y- Cordinates from Children to set nodes in same lines
+                for (TreeViewerNode tvnC : children) {
+                    //list to remove old Edges from the Tree between Nodes
+                    findEdge = clusterTreeImpl.findEdge(tvn, tvnC);
+                    toDelete.add(findEdge);
+                    //saves the X Cordinates from first Children of the Node
+                    tvnCTransform = layout.transform(tvnC);
+                    if (counter == 0) {
+                        beforeNodeA = tvnCTransform.getX();
+                        beforeTvnA = tvnC;
+                        counter += 1;
+                        //saves from the second children
+                    } else if (counter == 1) {
+                        beforeNodeB = tvnCTransform.getX();
+                        beforeTvnB = tvnC;
+                        counter += 1;
+                    }
+                }
+                //set the new Points right and left of the Node
+                newPointNode1 = new Point.Double(beforeNodeA, tvnTransform.getY());
+                newPointNode2 = new Point.Double(beforeNodeB, tvnTransform.getY());
+                newNode1 = new TreeViewerNode(newPointNode1.toString(), TreeViewerNode.BENDNODE);
+                newNode2 = new TreeViewerNode(newPointNode2.toString(), TreeViewerNode.BENDNODE);
+                //add both new points (right and left)
+                clusterTreeImpl.addVertex(newNode1);
+                clusterTreeImpl.addVertex(newNode2);
+                //set old CusterNode in the middle of the two children
+                Double Zahl = (beforeNodeA + beforeNodeB) / 2;
+                newPointOldNode = new Point.Double(Zahl, tvnTransform.getY());
+                layout.setLocation(tvn, newPointOldNode);
+                //add edges between new and old node
+                /*These errors should be fixable by using clusterTreeImpl.getEdgeCount from its super-class. No idea why this was used in the first place.
+                However, can't test this until I have a working implementation of MonaLisa.*/
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.BENDEDGE), tvn, newNode1);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.BENDEDGE), tvn, newNode2);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.CLUSTEREDGE), newNode1, beforeTvnA);
+                clusterTreeImpl.addEdge(new TreeViewerEdge(clusterTreeImpl.getEdgeCount(), TreeViewerEdge.CLUSTEREDGE), newNode2, beforeTvnB);
+                //set new points to the layout
+                layout.setLocation(newNode1, newPointNode1);
+                layout.setLocation(newNode2, newPointNode2);
+                counter = 0;
+            }
+            //remove the old Edges
+            for (TreeViewerEdge tne : toDelete) {
+                clusterTreeImpl.removeEdge(tne, false);
+            }
+            LOGGER.info("Successfully redrawn tree");
+        }
+    }
 
 }

@@ -7,16 +7,14 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.netviewer;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.IOException;
-
 
 /**
  * KeyListener to react on pressed keys in the NetViewer
+ *
  * @author Jens Einloft
  */
 public class NetViewerKeyListener implements KeyListener {
@@ -46,50 +44,51 @@ public class NetViewerKeyListener implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if(activated) {
+        if (activated) {
             keyCode = e.getKeyCode();
             // ESC
-            if(keyCode.equals(KeyEvent.VK_ESCAPE))
+            if (keyCode.equals(KeyEvent.VK_ESCAPE)) {
                 nv.cancelMouseAction();
-            // Q
-            else if(keyCode.equals(KeyEvent.VK_Q))
+            } // Q
+            else if (keyCode.equals(KeyEvent.VK_Q)) {
                 nv.placeMouseAction();
-            // W
-            else if(keyCode.equals(KeyEvent.VK_W))
+            } // W
+            else if (keyCode.equals(KeyEvent.VK_W)) {
                 nv.transitionMouseAction();
-            // E
-            else if(keyCode.equals(KeyEvent.VK_E))
+            } // E
+            else if (keyCode.equals(KeyEvent.VK_E)) {
                 nv.edgeMouseAction();
-            // R
-            else if(keyCode.equals(KeyEvent.VK_R))
+            } // R
+            else if (keyCode.equals(KeyEvent.VK_R)) {
                 nv.deleteMouseAction();
-            // S
-            else if(keyCode.equals(KeyEvent.VK_S))
+            } // S
+            else if (keyCode.equals(KeyEvent.VK_S)) {
                 nv.inVertexMouseAction();
-            // A
-            else if(keyCode.equals(KeyEvent.VK_A))
+            } // A
+            else if (keyCode.equals(KeyEvent.VK_A)) {
                 nv.outVertexMouseAction();
-            // D
-            else if(keyCode.equals(KeyEvent.VK_D))
+            } // D
+            else if (keyCode.equals(KeyEvent.VK_D)) {
                 nv.addBendMouseAction();
-            // F
-            else if(keyCode.equals(KeyEvent.VK_F))
+            } // F
+            else if (keyCode.equals(KeyEvent.VK_F)) {
                 nv.deleteBendMouseAction();
-            // Y
-            else if(keyCode.equals(KeyEvent.VK_Y))
+            } // Y
+            else if (keyCode.equals(KeyEvent.VK_Y)) {
                 nv.alignYMouseAction();
-            // X
-            else if(keyCode.equals(KeyEvent.VK_X))
+            } // X
+            else if (keyCode.equals(KeyEvent.VK_X)) {
                 nv.alignXMouseAction();
-            // C
-            else if(keyCode.equals(KeyEvent.VK_C))
+            } // C
+            else if (keyCode.equals(KeyEvent.VK_C)) {
                 nv.changeMouseModeToPicking();
-            // V
-            else if(keyCode.equals(KeyEvent.VK_V))
+            } // V
+            else if (keyCode.equals(KeyEvent.VK_V)) {
                 nv.changeMouseModeToTransforming();
-            // Delete
-            else if(keyCode.equals(KeyEvent.VK_DELETE))
+            } // Delete
+            else if (keyCode.equals(KeyEvent.VK_DELETE)) {
                 nv.removeSelectedVertices();
+            }
         }
     }
 }

@@ -7,7 +7,6 @@
  *  Goethe-University Frankfurt am Main, Germany
  *
  */
-
 package monalisa.addons.annotations;
 
 import java.util.regex.Pattern;
@@ -46,7 +45,7 @@ public class MiriamRegistryWrapper {
         return this.name;
     }
 
-    public Pattern getPattern(){
+    public Pattern getPattern() {
         return this.pattern;
     }
 

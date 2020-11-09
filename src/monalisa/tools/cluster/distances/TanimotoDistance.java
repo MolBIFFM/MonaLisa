@@ -13,17 +13,14 @@ import de.molbi.mjcl.clustering.distancemeasure.DistanceFunction;
 
 /**
  *
- * @author stefan (b+c)/(b+c+d) oder 1-(d/(b+c+d))
- * The Tanimoto Coefficient is a statsitic used for comparing the similarity and diversity
- * of sample sets. Given two objects, A and B, each with n binary attributes, SMC
- * is defined as: SMC = Number of Matching Attributes/ Number of Attributes =
- * (M01 + M10) / (M01+M10+M11)
- * M00 represents the total number of attributes where A and B both have a value of 1
- * M01 -"- of A is 0 and B is 1
- * M10 -"- of A is 1 and B is 0
- * M11 -"- of A and B bothe have a value of 0
+ * @author stefan (b+c)/(b+c+d) oder 1-(d/(b+c+d)) The Tanimoto Coefficient is a
+ * statsitic used for comparing the similarity and diversity of sample sets.
+ * Given two objects, A and B, each with n binary attributes, SMC is defined as:
+ * SMC = Number of Matching Attributes/ Number of Attributes = (M01 + M10) /
+ * (M01+M10+M11) M00 represents the total number of attributes where A and B
+ * both have a value of 1 M01 -"- of A is 0 and B is 1 M10 -"- of A is 1 and B
+ * is 0 M11 -"- of A and B bothe have a value of 0
  */
-
 public class TanimotoDistance extends DistanceFunction {
 
     public final static int id = 101;

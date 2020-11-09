@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
 import monalisa.data.input.InvParser;
 import monalisa.data.output.InvCalcOutputHandler;
 import monalisa.data.pn.PetriNetFacade;
@@ -32,10 +31,11 @@ import org.apache.logging.log4j.Logger;
  *
  * @author daniel
  */
-
 public final class MInvariantCalculator {
+
     @SuppressWarnings("serial")
     private class ExtractResourceException extends Exception {
+
         public ExtractResourceException(Exception cause) {
             super(cause);
         }
@@ -43,6 +43,7 @@ public final class MInvariantCalculator {
 
     @SuppressWarnings("serial")
     private class InvokeProcessException extends Exception {
+
         public InvokeProcessException(Exception cause) {
             super(cause);
         }
@@ -56,7 +57,7 @@ public final class MInvariantCalculator {
     private static final Logger LOGGER = LogManager.getLogger(MInvariantCalculator.class);
 
     public MInvariantCalculator(PetriNetFacade petriNet) {
-       this.petriNet = petriNet;
+        this.petriNet = petriNet;
     }
 
     public MInvariantCalculator(PetriNetFacade petriNet, ErrorLog log) throws InterruptedException, MInvariantCalculationFailedException {
@@ -77,18 +78,19 @@ public final class MInvariantCalculator {
         // it simply increments a counter for them, starting at zero. To
         // account for that, and to re-establish a mapping between the tinv
         // output and our Petri net, we perform a little bookkeeping ...
-        
         Map<Integer, Integer> placeIds = new HashMap<>();
         int pid = 0;
-        for (Place place : petriNet.places())
+        for (Place place : petriNet.places()) {
             placeIds.put(place.id(), pid++);
+        }
 
         transitionIds = new HashMap<>();
         int tid = 0;
-        for (Transition transition : petriNet.transitions())
+        for (Transition transition : petriNet.transitions()) {
             transitionIds.put(transition.id(), tid++);
+        }
 
-        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds,"MI");
+        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "MI");
         try {
             LOGGER.debug("Trying to export Petri net to temporary .pnt file for M-Invariant calculation");
             outHandler.save(petriNet, new FileOutputStream(pntFile));
@@ -116,8 +118,8 @@ public final class MInvariantCalculator {
         if (minvariants == null) {
             LOGGER.debug("Importing M-Invariants calculated by external tool");
             File invFile = new File(pntFile.getAbsolutePath().replaceAll("\\.pnt$", ".man"));
-            if(invFile.canRead()){
-                InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet,"MI");
+            if (invFile.canRead()) {
+                InvariantBuilder invariantBuilder = new InvariantBuilder(petriNet, "MI");
                 InvParser invParser;
 
                 try {
@@ -136,16 +138,14 @@ public final class MInvariantCalculator {
         return minvariants;
     }
 
-
     private void computeMinvariants(File input, File output) throws ExtractResourceException, InvokeProcessException, InterruptedException {
         File toolFile = null;
         try {
             String os = System.getProperty("os.name").toLowerCase();
-            if(os.contains("nix") || os.contains("nux")) {
+            if (os.contains("nix") || os.contains("nux")) {
                 LOGGER.debug("OS determined to be Unix");
                 toolFile = FileUtils.extractResource("manatee_2", "monalisa", "bin");
-            }
-            else if(os.contains("win")) {
+            } else if (os.contains("win")) {
                 LOGGER.debug("OS determined to be Windows");
                 toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             }
@@ -154,16 +154,15 @@ public final class MInvariantCalculator {
         }
         toolFile.deleteOnExit();
         toolFile.setExecutable(true);
-        
+
         String[] input_commands = new String[3];
-        
+
         input_commands[0] = toolFile.getAbsolutePath();
         input_commands[1] = input.getAbsolutePath();
         input_commands[2] = ("MI");
-        
+
         ProcessBuilder pb = new ProcessBuilder(input_commands).inheritIO();
         pb.directory(output);
-        
 
         try {
             LOGGER.debug("Starting actual process to compute M-Invariants");
@@ -172,19 +171,19 @@ public final class MInvariantCalculator {
             LOGGER.debug("Successfully computed M-Invariants");
         } catch (IOException e) {
             throw new InvokeProcessException(e);
-        }
-        finally {
+        } finally {
             LOGGER.debug("Marking output files for deletion");
             // Mark output files for deletion.
             String baseName = input.getAbsolutePath().replaceAll("\\..*$", "");
-            String[] extensions = { ".man" };
+            String[] extensions = {".man"};
 
             for (String ext : extensions) {
                 File file = new File(baseName + ext);
-                if (file.exists())
+                if (file.exists()) {
                     file.deleteOnExit();
+                }
             }
-            
+
             LOGGER.debug("Successfully marked output files for deletion");
         }
     }
@@ -192,10 +191,10 @@ public final class MInvariantCalculator {
     private final <T> Map<T, T> invertMap(Map<T, T> source) {
         Map<T, T> inverted = new HashMap<>();
 
-        for (Map.Entry<T, T> entry : source.entrySet())
+        for (Map.Entry<T, T> entry : source.entrySet()) {
             inverted.put(entry.getValue(), entry.getKey());
+        }
 
         return inverted;
     }
 }
-

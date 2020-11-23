@@ -1,7 +1,0 @@
-monalisa.addons.netviewer.transformer
-monalisa.addons.treeviwer.transformer
-monalisa.addons.data
-monalisa.gui.components
-monalisa.resources
-monalisa.tools
-monalisa.tools.cluster.distances

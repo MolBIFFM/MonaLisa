@@ -13,7 +13,6 @@ import monalisa.addons.reachability.ReachabilityEdge;
 import monalisa.addons.reachability.ReachabilityEvent;
 import monalisa.addons.reachability.ReachabilityGraph;
 import monalisa.addons.reachability.ReachabilityNode;
-import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
@@ -27,13 +26,13 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
 
     private static final Logger LOGGER = LogManager.getLogger(BreadthFirst.class);
 
-    public BreadthFirst(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
-        super(pf, pnf, marking, target);
+    public BreadthFirst(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
+        super(pf, marking, target);
     }
 
     @Override
     public void run() {
-        LOGGER.info("Starting Breadth First Algorithm.");
+        LOGGER.debug("Starting Breadth First Algorithm.");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -51,8 +50,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
             }
             ReachabilityNode workingNode = workingList.get(0);
+            LOGGER.debug("Current marking:" + workingNode.getMarking().toString());
             workingList.remove(0);
-            HashSet<Transition> activeTransitions = pf.computeActive(pnf.transitions(), workingNode.getMarking());
+            HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             for (Transition t : activeTransitions) {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
@@ -64,7 +64,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     edges.add(new ReachabilityEdge(workingNode, tar, t));
                     g = new ReachabilityGraph(vertices, edges);
                     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
-                    LOGGER.info("Target marking has been reached.");
+                    LOGGER.debug("Target marking has been reached.");
                     return;
                 }
                 boolean unvisited = true;

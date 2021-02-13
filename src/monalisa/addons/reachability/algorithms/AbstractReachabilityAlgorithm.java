@@ -14,7 +14,6 @@ import monalisa.addons.reachability.ReachabilityEvent.Status;
 import monalisa.addons.reachability.ReachabilityGraph;
 import monalisa.addons.reachability.ReachabilityListener;
 import monalisa.addons.reachability.ReachabilityNode;
-import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 
@@ -25,16 +24,14 @@ import monalisa.data.pn.Transition;
 public abstract class AbstractReachabilityAlgorithm extends Thread implements ReachabilityAlgorithm {
 
     protected final Pathfinder pf;
-    protected final PetriNetFacade pnf;
     protected final HashMap<Place, Long> marking;
     protected final HashMap<Place, Long> target;
     protected ReachabilityNode tar;
     protected ReachabilityGraph g;
     private List<ReachabilityListener> listeners = new ArrayList<>();
 
-    public AbstractReachabilityAlgorithm(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
+    public AbstractReachabilityAlgorithm(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
         this.pf = pf;
-        this.pnf = pnf;
         this.marking = marking;
         this.target = target;
     }

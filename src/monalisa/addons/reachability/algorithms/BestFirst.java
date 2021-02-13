@@ -13,7 +13,6 @@ import monalisa.addons.reachability.ReachabilityEdge;
 import monalisa.addons.reachability.ReachabilityEvent;
 import monalisa.addons.reachability.ReachabilityGraph;
 import monalisa.addons.reachability.ReachabilityNode;
-import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
@@ -28,14 +27,14 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
     private final String priority;
     private static final Logger LOGGER = LogManager.getLogger(BestFirst.class);
 
-    public BestFirst(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target, String heur) {
-        super(pf, pnf, marking, target);
+    public BestFirst(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target, String heur) {
+        super(pf, marking, target);
         this.priority = heur;
     }
 
     @Override
     public void run() {
-        LOGGER.info("Starting Best First Algorithm.");
+        LOGGER.debug("Starting Best First Algorithm.");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -54,7 +53,7 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
             }
             ReachabilityNode workingNode = workingList.get(0);
             workingList.remove(0);
-            HashSet<Transition> activeTransitions = pf.computeActive(pnf.transitions(), workingNode.getMarking());
+            HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             for (Transition t : activeTransitions) {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
@@ -66,7 +65,7 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
                     edges.add(new ReachabilityEdge(workingNode, tar, t));
                     g = new ReachabilityGraph(vertices, edges);
                     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
-                    LOGGER.info("Target marking has been reached.");
+                    LOGGER.debug("Target marking has been reached.");
                     return;
                 }
                 boolean unvisited = true;
@@ -122,8 +121,8 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
             // Default, but places are weighted inversely by their degree.
             // Effectively, places with a high degree increase priority value less.
             for (Place p : tar.getMarking().keySet()) {
-                prio += ((1 / (p.inputs().size() + p.outputs().size()))
-                        * Math.abs(tar.getMarking().get(p) - node.getMarking().get(p)));
+                prio += ((1f / (p.inputs().size() + p.outputs().size()))
+                        * Math.abs(tar.getMarking().get(p) - node.getMarking().get(p)));                        
             }
         }
         node.setPriority(prio);

@@ -13,7 +13,6 @@ import monalisa.addons.reachability.ReachabilityEdge;
 import monalisa.addons.reachability.ReachabilityEvent;
 import monalisa.addons.reachability.ReachabilityGraph;
 import monalisa.addons.reachability.ReachabilityNode;
-import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
@@ -27,8 +26,8 @@ public class FullCoverability extends AbstractReachabilityAlgorithm {
 
     private static final Logger LOGGER = LogManager.getLogger(FullCoverability.class);
 
-    public FullCoverability(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
-        super(pf, pnf, marking, target);
+    public FullCoverability(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
+        super(pf, marking, target);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class FullCoverability extends AbstractReachabilityAlgorithm {
             // get a node to expand
             ReachabilityNode workingNode = workingList.get(0);
             workingList.remove(workingNode);
-            HashSet<Transition> activeTransitions = pf.computeActive(pnf.transitions(), workingNode.getMarking());
+            HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
 
             for (Transition t : activeTransitions) {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                

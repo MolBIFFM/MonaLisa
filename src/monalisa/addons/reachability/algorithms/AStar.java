@@ -28,15 +28,17 @@ public class AStar extends AbstractReachabilityAlgorithm {
 
     private final String heur;
     private static final Logger LOGGER = LogManager.getLogger(AStar.class);
+    private final PetriNetFacade pnf;
 
     public AStar(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target, String heur) {
-        super(pf, pnf, marking, target);
+        super(pf, marking, target);
+        this.pnf = pnf;
         this.heur = heur; // Currently a dummy as there is only one implemented heuristic.
     }
 
     @Override
     public void run() {
-        LOGGER.info("Starting A* Algorithm.");
+        LOGGER.debug("Starting A* Algorithm.");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -56,12 +58,12 @@ public class AStar extends AbstractReachabilityAlgorithm {
             workingList.remove(workingNode);
             vertices.add(workingNode);
             LOGGER.debug("Expanding new marking with priority " + workingNode.getPriority());
-            HashSet<Transition> activeTransitions = pf.computeActive(pnf.transitions(), workingNode.getMarking());
+            HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             for (Transition t : activeTransitions) {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                /*for (Place p : pnf.places()) {                
+                /*for (Place p : tar.getMarking().keySet()) {                
                     LOGGER.info(p.getProperty("name") + "\t" + newNode.getMarking().get(p));
                 }*/
                 if (newNode.equals(tar)) {                    
@@ -70,7 +72,7 @@ public class AStar extends AbstractReachabilityAlgorithm {
                     edges.add(new ReachabilityEdge(workingNode, tar, t));
                     g = new ReachabilityGraph(vertices, edges);
                     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());                    
-                    LOGGER.info("Target marking has been reached.");                  
+                    LOGGER.debug("Target marking has been reached.");                  
                     return;
                 }
                 boolean unvisited = true;
@@ -132,12 +134,8 @@ public class AStar extends AbstractReachabilityAlgorithm {
     public void computePriority(ReachabilityNode node) {
         double prio = node.getDepth();
         HashMap<Place, Long> diff = tar.getDifference(node);
-        /*for (Place p : pnf.places()) {
-            LOGGER.debug(p.getProperty("name") + "\t" + node.getMarking().get(p)
-            + "\t" + tar.getMarking().get(p) + "\t" + diff.get(p));
-        }*/
         HashSet<Double> placewise = new HashSet<>();
-        for (Place p : pnf.places()) {
+        for (Place p : tar.getMarking().keySet()) {
             HashSet<Double> intermediate = new HashSet<>();
             ArrayList<Transition> validTransitions = new ArrayList<>();
             // The place still has too many tokens compared to the target marking
@@ -156,22 +154,7 @@ public class AStar extends AbstractReachabilityAlgorithm {
                 }
                 placewise.add(Collections.min(intermediate));                
             }
-            // find smallest element in intermediate and add it to placewise            
-            /*double smallest = Double.MAX_VALUE;
-            for (Double entry : intermediate) {
-                if (entry < smallest) {
-                    smallest = entry;
-                }
-            }
-            placewise.add(smallest);*/
         }
-        // find maximal value in placewise and add it to priority
-        /*double largest = Double.MIN_VALUE;
-        for (Double entry : placewise) {
-            if (entry > largest) {
-                largest = entry;
-            }
-        }*/
         LOGGER.debug("Depth: " + Double.toString(prio) + " Heur: " + Double.toString(Collections.max(placewise)));
         prio += Collections.max(placewise); // Add heuristic
         node.setPriority(prio);

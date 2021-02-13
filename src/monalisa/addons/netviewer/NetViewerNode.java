@@ -199,12 +199,12 @@ public class NetViewerNode implements Serializable {
      * @param color
      */
     public void setColorForAllNodes(Color color) {
-        LOGGER.info("Changing color for all logical places");
+        LOGGER.debug("Changing color for all logical places");
         this.setColor(color);
         for (NetViewerNode n : this.logicalPlaces) {
             n.setColor(color);
         }
-        LOGGER.info("Successfully changed color for all logical places");
+        LOGGER.debug("Successfully changed color for all logical places");
     }
 
     /**

@@ -33,7 +33,7 @@ public class NetViewerStorage implements Serializable {
     private Graph<NetViewerNode, NetViewerEdge> g;
     transient private MonaLisaLayout layout;
 
-    private static final Logger LOGGER = LogManager.getLogger(NetViewer.class);
+    private static final Logger LOGGER = LogManager.getLogger(NetViewerStorage.class);
 
     /**
      * Creates new empty NetViewerStorage for a newly created project.
@@ -97,12 +97,30 @@ public class NetViewerStorage implements Serializable {
         objectInput.defaultReadObject();
         this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
         this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
-        // Happens, if the user try to load an older project format
+        // Happens, if the user tries to load an older project format
 
         if (map != null) {
             this.layout.restore(map);
         }
         LOGGER.info("Read in: " + this.toString());
+        if (placeMap.getClass().toString().equals("class java.util.Collections$UnmodifiableMap")) {
+            LOGGER.warn("placeMap is not modifiable, restoring as HashMap.");
+            placeMap = restoreMap(NetViewer.PLACE);
+        }
+        if (transitionMap.getClass().toString().equals("class java.util.Collections$UnmodifiableMap")) {
+            LOGGER.warn("transitionMap is not modifiable, restoring as HashMap.");
+            transitionMap = restoreMap(NetViewer.TRANSITION);
+        }
+    }
+
+    private HashMap<Integer, NetViewerNode> restoreMap(String type) {
+        HashMap<Integer, NetViewerNode> newMap = new HashMap<>();
+        for (NetViewerNode n : g.getVertices()) {
+            if (n.getNodeType().equals(type)) {
+                newMap.put(n.getId(), n);
+            }
+        }
+        return newMap;
     }
 
     /**

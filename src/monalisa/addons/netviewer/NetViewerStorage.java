@@ -103,10 +103,6 @@ public class NetViewerStorage implements Serializable {
             this.layout.restore(map);
         }
         LOGGER.info("Read in: " + this.toString());
-        if (map != null) {
-            this.layout.restore(map);
-        }
-        LOGGER.info("Read in: " + this.toString());
         if (placeMap.getClass().toString().equals("class java.util.Collections$UnmodifiableMap")) {
             LOGGER.warn("placeMap is not modifiable, restoring as HashMap.");
             placeMap = restoreMap(NetViewer.PLACE);

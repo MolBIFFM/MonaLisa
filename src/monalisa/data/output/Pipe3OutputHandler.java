@@ -19,6 +19,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -36,7 +37,7 @@ public class Pipe3OutputHandler implements OutputHandler {
 
     private static final Logger LOGGER = LogManager.getLogger(Pipe3OutputHandler.class);
 
-    public void save(FileOutputStream fileOutputStream, PetriNet pn) {
+    public void save(FileOutputStream fileOutputStream, PetriNet pn, File file, NetViewer netViewer) {
         LOGGER.info("Exporting Petri net to PIPE3 format");
         Double minX = 0.0, minY = 0.0, x, y;
         for (Place p : pn.places()) {

@@ -47,7 +47,7 @@ public final class PetriNetInputHandlers {
     }
 
     public static PetriNet load(File file, InputHandler handler) throws IOException {
-        return handler.load(new FileInputStream(file));
+        return handler.load(new FileInputStream(file), file);
     }
 
     public static List<InputHandler> getHandlers() {

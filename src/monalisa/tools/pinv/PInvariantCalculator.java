@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.input.InvParser;
 import monalisa.data.output.InvCalcOutputHandler;
 import monalisa.data.pn.InvariantBuilder;
@@ -45,7 +46,7 @@ public final class PInvariantCalculator {
             super(cause);
         }
     }
-
+    private NetViewer netViewer;
     private final PetriNetFacade petriNet;
     private File pntFile = null;
     private PInvariants pinvariants = null;
@@ -85,7 +86,7 @@ public final class PInvariantCalculator {
         InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "PI");
         try {
             LOGGER.debug("Trying to export Petri net to temporary .pnt file for P-Invariant calculation");
-            outHandler.save(petriNet, new FileOutputStream(pntFile));
+            outHandler.save(petriNet, new FileOutputStream(pntFile), pntFile, netViewer);
         } catch (FileNotFoundException ex) {
             log.log(ex.getLocalizedMessage(), ErrorLog.Severity.ERROR);
             LOGGER.error("Caught FileNotFoundException while trying to export Petri net to temporary .pnt file for P-Invariant calculation: ", ex);

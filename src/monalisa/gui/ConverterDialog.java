@@ -25,6 +25,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import layout.TableLayout;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.input.ApnnInputHandler;
 import monalisa.data.input.InputHandler;
 import monalisa.data.input.MetaToolInputHandler;
@@ -58,6 +59,7 @@ public class ConverterDialog extends JDialog implements ActionListener {
     private static final String CHOOSE_INPUT = "CHOOSE_INPUT";
     private static final String CHOOSE_OUTPUT = "CHOOSE_OUTPUT";
 
+    private NetViewer netViewer;
     private JPanel panel;
     private JButton chooseInput, chooseOutput, start, cancel;
     private JList inputFormat, outputFormat;
@@ -157,8 +159,8 @@ public class ConverterDialog extends JDialog implements ActionListener {
             for (File f : inputFileList) {
                 if (ih.isKnownFile(f)) {
                     outputFileName = outputDirectory.getAbsolutePath() + f.getAbsolutePath().substring(f.getAbsolutePath().lastIndexOf(System.getProperty("file.separator")), f.getAbsolutePath().lastIndexOf(".")) + "." + oh.getExtension();
-                    pn = ih.load(new FileInputStream(f));
-                    oh.save(new FileOutputStream(new File(outputFileName)), pn);
+                    pn = ih.load(new FileInputStream(f), f);
+                    oh.save(new FileOutputStream(new File(outputFileName)), pn, f, netViewer);
                 }
             }
         }

@@ -250,7 +250,7 @@ public class NetViewerEdge implements Serializable {
      *
      * @param color
      */
-    private void setColor(Color color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 

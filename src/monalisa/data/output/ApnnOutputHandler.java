@@ -18,6 +18,7 @@ import java.util.Map;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class ApnnOutputHandler implements OutputHandler {
     private Map<Integer, Integer> transitionIds = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(ApnnOutputHandler.class);
 
-    public void save(FileOutputStream fileOutputStream, PetriNet petriNet) {
+    public void save(FileOutputStream fileOutputStream, PetriNet petriNet, File file, NetViewer netViewer) {
         LOGGER.info("Exporting Petri net to APNN format");
         try (PrintStream formatter = new PrintStream(fileOutputStream)) {
             int pid = 0;

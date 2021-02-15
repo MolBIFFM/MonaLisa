@@ -41,7 +41,7 @@ public final class PntInputHandler implements InputHandler {
     private static final Logger LOGGER = LogManager.getLogger(PntInputHandler.class);
 
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from .pnt file");
         places.clear();
         transitions.clear();

@@ -16,6 +16,7 @@ import java.io.InvalidClassException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +29,7 @@ public final class PetriNetOutputHandlers {
 
     private static final List<OutputHandler> handlers = new ArrayList<>();
     private static final Logger LOGGER = LogManager.getLogger(PetriNetOutputHandlers.class);
-
+    private static NetViewer netViewer;
     static {
         handlers.add(new SbmlOutputHandler(3, 1));
         handlers.add(new SbmlOutputHandler(2, 4));
@@ -44,12 +45,12 @@ public final class PetriNetOutputHandlers {
     }
 
     public static void save(File file, PetriNet pn) throws IOException {
-        save(file, autoDetectHandler(file), pn);
+        save(file, autoDetectHandler(file), pn, netViewer);
     }
 
-    public static void save(File file, OutputHandler handler, PetriNet pn) throws IOException {
+    public static void save(File file, OutputHandler handler, PetriNet pn, NetViewer netViewer) throws IOException {
         LOGGER.info("Exporting Petri net to file '" + file.getName() + "'");
-        handler.save(new FileOutputStream(file), pn);
+        handler.save(new FileOutputStream(file), pn, file, netViewer);
         LOGGER.info("Successfully exported Petri net to file '" + file.getName() + "'");
     }
 

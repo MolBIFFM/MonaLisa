@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import monalisa.data.pn.PetriNet;
+import monalisa.addons.netviewer.NetViewer;
+
 
 /**
  * An interface representing export handlers for Petri nets in specific file
@@ -27,7 +29,7 @@ public interface OutputHandler {
      * @param fileOutputStream
      * @param pn
      */
-    void save(FileOutputStream fileOutputStream, PetriNet pn);
+    void save(FileOutputStream fileOutputStream, PetriNet pn, File file, NetViewer netViewer);
 
     /**
      * Determine whether the given {@code file} is in a known format and can be

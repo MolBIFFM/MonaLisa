@@ -9,10 +9,16 @@
  */
 package monalisa.data.input;
 
+import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+import java.awt.geom.Point2D;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +30,13 @@ import monalisa.util.FileUtils;
 
 import javax.xml.stream.XMLStreamException;
 import monalisa.addons.annotations.AnnotationUtils;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import monalisa.addons.netviewer.NetViewer;
+import monalisa.addons.netviewer.NetViewerEdge;
+import monalisa.addons.netviewer.NetViewerNode;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +44,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.DOMBuilder;
 import org.sbml.jsbml.AbstractTreeNode;
 import org.sbml.jsbml.CVTerm;
 import org.sbml.jsbml.History;
@@ -90,7 +104,7 @@ public final class SbmlInputHandler implements InputHandler {
 
     @SuppressWarnings("unchecked")
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from SBML file");
         places.clear();
         transitions.clear();
@@ -404,8 +418,171 @@ public final class SbmlInputHandler implements InputHandler {
                 return false;
             }
         });
+        
+        
         LOGGER.info("Successfully loaded Petri net from SBML file");
         return petriNet;
+    }
+
+    public static void layoutImport(File layoutFile, NetViewer netViewer, PetriNet petriNet) {
+        try {
+            //building the document
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            org.w3c.dom.Document layoutdoc = dBuilder.parse(layoutFile);
+            Document document = new DOMBuilder().build(layoutdoc);
+            Element rootNode = document.getRootElement();
+            //going through the information nodes
+            List<Element> topicNodes = rootNode.getChildren();
+            //mapping all vertices  to their name for convenience and speed
+            Collection<NetViewerNode> allVertices = netViewer.getAllVertices();
+            HashMap<String, NetViewerNode> nameMap = new HashMap<>();
+            for (NetViewerNode node : allVertices) {
+                nameMap.put(node.getName(), node);
+            }
+            //logical places
+            List<Element> logPlaceNodes = topicNodes.get(0).getChildren();
+            for (Element logPlace : logPlaceNodes) {
+                List<Element> logPlaceInfo = logPlace.getChildren();
+                String masterNodeString = logPlaceInfo.get(0).getValue();
+                List<String> connectedNodes = new ArrayList<>();
+                for (Element connectedNode : logPlaceInfo.get(1).getChildren()) {
+                    if (!connectedNode.getValue().contains("BendNodeID")) {
+                        connectedNodes.add(connectedNode.getValue());
+                    }
+                }
+                for (Element connectedNode : logPlaceInfo.get(2).getChildren()) {
+                    if (!connectedNode.getValue().contains("BendNodeID")) {
+                        connectedNodes.add(connectedNode.getValue());
+                    }
+                }
+                List<NetViewerNode> connectedNetViewerNodes = new ArrayList<>();
+                for (String nodeName : connectedNodes) {
+                    connectedNetViewerNodes.add(nameMap.get(nodeName));
+                }
+                Double posX = Double.parseDouble(logPlaceInfo.get(3).getValue());
+                Double posY = Double.parseDouble(logPlaceInfo.get(4).getValue());
+                netViewer.addLogicalPlace(nameMap.get(masterNodeString), connectedNetViewerNodes, new Point2D.Double(posX, posY));
+                nameMap.put(logPlace.getAttributeValue("Name"), nameMap.get(masterNodeString).getLogicalPlaces().get(nameMap.get(masterNodeString).getLogicalPlaces().size() - 1));
+            }
+            //Bend edges
+            //beginning to build tasks for multiple bends
+            List<Element> edgeBends = topicNodes.get(1).getChildren();
+            ArrayList<String> doneBends = new ArrayList<>();
+            ArrayList<ArrayList<String>> taskList = new ArrayList<ArrayList<String>>();
+            HashMap<String, Element> bendElementMap = new HashMap<>();
+            for (Element edgeBend : edgeBends){
+                bendElementMap.put(edgeBend.getAttributeValue("Name"), edgeBend);
+            }
+            while (!edgeBends.isEmpty()) {
+                Iterator<Element> iterator = edgeBends.listIterator();
+                while (iterator.hasNext()) {
+                    Element currEdgeBend = iterator.next();
+                    String incomingName = currEdgeBend.getChildren().get(2).getValue();
+                    String outgoingName = currEdgeBend.getChildren().get(3).getValue();
+                    if (nameMap.containsKey(incomingName)) {
+                        ArrayList<String> tempList = new ArrayList<String>();
+                        tempList.add(incomingName);
+                        tempList.add(currEdgeBend.getAttributeValue("Name"));
+                        if (!outgoingName.contains("BendNodeID")) {
+                            tempList.add(outgoingName);
+                        }
+                        taskList.add(tempList);
+                        iterator.remove();
+                        continue;
+                    }
+                    for (ArrayList<String> insideList : taskList) {
+                        if (incomingName.equals(insideList.get(insideList.size() - 1))) {
+                            insideList.add(currEdgeBend.getAttributeValue("Name"));
+                            if (!outgoingName.contains("BendNodeID")) {
+                                insideList.add(outgoingName);
+                            }
+                            iterator.remove();
+                            break;
+                        }
+                    }
+                }
+            }            
+            for (ArrayList<String> task : taskList){
+                while (task.size() > 2){
+                    NetViewerEdge oldEdge = netViewer.g.findEdge(nameMap.get(task.get(0)), nameMap.get(task.get(task.size() - 1)));
+                    Element currBend = bendElementMap.get(task.get(1));
+                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.valueOf(currBend.getChildren().get(0).getValue()) - 30, Double.valueOf(currBend.getChildren().get(1).getValue()) - 30);
+                    nameMap.put(task.get(1), newEdge.getSource());
+                    task.remove(0);
+                }
+            }
+            //NodeInformation
+            List<Element> nodeInformation = topicNodes.get(2).getChildren();
+            for (Element currNodeElement : nodeInformation){
+                NetViewerNode currNode = nameMap.get(currNodeElement.getAttributeValue("Name"));
+                //LabelPosition
+                if (currNodeElement.getChildren().get(0).getValue().equals("SE")){
+                    currNode.setLabelPosition(Position.SE);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("S")){
+                    currNode.setLabelPosition(Position.S);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("SW")){
+                    currNode.setLabelPosition(Position.SW);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("W")){
+                    currNode.setLabelPosition(Position.W);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("NW")){
+                    currNode.setLabelPosition(Position.NW);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("N")){
+                    currNode.setLabelPosition(Position.N);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("NE")){
+                    currNode.setLabelPosition(Position.NE);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("E")){
+                    currNode.setLabelPosition(Position.E);
+                } else if (currNodeElement.getChildren().get(0).getValue().equals("CNTR")){
+                    currNode.setLabelPosition(Position.CNTR);
+                }
+                //color
+                Integer indexRed = currNodeElement.getChildren().get(1).getValue().indexOf("r=") + 2;
+                Integer indexGreen = currNodeElement.getChildren().get(1).getValue().indexOf("g=") + 2;
+                Integer indexBlue = currNodeElement.getChildren().get(1).getValue().indexOf("b=") + 2;
+                Integer redEnd = currNodeElement.getChildren().get(1).getValue().indexOf(",", currNodeElement.getChildren().get(1).getValue().indexOf("r=") + 1);
+                Integer greenEnd = currNodeElement.getChildren().get(1).getValue().indexOf(",", currNodeElement.getChildren().get(1).getValue().indexOf("g=") + 1);
+                Integer blueEnd = currNodeElement.getChildren().get(1).getValue().length() - 1;
+                Integer red = Integer.parseInt(currNodeElement.getChildren().get(1).getValue().substring(indexRed, redEnd));
+                Integer green = Integer.parseInt(currNodeElement.getChildren().get(1).getValue().substring(indexGreen, greenEnd));
+                Integer blue = Integer.parseInt(currNodeElement.getChildren().get(1).getValue().substring(indexBlue, blueEnd));
+                Color color = new Color(red, green, blue);
+                currNode.setColor(color);
+                //strokecolor
+                Integer indexRed2 = currNodeElement.getChildren().get(3).getValue().indexOf("r=") + 2;
+                Integer indexGreen2 = currNodeElement.getChildren().get(3).getValue().indexOf("g=") + 2;
+                Integer indexBlue2 = currNodeElement.getChildren().get(3).getValue().indexOf("b=") + 2;
+                Integer redEnd2 = currNodeElement.getChildren().get(3).getValue().indexOf(",", currNodeElement.getChildren().get(3).getValue().indexOf("r=") + 1);
+                Integer greenEnd2 = currNodeElement.getChildren().get(3).getValue().indexOf(",", currNodeElement.getChildren().get(3).getValue().indexOf("g=") + 1);
+                Integer blueEnd2 = currNodeElement.getChildren().get(3).getValue().length() - 1;
+                Integer red2 = Integer.parseInt(currNodeElement.getChildren().get(3).getValue().substring(indexRed2, redEnd2));
+                Integer green2 = Integer.parseInt(currNodeElement.getChildren().get(3).getValue().substring(indexGreen2, greenEnd2));
+                Integer blue2 = Integer.parseInt(currNodeElement.getChildren().get(3).getValue().substring(indexBlue2, blueEnd2));
+                Color color2 = new Color(red2, green2, blue2);
+                currNode.setStrokeColor(color2);
+                //corners
+                currNode.setCorners(Integer.parseInt(currNodeElement.getChildren().get(2).getValue()));
+            }
+            //EdgeInformation
+            List<Element> edgeInformation = topicNodes.get(3).getChildren();
+            for (Element currEdgeElement : edgeInformation){
+                NetViewerEdge currEdge = netViewer.g.findEdge(nameMap.get(currEdgeElement.getChildren().get(0).getValue()), nameMap.get(currEdgeElement.getChildren().get(1).getValue()));
+                Integer indexRed3 = currEdgeElement.getChildren().get(2).getValue().indexOf("r=") + 2;
+                Integer indexGreen3 = currEdgeElement.getChildren().get(2).getValue().indexOf("g=") + 2;
+                Integer indexBlue3 = currEdgeElement.getChildren().get(2).getValue().indexOf("b=") + 2;
+                Integer redEnd3 = currEdgeElement.getChildren().get(2).getValue().indexOf(",", currEdgeElement.getChildren().get(2).getValue().indexOf("r=") + 1);
+                Integer greenEnd3 = currEdgeElement.getChildren().get(2).getValue().indexOf(",", currEdgeElement.getChildren().get(2).getValue().indexOf("g=") + 1);
+                Integer blueEnd3 = currEdgeElement.getChildren().get(2).getValue().length() - 1;
+                Integer red3 = Integer.parseInt(currEdgeElement.getChildren().get(2).getValue().substring(indexRed3, redEnd3));
+                Integer green3 = Integer.parseInt(currEdgeElement.getChildren().get(2).getValue().substring(indexGreen3, greenEnd3));
+                Integer blue3 = Integer.parseInt(currEdgeElement.getChildren().get(2).getValue().substring(indexBlue3, blueEnd3));
+                Color color3 = new Color(red3, green3, blue3);
+                currEdge.setColor(color3);
+            }
+            LOGGER.info("Successfully finished loading in additional data");
+        } catch (Exception e) {
+            LOGGER.error("Error while trying to load the layoutfile during SBML-Import", e);
+        }
     }
 
     private Place findPlace(int placeId, PetriNet petriNet) {

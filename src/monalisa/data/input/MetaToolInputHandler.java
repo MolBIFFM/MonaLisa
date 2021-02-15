@@ -40,7 +40,7 @@ public class MetaToolInputHandler implements InputHandler {
     private static final Logger LOGGER = LogManager.getLogger(MetaToolInputHandler.class);
 
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from MetaTool file");
         places = new HashMap<>();
         transitions = new HashMap<>();

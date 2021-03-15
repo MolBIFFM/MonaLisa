@@ -184,12 +184,12 @@ public class Pathfinder {
         mNew.putAll(old);
         // deduct tokens from input places
         for (Place p : t.inputs()) {
-            long oldToken = old.get(p);
+            long oldToken = mNew.get(p);
             mNew.put(p, oldToken - pnf.getArc(p, t).weight());
         }
         // add tokens to output places
         for (Place p : t.outputs()) {
-            long oldToken = old.get(p);
+            long oldToken = mNew.get(p);
             mNew.put(p, oldToken + pnf.getArc(t, p).weight());
         }
         LOGGER.debug("Successfully computed new marking.");  // debug

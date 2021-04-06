@@ -514,15 +514,19 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 if (!clickedNode.getNodeType().equalsIgnoreCase(source.getNodeType()) && !clickedNode.getNodeType().equals(NetViewer.BEND)) {
                     Arc arc;
                     boolean error = false;
+                    LOGGER.info(clickedNode.isLogical() + "\t" + clickedNode.isMasterNode());
                     if (source.getNodeType().equals(NetViewer.PLACE)) {
                         arc = synchronizer.getPetriNet().getArc(synchronizer.getPetriNet().findPlace(source.getMasterNode().getId()), synchronizer.getPetriNet().findTransition(clickedNode.getMasterNode().getId()));
                         if (arc != null) {
                             error = true;
+                            LOGGER.warn("Duplicate edge found for place to transition!");
                         }
-                    } else if (source.getNodeType().equals(NetViewer.TRANSITION) && (clickedNode.isLogical() || clickedNode.isMasterNode())) {
+                    } else if (source.getNodeType().equals(NetViewer.TRANSITION)) {
+                        LOGGER.info("Checking for duplicate from transition to place.");
                         arc = synchronizer.getPetriNet().getArc(synchronizer.getPetriNet().findTransition(source.getMasterNode().getId()), synchronizer.getPetriNet().findPlace(clickedNode.getMasterNode().getId()));
                         if (arc != null) {
                             error = true;
+                            LOGGER.warn("Duplicate edge found for transition to place!");
                         }
                     }
                     if (!error) {

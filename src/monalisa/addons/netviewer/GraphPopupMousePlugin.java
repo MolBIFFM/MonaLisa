@@ -519,7 +519,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         if (arc != null) {
                             error = true;
                         }
-                    } else if (source.getNodeType().equals(NetViewer.TRANSITION) && (clickedNode.isLogical() || clickedNode.isMasterNode())) {
+                    } else if (source.getNodeType().equals(NetViewer.TRANSITION)) {
                         arc = synchronizer.getPetriNet().getArc(synchronizer.getPetriNet().findTransition(source.getMasterNode().getId()), synchronizer.getPetriNet().findPlace(clickedNode.getMasterNode().getId()));
                         if (arc != null) {
                             error = true;

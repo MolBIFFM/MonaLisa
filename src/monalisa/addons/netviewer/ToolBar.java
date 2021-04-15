@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -23,11 +26,16 @@ import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
+import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.data.pn.Compartment;
+import monalisa.data.pn.PInvariant;
+import monalisa.data.pn.Place;
 import monalisa.data.pn.TInvariant;
 import monalisa.data.pn.Transition;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
+import monalisa.results.PInvariants;
+import monalisa.results.PInvariantsConfiguration;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
@@ -253,6 +261,7 @@ public class ToolBar extends javax.swing.JPanel {
         manuellColorSelection = new javax.swing.JCheckBox();
         reset_color_button = new javax.swing.JButton();
         heatMap_CheckBox = new javax.swing.JCheckBox();
+        reachabilityButton = new javax.swing.JButton();
         mcsPanel = new javax.swing.JPanel();
         mcsLabel = new javax.swing.JLabel();
         mcsCb = new javax.swing.JComboBox();
@@ -290,7 +299,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         controlButtonPanel.add(enableHighlightingButton, gridBagConstraints);
 
         enableLabelsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/hide_labels.png"))); // NOI18N
@@ -303,7 +311,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         controlButtonPanel.add(enableLabelsButton, gridBagConstraints);
 
@@ -614,11 +621,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         controlButtonPanel.add(saveProjectButton, gridBagConstraints);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        controlPane.add(controlButtonPanel, gridBagConstraints);
+        controlPane.add(controlButtonPanel, new java.awt.GridBagConstraints());
 
         styleButtonPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -991,6 +994,20 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         optionsPanel.add(heatMap_CheckBox, gridBagConstraints);
 
+        reachabilityButton.setText("Reachability");
+        reachabilityButton.setActionCommand("Reach");
+        reachabilityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reachabilityButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
+        optionsPanel.add(reachabilityButton, gridBagConstraints);
+        reachabilityButton.getAccessibleContext().setAccessibleParent(analysisPane);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -1228,6 +1245,19 @@ public class ToolBar extends javax.swing.JPanel {
         Pinv_list.clearSelection();
     }//GEN-LAST:event_reset_color_buttonActionPerformed
 
+    private void reachabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reachabilityButtonActionPerformed
+        HashMap<Place, Long> marking = new HashMap<>();
+        marking.putAll(netViewer.getProject().getPNFacade().marking());
+        if (netViewer.getProject().getToolManager().hasResult(PInvariantTool.class, new PInvariantsConfiguration())) {
+            PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
+            ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking, pinvs);
+            rd.setVisible(true);
+        } else {
+            LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
+            JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+        }
+    }//GEN-LAST:event_reachabilityButtonActionPerformed
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
@@ -1305,6 +1335,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
+    private javax.swing.JButton reachabilityButton;
     protected javax.swing.JButton removeBendButton;
     protected javax.swing.JPanel removeBendPanel;
     private javax.swing.JButton reset_color_button;

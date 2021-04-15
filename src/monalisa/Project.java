@@ -469,7 +469,7 @@ public final class Project implements Serializable {
         }        
         // Workaround for older projects
         if (nvs == null) {
-            LOGGER.warn("Workaround for older projects, creating new NetViewerStprage");
+            LOGGER.warn("Workaround for older projects, creating new NetViewerStorage");
             nvs = new NetViewerStorage();
         }
         if (synchronizer != null) {

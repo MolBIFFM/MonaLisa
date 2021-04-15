@@ -33,7 +33,7 @@ public class NetViewerStorage implements Serializable {
     private Graph<NetViewerNode, NetViewerEdge> g;
     transient private MonaLisaLayout layout;
 
-    private static final Logger LOGGER = LogManager.getLogger(NetViewer.class);
+    private static final Logger LOGGER = LogManager.getLogger(NetViewerStorage.class);
 
     /**
      * Creates new empty NetViewerStorage for a newly created project.
@@ -97,7 +97,7 @@ public class NetViewerStorage implements Serializable {
         objectInput.defaultReadObject();
         this.layout = new MonaLisaLayout<>(new FRLayout<>(g));
         this.layout.setSize(new Dimension(1024 * 2, 768 * 2));
-        // Happens, if the user try to load an older project format
+        // Happens, if the user tries to load an older project format
 
         if (map != null) {
             this.layout.restore(map);

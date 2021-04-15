@@ -121,7 +121,7 @@ public class TinvSelectionListener implements ListSelectionListener {
                             }
                             chosenColor = new Color(Color.HSBtoRGB(hsbvals[0], norm, hsbvals[2]));
                         }
-
+                        try {
                         nv.getNodeFromVertex(t).setColor(chosenColor);
                         if (colorPlaces) {
                             // Color all in/out edges and their source/aim places
@@ -138,6 +138,13 @@ public class TinvSelectionListener implements ListSelectionListener {
                                     nvEdge.getMasterEdge().getSource().getMasterNode().setColorForAllNodes(chosenColor);
                                 }
                             }
+                        }
+                        }
+                        catch (NullPointerException e) {
+                            LOGGER.warn("Exception when trying to color: " + e.toString());
+                            LOGGER.warn("Occurred for transition: " + t.toString());
+                            LOGGER.warn("Pre-Places: " + t.inputs().toString());
+                            LOGGER.warn("Post-Places: " + t.outputs().toString());
                         }
                     }
                 }

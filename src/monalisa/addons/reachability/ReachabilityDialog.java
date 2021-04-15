@@ -109,7 +109,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         progressLabel = new javax.swing.JLabel();
         capacityButton = new javax.swing.JButton();
         knockoutButton = new javax.swing.JButton();
-        testbutton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -213,13 +212,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
-        testbutton.setText("Test");
-        testbutton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                testbuttonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -250,11 +242,9 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                         .addComponent(stopButton))
                     .addComponent(progressLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(capacityButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(testbutton, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(capacityButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -280,10 +270,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                         .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(knockoutButton))
                 .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressLabel)
-                    .addComponent(testbutton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(progressLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reachButton)
                     .addComponent(coverButton)
@@ -343,89 +331,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         kf.setVisible(true);
     }//GEN-LAST:event_knockoutButtonActionPerformed
 
-    private void testbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_testbuttonActionPerformed
-        updateMarkings();
-        pf = new Pathfinder(pnf, start, target, capacities, knockouts, null);
-        LOGGER.info("Start:" + start.toString());
-        LOGGER.info("Target:" + target.toString());
-        //
-        try {
-            LOGGER.info("Starting runs for Breadth First Search.");
-            File rt = new File("BreadthRT.txt");            
-            FileWriter writer = new FileWriter(rt);
-            for (int i=1; i<=25; i++) {
-                BreadthFirst breadthf = new BreadthFirst(pf, start, target);                
-                long startTime = System.nanoTime();
-                breadthf.run();
-                long endTime = System.nanoTime();
-                long duration = endTime - startTime; 
-                duration = duration / 1000; // truncated to microseconds
-                writer.write(Long.toString(duration) + breadthf.backtrack().toString() + "\n");
-            }
-            writer.close();
-            LOGGER.info("Finished runs for Breadth First Search.");
-        } catch (IOException ex) {
-            LOGGER.error("Error writing to file for Breadth runtimes: " + ex);
-        }
-        //*
-        try {
-            LOGGER.info("Starting runs for Best First Search with default heuristic.");
-            File rt = new File("BestFirstDefaultRT.txt");            
-            FileWriter writer = new FileWriter(rt);
-            for (int i=1; i<=25; i++) {
-                BestFirst bf1 = new BestFirst(pf, start, target, "Default");
-                long startTime = System.nanoTime();
-                bf1.run();
-                long endTime = System.nanoTime();
-                long duration = endTime - startTime;
-                duration = duration / 1000; // truncated to microseconds
-                writer.write(Long.toString(duration) + bf1.backtrack().toString() + "\n");
-            }
-            writer.close();
-            LOGGER.info("Finished runs for Best First Search with default heuristic.");
-        } catch (IOException ex) {
-            LOGGER.error("Error writing to file for BestFirst Default runtimes: " + ex);
-        }//
-        try {
-            LOGGER.info("Starting runs for Best First Search with weighted heuristic.");
-            File rt = new File("BestFirstWeightedRT.txt");            
-            FileWriter writer = new FileWriter(rt);
-            for (int i=1; i<=25; i++) {
-                BestFirst bf2 = new BestFirst(pf, start, target, "Weighted Default");
-                long startTime = System.nanoTime();
-                bf2.run();
-                long endTime = System.nanoTime();
-                long duration = endTime - startTime;
-                duration = duration / 1000; // truncated to microseconds                
-                writer.write(Long.toString(duration) + bf2.backtrack().toString() + "\n");
-            }
-            writer.close();
-            LOGGER.info("Finished runs for Best First Search with weighted heuristic.");            
-        } catch (IOException ex) {
-            LOGGER.error("Error writing to file for BestFirst Weighted runtimes: " + ex);
-        }//
-        try {
-            LOGGER.info("Starting runs for A* algorithm.");            
-            File rt = new File("AStarRT.txt");            
-            FileWriter writer = new FileWriter(rt);
-            for (int i=1; i<=25; i++) {
-                AStar as = new AStar(pf, pnf, start, target, "Default");
-                long startTime = System.nanoTime();
-                as.run();
-                long endTime = System.nanoTime();
-                long duration = endTime - startTime;
-                duration = duration / 1000; // truncated to microseconds                                
-                writer.write(Long.toString(duration) + as.backtrack().toString() + "\n");
-            }
-            writer.close();
-            LOGGER.info("Finished runs for A* algorithm.");            
-        } catch (IOException ex) {
-            LOGGER.error("Error writing to file for AStar runtimes: " + ex);
-        }
-        //
-        LOGGER.info("Testrun finished.");
-    }//GEN-LAST:event_testbuttonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarRButton;
     private javax.swing.JLabel algoLabel;
@@ -444,7 +349,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JLabel startLabel;
     private javax.swing.JButton stopButton;
     private javax.swing.JScrollPane tableScrollPane;
-    private javax.swing.JButton testbutton;
     // End of variables declaration//GEN-END:variables
 
     @Override

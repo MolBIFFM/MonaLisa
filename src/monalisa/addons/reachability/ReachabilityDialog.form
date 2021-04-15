@@ -57,12 +57,9 @@
                   <Component id="progressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="capacityButton" max="32767" attributes="0"/>
-                      <Component id="knockoutButton" max="32767" attributes="0"/>
-                  </Group>
-                  <Component id="testbutton" alignment="1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="capacityButton" max="32767" attributes="0"/>
+                  <Component id="knockoutButton" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -94,11 +91,8 @@
                   <Component id="knockoutButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="progressLabel" min="-2" max="-2" attributes="0"/>
-                  <Component id="testbutton" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="11" max="32767" attributes="0"/>
+              <Component id="progressLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="20" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="reachButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="coverButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -241,14 +235,6 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="knockoutButtonActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="testbutton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Test"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="testbuttonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

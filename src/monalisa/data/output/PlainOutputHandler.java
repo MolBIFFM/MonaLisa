@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.util.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +29,7 @@ public class PlainOutputHandler implements OutputHandler {
 
     private static final Logger LOGGER = LogManager.getLogger(PlainOutputHandler.class);
 
-    public void save(FileOutputStream fos, PetriNet pn) {
+    public void save(FileOutputStream fos, PetriNet pn, File file, NetViewer netViewer) {
         LOGGER.info("Exporting Petri net in plain format");
         try (PrintStream ps = new PrintStream(fos)) {
             int i, weight, nbr;

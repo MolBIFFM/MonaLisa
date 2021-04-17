@@ -29,7 +29,7 @@ public interface InputHandler {
      * @return The Petri net model.
      * @throws IOException If an error occurs while trying to read the file.
      */
-    PetriNet load(InputStream in) throws IOException;
+    PetriNet load(InputStream in, File file) throws IOException;
 
     /**
      * Determine whether the given {@code file} is in a known format and can be

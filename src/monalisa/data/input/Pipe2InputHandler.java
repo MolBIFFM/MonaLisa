@@ -82,7 +82,7 @@ public class Pipe2InputHandler implements InputHandler {
 
     @SuppressWarnings("unchecked")
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from PIPE2 file");
         PetriNet petriNet = new PetriNet();
         Map<Integer, Place> placeMap = new HashMap<>();

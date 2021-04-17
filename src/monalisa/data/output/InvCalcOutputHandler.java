@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -38,7 +39,7 @@ public final class InvCalcOutputHandler {
         this.transitionIds = transitionIds;
     }
 
-    public void save(PetriNetFacade petriNet, OutputStream out) {
+    public void save(PetriNetFacade petriNet, OutputStream out, File file, NetViewer netViewer) {
 
         LOGGER.info("Exporting Petri net to calculate Invariants");
         PrintStream formatter = new PrintStream(out);

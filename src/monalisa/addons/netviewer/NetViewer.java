@@ -2145,7 +2145,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 }
             }
         }
-        handler.save(new FileOutputStream(petriNetFile), sync.getSubNetwork(places, transitions, arcs));
+        handler.save(new FileOutputStream(petriNetFile), sync.getSubNetwork(places, transitions, arcs), petriNetFile, this);
     }
 
     /**
@@ -3016,7 +3016,6 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return Edge connecting outNode with inNode
      */
     public NetViewerEdge getEdge(NetViewerNode outNode, NetViewerNode inNode) {
-        LOGGER.info("Getting Edge. This function should not even be called anywhere. FATAL");
         // If outNode or inNode are a logical place, we have to find the correct edge.
         NetViewerEdge nvEdge;
         if (outNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {

@@ -38,6 +38,7 @@ import monalisa.data.Pair;
 import monalisa.data.PropertyList;
 import monalisa.data.input.InputHandler;
 import monalisa.data.input.PetriNetInputHandlers;
+import monalisa.data.input.SbmlInputHandler;
 import monalisa.data.input.TInputHandler;
 import monalisa.data.input.TInputHandlers;
 import monalisa.data.output.OutputHandler;
@@ -61,6 +62,7 @@ import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+
 
 @SuppressWarnings("serial")
 public final class MainDialog extends JFrame implements ActionListener, HierarchyBoundsListener, ToolStatusUpdateListener, NetChangedListener {
@@ -706,6 +708,14 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         project.getPetriNet().putProperty("new_imported", true);
 
         projectLoaded();
+        //searching for layoutdatafile
+        String filePath = petriNetFile.getAbsolutePath();
+        File layoutFile = new File(filePath.substring(0, filePath.length() - 4) + "layout" + filePath.substring(filePath.length() - 4, filePath.length()));
+        if (layoutFile.exists()){
+            SbmlInputHandler.layoutImport(layoutFile, netViewer, project.getPetriNet());
+            LOGGER.info("Found additional Layoutfile, loading data from secondary file");
+        }
+        
         LOGGER.info("Successfully created new project from a chosen Petri net file");
     }
 
@@ -889,8 +899,12 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     public void exportPetriNet() throws IOException {
         LOGGER.info("Exporting Petri net");
-        JFileChooser petriNetFileChooser = new MonaLisaFileChooser();
-
+        JFileChooser petriNetFileChooser = new MonaLisaFileChooser();        
+        try {
+            netViewer.updatePetriNet(true);
+        } catch (ClassNotFoundException ex){
+            LOGGER.error("Netviewer not found while exporting Petri Net", ex);
+        }
         petriNetFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         petriNetFileChooser.setDialogTitle(strings.get("ChooseAPetriNetFileName"));
         petriNetFileChooser.setAcceptAllFileFilterUsed(false);
@@ -907,7 +921,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         OutputFileFilter selectedFileFilter = ((OutputFileFilter) petriNetFileChooser.getFileFilter());
         petriNetFile = selectedFileFilter.checkFileNameForExtension(petriNetFile);
 
-        selectedFileFilter.getHandler().save(new FileOutputStream(petriNetFile), project.getPetriNet());
+        selectedFileFilter.getHandler().save(new FileOutputStream(petriNetFile), project.getPetriNet(), petriNetFile, netViewer);
         LOGGER.info("Succesfully exported Petri net");
     }
 

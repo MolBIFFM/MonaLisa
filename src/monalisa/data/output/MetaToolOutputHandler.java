@@ -17,6 +17,7 @@ import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.resources.ResourceManager;
 import monalisa.resources.StringResources;
 import monalisa.util.FileUtils;
@@ -34,7 +35,7 @@ public class MetaToolOutputHandler implements OutputHandler {
     private static final StringResources strings = resources.getDefaultStrings();
     private static final Logger LOGGER = LogManager.getLogger(MetaToolOutputHandler.class);
 
-    public void save(FileOutputStream fos, PetriNet pn) {
+    public void save(FileOutputStream fos, PetriNet pn, File file, NetViewer netViewer) {
         LOGGER.info("Exporting Petri net to MetaTool format");
         try (PrintStream ps = new PrintStream(fos)) {
             ps.println("Generated with MonaLisa Version " + strings.get("CurrentVersion"));

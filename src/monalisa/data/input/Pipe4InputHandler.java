@@ -76,7 +76,7 @@ public class Pipe4InputHandler implements InputHandler {
 
     @SuppressWarnings("unchecked")
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from PIPE4 file");
         PetriNet ret = new PetriNet();
 

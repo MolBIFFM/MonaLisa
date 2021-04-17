@@ -68,7 +68,7 @@ public class KeggInputHandler implements InputHandler {
     }
 
     @Override
-    public PetriNet load(InputStream in) throws IOException {
+    public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from KEGG file");
         PetriNet ret = new PetriNet();
 

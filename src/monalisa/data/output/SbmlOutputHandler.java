@@ -12,12 +12,26 @@ package monalisa.data.output;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collection;
 import javax.xml.stream.XMLStreamException;
-import monalisa.addons.annotations.AnnotationUtils;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import monalisa.addons.annotations.AnnotationUtils;
+import monalisa.addons.netviewer.NetViewer;
+import monalisa.addons.netviewer.NetViewerNode;
+import monalisa.addons.netviewer.NetViewerEdge;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -30,6 +44,8 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.sbml.jsbml.CVTerm;
 
 import org.sbml.jsbml.Compartment;
@@ -62,7 +78,7 @@ public class SbmlOutputHandler implements OutputHandler {
     }
 
     @Override
-    public void save(FileOutputStream fileOutputStream, PetriNet pn) {
+    public void save(FileOutputStream fileOutputStream, PetriNet pn, File file, NetViewer netViewer) {
         LOGGER.info("Exporting Petri net to SBML format - Level: " + this.level + " - Version: " + this.version);
         SBMLDocument doc = new SBMLDocument(this.level, this.version);
         Model model = doc.createModel("MonaLisaExport");
@@ -83,9 +99,7 @@ public class SbmlOutputHandler implements OutputHandler {
         }
         LayoutModelPlugin mplugin = new LayoutModelPlugin(model);
         model.addExtension(LayoutConstants.getNamespaceURI(level, version), mplugin);
-        //(LayoutModelPlugin) model.getPlugin(LayoutConstants.shortLabel);
-        //Layout layout = new Layout();
-        //mplugin.add(layout);
+
         Layout layout = mplugin.createLayout();
 
         Compartment defaultCompartment = null;
@@ -102,7 +116,7 @@ public class SbmlOutputHandler implements OutputHandler {
 
                         CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG" + c.toString());
                         cglyph.setCompartment(compartment.getId());
-                        cglyph.createBoundingBox(c.getProperty("spatialDimensions"));
+                        cglyph.createBoundingBox();
 
                         if (c == null) {
                             continue;
@@ -295,6 +309,135 @@ public class SbmlOutputHandler implements OutputHandler {
             LOGGER.error("Caught SBMLException while exporting to SBML format - Level: "
                     + this.level + " - Version: " + this.version + ": ", ex);
         }
+        LOGGER.info("Initiating Layout-File export");
+        String filePath = file.getAbsolutePath();
+        String layoutFilePath = filePath.substring(0, filePath.length() - 4) + "layout" + filePath.substring(filePath.length() - 4, filePath.length());
+        
+        try {
+            Document document = new Document();
+            document.setRootElement(new Element("Layoutdata"));
+            Collection<NetViewerNode> allVertices = netViewer.getAllVertices();
+            Integer bendNodeCounter = 0;
+            for (NetViewerNode node : allVertices) {
+                if (node.getNodeType().equals("BEND")) {
+                    node.setName("BendNodeID" + String.valueOf(bendNodeCounter));
+                    bendNodeCounter++;
+                }
+            }
+            //logical places
+            Element logicalPlaces = new Element("LogicalPlaces");
+            document.getRootElement().addContent(logicalPlaces);
+            Integer logicalNodeCounter = 0;
+            Map<Integer, NetViewerNode> placeMap = netViewer.getPlaceMap();
+            Collection<NetViewerNode> places = placeMap.values();
+            for (NetViewerNode node : places) {
+                if (node.getLogicalPlaces().size() > 1) {
+                    for (NetViewerNode n : node.getLogicalPlaces().subList(1, node.getLogicalPlaces().size())) {
+                        Element logicalPlace = new Element("LogicalPlace");
+                        logicalPlace.setAttribute("Name", "LogicalPlaceID" + String.valueOf(logicalNodeCounter));
+                        logicalPlace.addContent(new Element("MasterNode").setText(n.getMasterNode().getName()));
+                        Element inEdges = new Element("IncomingEdges");
+                        Collection<NetViewerEdge> inEdgesCollection = n.getInEdges();
+                        for (NetViewerEdge e : inEdgesCollection) {
+                            inEdges.addContent(new Element("IncomingEdgeFrom").setText(e.getSource().getName()));
+                        }
+                        logicalPlace.addContent(inEdges);
+                        Element outEdges = new Element("OutgoingEdges");
+                        Collection<NetViewerEdge> outEdgesCollection = n.getOutEdges();
+                        for (NetViewerEdge e : outEdgesCollection) {
+                            outEdges.addContent(new Element("OutgoingEdgeTo").setText(e.getAim().getName()));
+                        }
+                        logicalPlace.addContent(outEdges);
+                        logicalPlace.addContent(new Element("X").setText(String.valueOf(netViewer.getMLLayout().transform(n).getX())));
+                        logicalPlace.addContent(new Element("Y").setText(String.valueOf(netViewer.getMLLayout().transform(n).getY())));
+                        logicalPlaces.addContent(logicalPlace);
+                        //set internal Name for further reference
+                        n.setName("LogicalPlaceID" + String.valueOf(logicalNodeCounter));
+                        logicalNodeCounter++;
+                    }
+                }
+            }
+            //other layout information
+            Element bendEdges = new Element("BendEdges");
+            document.getRootElement().addContent(bendEdges);
+            Element addInfo = new Element("AdditionalInformationAboutNodes");
+            document.getRootElement().addContent(addInfo);
+            Element edgeInfo = new Element("AdditionalInformationAboutEdges");
+            document.getRootElement().addContent(edgeInfo);
+            Integer edgeCount = 0;
+            for (NetViewerNode n : allVertices) {
+                //bend
+                if (n.getNodeType().equals("BEND")) {
+                    Element bendEdge = new Element("BendEdge");
+                    bendEdge.setAttribute("Name", n.getName());
+                    bendEdge.addContent(new Element("X").setText(String.valueOf(netViewer.getMLLayout().transform(n).getX())));
+                    bendEdge.addContent(new Element("Y").setText(String.valueOf(netViewer.getMLLayout().transform(n).getY())));
+                    Collection<NetViewerEdge> inEdgesCollection = n.getInEdges();
+                    for (NetViewerEdge e : inEdgesCollection) {    
+                        bendEdge.addContent(new Element("IncomingEdgeFrom").setText(e.getSource().getName()));
+                    }
+                    Collection<NetViewerEdge> outEdgesCollection = n.getOutEdges();
+                    for (NetViewerEdge e : outEdgesCollection) {
+                        bendEdge.addContent(new Element("OutgoingEdgeTo").setText(e.getAim().getName()));
+                    }
+                    bendEdges.addContent(bendEdge);
+                } //label position
+                //color
+                //corners
+                else if (n.getNodeType().equals("PLACE") || n.getNodeType().equals("TRANSITION")) {
+                    Element node = new Element("Node");
+                    node.setAttribute("Name", n.getName());
+                    node.addContent(new Element("LabelPosition").setText(String.valueOf(n.getLabelPosition())));
+                    node.addContent(new Element("Color").setText(String.valueOf(n.getColor())));
+                    node.addContent(new Element("Corners").setText(String.valueOf(n.getCorners())));
+                    node.addContent(new Element("StrokeColor").setText(String.valueOf(n.getStrokeColor())));
+                    addInfo.addContent(node);
+                }
+                //edge color           
+                for (NetViewerEdge e : n.getOutEdges()) {
+                    Element edge = new Element("Edge");
+                    edge.setAttribute("Name", "E" + String.valueOf(edgeCount));
+                    edge.addContent(new Element("Source").setText(n.getName()));
+                    edge.addContent(new Element("Target").setText(e.getAim().getName()));
+                    edge.addContent(new Element("Color").setText(String.valueOf(e.getColor())));
+                    edgeInfo.addContent(edge);
+                    edgeCount++;
+                }
+            }
+            //fixing the internal names again
+            for (NetViewerNode node : places) {
+                if (node.getLogicalPlaces().size() > 1) {
+                    for (NetViewerNode n : node.getLogicalPlaces().subList(1, node.getLogicalPlaces().size())) {
+                        n.setName(n.getMasterNode().getName());
+                    }
+                }
+            }
+
+            //output
+            FileWriter writerLayout = new FileWriter(layoutFilePath);
+            XMLOutputter outputter = new XMLOutputter();
+            outputter.setFormat(Format.getPrettyFormat());
+            outputter.output(document, writerLayout);
+            LOGGER.info("Finished Layout-File export");
+        } catch (Exception e) {
+            e.printStackTrace();
+            }
+
+        /*try {
+            File layoutFile = new File(layoutFilePath);
+            if (layoutFile.createNewFile()) {
+                System.out.println("File created: " + layoutFile.getName());
+            } else {
+                layoutFile.delete();
+                layoutFile.createNewFile();
+                System.out.println("File did already exist, got deleted and recreated.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        */
+
     }
 
     @Override

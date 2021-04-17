@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -33,7 +34,7 @@ public class PntOutputHandler implements OutputHandler {
     private Map<Integer, Integer> transitionIds = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(PntOutputHandler.class);
 
-    public void save(FileOutputStream fileOutputStream, PetriNet petriNet) {
+    public void save(FileOutputStream fileOutputStream, PetriNet petriNet, File file, NetViewer netViewers) {
         LOGGER.info("Exporting Petri net to pnt format");
         int pid = 0;
         for (Place place : petriNet.places()) {

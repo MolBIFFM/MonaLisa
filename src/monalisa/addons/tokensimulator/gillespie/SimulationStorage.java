@@ -21,7 +21,7 @@ public class SimulationStorage {
     private final Set<Integer>[] compoundsInfluence;
     private final double volMol;
     private final MathematicalExpression[] constantPlacesExp;
-    private final double maxSimTime;
+    private double maxSimTime;
     private final String[] constantPlaceNames;
     private final Set<Integer> constantPlacesPostTransitions;
     private final MathematicalExpression[] reactionRateConstants;
@@ -80,6 +80,9 @@ public class SimulationStorage {
         this.compoundsInfluence = compoundsInfluence;
     }
 
+    public void setMaxSimTime(double maxSimTime) {
+            this.maxSimTime = maxSimTime;
+    }
     /**
      * @return the reactionsConstantEducts
      */

@@ -960,6 +960,7 @@ public class StochasticSimulator extends javax.swing.JFrame implements BooleanCh
             double timeSpanD = (((Double.parseDouble(timeInput[0]) * 24 + Double.parseDouble(timeInput[1])) * 60)
                     + Double.parseDouble(timeInput[2])) * 60 + Double.parseDouble(timeInput[3]);
             this.maxSimTime = timeSpanD;
+            simStor.setMaxSimTime(this.maxSimTime);
         } catch (NumberFormatException e) {
             LOGGER.error("NumberFormatException while trying to parse the timeinput", e);
         }

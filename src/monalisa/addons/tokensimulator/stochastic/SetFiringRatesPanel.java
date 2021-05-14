@@ -10,6 +10,7 @@
 package monalisa.addons.tokensimulator.stochastic;
 
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.tokensimulator.SimulationManager;
@@ -132,6 +133,11 @@ public class SetFiringRatesPanel extends javax.swing.JPanel {
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if (firingRatesTable.isEditing()) {
             firingRatesTable.getCellEditor().stopCellEditing();
+        }
+        for (int i=0; i< firingRatesTable.getModel().getRowCount(); i++) {
+            if ((Double) firingRatesTable.getModel().getValueAt(i, 1) < 0.0) {
+                JOptionPane.showMessageDialog(null, "Negative inputs are not allowed.");
+            }
         }
         this.netViewer.hideMenu();
     }//GEN-LAST:event_saveButtonActionPerformed

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import monalisa.addons.AddonPanel;
 import monalisa.addons.netviewer.NetViewer;
@@ -412,12 +413,16 @@ public class TopologyPanel extends AddonPanel {
         fc.setApproveButtonText("Export here");
 
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesAll"), new File(fc.getSelectedFile() + "/places_in_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_in.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsAll"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in_out.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in.csv"));
-            topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_out.csv"));
+            if (fc.getSelectedFile().isDirectory()) {
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesAll"), new File(fc.getSelectedFile() + "/places_in_out.csv"));
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_in.csv"));
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("PlacesOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/places_out.csv"));
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsAll"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in_out.csv"));
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsIn"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_in.csv"));
+                topologyUtils.writeCSVtoFile(topologyUtils.getFreqMap("TransitionsOut"), new File(fc.getSelectedFile().getAbsolutePath() + "/transitions_out.csv"));
+            } else {
+                JOptionPane.showMessageDialog(null, "Path name is invalid, please try again");
+            }
         }
         LOGGER.info("Successfully exported vertex degree distributions");
     }//GEN-LAST:event_exportButtonActionPerformed

@@ -85,7 +85,7 @@ public final class KnockoutConfiguration implements Configuration {
      * @return the entities
      */
     public List<? extends UniquePetriNetEntity> getEntities() {
-        return entities;
+        return (entities==null?Collections.<UniquePetriNetEntity>emptyList():entities);
     }
 
     /**

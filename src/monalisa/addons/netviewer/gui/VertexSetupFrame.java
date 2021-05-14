@@ -644,6 +644,7 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         }
 
         if (!error) {
+            netViewer.showMe();
             this.dispose();
         } else {
             String message = "A place or transition with the given name already exists";

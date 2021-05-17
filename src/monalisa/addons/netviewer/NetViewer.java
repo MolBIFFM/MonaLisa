@@ -2988,9 +2988,15 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void hideMenu() {
         LOGGER.info("Hiding currently displayed plugin menu");
-        cardLayout.show(mainPanel, VVPANEL);
-        tb.menuPane.setEnabledAt(0, true);
+        cardLayout.show(mainPanel, VVPANEL); // This line needs to be called to switch to displaying the petri net again
         LOGGER.info("Successfully hid previously displayed plugin menu");
+    }
+    
+    /**
+     * Unlock the control panel once the Petri net is shown again
+     */
+    public void unlockMenu() {
+        tb.menuPane.setEnabledAt(0, true);
     }
 
     /**

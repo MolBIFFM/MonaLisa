@@ -211,9 +211,15 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
         stepField.setEnabled(false);
         continuousModeCheckBox.setEnabled(false);
         syncTS.getSimulationMan().lockGUI(true);
+        int steps = 0;
         try {
             //number of steps that will be performed
-            int steps = Integer.parseInt(stepField.getText());
+            steps = Integer.parseInt(stepField.getText());
+        } catch (NumberFormatException nfe) {
+            stopFiring();
+            LOGGER.error("NumberFormatException while checking the number of firing steps in the synchronous token simulator", nfe);
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        } finally {
             if (steps < 1) {
                 steps = 1;
                 stepField.setText("1");
@@ -222,10 +228,6 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
             syncTS.setSimSwingWorker(new SynchronousSimulationSwingWorker(syncTS.getSimulationMan(), syncTS, isContinuous(), steps));
             syncTS.getSimSwingWorker().addSimulationListener(this);
             syncTS.getSimSwingWorker().execute();
-        } catch (NumberFormatException nfe) {
-            stopFiring();
-            LOGGER.error("NumberFormatException while checking the number of firing steps in the synchronous token simulator", nfe);
-            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
         }
     }
 

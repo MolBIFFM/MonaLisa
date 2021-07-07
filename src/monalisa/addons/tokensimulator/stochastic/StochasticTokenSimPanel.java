@@ -254,9 +254,16 @@ public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements Si
         stochTS.getSimulationMan().lockGUI(true);
 
         //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
+        int steps = 0;
         try {
             //number of steps that will be performed
-            int steps = Integer.parseInt(stepField.getText());
+            steps = Integer.parseInt(stepField.getText());
+
+        } catch (NumberFormatException nfe) {
+            LOGGER.error("NumberFormatException while trying to start firing, therefore stopping the firing", nfe);
+            stopFiring();
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        } finally {
             if (steps < 1) {
                 steps = 1;
                 stepField.setText("1");
@@ -265,10 +272,6 @@ public class StochasticTokenSimPanel extends AbstractTokenSimPanel implements Si
             stochTS.setSimSwingWorker(new StochasticSimulationSwingWorker(stochTS.getSimulationMan(), stochTS, isContinuous(), steps));
             stochTS.getSimSwingWorker().addSimulationListener(this);
             stochTS.getSimSwingWorker().execute();
-        } catch (NumberFormatException nfe) {
-            LOGGER.error("NumberFormatException while trying to start firing, therefore stopping the firing", nfe);
-            stopFiring();
-            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
         }
     }
 

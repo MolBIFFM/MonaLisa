@@ -18,6 +18,7 @@ import java.util.HashSet;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -328,9 +329,16 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
 
         //try to parse number of steps to perform from stepField. If no integer is entered, create a warning popup and do nothing
         LOGGER.debug("Parsing the number of steps to perfrom out of the textfield");
+        int steps = 0;
         try {
             //number of steps that will be performed
-            int steps = Integer.parseInt(stepField.getText());
+            steps = Integer.parseInt(stepField.getText());
+           
+        } catch (NumberFormatException nfe) {
+            LOGGER.error("NumberFormatException while trying to parse an integer out of the texfield for the amount of steps that should be calculated, therefore stopping the firing", nfe);
+            stopFiring();
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));            
+        } finally {
             if (steps < 1) {
                 steps = 1;
                 stepField.setText("1");
@@ -342,10 +350,7 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
             //Create new thread that will perform all firing steps.
             gillTS.setSimSwingWorker(new GillespieSimulationSwingWorker(gillTS.getSimulationMan(), gillTS, isContinuous(), steps));
             gillTS.getSimSwingWorker().addSimulationListener(this);
-            gillTS.getSimSwingWorker().execute();
-        } catch (NumberFormatException nfe) {
-            LOGGER.error("NumberFormatException while trying to parse an integer out of the texfield for the amount of steps that should be calculated, therefore stopping the firing", nfe);
-            stopFiring();
+            gillTS.getSimSwingWorker().execute();            
         }
     }
 

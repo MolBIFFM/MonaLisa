@@ -216,9 +216,15 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
         stepField.setEnabled(false);
         continuousModeCheckBox.setEnabled(false);
         asyncTS.getSimulationMan().lockGUI(true);
+        int steps = 0;
         try {
             //number of steps that will be performed
-            int steps = Integer.parseInt(stepField.getText());
+            steps = Integer.parseInt(stepField.getText());
+        } catch (NumberFormatException nfe) {
+            stopFiring();
+            LOGGER.error("NumberFormatException while checking the number of firing steps in the asynchronous token simulator", nfe);
+            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
+        } finally {
             if (steps < 1) {
                 steps = 1;
                 stepField.setText("1");
@@ -228,10 +234,6 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
             asyncTS.getSimSwingWorker().addSimulationListener(this);
             asyncTS.getSimSwingWorker().execute();
             LOGGER.info("Started execution of ATS Swingworker.");
-        } catch (NumberFormatException nfe) {
-            stopFiring();
-            LOGGER.error("NumberFormatException while checking the number of firing steps in the asynchronous token simulator", nfe);
-            JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
         }
     }
 

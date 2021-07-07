@@ -140,8 +140,15 @@ public final class InvCalcOutputHandler {
         return placeIds != null ? placeIds.get(p.id()) : p.id();
     }
 
+    // Should introduce no new bugs, not sure what it fixes
     private int transitionId(Transition t) {
-        return transitionIds != null ? transitionIds.get(t.id()) : t.id();
+        int transitionId;
+        if (transitionIds==null || transitionIds.get(t.id())==null) {
+            transitionId = t.id();
+        } else {
+            transitionId = transitionIds.get(t.id());
+        }
+        return transitionId;
     }
 
     public boolean isKnownFile(File file) throws IOException {

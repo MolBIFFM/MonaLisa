@@ -369,7 +369,7 @@ public class SimulationManager {
             new File((String) this.getPreferences().get("LogPath")).mkdir();
             //create a name of the log-file based on current date
             Calendar cal = Calendar.getInstance();
-            this.logName = "Sim_log_" + cal.getTime().toString().replaceAll(" ", "_");
+            this.logName = "Sim_log_" + cal.getTime().toString().replaceAll(" ", "_").replaceAll(":", "-");
 
             /*
             Write the header of the log.

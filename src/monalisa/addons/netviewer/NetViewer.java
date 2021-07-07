@@ -949,7 +949,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     protected Boolean hideColor() {
         LOGGER.debug("Changing whether vertex color is hidden");
-        VertexPaintTransformer vfpt = ((VertexPaintTransformer) vv.getRenderContext().getVertexDrawPaintTransformer());
+        VertexPaintTransformer vfpt = ((VertexPaintTransformer) vv.getRenderContext().getVertexFillPaintTransformer());
         vfpt.setHideColor(!(vfpt.getHideColor()));
         EdgePaintTransformer edpt = ((EdgePaintTransformer) vv.getRenderContext().getEdgeDrawPaintTransformer());
         edpt.setHideColor(!(edpt.getHideColor()));

@@ -51,6 +51,7 @@ public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
             simulationMan.getTokenSim().addTransitionsToCheck(simulationMan.getPetriNet().transitions().toArray(new Transition[0]));
             simulationMan.getTokenSim().computeActiveTransitions();
             //clear history
+            // Deleting or commenting out the following 3 lines will cause history functionality to not be locked after selecting a new marking from the combobox (Onur Kaya Report 2021, TokenSim Defect 4)
             simulationMan.historyListModel.clear();
             simulationMan.historyArrayList.clear();
             simulationMan.lastHistoryStep = -1;

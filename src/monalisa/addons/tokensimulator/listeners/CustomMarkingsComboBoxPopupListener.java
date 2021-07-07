@@ -55,6 +55,11 @@ public class CustomMarkingsComboBoxPopupListener implements PopupMenuListener {
             simulationMan.historyListModel.clear();
             simulationMan.historyArrayList.clear();
             simulationMan.lastHistoryStep = -1;
+            // simulationMan.disableStepButtons();
+            /* Need to implement a function disableStepButtons in SimulationManager.
+                This function needs to send a new GuiEvent that specifically locks the history buttons.
+                Handling for this event neeeds to be implemented in SimulationPanel's guiUpdateCall function.
+            */
             //clear snapshots
             simPanel.getSnapshots().clear();
             simPanel.snapshotsListModel.clear();

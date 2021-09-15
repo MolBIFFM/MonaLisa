@@ -264,35 +264,43 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             SpeciesReference sr = null;
+            ArrayList<String> ppcheck = new ArrayList<String>();
             for (Place p : t.inputs()) {
-                sr = reaction.createReactant(model.getSpecies("P" + p.id()));
-                sr.setStoichiometry(pn.getArc(p, t).weight());
-                if (this.level > 2) {
-                    sr.setConstant(true);
-                }
-                if (pn.getArc(p, t).hasProperty("toolTip")) {
-                    try {
-                        sr.setNotes((String) pn.getArc(p, t).getProperty("toolTip"));
-                    } catch (XMLStreamException ex) {
-                        LOGGER.error("XMLStreamException while saving tooltips for arc between place '"
-                                + p.getProperty("name") + "' and transition '" + t.getProperty("name") + "': ", ex);
+                if(!ppcheck.contains("P" + p.id())){
+                    sr = reaction.createReactant(model.getSpecies("P" + p.id()));
+                    sr.setStoichiometry(pn.getArc(p, t).weight());
+                    if (this.level > 2) {
+                        sr.setConstant(true);
                     }
+                    if (pn.getArc(p, t).hasProperty("toolTip")) {
+                        try {
+                            sr.setNotes((String) pn.getArc(p, t).getProperty("toolTip"));
+                        } catch (XMLStreamException ex) {
+                            LOGGER.error("XMLStreamException while saving tooltips for arc between place '"
+                                    + p.getProperty("name") + "' and transition '" + t.getProperty("name") + "': ", ex);
+                        }
+                    }
+                    ppcheck.add("P" + p.id());
                 }
             }
+            ArrayList<String> postplacecheck = new ArrayList<String>();
 
             for (Place p : t.outputs()) {
-                sr = reaction.createProduct(model.getSpecies("P" + p.id()));
-                sr.setStoichiometry(pn.getArc(t, p).weight());
-                if (this.level > 2) {
-                    sr.setConstant(true);
-                }
-                if (pn.getArc(t, p).hasProperty("toolTip")) {
-                    try {
-                        sr.setNotes((String) pn.getArc(t, p).getProperty("toolTip"));
-                    } catch (XMLStreamException ex) {
-                        LOGGER.error("XMLStreamException while saving tooltips for arc between transition '"
-                                + t.getProperty("name") + "' and place '" + p.getProperty("name") + "': ", ex);
+                if (!postplacecheck.contains("P" + p.id())){
+                    sr = reaction.createProduct(model.getSpecies("P" + p.id()));
+                    sr.setStoichiometry(pn.getArc(t, p).weight());
+                    if (this.level > 2) {
+                        sr.setConstant(true);
                     }
+                    if (pn.getArc(t, p).hasProperty("toolTip")) {
+                        try {
+                            sr.setNotes((String) pn.getArc(t, p).getProperty("toolTip"));
+                        } catch (XMLStreamException ex) {
+                            LOGGER.error("XMLStreamException while saving tooltips for arc between transition '"
+                                    + t.getProperty("name") + "' and place '" + p.getProperty("name") + "': ", ex);
+                        }
+                    }
+                    postplacecheck.add("P" + p.id());
                 }
             }
         }
@@ -393,15 +401,19 @@ public class SbmlOutputHandler implements OutputHandler {
                     node.addContent(new Element("StrokeColor").setText(String.valueOf(n.getStrokeColor())));
                     addInfo.addContent(node);
                 }
-                //edge color           
+                //edge color 
+                ArrayList<String> targetnode = new ArrayList<String>();
                 for (NetViewerEdge e : n.getOutEdges()) {
-                    Element edge = new Element("Edge");
-                    edge.setAttribute("Name", "E" + String.valueOf(edgeCount));
-                    edge.addContent(new Element("Source").setText(n.getName()));
-                    edge.addContent(new Element("Target").setText(e.getAim().getName()));
-                    edge.addContent(new Element("Color").setText(String.valueOf(e.getColor())));
-                    edgeInfo.addContent(edge);
+                    if(!targetnode.contains(e.getAim().getName())){
+                        Element edge = new Element("Edge");
+                        edge.setAttribute("Name", "E" + String.valueOf(edgeCount));
+                        edge.addContent(new Element("Source").setText(n.getName()));
+                        edge.addContent(new Element("Target").setText(e.getAim().getName()));
+                        edge.addContent(new Element("Color").setText(String.valueOf(e.getColor())));
+                        edgeInfo.addContent(edge);
                     edgeCount++;
+                    targetnode.add(e.getAim().getName());
+                    }
                 }
             }
             //fixing the internal names again

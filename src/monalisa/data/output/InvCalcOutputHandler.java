@@ -73,7 +73,7 @@ public final class InvCalcOutputHandler {
             // List of output arcs.
             for (Transition transition : place.inputs()) {
                 //  nur bei PInv berechnung
-                if(invType == "PI"){
+                if(invType == "PIw"){
                     if(!randtransition(petriNet).contains(transitionId(transition))){ //only non border transitions
                         formatter.print(transitionId(transition));
                         int weight = petriNet.getArc(transition, place).weight();
@@ -98,7 +98,7 @@ public final class InvCalcOutputHandler {
             }
 
             for (Transition transition : place.outputs()) {
-                if(invType == "PI"){
+                if(invType == "PIw"){
                     if(!randtransition(petriNet).contains(transitionId(transition))){
                         formatter.print(transitionId(transition));
                         int weight = petriNet.getArc(place, transition).weight();
@@ -150,7 +150,7 @@ public final class InvCalcOutputHandler {
         formatter.println("trans nr.             name priority time");
 
         for (Transition transition : petriNet.transitions()) {
-            if(invType == "PI"){
+            if(invType == "PIw"){
                 if(!randtransition(petriNet).contains(transitionId(transition))){
                     formatter.printf("       %d: %s", transitionId(transition),
                             sanitize(transition.<String>getValueOrDefault("name", "")));

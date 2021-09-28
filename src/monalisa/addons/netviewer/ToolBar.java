@@ -39,6 +39,8 @@ import monalisa.results.PInvariantsConfiguration;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
+import static monalisa.tools.pinv.PInvariantTool.setplaceborder;
+import static monalisa.tools.pinv.PInvariantTool.settransborder;
 import monalisa.util.ColorCollection;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -252,6 +254,7 @@ public class ToolBar extends javax.swing.JPanel {
         jScrollPane4 = new javax.swing.JScrollPane();
         Pinv_list = new javax.swing.JList<>();
         CTILabel = new javax.swing.JLabel();
+        pinvariantbutton = new javax.swing.JToggleButton();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -846,6 +849,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         InvPanel.add(computeInvsButton, gridBagConstraints);
 
@@ -909,6 +913,18 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         InvPanel.add(CTILabel, gridBagConstraints);
+
+        pinvariantbutton.setText("Place bordered");
+        pinvariantbutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pinvariantbuttonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        InvPanel.add(pinvariantbutton, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1227,11 +1243,25 @@ public class ToolBar extends javax.swing.JPanel {
         if (MinvCheckBox.isSelected()) {
             toolslist.add(MInvariantTool.class.getName());
         }
-        if (PinvCheckBox.isSelected()) {
+        if (PinvCheckBox.isSelected() && !pinvariantbutton.isSelected()) {           
+            settransborder();
             toolslist.add(PInvariantTool.class.getName());
+            //System.out.println("PinvList: " + PinvList);
+        }
+        if (PinvCheckBox.isSelected() && pinvariantbutton.isSelected()) {
+            setplaceborder();
+            toolslist.add(PInvariantTool.class.getName());
+            //System.out.println("PinvList: " + PinvList);
         }
 
         netViewer.calcTools(toolslist);
+        //System.out.println("PinvList: " + PinvList);
+        
+        /*System.out.println("Tabs are refresht");
+        InvTabbedPane.removeAll();
+        InvTabbedPane.addTab("T - Invariants", jScrollPane1);
+        InvTabbedPane.addTab("M - Invariants", jScrollPane2);
+        InvTabbedPane.addTab("P - Invariants", jScrollPane4);*/
 
         // check if the net is CTI
         //    TInvariantTool TTool  = new TInvariantTool();
@@ -1257,6 +1287,10 @@ public class ToolBar extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
         }
     }//GEN-LAST:event_reachabilityButtonActionPerformed
+
+    private void pinvariantbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pinvariantbuttonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pinvariantbuttonActionPerformed
 
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
@@ -1335,6 +1369,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
+    private javax.swing.JToggleButton pinvariantbutton;
     private javax.swing.JButton reachabilityButton;
     protected javax.swing.JButton removeBendButton;
     protected javax.swing.JPanel removeBendPanel;

@@ -26,13 +26,22 @@ import org.apache.logging.log4j.LogManager;
 public final class PInvariantTool extends AbstractTool {
 
     private static final Logger LOGGER = LogManager.getLogger(PInvariantTool.class);
+    private static String whichcalc;
+    
+    public static void setplaceborder(){
+        whichcalc = "PIw";
+    }
+    public static void settransborder(){
+        whichcalc = "PI";
+    }
 
     @Override
     public void run(Project project, ErrorLog log, Configuration config) throws InterruptedException {
         PInvariantCalculator calculator = null;
         try {
             LOGGER.info("Running PInvariantTool");
-            calculator = new PInvariantCalculator(project.getPNFacade(), log);
+            System.out.println("whichcalc: " + whichcalc);
+            calculator = new PInvariantCalculator(project.getPNFacade(), log, whichcalc);
             addResult(new PInvariantsConfiguration(), calculator.pinvariants(log));
             LOGGER.info("Successfully ran PInvariantTool");
         } catch (PInvariantCalculationFailedException e) {

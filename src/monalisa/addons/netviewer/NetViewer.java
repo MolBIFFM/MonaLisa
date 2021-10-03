@@ -618,6 +618,9 @@ public class NetViewer extends JFrame implements ActionListener {
 
                 pinvs = null;
                 tb.PinvList.clear();
+                
+                tb.CPILabel.setText("");
+                
                 mctsResults = null;
                 tb.mctsCb.removeAllItems();
                 mcsResults = null;
@@ -896,6 +899,28 @@ public class NetViewer extends JFrame implements ActionListener {
                 break;
             case -1:
                 tb.CTILabel.setText("");
+                break;
+            default:
+                break;
+        }
+    }
+    /**
+     * Checks if the net is CPI and changes the Label in Toolbar correspondingly
+     */
+    public void checkCPI() {
+        pinvs = getPInvs();
+        int status = ((PInvariantTool) project.getToolManager().getTool(PInvariantTool.class)).isCPI(pinvs, project);
+        switch (status) {
+            case 1:
+                tb.CPILabel.setText(strings.get("CPI"));
+                tb.CPILabel.setForeground(new java.awt.Color(35, 132, 71));
+                break;
+            case 0:
+                tb.CPILabel.setText(strings.get("NotCPI"));
+                tb.CPILabel.setForeground(new java.awt.Color(215, 69, 19));
+                break;
+            case -1:
+                tb.CPILabel.setText("");
                 break;
             default:
                 break;

@@ -95,7 +95,7 @@ public final class PInvariantTool extends AbstractTool {
             LOGGER.warn("P-Invariants could not be found");
             return -1;
         } else {
-            int nbrOfTransitions = project.getPetriNet().transitions().size();
+            int nbrOfPlaces = project.getPetriNet().places().size();
             int i = 0;
             List<Integer> counterList = new ArrayList<>();
             for (PInvariant t : pinv) {
@@ -107,7 +107,7 @@ public final class PInvariantTool extends AbstractTool {
                     i++;
                 }
             }
-            if (counterList.size() == nbrOfTransitions) {
+            if (counterList.size() == nbrOfPlaces) {
                 return 1;
             } else {
                 return 0;

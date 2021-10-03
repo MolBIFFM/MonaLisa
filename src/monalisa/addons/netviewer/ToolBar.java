@@ -255,6 +255,7 @@ public class ToolBar extends javax.swing.JPanel {
         Pinv_list = new javax.swing.JList<>();
         CTILabel = new javax.swing.JLabel();
         pinvariantbutton = new javax.swing.JToggleButton();
+        CPILabel = new javax.swing.JLabel();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -905,7 +906,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         InvPanel.add(InvTabbedPane, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -925,6 +926,11 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridy = 5;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         InvPanel.add(pinvariantbutton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        InvPanel.add(CPILabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1246,6 +1252,7 @@ public class ToolBar extends javax.swing.JPanel {
         if (PinvCheckBox.isSelected() && !pinvariantbutton.isSelected()) {           
             settransborder();
             toolslist.add(PInvariantTool.class.getName());
+            
             //System.out.println("PinvList: " + PinvList);
         }
         if (PinvCheckBox.isSelected() && pinvariantbutton.isSelected()) {
@@ -1301,6 +1308,7 @@ public class ToolBar extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JLabel CPILabel;
     protected javax.swing.JLabel CTILabel;
     private javax.swing.JPanel InvPanel;
     protected javax.swing.JTabbedPane InvTabbedPane;

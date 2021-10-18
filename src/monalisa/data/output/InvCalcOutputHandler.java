@@ -39,14 +39,14 @@ public final class InvCalcOutputHandler {
             Map<Integer, Integer> transitionIds, String InvType) {
         this.placeIds = placeIds;
         this.transitionIds = transitionIds;
-        this.invType = InvType; // um invType zu verwenden
+        this.invType = InvType; // for deciding wether to calculate the PN with or without border Transitions
     }
     
     //Method that returns a list of border Transitions if there are any
     public ArrayList<Integer> randtransition(PetriNetFacade pNet){
         ArrayList<Integer> rand = new ArrayList<Integer>();
         for(Transition allt: pNet.transitions()){
-            if(allt.outputs().isEmpty() ^ allt.inputs().isEmpty()){
+            if(allt.outputs().isEmpty() ^ allt.inputs().isEmpty()){ //checks wether the Transition has an input or output arc
                 rand.add(transitionId(allt));
             }
         }
@@ -72,8 +72,7 @@ public final class InvCalcOutputHandler {
 
             // List of output arcs.
             for (Transition transition : place.inputs()) {
-                //  nur bei PInv berechnung
-                if(invType == "PIw"){
+                if(invType == "PIw"){ //only if Place Invariants should be calculated and the bordered button is pressed
                     if(!randtransition(petriNet).contains(transitionId(transition))){ //only non border transitions
                         formatter.print(transitionId(transition));
                         int weight = petriNet.getArc(transition, place).weight();

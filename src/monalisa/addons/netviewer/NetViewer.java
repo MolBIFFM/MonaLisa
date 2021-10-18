@@ -1287,8 +1287,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void addPinvsToListDisplay() {
         LOGGER.info("Adding P-Invariants to List Display");
-        //damit pinvs == null
-        pinvs = null; //damit PInv Liste geupdatet wird
+        pinvs = null; //so that the P-Invariants List updates
         if (pinvs == null) {
             pinvs = getPInvs();
         }
@@ -1326,7 +1325,7 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             tb.InvTabbedPane.setTitleAt(2, strings.get("NVAllP", tb.PinvList.getSize() - 1));
-        }else{
+        }else{ //even if pinvs list is empty, clear the previous one and set title without list size
                 tb.PinvList.clear();
                 tb.InvTabbedPane.setTitleAt(2,"P - Invariants"); //strings.get("NVAllP", tb.PinvList.getSize() - 1));
             }

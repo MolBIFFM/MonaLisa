@@ -919,6 +919,14 @@ public class NetViewer extends JFrame implements ActionListener {
                 tb.CPILabel.setText(strings.get("NotCPI"));
                 tb.CPILabel.setForeground(new java.awt.Color(215, 69, 19));
                 break;
+            case 2:
+                tb.CPILabel.setText(strings.get("CPIw"));
+                tb.CPILabel.setForeground(new java.awt.Color(35, 132, 71));
+                break;
+            case 3:
+                tb.CPILabel.setText(strings.get("NotCPIw"));
+                tb.CPILabel.setForeground(new java.awt.Color(215, 69, 19));
+                break; 
             case -1:
                 tb.CPILabel.setText("");
                 break;

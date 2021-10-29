@@ -81,9 +81,15 @@ public final class PInvariantTool extends AbstractTool {
                 LOGGER.error("Caught exception while checking whether Petri net is CPI", e);
                 return -1;
             }
-            if (counterList.size() == nbrOfPlaces) {
-                return 1;
-            } else {
+            if (counterList.size() == nbrOfPlaces && whichcalc == "PI") {
+                return 1; //if CPI and original net
+                
+            } else if(counterList.size() == nbrOfPlaces && whichcalc == "PIw"){
+                return 2;  //if CPI and place bordered net              
+            } else if(counterList.size() != nbrOfPlaces && whichcalc == "PIw"){
+                return 3;  //if not CPI and place bordered net               
+            }
+            else {
                 return 0;
             }
         }
@@ -107,9 +113,14 @@ public final class PInvariantTool extends AbstractTool {
                     i++;
                 }
             }
-            if (counterList.size() == nbrOfPlaces) {
-                return 1;
-            } else {
+            if (counterList.size() == nbrOfPlaces && whichcalc == "PI") {
+                return 1; //if CPI and original net
+                
+            } else if(counterList.size() == nbrOfPlaces && whichcalc == "PIw"){
+                return 2;  //if CPI and place bordered net              
+            } else if(counterList.size() != nbrOfPlaces && whichcalc == "PIw"){
+                return 3;  //if not CPI and place bordered net               
+            }else {
                 return 0;
             }
         }

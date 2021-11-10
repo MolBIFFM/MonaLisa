@@ -72,7 +72,7 @@ public final class InvCalcOutputHandler {
 
             // List of output arcs.
             for (Transition transition : place.inputs()) {
-                if(invType == "PIw"){ //only if Place Invariants should be calculated and the bordered button is pressed
+                if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
                     if(!randtransition(petriNet).contains(transitionId(transition))){ //only non border transitions
                         formatter.print(transitionId(transition));
                         int weight = petriNet.getArc(transition, place).weight();
@@ -97,7 +97,7 @@ public final class InvCalcOutputHandler {
             }
 
             for (Transition transition : place.outputs()) {
-                if(invType == "PIw"){
+                if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
                     if(!randtransition(petriNet).contains(transitionId(transition))){
                         formatter.print(transitionId(transition));
                         int weight = petriNet.getArc(place, transition).weight();
@@ -149,7 +149,7 @@ public final class InvCalcOutputHandler {
         formatter.println("trans nr.             name priority time");
 
         for (Transition transition : petriNet.transitions()) {
-            if(invType == "PIw"){
+            if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
                 if(!randtransition(petriNet).contains(transitionId(transition))){
                     formatter.printf("       %d: %s", transitionId(transition),
                             sanitize(transition.<String>getValueOrDefault("name", "")));

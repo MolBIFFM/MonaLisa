@@ -26,11 +26,12 @@ import org.apache.logging.log4j.LogManager;
 public final class PInvariantTool extends AbstractTool {
 
     private static final Logger LOGGER = LogManager.getLogger(PInvariantTool.class);
-    private static String whichcalc;
-    
+    private static String whichcalc; 
+    //if P-Invariants should be calculated for the place bordered Petri net
     public static void setplaceborder(){
         whichcalc = "PIw";
     }
+    //if P-Invariants should be calculated for the transition bordered (original) Petri net
     public static void settransborder(){
         whichcalc = "PI";
     }
@@ -40,7 +41,7 @@ public final class PInvariantTool extends AbstractTool {
         PInvariantCalculator calculator = null;
         try {
             LOGGER.info("Running PInvariantTool");
-            System.out.println("whichcalc: " + whichcalc);
+            //System.out.println("whichcalc: " + whichcalc);
             calculator = new PInvariantCalculator(project.getPNFacade(), log, whichcalc);
             addResult(new PInvariantsConfiguration(), calculator.pinvariants(log));
             LOGGER.info("Successfully ran PInvariantTool");
@@ -54,7 +55,7 @@ public final class PInvariantTool extends AbstractTool {
         // TODO Auto-generated method stub
 
     }
-
+    //checks whether Petri net is CPI
     public int isCPI(Project project) {
         LOGGER.info("Checking whether Petri net is CPI");
         ToolManager tm = project.getToolManager();
@@ -94,7 +95,7 @@ public final class PInvariantTool extends AbstractTool {
             }
         }
     }
-
+    //checks whether Petri net is CPI
     public int isCPI(PInvariants pinv, Project project) {
         LOGGER.info("Checking whether Petri net is CPI");
         if (pinv == null) {

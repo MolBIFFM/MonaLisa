@@ -264,9 +264,10 @@ public class SbmlOutputHandler implements OutputHandler {
             }
 
             SpeciesReference sr = null;
+            //List that contains all pre-places to a transition that are already added to the SBML-File
             ArrayList<String> ppcheck = new ArrayList<String>();
             for (Place p : t.inputs()) {
-                if(!ppcheck.contains("P" + p.id())){
+                if(!ppcheck.contains("P" + p.id())){ //prevents multiple edges
                     sr = reaction.createReactant(model.getSpecies("P" + p.id()));
                     sr.setStoichiometry(pn.getArc(p, t).weight());
                     if (this.level > 2) {
@@ -283,10 +284,11 @@ public class SbmlOutputHandler implements OutputHandler {
                     ppcheck.add("P" + p.id());
                 }
             }
-            ArrayList<String> postplacecheck = new ArrayList<String>();
+            //List that contains all post-places to a transition that are already added to the SBML-File
+            ArrayList<String> postplacecheck = new ArrayList<String>(); 
 
             for (Place p : t.outputs()) {
-                if (!postplacecheck.contains("P" + p.id())){
+                if (!postplacecheck.contains("P" + p.id())){ //prevents multiple edges
                     sr = reaction.createProduct(model.getSpecies("P" + p.id()));
                     sr.setStoichiometry(pn.getArc(t, p).weight());
                     if (this.level > 2) {
@@ -402,9 +404,10 @@ public class SbmlOutputHandler implements OutputHandler {
                     addInfo.addContent(node);
                 }
                 //edge color 
+                //List containing all nodes that have already been traversed
                 ArrayList<String> targetnode = new ArrayList<String>();
                 for (NetViewerEdge e : n.getOutEdges()) {
-                    if(!targetnode.contains(e.getAim().getName())){
+                    if(!targetnode.contains(e.getAim().getName())){ //prevents double edges in layout information
                         Element edge = new Element("Edge");
                         edge.setAttribute("Name", "E" + String.valueOf(edgeCount));
                         edge.addContent(new Element("Source").setText(n.getName()));
@@ -412,7 +415,7 @@ public class SbmlOutputHandler implements OutputHandler {
                         edge.addContent(new Element("Color").setText(String.valueOf(e.getColor())));
                         edgeInfo.addContent(edge);
                     edgeCount++;
-                    targetnode.add(e.getAim().getName());
+                    targetnode.add(e.getAim().getName()); //adds node name to list
                     }
                 }
             }

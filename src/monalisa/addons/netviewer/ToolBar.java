@@ -1245,13 +1245,13 @@ public class ToolBar extends javax.swing.JPanel {
             toolslist.add(MInvariantTool.class.getName());
         }
         if (PinvCheckBox.isSelected() && !jCheckBox1.isSelected()){//!pinvariantbutton.isSelected()) {           
-            settransborder();
+            settransborder(); //ensures that the original Petri net is calculated 
             toolslist.add(PInvariantTool.class.getName());
             
             //System.out.println("PinvList: " + PinvList);
         }
         if (PinvCheckBox.isSelected() && jCheckBox1.isSelected()){//pinvariantbutton.isSelected()) {
-            setplaceborder();
+            setplaceborder(); //ensures that the place bordered Petri net is calculated
             toolslist.add(PInvariantTool.class.getName());
             //System.out.println("PinvList: " + PinvList);
         }

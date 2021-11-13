@@ -1150,6 +1150,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         }
         if (toolUI.getToolManager().hasResults(PInvariantTool.class)) {
             netViewer.addPinvsToListDisplay();
+            netViewer.checkCPI();
         }
         if (toolUI.getToolManager().hasResults(MctsTool.class)) {
             netViewer.addMctsToComboBox();

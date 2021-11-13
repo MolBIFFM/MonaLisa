@@ -26,13 +26,23 @@ import org.apache.logging.log4j.LogManager;
 public final class PInvariantTool extends AbstractTool {
 
     private static final Logger LOGGER = LogManager.getLogger(PInvariantTool.class);
+    private static String whichcalc; 
+    //if P-Invariants should be calculated for the place bordered Petri net
+    public static void setplaceborder(){
+        whichcalc = "PIw";
+    }
+    //if P-Invariants should be calculated for the transition bordered (original) Petri net
+    public static void settransborder(){
+        whichcalc = "PI";
+    }
 
     @Override
     public void run(Project project, ErrorLog log, Configuration config) throws InterruptedException {
         PInvariantCalculator calculator = null;
         try {
             LOGGER.info("Running PInvariantTool");
-            calculator = new PInvariantCalculator(project.getPNFacade(), log);
+            //System.out.println("whichcalc: " + whichcalc);
+            calculator = new PInvariantCalculator(project.getPNFacade(), log, whichcalc);
             addResult(new PInvariantsConfiguration(), calculator.pinvariants(log));
             LOGGER.info("Successfully ran PInvariantTool");
         } catch (PInvariantCalculationFailedException e) {
@@ -45,7 +55,7 @@ public final class PInvariantTool extends AbstractTool {
         // TODO Auto-generated method stub
 
     }
-
+    //checks whether Petri net is CPI
     public int isCPI(Project project) {
         LOGGER.info("Checking whether Petri net is CPI");
         ToolManager tm = project.getToolManager();
@@ -72,21 +82,27 @@ public final class PInvariantTool extends AbstractTool {
                 LOGGER.error("Caught exception while checking whether Petri net is CPI", e);
                 return -1;
             }
-            if (counterList.size() == nbrOfPlaces) {
-                return 1;
-            } else {
+            if (counterList.size() == nbrOfPlaces && whichcalc == "PI") {
+                return 1; //if CPI and original net
+                
+            } else if(counterList.size() == nbrOfPlaces && whichcalc == "PIw"){
+                return 2;  //if CPI and place bordered net              
+            } else if(counterList.size() != nbrOfPlaces && whichcalc == "PIw"){
+                return 3;  //if not CPI and place bordered net               
+            }
+            else {
                 return 0;
             }
         }
     }
-
+    //checks whether Petri net is CPI
     public int isCPI(PInvariants pinv, Project project) {
         LOGGER.info("Checking whether Petri net is CPI");
         if (pinv == null) {
             LOGGER.warn("P-Invariants could not be found");
             return -1;
         } else {
-            int nbrOfTransitions = project.getPetriNet().transitions().size();
+            int nbrOfPlaces = project.getPetriNet().places().size();
             int i = 0;
             List<Integer> counterList = new ArrayList<>();
             for (PInvariant t : pinv) {
@@ -98,9 +114,14 @@ public final class PInvariantTool extends AbstractTool {
                     i++;
                 }
             }
-            if (counterList.size() == nbrOfTransitions) {
-                return 1;
-            } else {
+            if (counterList.size() == nbrOfPlaces && whichcalc == "PI") {
+                return 1; //if CPI and original net
+                
+            } else if(counterList.size() == nbrOfPlaces && whichcalc == "PIw"){
+                return 2;  //if CPI and place bordered net              
+            } else if(counterList.size() != nbrOfPlaces && whichcalc == "PIw"){
+                return 3;  //if not CPI and place bordered net               
+            }else {
                 return 0;
             }
         }

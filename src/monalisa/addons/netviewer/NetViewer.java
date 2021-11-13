@@ -618,6 +618,9 @@ public class NetViewer extends JFrame implements ActionListener {
 
                 pinvs = null;
                 tb.PinvList.clear();
+                
+                tb.CPILabel.setText("");
+                
                 mctsResults = null;
                 tb.mctsCb.removeAllItems();
                 mcsResults = null;
@@ -896,6 +899,36 @@ public class NetViewer extends JFrame implements ActionListener {
                 break;
             case -1:
                 tb.CTILabel.setText("");
+                break;
+            default:
+                break;
+        }
+    }
+    /**
+     * Checks if the net is CPI and changes the Label in Toolbar correspondingly
+     */
+    public void checkCPI() {
+        pinvs = getPInvs();
+        int status = ((PInvariantTool) project.getToolManager().getTool(PInvariantTool.class)).isCPI(pinvs, project);
+        switch (status) {
+            case 1:
+                tb.CPILabel.setText(strings.get("CPI"));
+                tb.CPILabel.setForeground(new java.awt.Color(35, 132, 71));
+                break;
+            case 0:
+                tb.CPILabel.setText(strings.get("NotCPI"));
+                tb.CPILabel.setForeground(new java.awt.Color(215, 69, 19));
+                break;
+            case 2:
+                tb.CPILabel.setText(strings.get("CPIw"));
+                tb.CPILabel.setForeground(new java.awt.Color(35, 132, 71));
+                break;
+            case 3:
+                tb.CPILabel.setText(strings.get("NotCPIw"));
+                tb.CPILabel.setForeground(new java.awt.Color(215, 69, 19));
+                break; 
+            case -1:
+                tb.CPILabel.setText("");
                 break;
             default:
                 break;
@@ -1262,6 +1295,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public void addPinvsToListDisplay() {
         LOGGER.info("Adding P-Invariants to List Display");
+        pinvs = null; //so that the P-Invariants List updates
         if (pinvs == null) {
             pinvs = getPInvs();
         }
@@ -1299,7 +1333,10 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             tb.InvTabbedPane.setTitleAt(2, strings.get("NVAllP", tb.PinvList.getSize() - 1));
-        }
+        }else{ //even if pinvs list is empty, clear the previous one and set title without list size
+                tb.PinvList.clear();
+                tb.InvTabbedPane.setTitleAt(2,"P - Invariants"); //strings.get("NVAllP", tb.PinvList.getSize() - 1));
+            }
         LOGGER.info("Successfully added P-Invariants to List Display");
     }
 

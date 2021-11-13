@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.ArrayList; //für Liste mit randtransitionen
 
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.data.pn.PetriNetFacade;
@@ -28,6 +29,7 @@ public final class InvCalcOutputHandler {
 
     private final Map<Integer, Integer> placeIds;
     private final Map<Integer, Integer> transitionIds;
+    private final String invType; //um InvType zu verwenden
     private static final Logger LOGGER = LogManager.getLogger(InvCalcOutputHandler.class);
 
     /**
@@ -37,6 +39,18 @@ public final class InvCalcOutputHandler {
             Map<Integer, Integer> transitionIds, String InvType) {
         this.placeIds = placeIds;
         this.transitionIds = transitionIds;
+        this.invType = InvType; // for deciding wether to calculate the PN with or without border Transitions
+    }
+    
+    //Method that returns a list of border Transitions if there are any
+    public ArrayList<Integer> randtransition(PetriNetFacade pNet){
+        ArrayList<Integer> rand = new ArrayList<Integer>();
+        for(Transition allt: pNet.transitions()){
+            if(allt.outputs().isEmpty() ^ allt.inputs().isEmpty()){ //checks wether the Transition has an input or output arc
+                rand.add(transitionId(allt));
+            }
+        }
+        return rand;
     }
 
     public void save(PetriNetFacade petriNet, OutputStream out, File file, NetViewer netViewer) {
@@ -58,12 +72,23 @@ public final class InvCalcOutputHandler {
 
             // List of output arcs.
             for (Transition transition : place.inputs()) {
-                formatter.print(transitionId(transition));
-                int weight = petriNet.getArc(transition, place).weight();
-                if (weight != 1) {
-                    formatter.printf(": %d", weight);
+                if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
+                    if(!randtransition(petriNet).contains(transitionId(transition))){ //only non border transitions
+                        formatter.print(transitionId(transition));
+                        int weight = petriNet.getArc(transition, place).weight();
+                        if (weight != 1) {
+                            formatter.printf(": %d", weight);
+                        }
+                        formatter.print(' ');
+                    }
+                }else{
+                   formatter.print(transitionId(transition));
+                        int weight = petriNet.getArc(transition, place).weight();
+                        if (weight != 1) {
+                            formatter.printf(": %d", weight);
+                        }
+                        formatter.print(' '); 
                 }
-                formatter.print(' ');
             }
 
             // List of input arcs.
@@ -72,12 +97,23 @@ public final class InvCalcOutputHandler {
             }
 
             for (Transition transition : place.outputs()) {
-                formatter.print(transitionId(transition));
-                int weight = petriNet.getArc(place, transition).weight();
-                if (weight != 1) {
-                    formatter.printf(": %d", weight);
+                if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
+                    if(!randtransition(petriNet).contains(transitionId(transition))){
+                        formatter.print(transitionId(transition));
+                        int weight = petriNet.getArc(place, transition).weight();
+                        if (weight != 1) {
+                            formatter.printf(": %d", weight);
+                        }
+                        formatter.print(' ');
+                    }
+                }else{
+                    formatter.print(transitionId(transition));
+                        int weight = petriNet.getArc(place, transition).weight();
+                        if (weight != 1) {
+                            formatter.printf(": %d", weight);
+                        }
+                        formatter.print(' ');
                 }
-                formatter.print(' ');
             }
 
             formatter.println();
@@ -113,19 +149,37 @@ public final class InvCalcOutputHandler {
         formatter.println("trans nr.             name priority time");
 
         for (Transition transition : petriNet.transitions()) {
-            formatter.printf("       %d: %s", transitionId(transition),
-                    sanitize(transition.<String>getValueOrDefault("name", "")));
-            if (transition.hasProperty("priority")) {
-                formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
-            } else {
-                formatter.print(" 0");
+            if(invType == "PIw"){ //Place Invariants + place bordered Checkbox is chosen
+                if(!randtransition(petriNet).contains(transitionId(transition))){
+                    formatter.printf("       %d: %s", transitionId(transition),
+                            sanitize(transition.<String>getValueOrDefault("name", "")));
+                    if (transition.hasProperty("priority")) {
+                        formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
+                    } else {
+                        formatter.print(" 0");
+                    }
+                    if (transition.hasProperty("time")) {
+                        formatter.printf(" %d", transition.getValueOrDefault("time", 0));
+                    } else {
+                        formatter.print(" 0");
+                    }
+                    formatter.println();
+                }
+            }else{
+                formatter.printf("       %d: %s", transitionId(transition),
+                            sanitize(transition.<String>getValueOrDefault("name", "")));
+                    if (transition.hasProperty("priority")) {
+                        formatter.printf(" %d", transition.getValueOrDefault("priority", 0));
+                    } else {
+                        formatter.print(" 0");
+                    }
+                    if (transition.hasProperty("time")) {
+                        formatter.printf(" %d", transition.getValueOrDefault("time", 0));
+                    } else {
+                        formatter.print(" 0");
+                    }
+                    formatter.println();
             }
-            if (transition.hasProperty("time")) {
-                formatter.printf(" %d", transition.getValueOrDefault("time", 0));
-            } else {
-                formatter.print(" 0");
-            }
-            formatter.println();
         }
 
         formatter.println("@");

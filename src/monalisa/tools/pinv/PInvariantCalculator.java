@@ -53,7 +53,7 @@ public final class PInvariantCalculator {
     private Map<Integer, Integer> placeIds;
     private static final Logger LOGGER = LogManager.getLogger(PInvariantCalculator.class);
 
-    public PInvariantCalculator(PetriNetFacade petriNet, ErrorLog log) throws InterruptedException, PInvariantCalculationFailedException {
+    public PInvariantCalculator(PetriNetFacade petriNet, ErrorLog log, String wow) throws InterruptedException, PInvariantCalculationFailedException {
         LOGGER.info("Initializing PInvariantCalculator");
         this.petriNet = petriNet;
         File tempDir = FileUtils.getTempDir();
@@ -83,7 +83,7 @@ public final class PInvariantCalculator {
             transitionIds.put(transition.id(), tid++);
         }
 
-        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, "PI");
+        InvCalcOutputHandler outHandler = new InvCalcOutputHandler(placeIds, transitionIds, wow);
         try {
             LOGGER.debug("Trying to export Petri net to temporary .pnt file for P-Invariant calculation");
             outHandler.save(petriNet, new FileOutputStream(pntFile), pntFile, netViewer);
@@ -124,6 +124,7 @@ public final class PInvariantCalculator {
 
             pinvariants = new PInvariants(invParser.invariants());
         }
+        System.out.println("Pinvarianten calculator: " + pinvariants);
 
         return pinvariants;
     }

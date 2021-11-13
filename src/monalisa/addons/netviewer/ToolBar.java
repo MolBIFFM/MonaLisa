@@ -39,6 +39,8 @@ import monalisa.results.PInvariantsConfiguration;
 import monalisa.tools.pinv.PInvariantTool;
 import monalisa.tools.tinv.TInvariantTool;
 import monalisa.tools.minv.MInvariantTool;
+import static monalisa.tools.pinv.PInvariantTool.setplaceborder;
+import static monalisa.tools.pinv.PInvariantTool.settransborder;
 import monalisa.util.ColorCollection;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -252,6 +254,8 @@ public class ToolBar extends javax.swing.JPanel {
         jScrollPane4 = new javax.swing.JScrollPane();
         Pinv_list = new javax.swing.JList<>();
         CTILabel = new javax.swing.JLabel();
+        CPILabel = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -846,6 +850,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
         InvPanel.add(computeInvsButton, gridBagConstraints);
 
@@ -878,8 +883,8 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
         InvPanel.add(jLabel2, gridBagConstraints);
 
-        InvTabbedPane.setMinimumSize(new java.awt.Dimension(370, 300));
-        InvTabbedPane.setPreferredSize(new java.awt.Dimension(370, 300));
+        InvTabbedPane.setMinimumSize(new java.awt.Dimension(370, 280));
+        InvTabbedPane.setPreferredSize(new java.awt.Dimension(370, 280));
 
         Tinv_list.setModel(allInvList);
         Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));
@@ -901,7 +906,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         InvPanel.add(InvTabbedPane, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -909,6 +914,18 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
         InvPanel.add(CTILabel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        InvPanel.add(CPILabel, gridBagConstraints);
+
+        jCheckBox1.setText("Place bordered");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        InvPanel.add(jCheckBox1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -1227,11 +1244,26 @@ public class ToolBar extends javax.swing.JPanel {
         if (MinvCheckBox.isSelected()) {
             toolslist.add(MInvariantTool.class.getName());
         }
-        if (PinvCheckBox.isSelected()) {
+        if (PinvCheckBox.isSelected() && !jCheckBox1.isSelected()){//!pinvariantbutton.isSelected()) {           
+            settransborder(); //ensures that the original Petri net is calculated 
             toolslist.add(PInvariantTool.class.getName());
+            
+            //System.out.println("PinvList: " + PinvList);
+        }
+        if (PinvCheckBox.isSelected() && jCheckBox1.isSelected()){//pinvariantbutton.isSelected()) {
+            setplaceborder(); //ensures that the place bordered Petri net is calculated
+            toolslist.add(PInvariantTool.class.getName());
+            //System.out.println("PinvList: " + PinvList);
         }
 
         netViewer.calcTools(toolslist);
+        //System.out.println("PinvList: " + PinvList);
+        
+        /*System.out.println("Tabs are refresht");
+        InvTabbedPane.removeAll();
+        InvTabbedPane.addTab("T - Invariants", jScrollPane1);
+        InvTabbedPane.addTab("M - Invariants", jScrollPane2);
+        InvTabbedPane.addTab("P - Invariants", jScrollPane4);*/
 
         // check if the net is CTI
         //    TInvariantTool TTool  = new TInvariantTool();
@@ -1267,6 +1299,7 @@ public class ToolBar extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected javax.swing.JLabel CPILabel;
     protected javax.swing.JLabel CTILabel;
     private javax.swing.JPanel InvPanel;
     protected javax.swing.JTabbedPane InvTabbedPane;
@@ -1314,6 +1347,7 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JSpinner iconSizeSpinner;
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

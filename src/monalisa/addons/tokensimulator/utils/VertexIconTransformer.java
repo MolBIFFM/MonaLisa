@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.addons.tokensimulator.SimulationManager;
+import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.apache.commons.collections15.Transformer;
 
@@ -133,19 +134,59 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
             //decide whether the place is a masterNode, is logical or just a regular place
+
+            long tokenCount = simulationMan.getTokenSim().getTokens(id);
+
+            long tokenCountNet = 0;
+            for (Place p : simulationMan.getPetriNet().places()) {
+                tokenCountNet += simulationMan.getTokenSim().getTokens(p.id());
+            }
+
             if (n.isMasterNode()) {
-                graphics.setColor(Color.GRAY);
+                if (tokenCountNet > 0) {
+                graphics.setColor(
+                        new Color(
+                            128.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(128.0f/255.0f),
+                            128.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(128.0f/255.0f),
+                            128.0f/255.0f
+                        )
+                    );
+                }
+                else {
+                  graphics.setColor(Color.GRAY);
+                }
             } else if (n.isLogical()) {
-                graphics.setColor(Color.LIGHT_GRAY);
+                if (tokenCountNet > 0) {
+                    graphics.setColor(
+                        new Color(
+                            192.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(192.0f/255.0f),
+                            192.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(192.0f/255.0f),
+                            192.0f/255.0f
+                        )
+                    );
+                }
+                else {
+                    graphics.setColor(Color.LIGHT_GRAY);
+                }
             } else {
-                graphics.setColor(Color.WHITE);
+                if (tokenCountNet > 0) {
+                    graphics.setColor(
+                        new Color(
+                            255.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(255.0f/255.0f),
+                            255.0f/255.0f - ((float)tokenCount/(float)tokenCountNet)*(255.0f/255.0f),
+                            255.0f/255.0f
+                        )
+                    );
+                }
+                else {
+                    graphics.setColor(Color.WHITE);
+                }
             }
             graphics.fillOval(0, 0, vertexSize - 1, vertexSize - 1);  // draw outline of the icon
             graphics.setColor(Color.black);
             graphics.drawOval(0, 0, vertexSize - 1, vertexSize - 1);
 
             graphics.setColor(Color.RED);
-            long tokenCount = simulationMan.getTokenSim().getTokens(id);
             switch ((int) tokenCount) {
                 case 0:
                     break;

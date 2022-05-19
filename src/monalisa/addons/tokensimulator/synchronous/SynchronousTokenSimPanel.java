@@ -106,7 +106,7 @@ public class SynchronousTokenSimPanel extends AbstractTokenSimPanel implements S
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepLabel, gridBagConstraints);
 
-        stepField.setText("1");
+        stepField.setText("1000");
         stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {

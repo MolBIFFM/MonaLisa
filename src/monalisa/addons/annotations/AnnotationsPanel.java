@@ -622,7 +622,7 @@ public class AnnotationsPanel extends AddonPanel {
 
                 MiriamWrapper mw = new MiriamWrapper((Qualifier) entryQualifier.getSelectedItem(), mrw.getURL() + uriEntry.getText().trim());
                 miModelEntry.addElement(mw);
-                annUtils.addMiriam(getNode(selectedNV), mw, uriEntry.getText().trim());
+                annUtils.addMiriam(getNode(selectedNV), mw, mrw.getURL() + uriEntry.getText().trim());
                 LOGGER.info("Finished adding new entry");
             }
             uriEntry.setText("");

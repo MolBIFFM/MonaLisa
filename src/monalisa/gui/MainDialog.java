@@ -196,7 +196,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         splash.setLayout(new TableLayout(size));
         splash.add(emptyProject, "1,1");
         splash.add(newProject, "1,3");
-        splash.add(loadProject, "1,5");
+        //add following line of code for project functionality
+        //splash.add(loadProject, "1,5");
 
         contentPanel = new JPanel();
         contentPanel.setLayout(new GroupLayout(contentPanel));
@@ -349,15 +350,16 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         menuFileExit.setActionCommand(MENU_FILE_EXIT_ACTION);
         menuFileExit.addActionListener(this);
 
+        //if project functionality is wanted, add the following commands as lines of code again
         mainMenu = new JMenu(strings.get("File"));
         mainMenu.add(menuFileNew);
         mainMenu.add(menuFileImport);
-        mainMenu.add(menuFileOpen);
-        mainMenu.add(menuFileOpenRecently);
+        //mainMenu.add(menuFileOpen);
+        //mainMenu.add(menuFileOpenRecently);
         mainMenu.add(menuConverter);
         mainMenu.add(menuTFileLoad);
-        mainMenu.add(menuFileSave);
-        mainMenu.add(menuFileSaveAs);
+        //mainMenu.add(menuFileSave);
+        //mainMenu.add(menuFileSaveAs);
         mainMenu.addSeparator();
         mainMenu.add(menuFileExportPetriNet);
         mainMenu.add(menuFileExportResults);

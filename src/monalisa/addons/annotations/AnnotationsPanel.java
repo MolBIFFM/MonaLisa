@@ -72,8 +72,8 @@ public class AnnotationsPanel extends AddonPanel {
     public AnnotationsPanel(final NetViewer netViewer, final PetriNetFacade petriNet) {
         super(netViewer, petriNet, "Annotations");
         LOGGER.info("Initializing AnnotationsPanel");
-        helpText = "<html><center>&nbsp;&nbsp;&nbsp;For an overview over MIRIAM click <a href=\"http://www.ebi.ac.uk/miriam/main/\">here</a>&nbsp;&nbsp;&nbsp;"
-                + "<br />&nbsp;&nbsp;&nbsp;For an overview over SBO click <a href=\"http://www.ebi.ac.uk/sbo/main/\">here</a>&nbsp;&nbsp;&nbsp;</center></html>";
+        helpText = "<html><center>&nbsp;&nbsp;&nbsp;For the publication on MIRIAM click <a href=\"https://doi.org/10.1038/nbt1156\">here</a>&nbsp;&nbsp;&nbsp;"
+                + "<br />&nbsp;&nbsp;&nbsp;For an overview over SBO click <a href=\"http://www.ebi.ac.uk/sbo/\">here</a>&nbsp;&nbsp;&nbsp;</center></html>";
         initComponents();
 
         mif = new ModelInformationFrame(this, petriNet, netViewer);

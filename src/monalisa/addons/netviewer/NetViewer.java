@@ -33,6 +33,7 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -1067,7 +1068,8 @@ public class NetViewer extends JFrame implements ActionListener {
                 // Create an instance of the SVG Generator
                 SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
                 vv.paint(svgGenerator);
-                svgGenerator.stream(imgFile.getAbsolutePath());
+                Writer out = new OutputStreamWriter(new FileOutputStream(imgFile.getAbsolutePath()), "UTF-8");
+                svgGenerator.stream(out);
                 LOGGER.info("Successfully saved current layout as .svg");
             }
         }

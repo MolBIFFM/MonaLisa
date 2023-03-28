@@ -72,7 +72,7 @@ public class AnnotationsPanel extends AddonPanel {
     public AnnotationsPanel(final NetViewer netViewer, final PetriNetFacade petriNet) {
         super(netViewer, petriNet, "Annotations");
         LOGGER.info("Initializing AnnotationsPanel");
-        helpText = "<html><center>&nbsp;&nbsp;&nbsp;For the publication on MIRIAM click <a href=\"https://doi.org/10.1038/nbt1156\">here</a>&nbsp;&nbsp;&nbsp;"
+        helpText = "<html><center>&nbsp;&nbsp;&nbsp;Publication on MIRIAM: <a href=\"https://doi.org/10.1038/nbt1156\">Novère, N., Finney, A., Hucka, M. et al. Minimum information requested in the annotation of biochemical models (MIRIAM). Nat Biotechnol 23, 1509–1515 (2005).</a>&nbsp;&nbsp;&nbsp;"
                 + "<br />&nbsp;&nbsp;&nbsp;For an overview over SBO click <a href=\"http://www.ebi.ac.uk/sbo/\">here</a>&nbsp;&nbsp;&nbsp;</center></html>";
         initComponents();
 

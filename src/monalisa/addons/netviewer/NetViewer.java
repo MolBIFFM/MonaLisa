@@ -27,7 +27,6 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import java.awt.*;
 import java.awt.event.*;
@@ -318,7 +317,7 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.setEdgeToolTipTransformer(new EdgeToolTipTransformer());
         vv.getRenderer().setEdgeRenderer(new MyEdgeRenderer());
         vv.getRenderContext().setVertexLabelTransformer(new VertexLabelTransformer()); // render vertex label
-        vv.getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(20)); //render token image
+        vv.getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(12)); //render token image TODO:CHANGEABLE!
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabelTransformer()); // render edge label
         vv.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(12)); // render the shape of the vertices
         vv.getRenderContext().setVertexFillPaintTransformer(new VertexPaintTransformer()); // controll the color of vertices

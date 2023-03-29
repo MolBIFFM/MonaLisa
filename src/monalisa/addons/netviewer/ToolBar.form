@@ -666,8 +666,12 @@
                           <Connection code="new SpinnerNumberModel(12, 5, 150, 1)" type="code"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="iconSizeSpinnerStateChanged"/>
+                        <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="iconSizeSpinnerPropertyChange"/>
+                      </Events>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="iconSizeSpinner.addChangeListener(new ChangeListener() {           &#xa;    @Override&#xa;    public void stateChanged(ChangeEvent e) {&#xa;        int iconSize = ((Integer)iconSizeSpinner.getValue());&#xa;        netViewer.getProject().putProperty(&quot;iconSize&quot;, iconSize);        &#xa;        netViewer.setIconSize(iconSize);&#xa;    }&#xa;});"/>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="iconSizeSpinner.addChangeListener(new ChangeListener() {           &#xa;    @Override&#xa;    public void stateChanged(ChangeEvent e) {&#xa;        int newIconSize = ((Integer) iconSizeSpinner.getValue());&#xa;        netViewer.getProject().putProperty(&quot;iconSize&quot;, newIconSize);        &#xa;        netViewer.setIconSize(newIconSize);&#xa;        netViewer.getVisualizationViewer().getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(newIconSize));&#xa;        netViewer.getVisualizationViewer().getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(newIconSize));&#xa;        netViewer.getVisualizationViewer().repaint();&#xa;    }&#xa;});"/>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                       </AuxValues>
                       <Constraints>

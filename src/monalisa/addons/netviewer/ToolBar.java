@@ -25,7 +25,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
+import monalisa.addons.netviewer.transformer.VertexIconTransformerPlace;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
+import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
 import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.data.pn.Compartment;
 import monalisa.data.pn.PInvariant;
@@ -680,9 +682,22 @@ public class ToolBar extends javax.swing.JPanel {
         iconSizeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                int iconSize = ((Integer)iconSizeSpinner.getValue());
-                netViewer.getProject().putProperty("iconSize", iconSize);
-                netViewer.setIconSize(iconSize);
+                int newIconSize = ((Integer) iconSizeSpinner.getValue());
+                netViewer.getProject().putProperty("iconSize", newIconSize);
+                netViewer.setIconSize(newIconSize);
+                netViewer.getVisualizationViewer().getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(newIconSize));
+                netViewer.getVisualizationViewer().getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(newIconSize));
+                netViewer.getVisualizationViewer().repaint();
+            }
+        });
+        iconSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                iconSizeSpinnerStateChanged(evt);
+            }
+        });
+        iconSizeSpinner.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                iconSizeSpinnerPropertyChange(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -1289,6 +1304,14 @@ public class ToolBar extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
         }
     }//GEN-LAST:event_reachabilityButtonActionPerformed
+
+    private void iconSizeSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_iconSizeSpinnerStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_iconSizeSpinnerStateChanged
+
+    private void iconSizeSpinnerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_iconSizeSpinnerPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_iconSizeSpinnerPropertyChange
 
     public boolean stackSelection() {
         return this.stackSelection.isSelected();

@@ -3168,6 +3168,8 @@ public class NetViewer extends JFrame implements ActionListener {
             if (place.id() > latestVertexID) {
                 latestVertexID = place.id();
             }
+            //give place tokens
+            nvNode.setTokens(pn.getTokens(place));
         }
         // generate Transitions
         for (Transition transition : pn.transitions()) {

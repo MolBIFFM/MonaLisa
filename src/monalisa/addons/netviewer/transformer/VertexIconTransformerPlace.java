@@ -83,6 +83,8 @@ public class VertexIconTransformerPlace implements Transformer<NetViewerNode, Ic
             Graphics2D graphics = (Graphics2D) image.getGraphics();
             graphics.setColor(n.getColor());
             graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
+            graphics.setColor(n.getStrokeColor());
+            graphics.drawRect(0, 0, vertexSize - 1, vertexSize - 1);
             return new ImageIcon(image);
         }
 

@@ -108,10 +108,10 @@ public class VertexIconTransformerPlace implements Transformer<NetViewerNode, Ic
                 graphics.setColor(n.getColor());
             }
             graphics.fillOval(0, 0, vertexSize - 1, vertexSize - 1);  // draw outline of the icon
-            graphics.setColor(Color.black);
+            graphics.setColor(n.getStrokeColor());
             graphics.drawOval(0, 0, vertexSize - 1, vertexSize - 1);
 
-            graphics.setColor(Color.RED);
+            graphics.setColor(Color.black);
             long tokenCount = n.getTokens();
             switch ((int) tokenCount) {
                 case 0:

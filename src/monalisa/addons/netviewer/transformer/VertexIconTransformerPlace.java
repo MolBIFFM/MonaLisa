@@ -71,9 +71,7 @@ public class VertexIconTransformerPlace implements Transformer<NetViewerNode, Ic
         int id = n.getMasterNode().getId();
 
         /*
-         * If the node is a transition and inactive, return black square
-         * If the node is a transition and active, return black square with green border
-         * If the node is a transition, is active and fired at last step, return green square with red border
+         * If the node is a transition return black square
          */
         if (n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
             BufferedImage image = new BufferedImage(this.vertexSize, this.vertexSize, BufferedImage.TYPE_INT_ARGB);
@@ -83,7 +81,7 @@ public class VertexIconTransformerPlace implements Transformer<NetViewerNode, Ic
                 }
             }
             Graphics2D graphics = (Graphics2D) image.getGraphics();
-            graphics.setColor(Color.BLACK);
+            graphics.setColor(n.getColor());
             graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
             return new ImageIcon(image);
         }
@@ -107,7 +105,7 @@ public class VertexIconTransformerPlace implements Transformer<NetViewerNode, Ic
             } else if (n.isLogical()) {
                 graphics.setColor(Color.LIGHT_GRAY);
             } else {
-                graphics.setColor(Color.WHITE);
+                graphics.setColor(n.getColor());
             }
             graphics.fillOval(0, 0, vertexSize - 1, vertexSize - 1);  // draw outline of the icon
             graphics.setColor(Color.black);

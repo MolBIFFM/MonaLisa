@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
@@ -78,7 +79,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 /**
  *
  * @author Pavel Balazki.
@@ -703,7 +703,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
 
     private void startSimulationJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSimulationJButtonActionPerformed
         String simType = simModeJComboBox.getSelectedItem().toString();
-        initTS();
+        initTS();  
         createTokenSim(simType);
         startSim();
         this.simulationMan.startSimulator();
@@ -922,9 +922,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         fontSizeSpinner.setValue(netViewer.getFontSize());
         arrowSizeSpinner.setValue(netViewer.getArrowSize());
         edgeSizeSpinner.setValue(netViewer.getEdgeSize());
-        if (netViewer.getIconSize() > 25) {
-            iconSizeSpinner.setValue(netViewer.getIconSize());
-        }
+        iconSizeSpinner.setValue(netViewer.getIconSize());
         //enables/disables GUI-components
         startSimulationJButton.setEnabled(false);
         endSimulationJButton.setEnabled(true);

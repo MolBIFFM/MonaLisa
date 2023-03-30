@@ -189,11 +189,7 @@ public class SbmlOutputHandler implements OutputHandler {
             species.setBoundaryCondition(false);
             species.setConstant(false);
 
-            if (p.hasProperty("token")) {
-                species.setInitialAmount((Double) p.getProperty("token"));
-            } else {
-                species.setInitialAmount(0.0);
-            }
+            species.setInitialAmount(pn.getTokens(p).doubleValue());
 
             if (p.hasProperty("toolTip")) {
                 try {

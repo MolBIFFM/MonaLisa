@@ -3831,4 +3831,17 @@ public class NetViewer extends JFrame implements ActionListener {
             LOGGER.debug("Successfully reversed transition");
         }
     }
+    
+    
+        /**
+     * Changing coordinates: Rounding to the nearest ten
+     * @param point
+     * @return double
+     */
+    public double formatCoordinates(double point) {
+        if (point % 10 != 0) {
+            point = Math.round(point/10.0) * 10;
+        }
+        return point;
+    }
 }

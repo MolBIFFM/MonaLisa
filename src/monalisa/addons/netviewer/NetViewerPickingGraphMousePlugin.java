@@ -20,6 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.ConcurrentModificationException;
 
+import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER; //todo delete
+
 /**
  *
  * @author JUNG Library, modified by Jens Einloft
@@ -114,6 +116,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
             if (vertex != null) {
                 Point p = e.getPoint();
                 Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+                //LOGGER.info(point.x+"" + " " + point.y+""); // todo delete
                 Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
                 Layout<V, E> layout = vv.getGraphLayout();
                 double dx = graphPoint.getX() - graphDown.getX();
@@ -122,7 +125,13 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
                 for (V v : ps.getPicked()) {
                     Point2D vp = layout.transform(v);
-                    vp.setLocation(vp.getX() + dx, vp.getY() + dy);
+                    // start trying to format coordinates
+                    LOGGER.info((vp.getX() + dx)+"" + " " + (vp.getY() + dy)+""); // todo delete
+                    //double newCoord = formatCoordinates(vp.getX() + dx); // todo delete
+                    vp.setLocation(formatCoordinates(vp.getX() + dx), formatCoordinates(vp.getY() + dy));
+                    LOGGER.info(formatCoordinates(vp.getX() + dx)+"" + " " + formatCoordinates(vp.getY() + dy)+""); // todo delete
+                    // stop
+                    //vp.setLocation(vp.getX() + dx, vp.getY() + dy);
                     layout.setLocation(v, vp);
                 }
                 down = p;
@@ -147,6 +156,13 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+    
+    public double formatCoordinates(double point) { // todo change file or delete
+        if (point % 10 != 0) {
+            point = Math.round(point/10.0) * 10;
+        }
+        return point;
     }
 
 }

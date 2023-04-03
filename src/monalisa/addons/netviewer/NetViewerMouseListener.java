@@ -16,6 +16,8 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
 import monalisa.synchronisation.Synchronizer;
 
+import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER; // todo delete
+
 /**
  * MouseListener to react on mouse clicks for creating new nodes
  *
@@ -39,14 +41,20 @@ public class NetViewerMouseListener implements MouseListener {
         this.nv = nv;
         this.synchronizer = synchronizer;
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
             if (this.mouseMode.equalsIgnoreCase(PLACE)) {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
-                point.y = e.getY();
+                point.y = e.getY(); 
+                // start trying to change coordinates to spezific numbers
+                LOGGER.info(point.x+"" + " " + point.y+""); // todo delete
+                point.x = nv.formatCoordinates(point.x);
+                point.y = nv.formatCoordinates(point.y);
+                LOGGER.info(point.x+"" + " " + point.y+""); // todo delete
+                // stop
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
@@ -54,6 +62,12 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY();
+                // start trying to change coordinates to spezific numbers
+                LOGGER.info(point.x+"" + " " + point.y+""); // todo delete
+                point.x = nv.formatCoordinates(point.x);
+                point.y = nv.formatCoordinates(point.y);
+                LOGGER.info(point.x+"" + " " + point.y+""); // todo delete
+                // stop
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
@@ -72,6 +86,7 @@ public class NetViewerMouseListener implements MouseListener {
 
     }
 
+    
     @Override
     public void mousePressed(MouseEvent e) {
 

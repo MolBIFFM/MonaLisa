@@ -703,6 +703,7 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Setting new icon size");
         if (this.tb != null) {
             if ((int) this.tb.iconSizeSpinner.getValue() != newVertexSize) {
+                LOGGER.info(this.tb.iconSizeSpinner.getValue() + "");
                 this.tb.iconSizeSpinner.setValue(newVertexSize);
                 return;
             }
@@ -3817,6 +3818,7 @@ public class NetViewer extends JFrame implements ActionListener {
     public void reverseTransition(NetViewerNode nvNode, int x, int y) {
         if (nvNode.getNodeType().equalsIgnoreCase(TRANSITION)) {
             LOGGER.debug("Reversing transition");
+            LOGGER.info("reverse:" + x+"" + " " + y+""); // TODO delete
             NetViewerNode newNode = addNode(TRANSITION, nvNode.getName() + "_rev", x, y);
             Arc a;
             Transition t = getTransitionFromNode(nvNode);
@@ -3839,8 +3841,12 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return double
      */
     public double formatCoordinates(double point) {
-        if (point % 10 != 0) {
-            point = Math.round(point/10.0) * 10;
+        //if (point % 10 != 0) {
+        //    point = Math.round(point/10.0) * 10;
+        //}
+        //return point;
+        if (point % 5 != 0) {
+            point = Math.round(point/5.0) * 5;
         }
         return point;
     }

@@ -133,8 +133,8 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Reverse Transitions");
-                        nv.reverseTransition(nvNode, (int)formatCoordinates(me.getX()), (int)formatCoordinates(me.getY()));
-                        //nv.reverseTransition(nvNode, me.getX(), me.getY());
+                        nv.reverseTransition(nvNode, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // vertex is created on grid
+                        //nv.reverseTransition(nvNode, me.getX(), me.getY()); // without grid
                         nv.modificationActionHappend();
                     }
                 });
@@ -174,17 +174,5 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
 
         popup.show(owner, me.getX(), me.getY());
         LOGGER.debug("Done handling popup for SearchBar");
-    }
-    
-    
-    public double formatCoordinates(double point) { // TODO change file or delete
-        //if (point % 10 != 0) {
-        //    point = Math.round(point/10.0) * 10;
-        //}
-        //return point;
-        if (point % 5 != 0) {
-            point = Math.round(point/5.0) * 5;
-        }
-        return point;
     }
 }

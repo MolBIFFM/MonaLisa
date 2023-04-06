@@ -449,12 +449,8 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         });
 
         iconSizeSpinner.setModel(new SpinnerNumberModel(12, 5, 150, 1));
+        iconSizeSpinner.setToolTipText("");
         iconSizeSpinner.setEnabled(false);
-        iconSizeSpinner.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                iconSizeSpinnerPropertyChange(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 0;
@@ -811,10 +807,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         }
     }//GEN-LAST:event_makePicActionPerformed
 
-    private void iconSizeSpinnerPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_iconSizeSpinnerPropertyChange
-        // TODO add your handling code here:
-    }//GEN-LAST:event_iconSizeSpinnerPropertyChange
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowSizeLabel;
     protected javax.swing.JSpinner arrowSizeSpinner;
@@ -932,7 +924,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         arrowSizeSpinner.setValue(netViewer.getArrowSize());
         edgeSizeSpinner.setValue(netViewer.getEdgeSize());
         iconSizeSpinner.setValue(netViewer.getIconSize());
-        LOGGER.info("newviewer " + netViewer.getIconSize()+ ""); // TODO delete
         //enables/disables GUI-components
         startSimulationJButton.setEnabled(false);
         endSimulationJButton.setEnabled(true);
@@ -970,15 +961,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         Map<Place, Boolean> placesToPlot = new HashMap<>();
         simulationMan.getPreferences().put("PlacesToPlot", placesToPlot);
         
-        //assign correct values for the spinner // TODO delete
-        //fontSizeSpinner.setValue(netViewer.getFontSize());// TODO delete
-        //arrowSizeSpinner.setValue(netViewer.getArrowSize());// TODO delete
-        //edgeSizeSpinner.setValue(netViewer.getEdgeSize());// TODO delete
-        iconSizeSpinner.setValue(netViewer.getIconSize());// TODO delete? size doesnt change anymore
-        
         //get the size of vertices in NetViewer
-        vertexSize = (int) iconSizeSpinner.getValue();
-        LOGGER.info("vertexSize "+vertexSize+""); // TODO delete
+        vertexSize = (int) netViewer.getIconSize(); // input from control is displayed in simulator (icon size doesn't change anymore)
+        //vertexSize = (int) iconSizeSpinner.getValue();
         //create clear history
         simulationMan.lastHistoryStep = -1;
         simulationMan.historyArrayList = new ArrayList<>();

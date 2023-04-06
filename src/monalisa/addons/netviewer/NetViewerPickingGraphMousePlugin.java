@@ -20,7 +20,6 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.ConcurrentModificationException;
 
-import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER; //TODO delete
 
 /**
  *
@@ -114,8 +113,8 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
         if (locked == false) {
             VisualizationViewer<V, E> vv = (VisualizationViewer) e.getSource();
             if (vertex != null) {
-                //Point p = e.getPoint();
-                Point p = new Point((int) formatCoordinates(e.getPoint().getX()), (int) formatCoordinates(e.getPoint().getY()));
+                //Point p = e.getPoint(); // dragging everywhere
+                Point p = new Point((int) NetViewer.formatCoordinates(e.getPoint().getX()), (int) NetViewer.formatCoordinates(e.getPoint().getY())); // dragging on specific coordinates only 
                 Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
                 Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
                 Layout<V, E> layout = vv.getGraphLayout();
@@ -125,18 +124,9 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
                 for (V v : ps.getPicked()) {
                     Point2D vp = layout.transform(v);
-                    // start trying to format coordinates
-                    //LOGGER.info((vp.getX() + dx)+"" + " " + (vp.getY() + dy)+""); // TODO delete
-                    //vp.setLocation(formatCoordinates(vp.getX() + dx), formatCoordinates(vp.getY() + dy));
-                    //LOGGER.info(formatCoordinates(vp.getX() + dx)+"" + " " + formatCoordinates(vp.getY() + dy)+""); // TODO delete
-                    // stop
                     vp.setLocation(vp.getX() + dx, vp.getY() + dy);
-                    //Point2D.Double coord = new Point2D.Double(formatCoordinates(vp.getX()), formatCoordinates(vp.getY()));
-                    //layout.setLocation(v, coord);
                     layout.setLocation(v, vp);
                 }
-                //down = new Point((int) formatCoordinates(p.getX()), (int) formatCoordinates(p.getY()));
-                //LOGGER.info("p " + down.getX()+"" + " " + down.getY()+"");
                 down = p;
 
             } else {
@@ -160,16 +150,4 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
-    
-    public double formatCoordinates(double point) { // TODO change file or delete
-        //if (point % 10 != 0) {
-        //    point = Math.round(point/10.0) * 10;
-        //}
-        //return point;
-        if (point % 5 != 0) {
-            point = Math.round(point/5.0) * 5;
-        }
-        return point;
-    }
-
 }

@@ -3818,7 +3818,6 @@ public class NetViewer extends JFrame implements ActionListener {
     public void reverseTransition(NetViewerNode nvNode, int x, int y) {
         if (nvNode.getNodeType().equalsIgnoreCase(TRANSITION)) {
             LOGGER.debug("Reversing transition");
-            LOGGER.info("reverse:" + x+"" + " " + y+""); // TODO delete
             NetViewerNode newNode = addNode(TRANSITION, nvNode.getName() + "_rev", x, y);
             Arc a;
             Transition t = getTransitionFromNode(nvNode);
@@ -3835,16 +3834,12 @@ public class NetViewer extends JFrame implements ActionListener {
     }
     
     
-        /**
-     * Changing coordinates: Rounding to the nearest ten
-     * @param point
+     /**
+     * Changing coordinates: Rounding to the nearest five
+     * @param point (double)
      * @return double
      */
-    public double formatCoordinates(double point) {
-        //if (point % 10 != 0) {
-        //    point = Math.round(point/10.0) * 10;
-        //}
-        //return point;
+    public static double formatCoordinates(double point) {
         if (point % 5 != 0) {
             point = Math.round(point/5.0) * 5;
         }

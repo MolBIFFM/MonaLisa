@@ -375,8 +375,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Creating reverse transition");
-                            nv.reverseTransition(node, (int)formatCoordinates(me.getX()), (int)formatCoordinates(me.getY()));
-                            //nv.reverseTransition(node, me.getX(), me.getY());
+                            nv.reverseTransition(node, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // vertex is created on grid
+                            //nv.reverseTransition(node, me.getX(), me.getY()); // without grid
                             nv.modificationActionHappend();
                         }
                     });
@@ -659,16 +659,5 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
 
     public String getMouseMode() {
         return this.mouseMode;
-    }
-    
-    public double formatCoordinates(double point) { // TODO change file or delete
-        //if (point % 10 != 0) {
-        //    point = Math.round(point/10.0) * 10;
-        //}
-        //return point;
-        if (point % 5 != 0) {
-            point = Math.round(point/5.0) * 5;
-        }
-        return point;
     }
 }

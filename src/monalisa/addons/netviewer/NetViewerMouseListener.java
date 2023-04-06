@@ -49,7 +49,7 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY(); 
-                // start trying to change coordinates to spezific numbers
+                // start trying to change coordinates to spezific numbers (grid)
                 LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
                 point.x = nv.formatCoordinates(point.x);
                 point.y = nv.formatCoordinates(point.y);
@@ -62,7 +62,7 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY();
-                // start trying to change coordinates to spezific numbers
+                // start trying to change coordinates to spezific numbers (grid)
                 LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
                 point.x = nv.formatCoordinates(point.x);
                 point.y = nv.formatCoordinates(point.y);

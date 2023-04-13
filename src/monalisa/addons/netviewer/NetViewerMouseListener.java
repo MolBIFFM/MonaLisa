@@ -49,12 +49,11 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY(); 
-                // start trying to change coordinates to spezific numbers (grid)
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                point.x = nv.formatCoordinates(point.x);
-                point.y = nv.formatCoordinates(point.y);
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                // stop
+//                // start trying to change coordinates to spezific numbers (grid)
+//                point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+//                point.y = nv.formatCoordinates(e.getY());
+//                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
+//                // stop
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
@@ -62,12 +61,11 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 point.x = e.getX();
                 point.y = e.getY();
-                // start trying to change coordinates to spezific numbers (grid)
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                point.x = nv.formatCoordinates(point.x);
-                point.y = nv.formatCoordinates(point.y);
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                // stop
+//                // start trying to change coordinates to spezific numbers (grid)
+//                point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+//                point.y = nv.formatCoordinates(e.getY());
+//                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
+//                // stop
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
@@ -75,7 +73,7 @@ public class NetViewerMouseListener implements MouseListener {
         } else if (e.getClickCount() == 2 && nv.getMouseMode()) {
             psN = nv.vv.getRenderContext().getPickedVertexState();
             if (psN.getPicked().size() == 1) {
-                nv.showVertexSetup((NetViewerNode) psN.getPicked().toArray()[0], e.getX(), e.getY());
+                nv.showVertexSetup((NetViewerNode) psN.getPicked().toArray()[0]); //, e.getX(), e.getY());
             }
 
             psE = nv.vv.getPickedEdgeState();

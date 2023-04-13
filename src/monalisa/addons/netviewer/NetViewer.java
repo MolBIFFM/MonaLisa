@@ -34,6 +34,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.io.OutputStreamWriter;
+import static java.lang.Math.ceil;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -79,6 +80,7 @@ import monalisa.util.MonaLisaFileFilter;
 import monalisa.util.OutputFileFilter;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.commons.collections15.Transformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.DOMImplementation;
@@ -311,6 +313,11 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.debug("Initializing VisualizationViewer");
         // Init the VisualizationViewer and set all Renderer ect.
         vv = new VisualizationViewer<>(layout);//, gridSize, oo);
+        
+//        JPanel gridPanel = gridLayout(); // TODO put grid into the background / change or delete
+//        gridPanel.setLayout(null);
+//        vv.add(gridPanel);
+        
         vv.setPreferredSize(nvDimension);
         vv.setSize(nvDimension);
         vv.setVertexToolTipTransformer(new VertexToolTipTransformer()); // render the tooltips by mouse over
@@ -371,7 +378,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 }
             }
         });
-
+        
         vv.setBackground(BACKGROUND_COLOR);
         vv.repaint();
         LOGGER.debug("Finished initializing VisualizationViewer");
@@ -392,7 +399,6 @@ public class NetViewer extends JFrame implements ActionListener {
         mainPanel = new JPanel();
         mainPanel.setLayout(cardLayout);
         mainPanel.add(vv, VVPANEL);
-
         mainSplitPane = new JSplitPane();
         mainSplitPane.setSize(nvDimension);
         mainSplitPane.setPreferredSize(nvDimension);
@@ -401,21 +407,17 @@ public class NetViewer extends JFrame implements ActionListener {
 
         mainSplitPane.setLeftComponent(mainPanel);
         mainSplitPane.setRightComponent(tb);
-
         Container contentPane = getContentPane();
         double sizeOfMainLayout[][]
                 = {{TableLayout.FILL},
                 {TableLayout.FILL, TableLayout.PREFERRED}};
-
         contentPane.setLayout(new TableLayout(sizeOfMainLayout));
         contentPane.setSize(nvDimension);
         contentPane.add(mainSplitPane, "0,0");
         contentPane.add(infoBarLabel, "0,1");
-
         pack();
-
+        
         updateInfoBar();
-
         updateSearchBar(g.getVertices());
         markSelectedMouseMode(tb.mousePickingPanel);
         LOGGER.debug("Finished initializing GUI");
@@ -800,7 +802,9 @@ public class NetViewer extends JFrame implements ActionListener {
         center();
         Dimension d = vv.getSize();
         Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
+        //Point2D viewCenter = new Point2D.Double(NetViewer.formatCoordinates(d.width / 2), NetViewer.formatCoordinates(d.height / 2)); // TODO change or delete
         Point2D nodePosition = vv.getModel().getGraphLayout().transform(nvNode);
+        LOGGER.info("zoom" + nodePosition + "");
         viewCenter = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(viewCenter);
         double xdist = viewCenter.getX() - nodePosition.getX();
         double ydist = viewCenter.getY() - nodePosition.getY();
@@ -2633,13 +2637,14 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param x
      * @param y
      */
-    protected void showVertexSetup(NetViewerNode nvNode, int x, int y) {
+    protected void showVertexSetup(NetViewerNode nvNode) {//, int x, int y) {
         LOGGER.info("Opening properties menu for a vertex");
         if (nvNode != null) {
             if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
                 VertexSetupFrame setupFrame = new VertexSetupFrame(this, Arrays.asList(nvNode));
-
-                setupFrame.setLocation(x, y);
+                
+                setupFrame.setLocationRelativeTo(null); // centers popup on the screen
+                //setupFrame.setLocation(x, y);
                 setupFrame.setVisible(true);
                 this.setEnabled(false);
             }
@@ -2655,12 +2660,13 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param x
      * @param y
      */
-    protected void showVertexSetup(List<NetViewerNode> selectedNodes, int x, int y) {
+    protected void showVertexSetup(List<NetViewerNode> selectedNodes) { //, int x, int y) {
         if (selectedNodes != null) {
             LOGGER.info("Opening properties menu for several vertices");
             VertexSetupFrame setupFrame = new VertexSetupFrame(this, selectedNodes);
 
-            setupFrame.setLocation(x, y);
+            setupFrame.setLocationRelativeTo(null); // centers popup on the screen
+            //setupFrame.setLocation(x, y);
             setupFrame.setVisible(true);
             setupFrame.setAlwaysOnTop(true);
             this.setEnabled(false);
@@ -3834,15 +3840,50 @@ public class NetViewer extends JFrame implements ActionListener {
     }
     
     
-     /**
-     * Changing coordinates: Rounding to the nearest five
-     * @param point (double)
-     * @return double
-     */
-    public static double formatCoordinates(double point) {
-        if (point % 5 != 0) {
-            point = Math.round(point/5.0) * 5;
-        }
-        return point;
-    }
+//     /**
+//     * Changing coordinates: Rounding to the nearest five
+//     * @param point (double)
+//     * @return double
+//     */
+//    public static double formatCoordinates(double point) {
+//        if (point % 10 != 0) {
+//            point = Math.round(point/10.0) * 10;
+//        }
+//        return point;
+//    }
+//    
+//    private static final int DRAWING_SIZE_X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // TODO change position
+//    private static final int DRAWING_SIZE_Y = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+//    private static final int SUBDIVISION_SIZE_X = 50;
+//    private static final int SUBDIVISION_SIZE_Y = 50;
+//    private static final int SUBDIVISIONS_X = (int) ceil(DRAWING_SIZE_X / SUBDIVISION_SIZE_X);
+//    private static final int SUBDIVISIONS_Y = (int) ceil(DRAWING_SIZE_Y / SUBDIVISION_SIZE_Y);
+//   
+//    /**
+//     * 
+//     */
+//    private JPanel gridLayout() {
+//        setSize(800, 800); // TODO change
+//        JPanel panel = new JPanel() {
+//            @Override public void paintComponent(Graphics g) {
+//                super.paintComponent(g);
+//                Graphics2D g2 = (Graphics2D) g;
+//                g2.setPaint(Color.GRAY);
+//                for (int i = 0; i < SUBDIVISIONS_X; i++) {
+//                    int x = i * SUBDIVISION_SIZE_X;
+//                    g2.drawLine(x, 0, x, getSize().height);
+//                }
+//                for (int i = 0; i < SUBDIVISIONS_Y; i++) {
+//                    int y = i * SUBDIVISION_SIZE_Y;
+//                    g2.drawLine(0, y, getSize().width, y);
+//                }
+//            }          
+//        };
+//        panel.setPreferredSize(new Dimension(DRAWING_SIZE_X, DRAWING_SIZE_Y)); // TODO change
+//        panel.setOpaque(false);
+//        //panel.setBackground(BACKGROUND_COLOR);
+//        //add(panel);
+//        //setVisible(true);
+//        return panel;
+//    }
 }

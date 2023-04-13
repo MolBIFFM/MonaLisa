@@ -224,7 +224,7 @@
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addTransitionButtonActionPerformed"/>
                           </Events>
                           <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="addTransitionButton.setToolTipText(strings.get(&quot;NVTransition&quot;));"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="addTransitionButton.setToolTipText(strings.get(&quot;NVCreateTransition&quot;));"/>
                             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                           </AuxValues>
                           <Constraints>

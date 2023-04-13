@@ -387,7 +387,7 @@ public class ToolBar extends javax.swing.JPanel {
         addTransitionPanel.setLayout(new java.awt.GridBagLayout());
 
         addTransitionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/transition.png"))); // NOI18N
-        addTransitionButton.setToolTipText(strings.get("NVTransition"));
+        addTransitionButton.setToolTipText(strings.get("NVCreateTransition"));
         addTransitionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTransitionButtonActionPerformed(evt);

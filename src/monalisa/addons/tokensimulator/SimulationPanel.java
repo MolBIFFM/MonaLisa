@@ -145,8 +145,8 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         simModeJComboBox.addItem(strings.get("ATSName"));
         simModeJComboBox.addItem(strings.get("STSName"));
         simModeJComboBox.addItem(strings.get("StochTSName"));
-        simModeJComboBox.addItem(strings.get("GilTSName"));
-        simModeJComboBox.setSelectedIndex(3);
+        simModeJComboBox.addItem(strings.get("GilTSName")); // TODO disable
+        simModeJComboBox.setSelectedIndex(0); // shows asyncronous by default
 
         //history
         this.simulationMan.historyListModel = new DefaultListModel();

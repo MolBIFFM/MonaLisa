@@ -111,7 +111,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering vertex setup");
-                        nv.showVertexSetup(pickedVerticesList, me.getX(), me.getY());
+                        nv.showVertexSetup(pickedVerticesList); //, me.getX(), me.getY());
                         LOGGER.info("Leaving vertex setup");
                     }
                 });
@@ -265,7 +265,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering vertex setup");
-                        nv.showVertexSetup(node, me.getX(), me.getY());
+                        nv.showVertexSetup(node); //, me.getX(), me.getY());
                         LOGGER.info("Leaving vertex setup");
                     }
                 });
@@ -285,7 +285,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     case NetViewer.PLACE:
                         LOGGER.debug("Place selected for popup");
                         // Add Transition
-                        JMenu addTransitionMenu = new JMenu(strings.get("NVCreateTransition"));
+                        JMenu addTransitionMenu = new JMenu(strings.get("NVTransition"));
                         addTransitionMenu.add(new AbstractAction(strings.get("NVIn")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -316,7 +316,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     case NetViewer.TRANSITION:
                         LOGGER.debug("Transition selected for popup");
                         // Add Place
-                        JMenu addPlaceMenu = new JMenu(strings.get("NVCreateVertex"));
+                        JMenu addPlaceMenu = new JMenu(strings.get("NVPlace"));
                         addPlaceMenu.add(new AbstractAction(strings.get("NVIn")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -347,7 +347,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 }
 
                 // Insert Edge
-                popup.add(new AbstractAction(strings.get("NVCreateEdge")) {
+                popup.add(new AbstractAction(strings.get("NVEdge")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Inserting edge");
@@ -375,8 +375,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Creating reverse transition");
-                            nv.reverseTransition(node, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // vertex is created on grid
-                            //nv.reverseTransition(node, me.getX(), me.getY()); // without grid
+                            //nv.reverseTransition(node, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // TODO change or delete
+                            nv.reverseTransition(node, me.getX(), me.getY());
                             nv.modificationActionHappend();
                         }
                     });

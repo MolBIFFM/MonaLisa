@@ -47,7 +47,7 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         this.nvNodes = nvNodes;
         this.netViewer = netViewer;
 
-        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
 
         initComponents();
 

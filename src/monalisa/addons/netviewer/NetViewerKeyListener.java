@@ -11,6 +11,8 @@ package monalisa.addons.netviewer;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER;
 
 /**
  * KeyListener to react on pressed keys in the NetViewer
@@ -49,42 +51,58 @@ public class NetViewerKeyListener implements KeyListener {
             // ESC
             if (keyCode.equals(KeyEvent.VK_ESCAPE)) {
                 nv.cancelMouseAction();
+            } // 1
+            else if (keyCode.equals(KeyEvent.VK_1)) {
+                nv.placeMouseAction();
+            } // 2
+            else if (keyCode.equals(KeyEvent.VK_2)) {
+                nv.transitionMouseAction();
+            } // 3
+            else if (keyCode.equals(KeyEvent.VK_3)) {
+                nv.edgeMouseAction();
+            } // 4
+            else if (keyCode.equals(KeyEvent.VK_4)) {
+                nv.deleteMouseAction();
             } // Q
             else if (keyCode.equals(KeyEvent.VK_Q)) {
-                nv.placeMouseAction();
+                nv.outVertexMouseAction();
             } // W
             else if (keyCode.equals(KeyEvent.VK_W)) {
-                nv.transitionMouseAction();
+                nv.inVertexMouseAction();
             } // E
             else if (keyCode.equals(KeyEvent.VK_E)) {
-                nv.edgeMouseAction();
+                nv.addBendMouseAction();
             } // R
             else if (keyCode.equals(KeyEvent.VK_R)) {
-                nv.deleteMouseAction();
+                nv.deleteBendMouseAction();
             } // S
             else if (keyCode.equals(KeyEvent.VK_S)) {
-                nv.inVertexMouseAction();
+                nv.alignXMouseAction();
             } // A
             else if (keyCode.equals(KeyEvent.VK_A)) {
-                nv.outVertexMouseAction();
+                nv.alignYMouseAction();
             } // D
             else if (keyCode.equals(KeyEvent.VK_D)) {
-                nv.addBendMouseAction();
+                nv.changeMouseModeToPicking();
             } // F
             else if (keyCode.equals(KeyEvent.VK_F)) {
-                nv.deleteBendMouseAction();
+                nv.changeMouseModeToTransforming();
             } // Y
             else if (keyCode.equals(KeyEvent.VK_Y)) {
-                nv.alignYMouseAction();
+                nv.saveProject();
             } // X
             else if (keyCode.equals(KeyEvent.VK_X)) {
-                nv.alignXMouseAction();
+                try {
+                    nv.makePic();
+                } catch (IOException ex) {
+                    LOGGER.error("Issue while making picture: ", ex);
+                }
             } // C
             else if (keyCode.equals(KeyEvent.VK_C)) {
-                nv.changeMouseModeToPicking();
+                nv.showLabels(); // TODO change image
             } // V
             else if (keyCode.equals(KeyEvent.VK_V)) {
-                nv.changeMouseModeToTransforming();
+                nv.hideColor();
             } // Delete
             else if (keyCode.equals(KeyEvent.VK_DELETE)) {
                 nv.removeSelectedVertices();

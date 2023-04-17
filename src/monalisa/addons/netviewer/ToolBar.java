@@ -358,7 +358,7 @@ public class ToolBar extends javax.swing.JPanel {
                 if(!blockSpinner) {
                     value = (Integer)zoomSpinner.getValue();
                     inOrOut = (value >= lastValue) ? 1 : -1;
-                    netViewer.zommToValue(inOrOut);
+                    netViewer.zoomToValue(inOrOut);
                 }
             }
         });
@@ -681,7 +681,7 @@ public class ToolBar extends javax.swing.JPanel {
             }
         });
 
-        iconSizeSpinner.setModel(new SpinnerNumberModel(12, 5, 150, 1));
+        iconSizeSpinner.setModel(new SpinnerNumberModel(16, 5, 150, 1));
         iconSizeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {

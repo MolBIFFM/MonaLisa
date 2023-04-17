@@ -304,7 +304,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         });
                         popup.add(addTransitionMenu);
                         // Delete Place
-                        popup.add(new AbstractAction(strings.get("NVDeleteVertex")) {
+                        popup.add(new AbstractAction(strings.get("NVDelVertex")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 LOGGER.info("Deleting place");
@@ -470,7 +470,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 LOGGER.debug("No nodes or edges selected for popup");
                 // MouseMode
                 if (nv.getMouseMode()) {
-                    popup.add(new AbstractAction(strings.get("NVGMTransforming")) {
+                    popup.add(new AbstractAction(strings.get("NVGMTransform")) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Changing mouse mode to 'Transforming'");

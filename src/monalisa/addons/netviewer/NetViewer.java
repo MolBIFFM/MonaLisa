@@ -35,6 +35,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.io.OutputStreamWriter;
 import static java.lang.Math.ceil;
+import static java.lang.Math.round;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -142,6 +143,8 @@ public class NetViewer extends JFrame implements ActionListener {
     private MonaLisaLayout<NetViewerNode, NetViewerEdge> layout;
     public final Map<Integer, NetViewerNode> placeMap;
     public final Map<Integer, NetViewerNode> transitionMap;
+    private HashMap<NetViewerNode, String>  nvToName;
+    private int vertexSize;
     private int latestEdgeID;
     private int latestVertexID;
     protected VisualizationViewer<NetViewerNode, NetViewerEdge> vv;
@@ -232,11 +235,13 @@ public class NetViewer extends JFrame implements ActionListener {
         MCS_COLOR = Settings.getAsColor("mcsColor");
 
         netChangedListener = new ArrayList<>();
+        vertexSize = 16;
 
         initComponent();
 
         placeCount = this.synchronizer.getPetriNet().places().size();
         transitionCount = this.synchronizer.getPetriNet().transitions().size();
+        
         LOGGER.info("Finished initializing NetViewer");
     }
 
@@ -324,9 +329,9 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.setEdgeToolTipTransformer(new EdgeToolTipTransformer());
         vv.getRenderer().setEdgeRenderer(new MyEdgeRenderer());
         vv.getRenderContext().setVertexLabelTransformer(new VertexLabelTransformer()); // render vertex label
-        vv.getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(12)); //render token image TODO:CHANGEABLE!
+        vv.getRenderContext().setVertexIconTransformer(new VertexIconTransformerPlace(this.vertexSize)); //render token image TODO:CHANGEABLE!
         vv.getRenderContext().setEdgeLabelTransformer(new EdgeLabelTransformer()); // render edge label
-        vv.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(12)); // render the shape of the vertices
+        vv.getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(this.vertexSize)); // render the shape of the vertices
         vv.getRenderContext().setVertexFillPaintTransformer(new VertexPaintTransformer()); // controll the color of vertices
         vv.getRenderContext().setEdgeShapeTransformer(new EdgeShape.Line()); // render the border of vertices, because bends need no border
         vv.getRenderContext().setEdgeStrokeTransformer(new EdgeStrokeTransformer(1));
@@ -776,7 +781,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param inOrOut
      * @param setSlider
      */
-    protected void zommToValue(int inOrOut) {
+    protected void zoomToValue(int inOrOut) {
         LOGGER.info("Changing zoom value");
         Point2D center = new Point(vv.getSize().height / 2, vv.getSize().width / 2);
 
@@ -818,7 +823,12 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param zoomScale
      */
     protected void setZoomScale(double zoomScale) {
-        tb.setZoomSpinnerValue(new Double(zoomScale).intValue());
+//        if (zoomScale >= 500) {
+//            zoomScale = 500; 
+//        } else if (zoomScale <= 50) {
+//            zoomScale = 50;  
+//        }
+        tb.setZoomSpinnerValue(Double.valueOf(zoomScale).intValue());
     }
 
     /**
@@ -1460,6 +1470,27 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Successfully set color of all vertices to default");
     }
 
+    
+    /**
+     * Saves the vertexes in a HashMap.
+     */
+    public void updateSearchField() {
+        this.nvToName = new HashMap<>();
+        for (NetViewerNode nvNode : g.getVertices()) {
+            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {  
+                this.nvToName.put(nvNode, nvNode.getName());
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @return HashMap
+     */
+    public HashMap getNvToName(){
+        return this.nvToName;
+    }
+    
     /**
      * Add or delete (or update) a node to the search bar
      *

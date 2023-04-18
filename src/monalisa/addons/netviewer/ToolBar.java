@@ -307,6 +307,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         controlButtonPanel.add(enableHighlightingButton, gridBagConstraints);
 
+        enableLabelsButton.setFocusable(false);
         enableLabelsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/hide_labels.png"))); // NOI18N
         enableLabelsButton.setToolTipText(strings.get("NVHideAllLabels"));
         enableLabelsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -575,6 +576,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         mousePickingPanel.setLayout(new java.awt.GridBagLayout());
 
+        mousePickingButton.setFocusable(false);
         mousePickingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/mouse_picking.png"))); // NOI18N
         mousePickingButton.setToolTipText(strings.get("NVGMPicking"));
         mousePickingButton.addActionListener(new java.awt.event.ActionListener() {
@@ -616,7 +618,8 @@ public class ToolBar extends javax.swing.JPanel {
         controlButtonPanel.add(mouseTransformingPanel, gridBagConstraints);
 
         saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/save_project.png"))); // NOI18N
-        saveProjectButton.setToolTipText("Save Project");
+        saveProjectButton.setToolTipText("");
+        saveProjectButton.setToolTipText(strings.get("FileSave"));
         saveProjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveProjectButtonActionPerformed(evt);

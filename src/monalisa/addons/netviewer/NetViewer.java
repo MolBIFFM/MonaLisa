@@ -86,7 +86,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
-
 /**
  * Graphical Viewer for Petri nets and visualization of analysis results
  *
@@ -385,6 +384,7 @@ public class NetViewer extends JFrame implements ActionListener {
         });
         
         vv.setBackground(BACKGROUND_COLOR);
+        //vv.setBackground(new Color(0, 0, 0, 0));
         vv.repaint();
         LOGGER.debug("Finished initializing VisualizationViewer");
         // START --- GUI building section
@@ -400,9 +400,13 @@ public class NetViewer extends JFrame implements ActionListener {
         infoBarLabel.setPreferredSize(new Dimension((int) nvDimension.getWidth(), 20));
 
         cardLayout = new CardLayout();
-
+        
+        //JPanel gridPanel = gridLayout(); // TODO put grid into the background / change or delete
+        //gridPanel.add(vv, VVPANEL);
+        
         mainPanel = new JPanel();
         mainPanel.setLayout(cardLayout);
+        //mainPanel.add(gridPanel);
         mainPanel.add(vv, VVPANEL);
         mainSplitPane = new JSplitPane();
         mainSplitPane.setSize(nvDimension);
@@ -1008,12 +1012,12 @@ public class NetViewer extends JFrame implements ActionListener {
         if (!vfpt.getHideColor()) {
             colorItem.setText(strings.get("NVShowColorText"));
             vv.repaint();
-            LOGGER.info("Hiding vertex color");
+            LOGGER.info("Showing vertex color");
             return false;
         } else {
             colorItem.setText(strings.get("NVHideColorText"));
             vv.repaint();
-            LOGGER.info("Showing vertex color");
+            LOGGER.info("Hiding vertex color");
             return true;
         }
     }
@@ -1027,14 +1031,14 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.debug("Changing whether labels are shown or not");
         if (((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).showLabel()) {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(false);
-            labelItem.setText(strings.get("NVShowAllLabels"));
+            labelItem.setText(strings.get("NVShowLabels"));
 
             vv.repaint();
             LOGGER.info("Hiding all labels");
             return false;
         } else {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(true);
-            labelItem.setText(strings.get("NVHideAllLabels"));
+            labelItem.setText(strings.get("NVHideLabels"));
 
             vv.repaint();
             LOGGER.info("Showing all labels");
@@ -3871,50 +3875,50 @@ public class NetViewer extends JFrame implements ActionListener {
     }
     
     
-//     /**
-//     * Changing coordinates: Rounding to the nearest five
-//     * @param point (double)
-//     * @return double
-//     */
-//    public static double formatCoordinates(double point) {
-//        if (point % 10 != 0) {
-//            point = Math.round(point/10.0) * 10;
-//        }
-//        return point;
-//    }
-//    
-//    private static final int DRAWING_SIZE_X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // TODO change position
-//    private static final int DRAWING_SIZE_Y = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-//    private static final int SUBDIVISION_SIZE_X = 50;
-//    private static final int SUBDIVISION_SIZE_Y = 50;
-//    private static final int SUBDIVISIONS_X = (int) ceil(DRAWING_SIZE_X / SUBDIVISION_SIZE_X);
-//    private static final int SUBDIVISIONS_Y = (int) ceil(DRAWING_SIZE_Y / SUBDIVISION_SIZE_Y);
-//   
-//    /**
-//     * 
-//     */
-//    private JPanel gridLayout() {
-//        setSize(800, 800); // TODO change
-//        JPanel panel = new JPanel() {
-//            @Override public void paintComponent(Graphics g) {
-//                super.paintComponent(g);
-//                Graphics2D g2 = (Graphics2D) g;
-//                g2.setPaint(Color.GRAY);
-//                for (int i = 0; i < SUBDIVISIONS_X; i++) {
-//                    int x = i * SUBDIVISION_SIZE_X;
-//                    g2.drawLine(x, 0, x, getSize().height);
-//                }
-//                for (int i = 0; i < SUBDIVISIONS_Y; i++) {
-//                    int y = i * SUBDIVISION_SIZE_Y;
-//                    g2.drawLine(0, y, getSize().width, y);
-//                }
-//            }          
-//        };
-//        panel.setPreferredSize(new Dimension(DRAWING_SIZE_X, DRAWING_SIZE_Y)); // TODO change
-//        panel.setOpaque(false);
-//        //panel.setBackground(BACKGROUND_COLOR);
-//        //add(panel);
-//        //setVisible(true);
-//        return panel;
-//    }
+     /**
+     * Changing coordinates: Rounding to the nearest five
+     * @param point (double)
+     * @return double
+     */
+    public static double formatCoordinates(double point) {
+        if (point % 10 != 0) {
+            point = Math.round(point/10.0) * 10;
+        }
+        return point;
+    }
+    
+    private static final int DRAWING_SIZE_X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // TODO change position
+    private static final int DRAWING_SIZE_Y = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    private static final int SUBDIVISION_SIZE_X = 50;
+    private static final int SUBDIVISION_SIZE_Y = 50;
+    private static final int SUBDIVISIONS_X = (int) ceil(DRAWING_SIZE_X / SUBDIVISION_SIZE_X);
+    private static final int SUBDIVISIONS_Y = (int) ceil(DRAWING_SIZE_Y / SUBDIVISION_SIZE_Y);
+   
+    /**
+     * 
+     */
+    private JPanel gridLayout() {
+        setSize(800, 800); // TODO change
+        JPanel panel = new JPanel() {
+            @Override public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setPaint(Color.GRAY);
+                for (int i = 0; i < SUBDIVISIONS_X; i++) {
+                    int x = i * SUBDIVISION_SIZE_X;
+                    g2.drawLine(x, 0, x, getSize().height);
+                }
+                for (int i = 0; i < SUBDIVISIONS_Y; i++) {
+                    int y = i * SUBDIVISION_SIZE_Y;
+                    g2.drawLine(0, y, getSize().width, y);
+                }
+            }          
+        };
+        panel.setPreferredSize(new Dimension(DRAWING_SIZE_X, DRAWING_SIZE_Y)); // TODO change
+        //panel.setOpaque(false);
+        panel.setBackground(BACKGROUND_COLOR);
+        //add(panel);
+        //setVisible(true);
+        return panel;
+    }
 }

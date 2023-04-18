@@ -343,7 +343,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
         controlButtonPanel.add(zoomLabel, gridBagConstraints);
 
-        zoomSpinner.setModel(new SpinnerNumberModel(100, 1, 6000, 1));
+        zoomSpinner.setModel(new SpinnerNumberModel(100, 46, 313, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;

@@ -500,7 +500,7 @@ public class NetPropertiesPanel extends AddonPanel {
     private void jCheckBoxTransitionWithoutPrePlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
         Color color = jLabelTransitionWithoutPrePlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPrePlace.isSelected()) {
-            LOGGER.info("Colouring transitions without pre-places");
+            LOGGER.info("Coloring transitions without pre-places");
             transitionWithoutPrePlace = new TransitionWithoutPrePlace(pnf);
             transitionWithoutPrePlace.runAlgorithm();
 
@@ -509,10 +509,10 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPrePlaceColor.removeMouseListener(jLabelTransitionWithoutPrePlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured transitions without pre-places");
+            LOGGER.info("Successfully colored transitions without pre-places");
 
         } else {
-            LOGGER.info("Removing colouring from transitions without pre-places");
+            LOGGER.info("Removing coloring from transitions without pre-places");
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
                 if (colorMap.getColorFromList(t.id()) == null) {
@@ -522,14 +522,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelTransitionWithoutPrePlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPrePlaceColor));
-            LOGGER.info("Successfully removed colouring from transitions without pre-places");
+            LOGGER.info("Successfully removed coloring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
 
     private void jCheckBoxTransitionWithoutPostPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
         Color color = jLabelTransitionWithoutPostPlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPostPlace.isSelected()) {
-            LOGGER.info("Colouring transitions without post-places");
+            LOGGER.info("coloring transitions without post-places");
             transitionWithoutPostPlace = new TransitionWithoutPostPlace(pnf);
             transitionWithoutPostPlace.runAlgorithm();
 
@@ -539,9 +539,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPostPlaceColor.removeMouseListener(jLabelTransitionWithoutPostPlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured transitions without post-places");
+            LOGGER.info("Successfully colored transitions without post-places");
         } else {
-            LOGGER.info("Removing colouring from transitions without post-places");
+            LOGGER.info("Removing coloring from transitions without post-places");
             for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
                 if (colorMap.getColorFromList(t.id()) == null) {
@@ -551,14 +551,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelTransitionWithoutPostPlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPostPlaceColor));
-            LOGGER.info("Successfully removed colouring from transitions without pre-places");
+            LOGGER.info("Successfully removed coloring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
 
     private void jCheckBoxPlaceWithoutPreTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
         Color color = jLabelPlaceWithoutPreTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPreTransition.isSelected()) {
-            LOGGER.info("Colouring places without pre-transitions");
+            LOGGER.info("Coloring places without pre-transitions");
             placeWithoutPreTransition = new PlaceWithoutPreTransition(pnf);
             placeWithoutPreTransition.runAlgorithm();
 
@@ -568,9 +568,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPreTransitionColor.removeMouseListener(jLabelPlaceWithoutPreTransitionColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured places without pre-transitions");
+            LOGGER.info("Successfully colored places without pre-transitions");
         } else {
-            LOGGER.info("Removing colouring from places without pre-transitions");
+            LOGGER.info("Removing coloring from places without pre-transitions");
             for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
                 if (colorMap.getColorFromList(p.id()) == null) {
@@ -580,14 +580,14 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelPlaceWithoutPreTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPreTransitionColor));
-            LOGGER.info("Successfully removed colouring from places without pre-transitions");
+            LOGGER.info("Successfully removed coloring from places without pre-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
 
     private void jCheckBoxPlaceWithoutPostTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
         Color color = jLabelPlaceWithoutPostTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPostTransition.isSelected()) {
-            LOGGER.info("Colouring places without post-transitions");
+            LOGGER.info("Coloring places without post-transitions");
             placeWithoutPostTransition = new PlaceWithoutPostTransition(pnf);
             placeWithoutPostTransition.runAlgorithm();
 
@@ -597,9 +597,9 @@ public class NetPropertiesPanel extends AddonPanel {
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPostTransitionColor.removeMouseListener(jLabelPlaceWithoutPostTransitionColor.getMouseListeners()[0]); //removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured places without post-transitions");
+            LOGGER.info("Successfully colored places without post-transitions");
         } else {
-            LOGGER.info("Removing colouring from places without post-transitions");
+            LOGGER.info("Removing coloring from places without post-transitions");
             for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
                 if (colorMap.getColorFromList(p.id()) == null) {
@@ -609,7 +609,7 @@ public class NetPropertiesPanel extends AddonPanel {
                 }
             }
             jLabelPlaceWithoutPostTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPostTransitionColor));
-            LOGGER.info("Successfully removed colouring from places without post-transitions");
+            LOGGER.info("Successfully removed coloring from places without post-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
 
@@ -764,4 +764,34 @@ public class NetPropertiesPanel extends AddonPanel {
         }
         LOGGER.debug("Successfully handled net change for NetPropertiesPanel");
     }
+//    
+//    /**
+//     * 
+//     * @return placeWithoutPreTransition
+//     */
+//    public PlaceWithoutPreTransition getPlaceWithoutPreTransition() {
+//        return placeWithoutPreTransition;
+//    }
+//    
+//    /**
+//     * 
+//     * @return placeWithoutPostTransition
+//     */
+//    public PlaceWithoutPostTransition getPlaceWithoutPostTransition() {
+//        return placeWithoutPostTransition;
+//    }
+//    /**
+//     * 
+//     * @return transitionWithoutPostPlace
+//     */
+//    public TransitionWithoutPostPlace getTransitionWithoutPostPlace() {
+//        return transitionWithoutPostPlace;
+//    }
+//    /**
+//     * 
+//     * @return TransitionWithoutPrePlace
+//     */
+//    public TransitionWithoutPrePlace getTransitionWithoutPrePlace() {
+//        return transitionWithoutPrePlace;
+//    }
 }

@@ -145,7 +145,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         simModeJComboBox.addItem(strings.get("ATSName"));
         simModeJComboBox.addItem(strings.get("STSName"));
         simModeJComboBox.addItem(strings.get("StochTSName"));
-        simModeJComboBox.addItem(strings.get("GilTSName")); // TODO disable
+        simModeJComboBox.addItem(strings.get("GilTSName")); // TODO disable or make it work
         simModeJComboBox.setSelectedIndex(0); // shows asyncronous by default
 
         //history
@@ -448,7 +448,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
             }
         });
 
-        iconSizeSpinner.setModel(new SpinnerNumberModel(12, 5, 150, 1));
+        iconSizeSpinner.setModel(new SpinnerNumberModel(16, 5, 150, 1));
         iconSizeSpinner.setToolTipText("");
         iconSizeSpinner.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();

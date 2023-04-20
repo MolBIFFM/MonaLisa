@@ -150,7 +150,7 @@ public class NetViewer extends JFrame implements ActionListener {
     private NetViewerModalGraphMouse gm;
     private Boolean mouseMode;                                                  // true = picking ; false = transforming
     protected Boolean heatMap;                                                    // true = show , false = dont show
-    private Boolean netChanged = false, lastChanged = false;
+    private Boolean netChanged = false, lastChanged = false, netStructureChanged = false;
     private final List<NetViewerNode> alignmentList;                            // List to save selected nodes for a layout alignment
 
     private GraphPopupMousePlugin gpmp;
@@ -605,6 +605,10 @@ public class NetViewer extends JFrame implements ActionListener {
     public void netChanged() {
         if (netChanged) {
             LOGGER.debug("Petri net has changed");
+            if (netStructureChanged) {
+                fireNetChangedEvent();
+                netStructureChanged = false;
+            }
             if (project.getToolManager().hasResults(new TInvariantTool()) || project.getToolManager().hasResults(new PInvariantTool()) || project.getToolManager().hasResults(new MctsTool())) {
                 displayMessage(strings.get("NVNetChanged"), Color.RED);
             }
@@ -646,7 +650,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 tb.InvTabbedPane.setTitleAt(1, "M - Invariants");
                 tb.InvTabbedPane.setTitleAt(2, "P - Invariants");
             }
-            fireNetChangedEvent();
+            //fireNetChangedEvent();
         } else if (!netChanged && lastChanged) {
             LOGGER.debug("!netChanged && lastChanged");
             lastChanged = netChanged;
@@ -1008,14 +1012,20 @@ public class NetViewer extends JFrame implements ActionListener {
         vfpt.setHideColor(!(vfpt.getHideColor()));
         EdgePaintTransformer edpt = ((EdgePaintTransformer) vv.getRenderContext().getEdgeDrawPaintTransformer());
         edpt.setHideColor(!(edpt.getHideColor()));
-
+        JButton enableHighlightingButton = tb.getEnableHighlightingButton();
         if (!vfpt.getHideColor()) {
-            colorItem.setText(strings.get("NVShowColorText"));
+            switchColors();
+            colorItem.setText(strings.get("NVHideColorText"));
+            enableHighlightingButton.setIcon(resources.getIcon("color.png"));
+            enableHighlightingButton.setToolTipText(strings.get("NVHideColor"));
             vv.repaint();
             LOGGER.info("Showing vertex color");
             return false;
         } else {
-            colorItem.setText(strings.get("NVHideColorText"));
+            switchColors();
+            colorItem.setText(strings.get("NVShowColorText"));
+            enableHighlightingButton.setIcon(resources.getIcon("sw.png"));
+            enableHighlightingButton.setToolTipText(strings.get("NVShowColor"));
             vv.repaint();
             LOGGER.info("Hiding vertex color");
             return true;
@@ -1023,22 +1033,42 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
+     * Switches colors and defaultColors. Purpose: Color hiding without loosing
+     * default colors.
+     */
+    private void switchColors() {
+        for (NetViewerNode n: g.getVertices()) {
+            Color defaultColor = n.getDefaultColor();
+            Color color = n.getColor();
+            Color strokeColor = n.getStrokeColor();
+            Color defaultStrokeColor = n.getDefaultStrokeColor();
+            n.setDefaultColor(color);
+            n.setColor(defaultColor);
+            n.setStrokeColor(defaultStrokeColor);
+            n.setDefaultStrokeColor(strokeColor);
+        }
+    }
+        
+    /**
      * Hide or show all Labels
      *
      * @return
      */
     protected Boolean showLabels() {
         LOGGER.debug("Changing whether labels are shown or not");
+        JButton enableLabelsButton = tb.getEnableLabelsButton();
         if (((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).showLabel()) {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(false);
             labelItem.setText(strings.get("NVShowLabels"));
-
+            enableLabelsButton.setIcon(resources.getIcon("show_labels.png"));
+            
             vv.repaint();
             LOGGER.info("Hiding all labels");
             return false;
         } else {
             ((VertexLabelTransformer) vv.getRenderContext().getVertexLabelTransformer()).setShowLabel(true);
             labelItem.setText(strings.get("NVHideLabels"));
+            enableLabelsButton.setIcon(resources.getIcon("hide_labels.png"));
 
             vv.repaint();
             LOGGER.info("Showing all labels");
@@ -1453,14 +1483,18 @@ public class NetViewer extends JFrame implements ActionListener {
         for (NetViewerNode n : g.getVertices()) {
             if (n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
                 n.setColor(Color.BLACK);
+                n.setStrokeColor(Color.BLACK);
             }
             if (n.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
                 if (n.isLogical()) {
                     n.setColor(Color.LIGHT_GRAY);
+                    n.setStrokeColor(Color.BLACK);
                 } else if (n.isMasterNode()) {
                     n.setColor(Color.DARK_GRAY);
+                    n.setStrokeColor(Color.BLACK);
                 } else {
                     n.setColor(Color.WHITE);
+                    n.setStrokeColor(Color.BLACK);
                 }
             }
         }
@@ -3399,6 +3433,7 @@ public class NetViewer extends JFrame implements ActionListener {
             Transition t = synchronizer.addTransition(ret.getId(), ret.getName(), x, y);
             transitionMap.put(t.id(), ret);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully added new node to NetViewer and Petri net");
         return ret;
     }
@@ -3423,6 +3458,7 @@ public class NetViewer extends JFrame implements ActionListener {
         } else {
             addEdge(1, nvNode, ret);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully added new node to NetViewer in dependence from another node");
         return ret;
     }
@@ -3479,6 +3515,7 @@ public class NetViewer extends JFrame implements ActionListener {
             } else {
                 layout.setLocation(newNode, nodePosition);
             }
+            netStructureChanged = true;
             LOGGER.debug("Successfully added new logical place to NetViewer");
         }
     }
@@ -3510,6 +3547,7 @@ public class NetViewer extends JFrame implements ActionListener {
             nvEdge.getAim().removeInEdge(nvEdge);
             nvEdge.getSource().removeOutEdge(nvEdge);
         }
+        netStructureChanged = false;
         LOGGER.debug("Successfully added bend to edge in NetViewer");
         return newEdge;
     }
@@ -3552,6 +3590,7 @@ public class NetViewer extends JFrame implements ActionListener {
             Place to = synchronizer.getPlaceFromId(ret.getAim().getMasterNode().getId());
             synchronizer.addArc(from, to, weight);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully added new edge to NetViewer and Petri net");
         return ret;
     }
@@ -3594,6 +3633,7 @@ public class NetViewer extends JFrame implements ActionListener {
         if (nvNode.getMasterNode().getLogicalPlaces().size() == 1) {
             nvNode.getMasterNode().setColor(Color.WHITE);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully removed logical place from NetViewer");
     }
 
@@ -3607,6 +3647,7 @@ public class NetViewer extends JFrame implements ActionListener {
         removeEdgeFromPetriNet(edge);
         removeAllBends(edge);
         removeEdgeFromGraph(edge);
+        netStructureChanged = true;
         LOGGER.debug("Successfully removed edge from Graph and Petri net");
     }
 
@@ -3647,6 +3688,7 @@ public class NetViewer extends JFrame implements ActionListener {
         for (NetViewerNode nvNode : nvNodes) {
             removeNode(nvNode);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully merged logical places with master node in NetViewer");
     }
 
@@ -3810,6 +3852,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 transitionMap.remove(nvNode.getId());
             }
         }
+        netStructureChanged = true;
         LOGGER.info("Successfully removed node from graph and Petri net");
     }
 
@@ -3848,6 +3891,7 @@ public class NetViewer extends JFrame implements ActionListener {
             // Remove the old vertex
             removeNode(nvNode);
         }
+        netStructureChanged = true;
         LOGGER.debug("Successfully merged vertices to a single vertex in NetViewer");
     }
 
@@ -3870,6 +3914,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 a = synchronizer.getArc(t, p);
                 addEdge(a.weight(), getNodeFromPlaceId(p.id()), newNode);
             }
+            netStructureChanged = true;
             LOGGER.debug("Successfully reversed transition");
         }
     }

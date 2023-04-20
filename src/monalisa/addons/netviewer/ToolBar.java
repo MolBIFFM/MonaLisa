@@ -1323,7 +1323,23 @@ public class ToolBar extends javax.swing.JPanel {
     public boolean manuellColorSelection() {
         return this.manuellColorSelection.isSelected();
     }
+    
+    /**
+     * Returns the JButton, which controls the Labels.
+     * @return JButton
+     */
+    public javax.swing.JButton getEnableLabelsButton() {
+        return this.enableLabelsButton;
+    }
 
+        /**
+     * Returns the JButton, which controls whether color is shown or not.
+     * @return JButton
+     */
+    public javax.swing.JButton getEnableHighlightingButton() {
+        return this.enableHighlightingButton;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JLabel CPILabel;
     protected javax.swing.JLabel CTILabel;

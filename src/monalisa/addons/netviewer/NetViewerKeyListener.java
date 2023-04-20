@@ -99,7 +99,7 @@ public class NetViewerKeyListener implements KeyListener {
                 }
             } // C
             else if (keyCode.equals(KeyEvent.VK_C)) {
-                nv.showLabels(); // TODO change image
+                nv.showLabels();
             } // V
             else if (keyCode.equals(KeyEvent.VK_V)) {
                 nv.hideColor();

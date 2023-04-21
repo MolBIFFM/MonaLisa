@@ -46,7 +46,6 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
             newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
             newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
             double zoomScale = getZoomScale(newViewScale, newLayoutScale);
-            LOGGER.info("zoom " + zoomScale +"");
             
             Point2D mouse = e.getPoint();
             Point2D center = vv.getCenter();

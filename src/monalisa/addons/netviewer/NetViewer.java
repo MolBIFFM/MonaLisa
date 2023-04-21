@@ -26,6 +26,7 @@ import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import java.awt.*;
@@ -791,7 +792,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     protected void zoomToValue(int inOrOut) {
         LOGGER.info("Changing zoom value");
-        Point2D center = new Point(vv.getSize().height / 2, vv.getSize().width / 2);
+        Point2D center = new Point((int) formatCoordinates(vv.getSize().height / 2), (int) formatCoordinates(vv.getSize().width / 2));
 
         if (inOrOut > 0) {
             this.gm.getScalingPlugin().getScaler().scale(vv, 1.1F, center);
@@ -802,11 +803,22 @@ public class NetViewer extends JFrame implements ActionListener {
         double viewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
         double layoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
         setZoomScale((viewScale * layoutScale) * 100);
+        correctZoom();
         LOGGER.info("Successfully changed zoom value");
     }
 
+    private void correctZoom() { //TODO finish
+        for (NetViewerNode n : g.getVertices()) {
+            Point2D nodePosition = vv.getModel().getGraphLayout().transform(n);
+            nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
+            //nodePosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
+            Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
+            LOGGER.info("pos " + test + "");
+        }
+    }
+    
     /**
-     * Zooms to a given NetViewerNode
+     * Zooms to a given NetViewerNode (in SearchBar)
      *
      * @param nvNode
      */
@@ -814,10 +826,10 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Zooming to node");
         center();
         Dimension d = vv.getSize();
-        Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
-        //Point2D viewCenter = new Point2D.Double(NetViewer.formatCoordinates(d.width / 2), NetViewer.formatCoordinates(d.height / 2)); // TODO change or delete
+        //Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
+        Point2D viewCenter = new Point2D.Double(formatCoordinates(d.width / 2), formatCoordinates(d.height / 2));
         Point2D nodePosition = vv.getModel().getGraphLayout().transform(nvNode);
-        LOGGER.info("zoom" + nodePosition + "");
+        nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
         viewCenter = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(viewCenter);
         double xdist = viewCenter.getX() - nodePosition.getX();
         double ydist = viewCenter.getY() - nodePosition.getY();
@@ -831,11 +843,6 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param zoomScale
      */
     protected void setZoomScale(double zoomScale) {
-//        if (zoomScale >= 500) {
-//            zoomScale = 500; 
-//        } else if (zoomScale <= 50) {
-//            zoomScale = 50;  
-//        }
         tb.setZoomSpinnerValue(Double.valueOf(zoomScale).intValue());
     }
 
@@ -2612,9 +2619,11 @@ public class NetViewer extends JFrame implements ActionListener {
                         for (int i = 1; i < length - 1; i++) {
                             pointParts = points.get(i).split("\\|");
                             if (lastEdge == null) {
-                                lastEdge = addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                lastEdge = addBend(e, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
+                                //lastEdge = addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
                             } else {
-                                lastEdge = addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                lastEdge = addBend(lastEdge, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
+                                //lastEdge = addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
 
                             }
                         }
@@ -2737,7 +2746,7 @@ public class NetViewer extends JFrame implements ActionListener {
             setupFrame.setLocationRelativeTo(null); // centers popup on the screen
             //setupFrame.setLocation(x, y);
             setupFrame.setVisible(true);
-            setupFrame.setAlwaysOnTop(true);
+            setupFrame.setAlwaysOnTop(false);
             this.setEnabled(false);
             LOGGER.info("Successfully opened properties menu for several vertices");
         }
@@ -2750,11 +2759,14 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param x
      * @param y
      */
-    public void showEdgeSetup(NetViewerEdge nvEdge, int x, int y) {
+    public void showEdgeSetup(NetViewerEdge nvEdge) { //, int x, int y) {
         LOGGER.info("Opening properties menu for an edge");
         EdgeSetupFrame setupFrame = new EdgeSetupFrame(this, nvEdge);
-        setupFrame.setLocation(x, y);
+        
+        setupFrame.setLocationRelativeTo(null); // centers popup on the screen
+        //setupFrame.setLocation(x, y);
         setupFrame.setVisible(true);
+        setupFrame.setAlwaysOnTop(false);
         this.setEnabled(false);
         LOGGER.info("Successfully opened properties menu for an edge");
     }
@@ -2778,7 +2790,7 @@ public class NetViewer extends JFrame implements ActionListener {
         }
 
         lpf.setVisible(true);
-        lpf.setAlwaysOnTop(true);
+        lpf.setAlwaysOnTop(false);
         this.setEnabled(false);
         LOGGER.info("Successfully opened logical place menu");
     }
@@ -3925,10 +3937,11 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param point (double)
      * @return double
      */
-    public static double formatCoordinates(double point) {
+    public double formatCoordinates(double point) {
         if (point % 10 != 0) {
             point = Math.round(point/10.0) * 10;
         }
+        LOGGER.info("coord: " + point + "");
         return point;
     }
     

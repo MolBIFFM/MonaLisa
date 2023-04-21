@@ -507,7 +507,8 @@ public final class SbmlInputHandler implements InputHandler {
                 while (task.size() > 2){
                     NetViewerEdge oldEdge = netViewer.g.findEdge(nameMap.get(task.get(0)), nameMap.get(task.get(task.size() - 1)));
                     Element currBend = bendElementMap.get(task.get(1));
-                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.valueOf(currBend.getChildren().get(0).getValue()) - 30, Double.valueOf(currBend.getChildren().get(1).getValue()) - 30);
+                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(0).getValue())) - 30, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(1).getValue())) - 30);
+                    //NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.valueOf(currBend.getChildren().get(0).getValue()) - 30, Double.valueOf(currBend.getChildren().get(1).getValue()) - 30);
                     nameMap.put(task.get(1), newEdge.getSource());
                     task.remove(0);
                 }

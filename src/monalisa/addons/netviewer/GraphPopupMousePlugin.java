@@ -81,6 +81,14 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
     public void changeGraph(Graph<NetViewerNode, NetViewerEdge> g) {
         this.g = g;
     }
+    
+    /**
+     * 
+     * @return NetViewer
+     */
+    public NetViewer getNetViewer() {
+        return nv;
+    }
 
     @Override
     protected void handlePopup(final MouseEvent me) {
@@ -200,7 +208,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering edge setup");
-                        nv.showEdgeSetup(edge, me.getX(), me.getY());
+                        nv.showEdgeSetup(edge); //, me.getX(), me.getY());
                         LOGGER.info("Leaving edge setup");
                     }
                 });
@@ -212,7 +220,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Adding bend to edge");
-                        nv.addBend(edge, (double) me.getX(), (double) me.getY());
+                        nv.addBend(edge, nv.formatCoordinates((double) me.getX()), nv.formatCoordinates((double) me.getY()));
                     }
                 });
 
@@ -375,8 +383,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Creating reverse transition");
-                            //nv.reverseTransition(node, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // TODO change or delete
-                            nv.reverseTransition(node, me.getX(), me.getY());
+                            nv.reverseTransition(node, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
+                            //nv.reverseTransition(node, me.getX(), me.getY());
                             nv.modificationActionHappend();
                         }
                     });
@@ -600,6 +608,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
             case ADD_BEND:
                 LOGGER.debug("Add_bend mode");
                 Point mousePoint = vv.getMousePosition();
+                mousePoint.x = (int) nv.formatCoordinates(mousePoint.x);
+                mousePoint.y = (int) nv.formatCoordinates(mousePoint.y);
                 nv.addBend(clickedEdge, (double) mousePoint.x, (double) mousePoint.y);
                 break;
             case DELETE_BEND:

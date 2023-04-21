@@ -133,8 +133,8 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Reverse Transitions");
-                        //nv.reverseTransition(nvNode, (int) NetViewer.formatCoordinates(me.getX()), (int) NetViewer.formatCoordinates(me.getY())); // TODO change or delete
-                        nv.reverseTransition(nvNode, me.getX(), me.getY());
+                        nv.reverseTransition(nvNode, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
+                        //nv.reverseTransition(nvNode, me.getX(), me.getY());
                         nv.modificationActionHappend();
                     }
                 });

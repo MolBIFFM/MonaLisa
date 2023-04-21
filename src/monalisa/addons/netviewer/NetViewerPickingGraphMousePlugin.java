@@ -44,10 +44,8 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void mousePressed(MouseEvent e) {
         this.down = e.getPoint();
-//        this.down.x = (int) (this.down.x - this.offsetx); // coordinates of vertex center 
-//        this.down.y = (int) (this.down.y - this.offsety);
-//        this.down.x = (int) NetViewer.formatCoordinates(this.down.x); // TODO change or delete
-//        this.down.y = (int) NetViewer.formatCoordinates(this.down.y);
+        this.down.x = (int) gpmp.getNetViewer().formatCoordinates(this.down.x); // important for dragging on spezific coordinates
+        this.down.y = (int) gpmp.getNetViewer().formatCoordinates(this.down.y);
         VisualizationViewer vv = (VisualizationViewer) e.getSource();
         GraphElementAccessor pickSupport = vv.getPickSupport();
         PickedState pickedVertexState = vv.getPickedVertexState();
@@ -119,8 +117,8 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
             VisualizationViewer<V, E> vv = (VisualizationViewer) e.getSource();
             if (vertex != null) {
                 Point p = e.getPoint();
-//                p.x = (int) NetViewer.formatCoordinates(p.x); // dragging on specific coordinates only TODO change or delete
-//                p.y = (int) NetViewer.formatCoordinates(p.y);
+                p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
+                p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
                 Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
                 Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
                 Layout<V, E> layout = vv.getGraphLayout();

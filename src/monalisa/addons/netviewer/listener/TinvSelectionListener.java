@@ -82,6 +82,9 @@ public class TinvSelectionListener implements ListSelectionListener {
                     Color chosenColor;
                     if (tb.manuellColorSelection()) {
                         chosenColor = JColorChooser.showDialog(null, "Select color", null);
+                        if (chosenColor == null) {
+                            chosenColor = NetViewer.TINV_COLOR;
+                        }
                     } else {
                         chosenColor = NetViewer.TINV_COLOR;
                     }

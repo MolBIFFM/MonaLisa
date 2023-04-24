@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.transformer.VertexIconTransformerPlace;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
@@ -906,18 +907,96 @@ public class ToolBar extends javax.swing.JPanel {
 
         Tinv_list.setModel(allInvList);
         Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));
+        Tinv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane1.setViewportView(Tinv_list);
 
         InvTabbedPane.addTab("T - Invariants", jScrollPane1);
 
         Minv_list.setModel(MinvList);
         Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));
+        Minv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane2.setViewportView(Minv_list);
 
         InvTabbedPane.addTab("M - Invariants", jScrollPane2);
 
         Pinv_list.setModel(PinvList);
         Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));
+        Pinv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane4.setViewportView(Pinv_list);
 
         InvTabbedPane.addTab("P - Invariants", jScrollPane4);
@@ -1293,6 +1372,7 @@ public class ToolBar extends javax.swing.JPanel {
         netViewer.resetColor();
         Tinv_list.clearSelection();
         Pinv_list.clearSelection();
+        Minv_list.clearSelection();
     }//GEN-LAST:event_reset_color_buttonActionPerformed
 
     private void reachabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reachabilityButtonActionPerformed

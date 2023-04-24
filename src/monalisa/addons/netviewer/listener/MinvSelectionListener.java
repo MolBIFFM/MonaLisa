@@ -63,7 +63,7 @@ public class MinvSelectionListener implements ListSelectionListener {
 
             List<MinvWrapper> selectionValues;
             selectionValues = js.getSelectedValuesList();
-
+            
             for (Object sv : selectionValues) {
                 // if an object is selected, that is not a Wrapper
                 if (!sv.getClass().getSimpleName().equalsIgnoreCase("MinvWrapper")) {
@@ -78,8 +78,11 @@ public class MinvSelectionListener implements ListSelectionListener {
                     Color chosenColor;
                     if (tb.manuellColorSelection()) {
                         chosenColor = JColorChooser.showDialog(null, "Select color", null);
+                        if (chosenColor == null) {
+                            chosenColor = NetViewer.MINV_COLOR;
+                        }
                     } else {
-                        chosenColor = NetViewer.TINV_COLOR;
+                        chosenColor = NetViewer.MINV_COLOR;
                     }
 
                     Set<Transition> transitions;

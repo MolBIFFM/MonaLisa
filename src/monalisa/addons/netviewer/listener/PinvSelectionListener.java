@@ -73,6 +73,9 @@ public class PinvSelectionListener implements ListSelectionListener {
                 Color chosenColor;
                 if (tb.manuellColorSelection()) {
                     chosenColor = JColorChooser.showDialog(null, "Select color", null);
+                    if (chosenColor == null) {
+                            chosenColor = NetViewer.PINV_COLOR;
+                    }
                 } else {
                     chosenColor = NetViewer.PINV_COLOR;
                 }

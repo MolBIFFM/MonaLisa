@@ -26,7 +26,6 @@ import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 import java.awt.*;
@@ -36,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.io.OutputStreamWriter;
 import static java.lang.Math.ceil;
-import static java.lang.Math.round;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -82,7 +80,6 @@ import monalisa.util.MonaLisaFileFilter;
 import monalisa.util.OutputFileFilter;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.commons.collections15.Transformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.DOMImplementation;
@@ -120,6 +117,7 @@ public class NetViewer extends JFrame implements ActionListener {
 
     public static Color TINV_COLOR;
     public static Color PINV_COLOR;
+    public static Color MINV_COLOR;
     public static Color MCTS_COLOR;
     public static Color HEATMAP_COLOR;
     public static Color KNOCKEDOUT_COLOR;
@@ -225,6 +223,7 @@ public class NetViewer extends JFrame implements ActionListener {
         // Read the saved settings for the NetViewer out of config file
         TINV_COLOR = Settings.getAsColor("tinvColor");
         PINV_COLOR = Settings.getAsColor("pinvColor");
+        MINV_COLOR = Settings.getAsColor("minvColor");
         MCTS_COLOR = Settings.getAsColor("mctsColor");
         HEATMAP_COLOR = Settings.getAsColor("heatMapColor");
         KNOCKEDOUT_COLOR = Settings.getAsColor("knockedOutColor");
@@ -803,7 +802,7 @@ public class NetViewer extends JFrame implements ActionListener {
         double viewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
         double layoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
         setZoomScale((viewScale * layoutScale) * 100);
-        correctZoom();
+//        correctZoom();
         LOGGER.info("Successfully changed zoom value");
     }
 
@@ -811,9 +810,14 @@ public class NetViewer extends JFrame implements ActionListener {
         for (NetViewerNode n : g.getVertices()) {
             Point2D nodePosition = vv.getModel().getGraphLayout().transform(n);
             nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
+//            center = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
+//            double xdist = center.getX() - nodePosition.getX();
+//            double ydist = center.getY() - nodePosition.getY();
+//            vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).translate(xdist, ydist);
             //nodePosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
-            Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
-            LOGGER.info("pos " + test + "");
+            //Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
+//            Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
+            LOGGER.info("pos " + nodePosition + "");
         }
     }
     
@@ -1043,7 +1047,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * Switches colors and defaultColors. Purpose: Color hiding without loosing
      * default colors.
      */
-    private void switchColors() {
+    protected void switchColors() {
         for (NetViewerNode n: g.getVertices()) {
             Color defaultColor = n.getDefaultColor();
             Color color = n.getColor();

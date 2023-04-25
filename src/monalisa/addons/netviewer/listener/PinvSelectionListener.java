@@ -67,6 +67,7 @@ public class PinvSelectionListener implements ListSelectionListener {
                 nv.resetMessageLabel();
 
                 if (!tb.stackSelection()) {
+                    nv.switchColors();
                     nv.resetColor();
                 }
 

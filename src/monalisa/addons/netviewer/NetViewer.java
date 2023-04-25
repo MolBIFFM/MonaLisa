@@ -10,6 +10,7 @@
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
@@ -802,22 +803,23 @@ public class NetViewer extends JFrame implements ActionListener {
         double viewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
         double layoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
         setZoomScale((viewScale * layoutScale) * 100);
-//        correctZoom();
+        //correctZoom();
         LOGGER.info("Successfully changed zoom value");
     }
 
-    private void correctZoom() { //TODO finish
+    private void correctZoom() {
         for (NetViewerNode n : g.getVertices()) {
             Point2D nodePosition = vv.getModel().getGraphLayout().transform(n);
-            nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
-//            center = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
-//            double xdist = center.getX() - nodePosition.getX();
-//            double ydist = center.getY() - nodePosition.getY();
-//            vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).translate(xdist, ydist);
-            //nodePosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
-            //Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
-//            Point2D test = vv.getRenderContext().getMultiLayerTransformer().transform(nodePosition);
+            double x = formatCoordinates(nodePosition.getX());
+            double y = formatCoordinates(nodePosition.getY());
+            nodePosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
+//            Point2D vp = layout.transform(n);
+            //Layout<V, E> layout = vv.getGraphLayout();
+            Point2D vp = layout.transform(n);
+            nodePosition.setLocation(x, y);
+            //layout.setLocation(vp, nodePosition);
             LOGGER.info("pos " + nodePosition + "");
+            LOGGER.info("pos2 " + vv.getModel().getGraphLayout().transform(n)+"");
         }
     }
     
@@ -1047,7 +1049,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * Switches colors and defaultColors. Purpose: Color hiding without loosing
      * default colors.
      */
-    protected void switchColors() {
+    public void switchColors() {
         for (NetViewerNode n: g.getVertices()) {
             Color defaultColor = n.getDefaultColor();
             Color color = n.getColor();
@@ -1057,6 +1059,12 @@ public class NetViewer extends JFrame implements ActionListener {
             n.setColor(defaultColor);
             n.setStrokeColor(defaultStrokeColor);
             n.setDefaultStrokeColor(strokeColor);
+        }
+        for (NetViewerEdge e: g.getEdges()) {
+            Color defaultEdgeColor = e.getDefaultColor();
+            Color edgeColor = e.getColor();
+            e.setDefaultColor(edgeColor);
+            e.setColor(defaultEdgeColor);
         }
     }
         
@@ -3549,7 +3557,7 @@ public class NetViewer extends JFrame implements ActionListener {
         NetViewerEdge masterEdge = nvEdge.getMasterEdge();
         NetViewerNode newNode = addNode(BEND, "B", x + 30.0, y + 30.0);
         addBendEdge(nvEdge.getSource(), newNode, masterEdge);
-        newEdge = new NetViewerEdge("n" + getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge);
+        newEdge = new NetViewerEdge("n" + getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge, nvEdge.getColor());
         if (newEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
             g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.UNDIRECTED);
         } else {
@@ -3579,7 +3587,7 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
         LOGGER.debug("Adding new bended edge to NetViewer");
-        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge);
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge, masterEdge.getColor());
         g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
         LOGGER.debug("Successfully added new bended edge to NetViewer");
         return ret;
@@ -3942,10 +3950,11 @@ public class NetViewer extends JFrame implements ActionListener {
      * @return double
      */
     public double formatCoordinates(double point) {
+        LOGGER.info("coord: " + point);
         if (point % 10 != 0) {
             point = Math.round(point/10.0) * 10;
         }
-        LOGGER.info("coord: " + point + "");
+        LOGGER.info("coord2: " + point + "");
         return point;
     }
     

@@ -914,6 +914,7 @@ public class ToolBar extends javax.swing.JPanel {
                     if (isSelectedIndex(index0)) {
                         removeSelectionInterval(index0, index0);
                         netViewer.resetColor();
+                        netViewer.switchColors();
                         return;
                     }
                 }
@@ -926,6 +927,7 @@ public class ToolBar extends javax.swing.JPanel {
                     if (isSelectedIndex(index0)) {
                         removeSelectionInterval(index0, index0);
                         netViewer.resetColor();
+                        netViewer.switchColors();
                         return;
                     }
                     super.addSelectionInterval(index0, index1);
@@ -946,6 +948,7 @@ public class ToolBar extends javax.swing.JPanel {
                     if (isSelectedIndex(index0)) {
                         removeSelectionInterval(index0, index0);
                         netViewer.resetColor();
+                        netViewer.switchColors();
                         return;
                     }
                 }
@@ -958,6 +961,7 @@ public class ToolBar extends javax.swing.JPanel {
                     if (isSelectedIndex(index0)) {
                         removeSelectionInterval(index0, index0);
                         netViewer.resetColor();
+                        netViewer.switchColors();
                         return;
                     }
                     super.addSelectionInterval(index0, index1);
@@ -978,6 +982,7 @@ public class ToolBar extends javax.swing.JPanel {
                     if (isSelectedIndex(index0)) {
                         removeSelectionInterval(index0, index0);
                         netViewer.resetColor();
+                        netViewer.switchColors();
                         return;
                     }
                 }
@@ -1384,7 +1389,7 @@ public class ToolBar extends javax.swing.JPanel {
             rd.setVisible(true);
         } else {
             LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
-            JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+            JOptionPane.showMessageDialog(null, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
         }
     }//GEN-LAST:event_reachabilityButtonActionPerformed
 

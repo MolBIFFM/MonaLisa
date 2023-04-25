@@ -45,7 +45,7 @@ public class TinvSelectionListener implements ListSelectionListener {
     public TinvSelectionListener(NetViewer nv, ToolBar tb, JList js, Boolean colorPlaces) {
         this.js = js;
         this.tb = tb;
-        this.colorPlaces = colorPlaces;;
+        this.colorPlaces = colorPlaces;
         this.nv = nv;
 
         this.blocked = true;
@@ -76,6 +76,7 @@ public class TinvSelectionListener implements ListSelectionListener {
                     nv.resetMessageLabel();
 
                     if (!tb.stackSelection()) {
+                        nv.switchColors();
                         nv.resetColor();
                     }
 

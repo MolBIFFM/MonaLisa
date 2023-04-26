@@ -38,6 +38,7 @@ public class CentralityPanel extends AddonPanel {
 
     private static final Logger LOGGER = LogManager.getLogger(CentralityPanel.class);
     private Color heatMapColor;
+    private Boolean heatMapSelected = false;
 
     private DefaultTableModel modelPlaces;
     private DefaultTableModel modelTransitions;
@@ -551,6 +552,9 @@ public class CentralityPanel extends AddonPanel {
      */
     private void heatMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatMapActionPerformed
         LOGGER.info("New centrality selected for heatmap");
+        heatMap.setFocusPainted(true);
+        if (!heatMapSelected) {
+            netViewer.switchColors();
         //Why do we calculate these again on every seletion?
         if (getComboElement().equals("Closeness")) {
             LOGGER.info("New centrality for heatmap will be closeness");
@@ -584,6 +588,14 @@ public class CentralityPanel extends AddonPanel {
             Map<Integer, Double> rankingPlaces = ec.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
             LOGGER.info("Successfully changed heatmap centrality to eigenvector");
+        }
+        heatMapSelected = true;
+        } else { // deselect button
+            heatMap.setSelected(false);
+            heatMap.setFocusPainted(false);
+            heatMapSelected = false;
+            netViewer.resetColor();
+            netViewer.switchColors();
         }
     }//GEN-LAST:event_heatMapActionPerformed
 

@@ -61,6 +61,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
                 if (this.vertex != null) {
                     if (!pickedVertexState.isPicked(this.vertex)) {
                         pickedVertexState.clear();
+                        pickedEdgeState.clear();
                         pickedVertexState.pick(this.vertex, true);
                     }
 
@@ -78,6 +79,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
                         }
                     } catch (ConcurrentModificationException cme) {
                     } else {
+                        pickedVertexState.clear();
                         pickedEdgeState.pick(edge, true);
                     }
                 } else {

@@ -48,7 +48,6 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.sbml.jsbml.CVTerm;
 
-import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.History;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Reaction;
@@ -102,68 +101,6 @@ public class SbmlOutputHandler implements OutputHandler {
 
         Layout layout = mplugin.createLayout();
 
-        Compartment defaultCompartment = null;
-        Map<monalisa.data.pn.Compartment, org.sbml.jsbml.Compartment> compartmentMap = new HashMap<>();
-        if (this.level > 2) {
-            boolean thereAreCompartments = false;
-
-            if (pn.getCompartments() != null) {
-                if (!pn.getCompartments().isEmpty()) {
-                    thereAreCompartments = true;
-                    Integer i = 1;
-                    for (monalisa.data.pn.Compartment c : pn.getCompartments()) {
-                        Compartment compartment = model.createCompartment("C" + i.toString());
-
-                        CompartmentGlyph cglyph = layout.createCompartmentGlyph("CG" + c.toString());
-                        cglyph.setCompartment(compartment.getId());
-                        cglyph.createBoundingBox();
-
-                        if (c == null) {
-                            continue;
-                        }
-
-                        compartment.setName(c.getName());
-
-                        if (c.hasProperty("spatialDimensions")) {
-                            compartment.setSpatialDimensions((double) c.getProperty("spatialDimensions"));
-                        } else {
-                            compartment.setSpatialDimensions(1.0);
-                        }
-
-                        if (c.hasProperty("size")) {
-                            compartment.setSize((double) c.getProperty("size"));
-                        } else {
-                            compartment.setSize(1.0);
-                        }
-
-                        if (c.hasProperty("constant")) {
-                            compartment.setConstant((boolean) c.getProperty("constant"));
-                        } else {
-                            compartment.setConstant(true);
-                        }
-
-                        if (c.hasProperty(AnnotationUtils.SBO_TERM)) {
-                            compartment.setSBOTerm((String) c.getProperty(AnnotationUtils.SBO_TERM));
-                        }
-
-                        if (c.hasProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS)) {
-                            List<CVTerm> cvts = (List<CVTerm>) c.getProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS);
-                            for (CVTerm cvt : cvts) {
-                                compartment.addCVTerm(cvt);
-                            }
-                        }
-                        compartmentMap.put(c, compartment);
-                        i++;
-                    }
-                }
-            }
-            if (!thereAreCompartments) {
-                defaultCompartment = model.createCompartment("default_compartment");
-                defaultCompartment.setSize(1.0);
-                defaultCompartment.setConstant(true);
-                defaultCompartment.setSpatialDimensions(3.0);
-            }
-        }
 
         Species species = null;
         SpeciesGlyph sglyph = null;
@@ -171,12 +108,6 @@ public class SbmlOutputHandler implements OutputHandler {
             species = model.createSpecies("P" + p.id());
 
             if (this.level > 2) {
-                if (p.getCompartment() != null) {
-                    species.setCompartment(compartmentMap.get(p.getCompartment()));
-
-                } else {
-                    species.setCompartment(defaultCompartment);
-                }
 
                 sglyph = layout.createSpeciesGlyph("SG" + species.getId());
                 sglyph.setSpecies(species.getId());
@@ -225,11 +156,6 @@ public class SbmlOutputHandler implements OutputHandler {
             reaction.setFast(false);
 
             if (this.level > 2) {
-                if (t.getCompartment() != null) {
-                    reaction.setCompartment(compartmentMap.get(t.getCompartment()));
-                } else {
-                    reaction.setCompartment(defaultCompartment);
-                }
 
                 rglyph = layout.createReactionGlyph("RG" + reaction.getId());
                 rglyph.setReaction(reaction.getId());

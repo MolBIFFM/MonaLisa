@@ -96,6 +96,7 @@ public class NetViewerEdge implements Serializable {
      * @param source
      * @param aim
      * @param masterEdge
+     * @param color
      */
     public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge, Color color) {
         LOGGER.debug("Creating new NetViewerEdge with bend");

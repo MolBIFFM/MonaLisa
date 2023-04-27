@@ -31,7 +31,6 @@ import javax.swing.JOptionPane;
 import monalisa.addons.AddonPanel;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.data.pn.Compartment;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.UniquePetriNetEntity;
 import monalisa.resources.ResourceManager;

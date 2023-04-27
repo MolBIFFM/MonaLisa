@@ -447,20 +447,6 @@ public class NetViewerNode implements Serializable {
     }
 
     /**
-     * Change the corners of all logical places
-     *
-     * @param corners
-     */
-    public void setCornersForAllNodes(int corners) {
-        LOGGER.info("Setting corner for all logical places of '" + this.getName() + "'");
-        this.setCorners(corners);
-        for (NetViewerNode n : this.logicalPlaces) {
-            n.setCorners(corners);
-        }
-        LOGGER.info("Successfully set corner for all logical places of '" + this.getName() + "'");
-    }
-
-    /**
      * Change the name of all logical places
      *
      * @param name

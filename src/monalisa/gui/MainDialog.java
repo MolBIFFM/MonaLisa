@@ -482,8 +482,9 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             break;
             case MENU_FILE_SAVE_ACTION:
                 try {
-                saveProject();
-            } catch (ClassNotFoundException | IOException ex) {
+                //saveProject();
+                exportPetriNet();
+            } catch (IOException ex) {
                 LOGGER.error("Caught exception while trying to save project: ", ex);
             }
             break;
@@ -656,7 +657,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private void createNewProject() throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Creating new project from a chosen Petri net file");
         if (askForSavingTheProject()) {
-            saveProject();
+            //saveProject();
+            exportPetriNet();
         }
 
         // PN File
@@ -886,13 +888,11 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         LOGGER.info("Successfully opened project from file");
     }
 
-    private void saveProject() throws ClassNotFoundException, IOException {
+    private void saveProject() throws ClassNotFoundException, IOException { // TODO löschen
         if (project != null) {
 //            try {
-            if (netViewer != null) {
-                netViewer.updatePetriNet();
-            }
-            save();
+            
+            save(); // TODO anschauen
 //            } catch (IOException ex) {
 //                JOptionPane.showMessageDialog(this, strings.get("ErrorWritingFileMessage"), strings.get("ErrorWritingFileTitle"), JOptionPane.ERROR_MESSAGE);
 //            }
@@ -1207,7 +1207,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      * @return
      * @throws IOException
      */
-    public boolean save() throws IOException {
+    public boolean save() throws IOException { // TODO delete?
         LOGGER.info("Saving project");
         boolean ret = false;
         if (project.getPath() == null) {

@@ -162,17 +162,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         //create new selection listener selecting custom markings. If an entry is selected in customMarkingsComboBox, load the marking
         customMarkingsJComboBox.addPopupMenuListener(new CustomMarkingsComboBoxPopupListener(this, simulationMan, customMarkingsJComboBox));
 
-        //Increase the size of vertices (places and transitions)
-        iconSizeSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int newIconSize = ((Integer) iconSizeSpinner.getValue());
-                netViewer.getVisualizationViewer().getRenderContext().setVertexShapeTransformer(new VertexShapeTransformer(newIconSize));
-                vertexIconTransformer.setVertexSize(newIconSize);
-                netViewer.getVisualizationViewer().repaint();
-            }
-        });
-
         //Go one step back in the history
         historyBackJButton.addActionListener(new ActionListener() {
             @Override
@@ -291,14 +280,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         simModeJLabel = new javax.swing.JLabel();
         endSimulationJButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        edgeSizeLabel = new javax.swing.JLabel();
-        fontSizeLabel = new javax.swing.JLabel();
-        arrowSizeLabel = new javax.swing.JLabel();
-        iconSizeLabel = new javax.swing.JLabel();
-        edgeSizeSpinner = new javax.swing.JSpinner();
-        fontSizeSpinner = new javax.swing.JSpinner();
-        iconSizeSpinner = new javax.swing.JSpinner();
-        arrowSizeSpinner = new javax.swing.JSpinner();
         makePic = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         snapshotsJLabel = new javax.swing.JLabel();
@@ -385,93 +366,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         add(jPanel1, gridBagConstraints);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        edgeSizeLabel.setText("Edge size:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 0);
-        jPanel2.add(edgeSizeLabel, gridBagConstraints);
-
-        fontSizeLabel.setText("Font size:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 3);
-        jPanel2.add(fontSizeLabel, gridBagConstraints);
-
-        arrowSizeLabel.setText("Arrow size:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 3);
-        jPanel2.add(arrowSizeLabel, gridBagConstraints);
-
-        iconSizeLabel.setText("Icon size:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 0);
-        jPanel2.add(iconSizeLabel, gridBagConstraints);
-
-        edgeSizeSpinner.setModel(new SpinnerNumberModel(1, 1, 100, 1));
-        edgeSizeSpinner.setEnabled(false);
-        edgeSizeSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                netViewer.setEdgeSize(((Integer)edgeSizeSpinner.getValue()).intValue());
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 0);
-        jPanel2.add(edgeSizeSpinner, gridBagConstraints);
-
-        fontSizeSpinner.setModel(new SpinnerNumberModel(12, 5, 100, 1));
-        fontSizeSpinner.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 3);
-        jPanel2.add(fontSizeSpinner, gridBagConstraints);
-        fontSizeSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                netViewer.setFontSize(((Integer)fontSizeSpinner.getValue()).intValue());
-            }
-        });
-
-        iconSizeSpinner.setModel(new SpinnerNumberModel(16, 5, 150, 1));
-        iconSizeSpinner.setToolTipText("");
-        iconSizeSpinner.setEnabled(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 3, 3, 0);
-        jPanel2.add(iconSizeSpinner, gridBagConstraints);
-
-        arrowSizeSpinner.setModel(new SpinnerNumberModel(1.0, 1.0, 100.0, 0.5));
-        arrowSizeSpinner.setEnabled(false);
-        arrowSizeSpinner.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                netViewer.setArrowSize(((Double)arrowSizeSpinner.getValue()));
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(3, 3, 0, 3);
-        jPanel2.add(arrowSizeSpinner, gridBagConstraints);
 
         makePic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/save_picture.png"))); // NOI18N
         makePic.setText("Save as image");
@@ -808,23 +702,15 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     }//GEN-LAST:event_makePicActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel arrowSizeLabel;
-    protected javax.swing.JSpinner arrowSizeSpinner;
     protected javax.swing.JScrollPane customControlScrollPane;
     protected javax.swing.JComboBox customMarkingsJComboBox;
     protected javax.swing.JButton deleteMarkingJButton;
-    private javax.swing.JLabel edgeSizeLabel;
-    protected javax.swing.JSpinner edgeSizeSpinner;
     protected javax.swing.JButton endSimulationJButton;
-    private javax.swing.JLabel fontSizeLabel;
-    protected javax.swing.JSpinner fontSizeSpinner;
     protected javax.swing.JButton historyBackJButton;
     protected javax.swing.JButton historyForwardJButton;
     private javax.swing.JLabel historyJLabel;
     protected javax.swing.JList historyJList;
     protected javax.swing.JScrollPane historyScrollPane;
-    private javax.swing.JLabel iconSizeLabel;
-    protected javax.swing.JSpinner iconSizeSpinner;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -919,18 +805,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         //assign ItemListener for firing picked transitions
         vfl = new VertexFireListener(simulationMan, vv);
         vv.getRenderContext().getPickedVertexState().addItemListener(vfl);
-        //assign correct values for the spinner
-        fontSizeSpinner.setValue(netViewer.getFontSize());
-        arrowSizeSpinner.setValue(netViewer.getArrowSize());
-        edgeSizeSpinner.setValue(netViewer.getEdgeSize());
-        iconSizeSpinner.setValue(netViewer.getIconSize());
         //enables/disables GUI-components
         startSimulationJButton.setEnabled(false);
         endSimulationJButton.setEnabled(true);
-        iconSizeSpinner.setEnabled(true);
-        arrowSizeSpinner.setEnabled(true);
-        fontSizeSpinner.setEnabled(true);
-        edgeSizeSpinner.setEnabled(true);
         showStatisticsJButton.setEnabled(true);
         saveMarkingJButton.setEnabled(true);
         deleteMarkingJButton.setEnabled(true);
@@ -1052,18 +929,9 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         vv.getRenderContext().getPickedVertexState().removeItemListener(vfl);
         vv.repaint();
         preferencesJFrame.dispose();
-        //reset the spinner values to the NetViewer
-        netViewer.setArrowSize((double) arrowSizeSpinner.getValue());
-        netViewer.setFontSize((int) fontSizeSpinner.getValue());
-        netViewer.setIconSize((int) iconSizeSpinner.getValue());
-        netViewer.setEdgeSize((int) edgeSizeSpinner.getValue());
         //enables/disables GUI-components
         startSimulationJButton.setEnabled(true);
         endSimulationJButton.setEnabled(false);
-        iconSizeSpinner.setEnabled(false);
-        arrowSizeSpinner.setEnabled(false);
-        fontSizeSpinner.setEnabled(false);
-        edgeSizeSpinner.setEnabled(false);
         historyBackJButton.setEnabled(false);
         historyForwardJButton.setEnabled(false);
         showStatisticsJButton.setEnabled(false);

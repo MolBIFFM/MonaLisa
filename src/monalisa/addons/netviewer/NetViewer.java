@@ -3188,6 +3188,11 @@ public class NetViewer extends JFrame implements ActionListener {
         vv.repaint();
         LOGGER.info("Successfully closed TokenSimulator");
     }
+    
+    public NetViewerModalGraphMouse getGM() {
+        return this.gm;
+    }
+    
     // ------- END: Communication and control with / for other addons -----------
 
     // ------- START: Graph modification in NetViewer -------

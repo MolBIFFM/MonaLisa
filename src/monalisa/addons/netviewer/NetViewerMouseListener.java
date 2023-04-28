@@ -70,7 +70,7 @@ public class NetViewerMouseListener implements MouseListener {
                 nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             }
-        } else if (e.getClickCount() == 2 && nv.getMouseMode()) {
+        } else if (e.getClickCount() == 2 && nv.getMouseMode() && !nv.getGM().getSimulatorMode()) {
             psN = nv.vv.getRenderContext().getPickedVertexState();
             if (psN.getPicked().size() >= 1) {
                 nv.showVertexSetup((NetViewerNode) psN.getPicked().toArray()[0]); //, e.getX(), e.getY());

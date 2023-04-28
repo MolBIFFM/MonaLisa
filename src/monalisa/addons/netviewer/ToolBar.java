@@ -581,7 +581,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/save_project.png"))); // NOI18N
         saveProjectButton.setToolTipText("");
-        saveProjectButton.setToolTipText(strings.get("FileSave"));
+        saveProjectButton.setToolTipText(strings.get("NVFileSave"));
         saveProjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveProjectButtonActionPerformed(evt);

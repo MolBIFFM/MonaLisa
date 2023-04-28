@@ -43,8 +43,7 @@ public final class Project implements Serializable {
 
     private static final long serialVersionUID = -7900422748294040894L;
     private static final Logger LOGGER = LogManager.getLogger(Project.class);
-
-    public static final String FILENAME_EXTENSION = "mlproject";
+    
     public static final String TFILENAME_EXTENSION = "res";
 
     private static final StringResources strings = ResourceManager.instance().getDefaultStrings();

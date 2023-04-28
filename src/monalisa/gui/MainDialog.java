@@ -163,7 +163,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
                 if (keyCode.equals(KeyEvent.VK_S) && e.isControlDown()) {
                     try {
-                        save();
+                        //save();
+                        exportPetriNet();
                     } catch (IOException ex) {
                         LOGGER.error("Caught IOException while trying to save project on Ctrl + S: ", ex);
                     }
@@ -599,7 +600,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                                 updateProjectStorage();
                                 project.save();
                             } else {
-                                save();
+                                //save();
+                                exportPetriNet();
                             }
                             LOGGER.info("Successfully saved project on application exit");
                         } catch (IOException ex) {
@@ -640,7 +642,10 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      */
     private void createEmptyProject() throws ClassNotFoundException, IOException, InterruptedException {
         LOGGER.info("Creating new empty project");
-        askForSavingTheProject();
+        if (askForSavingTheProject()) {
+            //saveProject();
+            exportPetriNet();
+        }
         project = new Project();
         projectLoaded();
         LOGGER.info("Successfully created new empty project");
@@ -731,7 +736,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
      */
-    public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException {
+    public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException { // TODO doesn't work right
         File newProjectFile;
 
         if (oldProject != null) {
@@ -740,9 +745,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             projectLocationChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory()
-                            || Project.FILENAME_EXTENSION.equalsIgnoreCase(
-                                    FileUtils.getExtension(f));
+                    return f.isDirectory();
                 }
 
                 @Override
@@ -758,9 +761,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
             newProjectFile = projectLocationChooser.getSelectedFile();
 
-            if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(newProjectFile))) {
-                newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-            }
             netViewer.updateNVS();
             updateProjectStorage();
             Project newProj = Project.create(oldProject, newProjectFile);
@@ -818,16 +818,17 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     private void openProject() throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Gathering file to open project from");
-        askForSavingTheProject();
+        if (askForSavingTheProject()) {
+            //saveProject();
+            exportPetriNet();
+        }
 
         MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
 
         projectLocationChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.isDirectory()
-                        || Project.FILENAME_EXTENSION.equalsIgnoreCase(
-                                FileUtils.getExtension(f));
+                return f.isDirectory();
             }
 
             @Override
@@ -886,17 +887,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
         toolUI.setResults(toolUI.getToolManager().getAllResults());
         LOGGER.info("Successfully opened project from file");
-    }
-
-    private void saveProject() throws ClassNotFoundException, IOException { // TODO löschen
-        if (project != null) {
-//            try {
-            
-            save(); // TODO anschauen
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(this, strings.get("ErrorWritingFileMessage"), strings.get("ErrorWritingFileTitle"), JOptionPane.ERROR_MESSAGE);
-//            }
-        }
     }
 
     public void exportPetriNet() throws IOException {
@@ -1216,7 +1206,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             projectLocationChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory() || Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(f));
+                    return f.isDirectory();
                 }
 
                 @Override
@@ -1230,9 +1220,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                 return false;
             }
             projectFile = projectLocationChooser.getSelectedFile();
-            if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(projectFile))) {
-                projectFile = new File(projectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-            }
             project.setPath(projectFile);
             String recentlyProjects = Settings.get("recentlyProjects");
             // If project are in the list, set it to the last place

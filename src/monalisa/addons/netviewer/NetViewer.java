@@ -2976,7 +2976,8 @@ public class NetViewer extends JFrame implements ActionListener {
     public void saveProject() {
         LOGGER.info("Saving project");
         try {
-            mainDialog.save();
+            // mainDialog.save();
+            mainDialog.exportPetriNet();
             LOGGER.info("Successfully saved project");
         } catch (IOException ex) {
             LOGGER.error("Issue while saving project: ", ex);

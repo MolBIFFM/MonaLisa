@@ -154,7 +154,7 @@ public class SbmlQualInputHandler {
             }
         }
 
-
+        
         // set the qualitative species as species
         List<QualitativeSpecies> places = qual_species_list;
         int index = 0;
@@ -214,7 +214,6 @@ public class SbmlQualInputHandler {
                 s.setStoichiometry(qual_output_level_list.get(t).get(p));
             }
         }
-
 
         return converted_doc;
 

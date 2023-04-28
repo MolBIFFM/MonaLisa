@@ -54,6 +54,7 @@ import org.sbml.jsbml.Model;
 import org.sbml.jsbml.ModifierSpeciesReference;
 import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.util.filters.Filter;
 import org.sbml.jsbml.ext.layout.*;
@@ -65,7 +66,7 @@ import org.sbml.jsbml.ext.SBasePlugin;
  * <a href="http://sbml.org/Documents/Specifications">http://sbml.org/Documents/Specifications</a>
  *
  */
-public final class SbmlInputHandler implements InputHandler {
+public final class SbmlInputHandler extends SbmlQualInputHandler implements InputHandler {
 
     private final Map<Integer, Place> places = new HashMap<>();
     private final Map<Integer, Transition> transitions = new HashMap<>();
@@ -123,18 +124,28 @@ public final class SbmlInputHandler implements InputHandler {
             LOGGER.error("Caught XMLStreamException while parsing XML file: ", ex);
         }
 
+        //check if the model contains the SBMLqual extension
+        Map<String,String> namespaces = doc.getDeclaredNamespaces();
+        for (String n : namespaces.keySet()) {
+            if (n.contains("qual")) {
+                doc = convertqualtosbmlcore(doc);
+                break;
+            }
+        }
+
         doc.removeAllTreeNodeChangeListeners(true);
         Model model = doc.getModel();
         SBasePlugin mplugin = null;
         Layout layout = null;
         Boolean hasLayout = false;
 
+
         if (model.isSetPlugin(LayoutConstants.getNamespaceURI(3, 1))) {
             mplugin = model.getExtension(LayoutConstants.getNamespaceURI(3, 1));
             LayoutModelPlugin layplugin = (LayoutModelPlugin) mplugin;
             layout = layplugin.getLayout(0);
 
-            //check if the layout is not empty  
+            //check if the layout is not empty
             if (layout.getReactionGlyphCount() != 0 && layout.getSpeciesGlyphCount() != 0) {
                 hasLayout = true;
             }
@@ -284,6 +295,7 @@ public final class SbmlInputHandler implements InputHandler {
             } else {
                 transition.putProperty(AnnotationUtils.SBO_TERM, "SBO:0000000");
             }
+
             tmp = r.getCVTerms();
             transition.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
@@ -418,8 +430,8 @@ public final class SbmlInputHandler implements InputHandler {
                 return false;
             }
         });
-        
-        
+
+
         LOGGER.info("Successfully loaded Petri net from SBML file");
         return petriNet;
     }
@@ -502,7 +514,7 @@ public final class SbmlInputHandler implements InputHandler {
                         }
                     }
                 }
-            }            
+            }
             for (ArrayList<String> task : taskList){
                 while (task.size() > 2){
                     NetViewerEdge oldEdge = netViewer.g.findEdge(nameMap.get(task.get(0)), nameMap.get(task.get(task.size() - 1)));

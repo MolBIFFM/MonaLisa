@@ -3514,7 +3514,7 @@ public class NetViewer extends JFrame implements ActionListener {
         NetViewerEdge newEdge;
         NetViewerEdge masterEdge = nvEdge.getMasterEdge();
         NetViewerNode newNode = addNode(BEND, "B", x + 30.0, y + 30.0);
-        addBendEdge(nvEdge.getSource(), newNode, masterEdge);
+        addBendEdge(nvEdge.getSource(), newNode, masterEdge, masterEdge.getColor());
         newEdge = new NetViewerEdge("n" + getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge, nvEdge.getColor());
         if (newEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
             g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.UNDIRECTED);
@@ -3540,12 +3540,13 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param weight
      * @param source
      * @param aim
+     * @param color
      * @param masterEdge
      * @return
      */
-    public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
+    public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge, Color color) {
         LOGGER.debug("Adding new bended edge to NetViewer");
-        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge, masterEdge.getColor());
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge, color);
         g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
         LOGGER.debug("Successfully added new bended edge to NetViewer");
         return ret;
@@ -3726,6 +3727,8 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.debug("Removing one bend from an edge in NetViewer");
         NetViewerEdge invisibleEdge = null;
         NetViewerEdge otherEdge;
+        Color newColor = edge.getColor();
+        int newWeight = edge.getWeight();
         // NetViewer.BEND ------ NODE
         if (edge.getSource().getNodeType().equalsIgnoreCase(BEND) && !edge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
             edge.getAim().removeInEdge(edge);
@@ -3734,7 +3737,7 @@ public class NetViewer extends JFrame implements ActionListener {
             if (!otherEdge.getSource().getNodeType().equals(BEND)) {
                 invisibleEdge = g.findEdge(otherEdge.getSource(), edge.getAim());
             } else {
-                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
+                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor);
             }
             g.removeVertex(edge.getSource());
         } // NODE ------ NetViewer.BEND
@@ -3745,7 +3748,7 @@ public class NetViewer extends JFrame implements ActionListener {
             if (!otherEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
                 invisibleEdge = g.findEdge(edge.getSource(), otherEdge.getAim());
             } else {
-                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge());
+                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge(), newColor);
             }
             g.removeVertex(edge.getAim());
         } // NetViewer.BEND ------ NetViewer.BEND
@@ -3753,7 +3756,7 @@ public class NetViewer extends JFrame implements ActionListener {
             edge.getAim().removeInEdge(edge);
             edge.getSource().removeOutEdge(edge);
             otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);
-            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge());
+            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor);
             g.removeVertex(otherEdge.getAim());
         }
         otherEdge.getMasterEdge().removeBendEdge(otherEdge);
@@ -3761,6 +3764,8 @@ public class NetViewer extends JFrame implements ActionListener {
         edge.getMasterEdge().removeBendEdge(edge);
         g.removeEdge(edge);
         if (invisibleEdge != null) {
+            invisibleEdge.setColor(newColor);
+            invisibleEdge.setWeightForAllEdges(newWeight);
             invisibleEdge.setVisible(true);
         }
         LOGGER.debug("Successfully removed one bend from an edge in NetViewer");

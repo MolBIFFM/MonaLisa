@@ -14,9 +14,11 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.util.Set;
 import monalisa.synchronisation.Synchronizer;
 
 import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER; // TODO delete
+import static monalisa.addons.netviewer.NetViewer.BEND;
 
 /**
  * MouseListener to react on mouse clicks for creating new nodes
@@ -77,7 +79,7 @@ public class NetViewerMouseListener implements MouseListener {
             }
 
             psE = nv.vv.getPickedEdgeState();
-            if (psE.getPicked().size() == 1) {
+            if (psE.getPicked().size() >= 1) {
                 nv.showEdgeSetup((NetViewerEdge) psE.getPicked().toArray()[0]); //, e.getX(), e.getY());
             }
         }

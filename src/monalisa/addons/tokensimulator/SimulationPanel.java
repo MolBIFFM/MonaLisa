@@ -280,7 +280,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         simModeJLabel = new javax.swing.JLabel();
         endSimulationJButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        makePic = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         snapshotsJLabel = new javax.swing.JLabel();
         loadSetupButton = new javax.swing.JButton();
@@ -366,22 +365,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         add(jPanel1, gridBagConstraints);
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
-
-        makePic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/save_picture.png"))); // NOI18N
-        makePic.setText("Save as image");
-        makePic.setToolTipText("Saves the Petri net as an image");
-        makePic.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                makePicActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
-        jPanel2.add(makePic, gridBagConstraints);
-
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -693,14 +676,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         showPlot();
     }//GEN-LAST:event_showPlotButtonActionPerformed
 
-    private void makePicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_makePicActionPerformed
-        try {
-            this.netViewer.makePic();
-        } catch (IOException ex) {
-            LOGGER.error(ex);
-        }
-    }//GEN-LAST:event_makePicActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JScrollPane customControlScrollPane;
     protected javax.swing.JComboBox customMarkingsJComboBox;
@@ -718,7 +693,6 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     protected javax.swing.JButton loadSetupButton;
-    private javax.swing.JButton makePic;
     protected javax.swing.JButton preferencesJButton;
     protected javax.swing.JButton saveMarkingJButton;
     protected javax.swing.JButton saveSetupButton;
@@ -996,7 +970,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         Generate graph.
          */
         LOGGER.debug("Generating the graph for the output visualization");
-        JFreeChart chart = ChartFactory.createXYLineChart("Simulation results", "Passed time [sec]", "Nr. of tokens", chartDataset,
+        JFreeChart chart = ChartFactory.createXYLineChart("Simulation results", "Number of steps", "Number of tokens", chartDataset,
                 PlotOrientation.VERTICAL, true, false, false);
         final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         for (int i = 0; i < chartDataset.getSeries().size(); i++) {

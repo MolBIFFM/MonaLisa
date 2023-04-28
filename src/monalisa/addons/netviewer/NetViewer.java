@@ -1255,7 +1255,6 @@ public class NetViewer extends JFrame implements ActionListener {
                 }
             }
             if (!tb.ioInvList.isEmpty()) {
-                tb.allInvList.addElement(strings.get("NVSeperator"));
                 counter++;
                 for (Object tw : tb.ioInvList.toArray()) {
                     tb.allInvList.addElement(tw);
@@ -1263,7 +1262,6 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             if (!tb.inputInvList.isEmpty()) {
-                tb.allInvList.addElement(strings.get("NVSeperator"));
                 counter++;
                 for (Object tw : tb.inputInvList.toArray()) {
                     tb.allInvList.addElement(tw);
@@ -1271,7 +1269,6 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             if (!tb.outputInvList.isEmpty()) {
-                tb.allInvList.addElement(strings.get("NVSeperator"));
                 counter++;
                 for (Object tw : tb.outputInvList.toArray()) {
                     tb.allInvList.addElement(tw);
@@ -1279,7 +1276,6 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             if (!tb.cyclicInvList.isEmpty()) {
-                tb.allInvList.addElement(strings.get("NVSeperator"));
                 counter++;
                 for (Object tw : tb.cyclicInvList.toArray()) {
                     tb.allInvList.addElement(tw);
@@ -1287,7 +1283,6 @@ public class NetViewer extends JFrame implements ActionListener {
             }
 
             if (!tb.trivialInvList.isEmpty()) {
-                tb.allInvList.addElement(strings.get("NVSeperator"));
                 counter++;
                 for (Object tw : tb.trivialInvList.toArray()) {
                     tb.allInvList.addElement(tw);

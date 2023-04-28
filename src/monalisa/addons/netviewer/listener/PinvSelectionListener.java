@@ -63,9 +63,7 @@ public class PinvSelectionListener implements ListSelectionListener {
             selectionValues = js.getSelectedValuesList();
 
             for (PinvWrapper sv : selectionValues) {
-
                 nv.resetMessageLabel();
-
                 if (!tb.stackSelection()) {
                     nv.switchColors();
                     nv.resetColor();

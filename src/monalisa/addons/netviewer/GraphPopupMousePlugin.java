@@ -410,8 +410,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                             for (NetViewerNode n : node.getMasterNode().getLogicalPlaces()) {
                                 allPlaces.add(n);
                             }
-                            for (NetViewerNode n : allPlaces) {
-                                nv.removeNode(node);
+                            for (NetViewerNode n : allPlaces.subList(1, allPlaces.size())) {
+                                nv.removeNode(n);
                             }
                             nv.modificationActionHappend();
                         }

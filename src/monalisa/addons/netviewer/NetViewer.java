@@ -1507,7 +1507,7 @@ public class NetViewer extends JFrame implements ActionListener {
                     n.setColor(Color.LIGHT_GRAY);
                     n.setStrokeColor(Color.BLACK);
                 } else if (n.isMasterNode()) {
-                    n.setColor(Color.DARK_GRAY);
+                    n.setColor(Color.GRAY);
                     n.setStrokeColor(Color.BLACK);
                 } else {
                     n.setColor(Color.WHITE);
@@ -2574,8 +2574,10 @@ public class NetViewer extends JFrame implements ActionListener {
                 for (String k : newLogicalPlaces.keySet()) {
                     pointParts = internalId2Pos.get(k).split("\\|");
                     Point.Double newPoint = new Point.Double();
-                    newPoint.x = new Double(pointParts[0]);
-                    newPoint.y = new Double(pointParts[1]);
+//                    newPoint.x = Double.parseDouble(pointParts[0]);
+//                    newPoint.y = Double.parseDouble(pointParts[1]);
+                    newPoint.x = formatCoordinates(Double.parseDouble(pointParts[0]));
+                    newPoint.y = formatCoordinates(Double.parseDouble(pointParts[1]));
                     selectedNodes.clear();
                     selectedNodes.addAll(newLogicalPlaces.get(k));
                     addLogicalPlace(getNodeFromVertex(graphicalId2Place.get(k)), selectedNodes, newPoint);
@@ -2699,6 +2701,7 @@ public class NetViewer extends JFrame implements ActionListener {
                 setupFrame.setLocationRelativeTo(null); // centers popup on the screen
                 //setupFrame.setLocation(x, y);
                 setupFrame.setVisible(true);
+                setupFrame.setAlwaysOnTop(false);
                 this.setEnabled(false);
             }
         }
@@ -3460,15 +3463,9 @@ public class NetViewer extends JFrame implements ActionListener {
             LOGGER.debug("Adding new logical place to NetViewer");
             NetViewerNode newNode = sourceNode.getMasterNode().generateLocicalPlace(getNewNodeId());
             sourceNode.getMasterNode().setColor(Color.GRAY);
+            sourceNode.getMasterNode().setStrokeColor(Color.BLACK);
+//            sourceNode.getMasterNode().setLogical(true);
             g.addVertex(newNode);
-            if (!(sourceNode.getMasterNode().getColor().equals(Color.WHITE) || sourceNode.getMasterNode().getColor().equals(Color.GRAY))) {
-                newNode.setColor(sourceNode.getColor());
-            }
-            if (!sourceNode.getMasterNode().getStrokeColor().equals(Color.BLACK)) {
-                newNode.setStrokeColor(sourceNode.getMasterNode().getStrokeColor());
-            } else {
-                newNode.setStrokeColor(Color.BLACK);
-            }
             NetViewerEdge oldEdge;
             NetViewerEdge newEdge;
             for (Object n : selectedNodes) {
@@ -3594,6 +3591,7 @@ public class NetViewer extends JFrame implements ActionListener {
         }
         LOGGER.debug("Removing logical place from NetViewer");
         List<NetViewerEdge> edgesToDelete = new ArrayList<>();
+//        nvNode.getMasterNode().setLogical(false);
         for (NetViewerEdge e : nvNode.getInEdges()) {
             addEdge(e.getWeight(), e.getSource(), aim);
             edgesToDelete.add(g.findEdge(e.getSource(), nvNode));
@@ -3608,11 +3606,6 @@ public class NetViewer extends JFrame implements ActionListener {
             removeEdgeFromGraph(nvEdge);
         }
         nvNode.getMasterNode().removeLogicalNode(nvNode);
-        if (!nvNode.getMasterNode().getColor().equals(Color.WHITE)) {
-            nvNode.getMasterNode().setColor(nvNode.getMasterNode().getColor());
-        } else {
-            nvNode.getMasterNode().setColor(Color.WHITE);
-        }
         if (nvNode.getMasterNode().getLogicalPlaces().size() == 1) {
             nvNode.getMasterNode().setColor(Color.WHITE);
         }

@@ -415,8 +415,10 @@ public final class SbmlInputHandler implements InputHandler {
                 for (String nodeName : connectedNodes) {
                     connectedNetViewerNodes.add(nameMap.get(nodeName));
                 }
-                Double posX = Double.parseDouble(logPlaceInfo.get(3).getValue());
-                Double posY = Double.parseDouble(logPlaceInfo.get(4).getValue());
+//                Double posX = Double.valueOf(logPlaceInfo.get(3).getValue());
+//                Double posY = Double.valueOf(logPlaceInfo.get(4).getValue());
+                Double posX = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(3).getValue()));
+                Double posY = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(4).getValue()));
                 netViewer.addLogicalPlace(nameMap.get(masterNodeString), connectedNetViewerNodes, new Point2D.Double(posX, posY));
                 nameMap.put(logPlace.getAttributeValue("Name"), nameMap.get(masterNodeString).getLogicalPlaces().get(nameMap.get(masterNodeString).getLogicalPlaces().size() - 1));
             }

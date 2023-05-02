@@ -80,7 +80,7 @@ public class NetViewerNode implements Serializable {
         }
 
         this.searchBarColor = Color.BLACK;
-        this.strokeColor = color.BLACK;
+        this.strokeColor = Color.BLACK;
         this.defaultStrokeColor = Color.BLACK;
 
         this.logicalPlaces = new ArrayList<>();
@@ -110,7 +110,9 @@ public class NetViewerNode implements Serializable {
         this.nodeType = NetViewer.PLACE;
         this.labelName = masterNode.labelName;
         this.color = Color.LIGHT_GRAY;
-        this.defaultColor = Color.LIGHT_GRAY;
+        this.defaultColor = Color.WHITE;
+        this.strokeColor = Color.BLACK;
+        this.defaultStrokeColor = Color.BLACK;
         this.searchBarColor = Color.BLACK;
         this.corners = 0;
         this.logicalPlaces = new ArrayList<>();
@@ -205,9 +207,11 @@ public class NetViewerNode implements Serializable {
      */
     public void setColorForAllNodes(Color color) {
         LOGGER.debug("Changing color for all logical places");
-        this.setColor(color);
+        //this.setColor(color);
         for (NetViewerNode n : this.logicalPlaces) {
-            n.setColor(color);
+            if (!n.isLogical && !n.isMasterNode()) {
+                n.setColor(color);
+            }
         }
         LOGGER.debug("Successfully changed color for all logical places");
     }
@@ -439,9 +443,11 @@ public class NetViewerNode implements Serializable {
      */
     public void setStrokeColorForAllNodes(Color color) {
         LOGGER.info("Setting stroke color for all logical places of '" + this.getName() + "'");
-        this.setStrokeColor(color);
+        //this.setStrokeColor(color);
         for (NetViewerNode n : this.logicalPlaces) {
-            n.setStrokeColor(color);
+            if (!n.isLogical && !n.isMasterNode()) {
+                n.setStrokeColor(color);
+            }
         }
         LOGGER.info("Successfully set stroke color for all logical places of '" + this.getName() + "'");
     }
@@ -501,7 +507,7 @@ public class NetViewerNode implements Serializable {
         return this.isLogical;
     }
 
-    private void setLogical(boolean b) {
+    protected void setLogical(boolean b) {
         this.isLogical = b;
     }
 

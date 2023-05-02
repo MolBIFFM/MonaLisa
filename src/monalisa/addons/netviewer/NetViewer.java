@@ -3514,7 +3514,7 @@ public class NetViewer extends JFrame implements ActionListener {
         NetViewerEdge newEdge;
         NetViewerEdge masterEdge = nvEdge.getMasterEdge();
         NetViewerNode newNode = addNode(BEND, "B", x + 30.0, y + 30.0);
-        addBendEdge(nvEdge.getSource(), newNode, masterEdge, masterEdge.getColor());
+        addBendEdge(nvEdge.getSource(), newNode, masterEdge, masterEdge.getColor(), masterEdge.getWeight());
         newEdge = new NetViewerEdge("n" + getNewEdgeId(), nvEdge.getWeight(), newNode, nvEdge.getAim(), masterEdge, nvEdge.getColor());
         if (newEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
             g.addEdge(newEdge, newEdge.getSource(), newEdge.getAim(), EdgeType.UNDIRECTED);
@@ -3544,9 +3544,9 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param masterEdge
      * @return
      */
-    public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge, Color color) {
+    public NetViewerEdge addBendEdge(NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge, Color color, int weight) {
         LOGGER.debug("Adding new bended edge to NetViewer");
-        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), masterEdge.getWeight(), source, aim, masterEdge, color);
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), weight, source, aim, masterEdge, color);
         g.addEdge(ret, ret.getSource(), ret.getAim(), EdgeType.UNDIRECTED);
         LOGGER.debug("Successfully added new bended edge to NetViewer");
         return ret;
@@ -3733,30 +3733,30 @@ public class NetViewer extends JFrame implements ActionListener {
         if (edge.getSource().getNodeType().equalsIgnoreCase(BEND) && !edge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
             edge.getAim().removeInEdge(edge);
             edge.getSource().removeOutEdge(edge);
-            otherEdge = (NetViewerEdge) edge.getSource().getInEdges().toArray()[0];
+            otherEdge = (NetViewerEdge) edge.getSource().getInEdges().toArray()[edge.getSource().getInEdges().size() - 1];
             if (!otherEdge.getSource().getNodeType().equals(BEND)) {
                 invisibleEdge = g.findEdge(otherEdge.getSource(), edge.getAim());
             } else {
-                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor);
+                addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor, newWeight);
             }
             g.removeVertex(edge.getSource());
         } // NODE ------ NetViewer.BEND
         else if (edge.getAim().getNodeType().equalsIgnoreCase(BEND) && !edge.getSource().getNodeType().equalsIgnoreCase(BEND)) {
             edge.getSource().removeOutEdge(edge);
             edge.getAim().removeInEdge(edge);
-            otherEdge = (NetViewerEdge) edge.getAim().getOutEdges().toArray()[0];
+            otherEdge = (NetViewerEdge) edge.getAim().getOutEdges().toArray()[edge.getAim().getOutEdges().size() - 1];
             if (!otherEdge.getAim().getNodeType().equalsIgnoreCase(BEND)) {
                 invisibleEdge = g.findEdge(edge.getSource(), otherEdge.getAim());
             } else {
-                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge(), newColor);
+                addBendEdge(edge.getSource(), otherEdge.getAim(), otherEdge.getMasterEdge(), newColor, newWeight);
             }
             g.removeVertex(edge.getAim());
         } // NetViewer.BEND ------ NetViewer.BEND
         else {
             edge.getAim().removeInEdge(edge);
             edge.getSource().removeOutEdge(edge);
-            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[0]);
-            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor);
+            otherEdge = ((NetViewerEdge) edge.getSource().getInEdges().toArray()[edge.getSource().getInEdges().size() - 1]);
+            addBendEdge(otherEdge.getSource(), edge.getAim(), edge.getMasterEdge(), newColor, newWeight);
             g.removeVertex(otherEdge.getAim());
         }
         otherEdge.getMasterEdge().removeBendEdge(otherEdge);

@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import monalisa.synchronisation.Synchronizer;
 
@@ -75,7 +77,11 @@ public class NetViewerMouseListener implements MouseListener {
         } else if (e.getClickCount() == 2 && nv.getMouseMode() && !nv.getGM().getSimulatorMode()) {
             psN = nv.vv.getRenderContext().getPickedVertexState();
             if (psN.getPicked().size() >= 1) {
-                nv.showVertexSetup((NetViewerNode) psN.getPicked().toArray()[0]); //, e.getX(), e.getY());
+                List<NetViewerNode> selectedNodes = new ArrayList<>();
+                for (Object o : psN.getPicked()) {
+                    selectedNodes.add((NetViewerNode) o);
+                }
+                nv.showVertexSetup(selectedNodes); //, e.getX(), e.getY());
             }
 
             psE = nv.vv.getPickedEdgeState();

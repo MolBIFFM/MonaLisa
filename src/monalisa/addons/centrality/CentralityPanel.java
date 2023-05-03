@@ -26,6 +26,7 @@ import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
+import monalisa.util.MonaLisaFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -516,6 +517,8 @@ public class CentralityPanel extends AddonPanel {
 
         LOGGER.info("Exporting centralities");
         MonaLisaFileChooser fileCh = new MonaLisaFileChooser();
+        MonaLisaFileFilter csvFilter = new MonaLisaFileFilter("csv", "Comma-sparated values");
+        fileCh.addChoosableFileFilter(csvFilter);
         int returnValue = fileCh.showSaveDialog(null);
         File file = fileCh.getSelectedFile();
         if (returnValue == JFileChooser.APPROVE_OPTION) {

@@ -89,7 +89,15 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
     public NetViewer getNetViewer() {
         return nv;
     }
-
+    
+    /**
+     * 
+     * @return Graph
+     */
+    public Graph getGraph() {
+        return g;
+    }
+    
     @Override
     protected void handlePopup(final MouseEvent me) {
         LOGGER.debug("Handling right-click popup in NetViewer");
@@ -220,7 +228,11 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Adding bend to edge");
-                        nv.addBend(edge, nv.formatCoordinates((double) me.getX()), nv.formatCoordinates((double) me.getY()));
+                        if (nv.tb.getEnableGrid()) {
+                            nv.addBend(edge, nv.formatCoordinates((double) me.getX()), nv.formatCoordinates((double) me.getY()));
+                        } else {
+                            nv.addBend(edge, (double) me.getX(), (double) me.getY());
+                        }
                     }
                 });
 
@@ -383,8 +395,11 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Creating reverse transition");
-                            nv.reverseTransition(node, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
-                            //nv.reverseTransition(node, me.getX(), me.getY());
+                            if (nv.tb.getEnableGrid()) {
+                                nv.reverseTransition(node, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
+                            } else {
+                                nv.reverseTransition(node, me.getX(), me.getY());
+                            }
                             nv.modificationActionHappend();
                         }
                     });
@@ -608,8 +623,10 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
             case ADD_BEND:
                 LOGGER.debug("Add_bend mode");
                 Point mousePoint = vv.getMousePosition();
-                mousePoint.x = (int) nv.formatCoordinates(mousePoint.x);
-                mousePoint.y = (int) nv.formatCoordinates(mousePoint.y);
+                if (nv.tb.getEnableGrid()) {
+                    mousePoint.x = (int) nv.formatCoordinates(mousePoint.x);
+                    mousePoint.y = (int) nv.formatCoordinates(mousePoint.y);
+                }
                 nv.addBend(clickedEdge, (double) mousePoint.x, (double) mousePoint.y);
                 break;
             case DELETE_BEND:

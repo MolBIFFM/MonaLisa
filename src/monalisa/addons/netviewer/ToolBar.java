@@ -201,6 +201,8 @@ public class ToolBar extends javax.swing.JPanel {
         iconSizeSpinner = new javax.swing.JSpinner();
         arrowSizeSpinner = new javax.swing.JSpinner();
         edgeSizeSpinner = new javax.swing.JSpinner();
+        enableGridCheckBox = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
         analysisPane = new javax.swing.JPanel();
         InvPanel = new javax.swing.JPanel();
         emLabel = new javax.swing.JLabel();
@@ -701,12 +703,29 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
         styleButtonPanel.add(edgeSizeSpinner, gridBagConstraints);
 
+        enableGridCheckBox.setSelected(true);
+        enableGridCheckBox.setText("Enable Grid");
+        enableGridCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enableGridCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        styleButtonPanel.add(enableGridCheckBox, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
         controlPane.add(styleButtonPanel, gridBagConstraints);
+
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+        controlPane.add(jPanel2, new java.awt.GridBagConstraints());
 
         menuPane.addTab("Control", controlPane);
 
@@ -1250,6 +1269,12 @@ public class ToolBar extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_iconSizeSpinnerPropertyChange
 
+    private void enableGridCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableGridCheckBoxActionPerformed
+        if (enableGridCheckBox.isSelected()) {
+            netViewer.correctCoordinates();
+        }
+    }//GEN-LAST:event_enableGridCheckBoxActionPerformed
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
@@ -1272,6 +1297,10 @@ public class ToolBar extends javax.swing.JPanel {
      */
     public javax.swing.JButton getEnableHighlightingButton() {
         return this.enableHighlightingButton;
+    }
+    
+    public boolean getEnableGrid() {
+        return enableGridCheckBox.isSelected();
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1309,6 +1338,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JLabel edgeSizeLabel;
     protected javax.swing.JSpinner edgeSizeSpinner;
     private javax.swing.JLabel emLabel;
+    private javax.swing.JCheckBox enableGridCheckBox;
     protected javax.swing.JButton enableHighlightingButton;
     protected javax.swing.JButton enableLabelsButton;
     private javax.swing.JLabel fontSizeLabel;
@@ -1321,6 +1351,7 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JPanel inEdgePanel;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;

@@ -58,6 +58,9 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
                     this.scaler.scale(vv, this.out, mouse);
                 }
 
+                if (owner.tb.getEnableGrid()) {
+                    owner.correctCoordinates();
+                }
                 newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
                 newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
 

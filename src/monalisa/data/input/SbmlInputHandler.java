@@ -415,10 +415,10 @@ public final class SbmlInputHandler implements InputHandler {
                 for (String nodeName : connectedNodes) {
                     connectedNetViewerNodes.add(nameMap.get(nodeName));
                 }
-//                Double posX = Double.valueOf(logPlaceInfo.get(3).getValue());
-//                Double posY = Double.valueOf(logPlaceInfo.get(4).getValue());
-                Double posX = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(3).getValue()));
-                Double posY = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(4).getValue()));
+                Double posX = Double.valueOf(logPlaceInfo.get(3).getValue());
+                Double posY = Double.valueOf(logPlaceInfo.get(4).getValue());
+//                Double posX = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(3).getValue()));
+//                Double posY = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(4).getValue()));
                 netViewer.addLogicalPlace(nameMap.get(masterNodeString), connectedNetViewerNodes, new Point2D.Double(posX, posY));
                 nameMap.put(logPlace.getAttributeValue("Name"), nameMap.get(masterNodeString).getLogicalPlaces().get(nameMap.get(masterNodeString).getLogicalPlaces().size() - 1));
             }
@@ -464,8 +464,8 @@ public final class SbmlInputHandler implements InputHandler {
                 while (task.size() > 2){
                     NetViewerEdge oldEdge = netViewer.g.findEdge(nameMap.get(task.get(0)), nameMap.get(task.get(task.size() - 1)));
                     Element currBend = bendElementMap.get(task.get(1));
-                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(0).getValue())) - 30, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(1).getValue())) - 30);
-                    //NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.valueOf(currBend.getChildren().get(0).getValue()) - 30, Double.valueOf(currBend.getChildren().get(1).getValue()) - 30);
+//                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(0).getValue())) - 30, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(1).getValue())) - 30);
+                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.parseDouble(currBend.getChildren().get(0).getValue()) - 30, Double.parseDouble(currBend.getChildren().get(1).getValue()) - 30);
                     nameMap.put(task.get(1), newEdge.getSource());
                     task.remove(0);
                 }

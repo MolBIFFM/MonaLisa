@@ -18,6 +18,9 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import static java.lang.Math.abs;
+import static java.lang.Math.round;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER;
 
@@ -30,6 +33,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
     private GraphPopupMousePlugin gpmp;
     private NetViewerModalGraphMouse gm;
+    private Point2D oldPoint = null;
 
     public NetViewerPickingGraphMousePlugin(NetViewerModalGraphMouse gm, GraphPopupMousePlugin gpmp) {
         super(16, 17);
@@ -44,8 +48,10 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void mousePressed(MouseEvent e) {
         this.down = e.getPoint();
-        this.down.x = (int) gpmp.getNetViewer().formatCoordinates(this.down.x); // important for dragging on spezific coordinates
-        this.down.y = (int) gpmp.getNetViewer().formatCoordinates(this.down.y);
+        if (gpmp.getNetViewer().tb.getEnableGrid()) {
+            this.down.x = (int) gpmp.getNetViewer().formatCoordinates(this.down.x); // important for dragging on spezific coordinates
+            this.down.y = (int) gpmp.getNetViewer().formatCoordinates(this.down.y);
+        }
         VisualizationViewer vv = (VisualizationViewer) e.getSource();
         GraphElementAccessor pickSupport = vv.getPickSupport();
         PickedState pickedVertexState = vv.getPickedVertexState();
@@ -116,34 +122,92 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void mouseDragged(MouseEvent e) {
         if (locked == false) {
-            VisualizationViewer<V, E> vv = (VisualizationViewer) e.getSource();
-            if (vertex != null) {
+            VisualizationViewer vv = (VisualizationViewer) e.getSource();
+            Layout layout = vv.getGraphLayout();
+            double dx, dy;
+            if (!gpmp.getNetViewer().getMouseMode() && gpmp.getNetViewer().tb.getEnableGrid()) { // transforming mode
                 Point p = e.getPoint();
                 p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
                 p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
                 Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
-                Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
-                Layout<V, E> layout = vv.getGraphLayout();
-                double dx = graphPoint.getX() - graphDown.getX();
-                double dy = graphPoint.getY() - graphDown.getY();
-                PickedState<V> ps = vv.getPickedVertexState();
-
-                for (V v : ps.getPicked()) {
-                    Point2D vp = layout.transform(v);
-                    vp.setLocation(vp.getX() + dx, vp.getY() + dy);
-                    layout.setLocation(v, vp);
-                }
-                down = p;
-
+                graphPoint.setLocation(gpmp.getNetViewer().formatCoordinates(graphPoint.getX()), gpmp.getNetViewer().formatCoordinates(graphPoint.getY()));
+//                if (oldPoint == null) {
+//                    oldPoint = p;
+//                }
+                LOGGER.info("graphPoint " + graphPoint);
+                LOGGER.info("p " + p);
+                Collection nodeCollection = gpmp.getGraph().getVertices();
+                for (Object v : nodeCollection) {                      
+                    Point2D vp = (Point2D) layout.transform(v);
+                    if (p.getX() > vp.getX()) {
+                        dx = abs(p.getX() - vp.getX());
+                    } else {
+                        dx = -1 * abs(p.getX() - vp.getX());
+                    }
+                    if (p.getY() > vp.getY()) {
+                        dy = abs(p.getY() - vp.getY());
+                    } else {
+                        dy = -1 * abs(p.getY() - vp.getY());
+                    }
+                        
+                    LOGGER.info("vp "+vp);
+                    LOGGER.info("dx dy " + dx + " " + dy);
+                    LOGGER.info("new " + (int) (p.getX() + dx) + " " + (int) (p.getY() + dy)); 
+                    layout.setLocation(v, new Point((int) (p.getX() + dx), (int) (p.getY() + dy)));
+                } 
+//                oldPoint = p;
             } else {
-                Point2D out = e.getPoint();
-                if (e.getModifiers() == this.addToSelectionModifiers
-                        || e.getModifiers() == modifiers) {
-                    rect.setFrameFromDiagonal(down, out);
+                if (vertex != null) {
+                    Point p = e.getPoint();
+                    if (gpmp.getNetViewer().tb.getEnableGrid()) {
+                        p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
+                        p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
+                    }
+                    Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+                    if (gpmp.getNetViewer().tb.getEnableGrid()) {
+                        graphPoint.setLocation(gpmp.getNetViewer().formatCoordinates(graphPoint.getX()), gpmp.getNetViewer().formatCoordinates(graphPoint.getY()));
+                    } else {
+                        graphPoint.setLocation(round(graphPoint.getX()), round(graphPoint.getY()));
+                    }
+                    PickedState<V> ps = vv.getPickedVertexState();
+                    Point2D pickedPoint = (Point2D) layout.transform(this.vertex);
+                    pickedPoint.setLocation(round(pickedPoint.getX()), round(pickedPoint.getY()));
+                    LOGGER.info("picked " + pickedPoint);
+                    for (V v : ps.getPicked()) {
+                        if (!v.equals(this.vertex)) {                        
+                            Point2D vp = (Point2D) layout.transform(v);
+                            if (pickedPoint.getX() < vp.getX()) {
+                                dx = abs(pickedPoint.getX() - vp.getX());
+                            } else {
+                                dx = -1 * abs(pickedPoint.getX() - vp.getX());
+                            }
+                            if (pickedPoint.getY() < vp.getY()) {
+                                dy = abs(pickedPoint.getY() - vp.getY());
+                            } else {
+                                dy = -1 * abs(pickedPoint.getY() - vp.getY());
+                            }
+                        
+                            LOGGER.info("vp "+vp);
+                            LOGGER.info("dx dy " + dx + " " + dy);
+                        
+                            layout.setLocation(v, new Point((int) (graphPoint.getX() + dx), (int) (graphPoint.getY() + dy)));
+                        } else {
+                            layout.setLocation(v, graphPoint);
+                        }
+                    }
+                    //LOGGER.info("dx dy " + dx + " " + dy);
+                    LOGGER.info("graphPoint " + graphPoint);
+                    down = p;
+                } else {
+                    Point2D out = e.getPoint();
+                    if (e.getModifiers() == this.addToSelectionModifiers
+                            || e.getModifiers() == modifiers) {
+                        rect.setFrameFromDiagonal(down, out);
+                    }
                 }
-            }
-            if (vertex != null) {
-                e.consume();
+                if (vertex != null) {
+                    e.consume();
+                }
             }
             vv.repaint();
         }

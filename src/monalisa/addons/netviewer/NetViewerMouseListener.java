@@ -49,27 +49,32 @@ public class NetViewerMouseListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
+            LOGGER.info("coord: " + e.getPoint()); // TODO delete
             if (this.mouseMode.equalsIgnoreCase(PLACE)) {
                 Point.Double point = new Point.Double();
-//                point.x = e.getX();
-//                point.y = e.getY(); 
-                // start trying to change coordinates to spezific numbers (grid)
-                point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
-                point.y = nv.formatCoordinates(e.getY());
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                // stop
+                if (nv.tb.getEnableGrid()) {
+                    // start trying to change coordinates to spezific numbers (grid)
+                    point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+                    point.y = nv.formatCoordinates(e.getY());
+                    LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
+                } else {
+                    point.x = e.getX();
+                    point.y = e.getY(); 
+                }
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             } else if (this.mouseMode.equalsIgnoreCase(TRANSITION)) {
                 Point.Double point = new Point.Double();
-//                point.x = e.getX();
-//                point.y = e.getY();
-                // start trying to change coordinates to spezific numbers (grid)
-                point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
-                point.y = nv.formatCoordinates(e.getY());
-                LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
-                // stop
+                if (nv.tb.getEnableGrid()) {
+                    // start trying to change coordinates to spezific numbers (grid)
+                    point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+                    point.y = nv.formatCoordinates(e.getY());
+                    LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
+                } else {
+                    point.x = e.getX();
+                    point.y = e.getY();
+                }
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();

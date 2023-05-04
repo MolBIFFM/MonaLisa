@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.logging.Level;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
@@ -66,6 +67,7 @@ import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.MonaLisaFileChooser;
+import monalisa.util.MonaLisaFileFilter;
 import org.apache.commons.collections15.Transformer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -245,12 +247,14 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
                 LOGGER.info("Button to delete the currently selected marking has been pressed - deleting current marking");
                 //delete the marking that is currently selected in customMarkingsComboBox
                 String markingName = customMarkingsJComboBox.getSelectedItem().toString();
-                simulationMan.customMarkingsMap.remove(markingName);
-                customMarkingsJComboBox.removeItemAt(customMarkingsJComboBox.getSelectedIndex());
-                //disable custmMarkingsComboBox and the delete-button if no markings are saved
-                if (simulationMan.customMarkingsMap.isEmpty()) {
-                    customMarkingsJComboBox.setEnabled(false);
-                    deleteMarkingJButton.setEnabled(false);
+                if (!markingName.equals("Empty marking")) {
+                    simulationMan.customMarkingsMap.remove(markingName);
+                    customMarkingsJComboBox.removeItemAt(customMarkingsJComboBox.getSelectedIndex());
+                    //disable custmMarkingsComboBox and the delete-button if no markings are saved
+                    if (simulationMan.customMarkingsMap.isEmpty()) {
+                        customMarkingsJComboBox.setEnabled(false);
+                        deleteMarkingJButton.setEnabled(false);
+                    }
                 }
             }
         });
@@ -638,6 +642,8 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
     private void saveSetupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSetupButtonActionPerformed
         File outFile;
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
+        MonaLisaFileFilter xmlFilter = new MonaLisaFileFilter("xml", "Extensible Markup Language");
+        fc.addChoosableFileFilter(xmlFilter);
         fc.setDialogType(JFileChooser.SAVE_DIALOG);
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         if (fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION) {
@@ -646,6 +652,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
         outFile = fc.getSelectedFile();
         try {
             LOGGER.info("Import of setup initiated");
+            outFile = new File(outFile.getAbsolutePath() + ".xml");
             this.simulationMan.getTokenSim().exportSetup(outFile);
         } catch (ParserConfigurationException | TransformerException ex) {
             LOGGER.error("Parser or Transformer exception while handling the setupexport in the asynchronous token simulator", ex);

@@ -791,38 +791,40 @@ public class NetViewer extends JFrame implements ActionListener {
      */
     protected void zoomToValue(int inOrOut) {
         LOGGER.info("Changing zoom value");
-        Point2D center = new Point((int) formatCoordinates(vv.getSize().height / 2), (int) formatCoordinates(vv.getSize().width / 2));
+        Point2D center;
+        center = new Point((int) vv.getSize().height / 2, (int) vv.getSize().width / 2);
 
         if (inOrOut > 0) {
             this.gm.getScalingPlugin().getScaler().scale(vv, 1.1F, center);
         } else if (inOrOut < 0) {
             this.gm.getScalingPlugin().getScaler().scale(vv, 0.9090909F, center);
         }
-
+        
+        if (tb.getEnableGrid()) {
+            correctCoordinates();
+        }
+        
         double viewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
         double layoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
         setZoomScale((viewScale * layoutScale) * 100);
-        correctZoom();
         LOGGER.info("Successfully changed zoom value");
     }
 
     /**
-     * Corrects the zoom to coordinates, which end with 0.
-     * Doesn't work correct. :(
+     * Corrects the coordinates to coordinates, which end with 0. Corrects the
+     * grid layout.
      */
-    private void correctZoom() { // TODO finish / debug
+    protected void correctCoordinates() {
         for (NetViewerNode n : g.getVertices()) {
-            Point2D nodePosition = vv.getModel().getGraphLayout().transform(n);
+            Point2D nodePosition = layout.transform(n);
+            nodePosition.setLocation(formatCoordinates(nodePosition.getX()), formatCoordinates(nodePosition.getY()));
             Point2D newPosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
             int x = (int) formatCoordinates(newPosition.getX());
             int y = (int) formatCoordinates(newPosition.getY());
-            newPosition.setLocation(x, y);
-            newPosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(newPosition);
-            double xdist = newPosition.getX() - nodePosition.getX();
-            double ydist = newPosition.getY() - nodePosition.getY();
-            vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).translate(xdist, ydist);
-            //vv.repaint();
+            LOGGER.info("new Point " + new Point(x, y));
+            layout.setLocation(n, new Point(x, y));
         }
+        vv.repaint();
     }
     
     /**
@@ -834,10 +836,14 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.info("Zooming to node");
         center();
         Dimension d = vv.getSize();
-        //Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
-        Point2D viewCenter = new Point2D.Double(formatCoordinates(d.width / 2), formatCoordinates(d.height / 2));
+        Point2D viewCenter;
         Point2D nodePosition = vv.getModel().getGraphLayout().transform(nvNode);
-        nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
+        if (tb.getEnableGrid()) {
+            viewCenter = new Point2D.Double(formatCoordinates(d.width / 2), formatCoordinates(d.height / 2));
+            nodePosition.setLocation(formatCoordinates(nodePosition.getX()) , formatCoordinates(nodePosition.getY()));
+        } else {
+            viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
+        }
         viewCenter = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(viewCenter);
         double xdist = viewCenter.getX() - nodePosition.getX();
         double ydist = viewCenter.getY() - nodePosition.getY();
@@ -886,7 +892,7 @@ public class NetViewer extends JFrame implements ActionListener {
         cancelMouseAction();
         mouseMode = false;
         markSelectedMouseMode(tb.mouseTransformingPanel);
-        gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
+        //gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
         netChanged();
         LOGGER.info("Successfully changed mouse mode to transforming");
     }
@@ -2574,10 +2580,10 @@ public class NetViewer extends JFrame implements ActionListener {
                 for (String k : newLogicalPlaces.keySet()) {
                     pointParts = internalId2Pos.get(k).split("\\|");
                     Point.Double newPoint = new Point.Double();
-//                    newPoint.x = Double.parseDouble(pointParts[0]);
-//                    newPoint.y = Double.parseDouble(pointParts[1]);
-                    newPoint.x = formatCoordinates(Double.parseDouble(pointParts[0]));
-                    newPoint.y = formatCoordinates(Double.parseDouble(pointParts[1]));
+                    newPoint.x = Double.parseDouble(pointParts[0]);
+                    newPoint.y = Double.parseDouble(pointParts[1]);
+//                    newPoint.x = formatCoordinates(Double.parseDouble(pointParts[0]));
+//                    newPoint.y = formatCoordinates(Double.parseDouble(pointParts[1]));
                     selectedNodes.clear();
                     selectedNodes.addAll(newLogicalPlaces.get(k));
                     addLogicalPlace(getNodeFromVertex(graphicalId2Place.get(k)), selectedNodes, newPoint);
@@ -2605,11 +2611,11 @@ public class NetViewer extends JFrame implements ActionListener {
                         for (int i = 1; i < length - 1; i++) {
                             pointParts = points.get(i).split("\\|");
                             if (lastEdge == null) {
-                                lastEdge = addBend(e, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
-                                //lastEdge = addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                //lastEdge = addBend(e, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
+                                lastEdge = addBend(e, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
                             } else {
-                                lastEdge = addBend(lastEdge, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
-                                //lastEdge = addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
+                                //lastEdge = addBend(lastEdge, formatCoordinates(Double.parseDouble(pointParts[0])) - 40.0, formatCoordinates(Double.parseDouble(pointParts[1])) - 30.0);
+                                lastEdge = addBend(lastEdge, Double.parseDouble(pointParts[0]) - 40.0, Double.parseDouble(pointParts[1]) - 30.0);
 
                             }
                         }
@@ -3464,7 +3470,6 @@ public class NetViewer extends JFrame implements ActionListener {
             NetViewerNode newNode = sourceNode.getMasterNode().generateLocicalPlace(getNewNodeId());
             sourceNode.getMasterNode().setColor(Color.GRAY);
             sourceNode.getMasterNode().setStrokeColor(Color.BLACK);
-//            sourceNode.getMasterNode().setLogical(true);
             g.addVertex(newNode);
             NetViewerEdge oldEdge;
             NetViewerEdge newEdge;
@@ -3591,7 +3596,6 @@ public class NetViewer extends JFrame implements ActionListener {
         }
         LOGGER.debug("Removing logical place from NetViewer");
         List<NetViewerEdge> edgesToDelete = new ArrayList<>();
-//        nvNode.getMasterNode().setLogical(false);
         for (NetViewerEdge e : nvNode.getInEdges()) {
             addEdge(e.getWeight(), e.getSource(), aim);
             edgesToDelete.add(g.findEdge(e.getSource(), nvNode));

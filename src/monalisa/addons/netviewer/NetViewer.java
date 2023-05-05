@@ -2076,7 +2076,7 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.inEdgePanel);
         displayMessage(strings.get("NVInsertInVertexMessage"), Color.BLACK);
         gpmp.setMouseModeToInVertex();
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2089,7 +2089,7 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.outEdgePanel);
         displayMessage(strings.get("NVInsertOutVertexMessage"), Color.BLACK);
         gpmp.setMouseModeToOutVertex();
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2109,7 +2109,7 @@ public class NetViewer extends JFrame implements ActionListener {
             displayMessage(strings.get("NVInsertDoubleEdgeMessage"), Color.BLACK);
             gpmp.setMouseModeToDoubleEdge();
         }
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2122,7 +2122,7 @@ public class NetViewer extends JFrame implements ActionListener {
         mml.setMouseModeToPlace();
         markSelectedMouseMode(tb.addPlacePanel);
         displayMessage(strings.get("NVPlaceMessage"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2135,7 +2135,7 @@ public class NetViewer extends JFrame implements ActionListener {
         mml.setMouseModeToTransition();
         markSelectedMouseMode(tb.addTransitionPanel);
         displayMessage(strings.get("NVTransitionMessage"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2149,7 +2149,7 @@ public class NetViewer extends JFrame implements ActionListener {
         gpmp.setMouseModeToDelete();
         markSelectedMouseMode(tb.deletePanel);
         displayMessage(strings.get("NVDeleteMessage"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2162,7 +2162,7 @@ public class NetViewer extends JFrame implements ActionListener {
         gpmp.setMouseModeToAddBend();
         markSelectedMouseMode(tb.addBendPanel);
         displayMessage(strings.get("NVAddBendMessage"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2175,7 +2175,7 @@ public class NetViewer extends JFrame implements ActionListener {
         gpmp.setMouseModeToDeleteBend();
         markSelectedMouseMode(tb.removeBendPanel);
         displayMessage(strings.get("NVDeleteBendMessage"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2188,7 +2188,7 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.allignXPanel);
         saveSelectedVertices();
         displayMessage(strings.get("NVAlignmentText"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -2201,7 +2201,7 @@ public class NetViewer extends JFrame implements ActionListener {
         markSelectedMouseMode(tb.allignYPanel);
         saveSelectedVertices();
         displayMessage(strings.get("NVAlignmentText"), Color.BLACK);
-        mouseMode = false;
+//        mouseMode = false;
     }
 
     /**
@@ -3949,5 +3949,9 @@ public class NetViewer extends JFrame implements ActionListener {
         //add(panel);
         //setVisible(true);
         return panel;
+    }
+    
+    public NetViewerMouseListener getMouseListener() {
+        return mml;
     }
 }

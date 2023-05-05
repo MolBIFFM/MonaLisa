@@ -22,7 +22,8 @@ import static java.lang.Math.abs;
 import static java.lang.Math.round;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
-import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -33,7 +34,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
     private GraphPopupMousePlugin gpmp;
     private NetViewerModalGraphMouse gm;
-    private Point2D oldPoint = null;
+    private Map<Object, Point2D> distMap = new HashMap<>();
 
     public NetViewerPickingGraphMousePlugin(NetViewerModalGraphMouse gm, GraphPopupMousePlugin gpmp) {
         super(16, 17);
@@ -124,79 +125,66 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
         if (locked == false) {
             VisualizationViewer vv = (VisualizationViewer) e.getSource();
             Layout layout = vv.getGraphLayout();
-            double dx, dy;
-            if (!gpmp.getNetViewer().getMouseMode() && gpmp.getNetViewer().tb.getEnableGrid()) { // transforming mode
-                Point p = e.getPoint();
+            int dx, dy;
+            
+            Point p = e.getPoint();
+            if (gpmp.getNetViewer().tb.getEnableGrid()) {
                 p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
                 p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
-                Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+            }
+            Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+            if (gpmp.getNetViewer().tb.getEnableGrid()) {
                 graphPoint.setLocation(gpmp.getNetViewer().formatCoordinates(graphPoint.getX()), gpmp.getNetViewer().formatCoordinates(graphPoint.getY()));
-//                if (oldPoint == null) {
-//                    oldPoint = p;
-//                }
-                LOGGER.info("graphPoint " + graphPoint);
-                LOGGER.info("p " + p);
-                Collection nodeCollection = gpmp.getGraph().getVertices();
-                for (Object v : nodeCollection) {                      
-                    Point2D vp = (Point2D) layout.transform(v);
-                    if (p.getX() > vp.getX()) {
-                        dx = abs(p.getX() - vp.getX());
-                    } else {
-                        dx = -1 * abs(p.getX() - vp.getX());
-                    }
-                    if (p.getY() > vp.getY()) {
-                        dy = abs(p.getY() - vp.getY());
-                    } else {
-                        dy = -1 * abs(p.getY() - vp.getY());
-                    }
-                        
-                    LOGGER.info("vp "+vp);
-                    LOGGER.info("dx dy " + dx + " " + dy);
-                    LOGGER.info("new " + (int) (p.getX() + dx) + " " + (int) (p.getY() + dy)); 
-                    layout.setLocation(v, new Point((int) (p.getX() + dx), (int) (p.getY() + dy)));
-                } 
-//                oldPoint = p;
             } else {
-                if (vertex != null) {
-                    Point p = e.getPoint();
-                    if (gpmp.getNetViewer().tb.getEnableGrid()) {
-                        p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
-                        p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
+                graphPoint.setLocation(round(graphPoint.getX()), round(graphPoint.getY()));
+            }
+            
+            Collection nodeCollection = gpmp.getGraph().getVertices();
+            if (!gpmp.getNetViewer().getMouseMode() && !nodeCollection.isEmpty()) { // transforming mode
+                for (Object v : nodeCollection) {
+                    Point2D vp = (Point2D) layout.transform(v);
+                    if (gpmp.getNetViewer().getMouseListener().getReleased()) { // new distance calculation when mouse has been released
+                        if (graphPoint.getX() < vp.getX()) {
+                            dx = (int) abs(vp.getX() - graphPoint.getX());
+                        } else {
+                            dx = (int) (-1 * abs(vp.getX() - graphPoint.getX()));
+                        }
+                        if (graphPoint.getY() < vp.getY()) {
+                            dy = (int) abs(vp.getY() - graphPoint.getY());
+                        } else {
+                            dy = (int) (-1 * abs(vp.getY() - graphPoint.getY()));
+                        }
+                        if (!distMap.containsKey(v)) {
+                            distMap.put(v, new Point(dx, dy));
+                        } else {
+                            distMap.replace(v, new Point(dx, dy));
+                        } 
                     }
-                    Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
-                    if (gpmp.getNetViewer().tb.getEnableGrid()) {
-                        graphPoint.setLocation(gpmp.getNetViewer().formatCoordinates(graphPoint.getX()), gpmp.getNetViewer().formatCoordinates(graphPoint.getY()));
-                    } else {
-                        graphPoint.setLocation(round(graphPoint.getX()), round(graphPoint.getY()));
-                    }
+                    layout.setLocation(v, new Point((int) (graphPoint.getX() + distMap.get(v).getX()), (int) (graphPoint.getY() + distMap.get(v).getY())));
+                }
+            } else if (gpmp.getNetViewer().getMouseMode()) {
+                if (vertex != null) { // marking vertices and dragging them
                     PickedState<V> ps = vv.getPickedVertexState();
                     Point2D pickedPoint = (Point2D) layout.transform(this.vertex);
                     pickedPoint.setLocation(round(pickedPoint.getX()), round(pickedPoint.getY()));
-                    LOGGER.info("picked " + pickedPoint);
                     for (V v : ps.getPicked()) {
                         if (!v.equals(this.vertex)) {                        
                             Point2D vp = (Point2D) layout.transform(v);
                             if (pickedPoint.getX() < vp.getX()) {
-                                dx = abs(pickedPoint.getX() - vp.getX());
+                                dx = (int) abs(pickedPoint.getX() - vp.getX());
                             } else {
-                                dx = -1 * abs(pickedPoint.getX() - vp.getX());
+                                dx = (int) (-1 * abs(pickedPoint.getX() - vp.getX()));
                             }
                             if (pickedPoint.getY() < vp.getY()) {
-                                dy = abs(pickedPoint.getY() - vp.getY());
+                                dy = (int) abs(pickedPoint.getY() - vp.getY());
                             } else {
-                                dy = -1 * abs(pickedPoint.getY() - vp.getY());
-                            }
-                        
-                            LOGGER.info("vp "+vp);
-                            LOGGER.info("dx dy " + dx + " " + dy);
-                        
+                                dy = (int) (-1 * abs(pickedPoint.getY() - vp.getY()));
+                            }                        
                             layout.setLocation(v, new Point((int) (graphPoint.getX() + dx), (int) (graphPoint.getY() + dy)));
                         } else {
                             layout.setLocation(v, graphPoint);
                         }
                     }
-                    //LOGGER.info("dx dy " + dx + " " + dy);
-                    LOGGER.info("graphPoint " + graphPoint);
                     down = p;
                 } else {
                     Point2D out = e.getPoint();
@@ -211,6 +199,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
             }
             vv.repaint();
         }
+        gpmp.getNetViewer().getMouseListener().setReleased(false);
     }
 
     /**

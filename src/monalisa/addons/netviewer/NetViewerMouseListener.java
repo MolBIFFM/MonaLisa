@@ -34,6 +34,7 @@ public class NetViewerMouseListener implements MouseListener {
     private static final String TRANSITION = "TRANSITION";
 
     private String mouseMode = NORMAL;
+    boolean released = true;
 
     private final NetViewer nv;
     private final Synchronizer synchronizer;
@@ -100,11 +101,12 @@ public class NetViewerMouseListener implements MouseListener {
     
     @Override
     public void mousePressed(MouseEvent e) {
-
+    
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) { 
+        released = true;
     }
 
     @Override
@@ -129,4 +131,11 @@ public class NetViewerMouseListener implements MouseListener {
         this.mouseMode = NORMAL;
     }
 
+    public void setReleased(boolean b) {
+        released = b;
+    }
+    
+    public boolean getReleased() {
+        return released;
+    }
 }

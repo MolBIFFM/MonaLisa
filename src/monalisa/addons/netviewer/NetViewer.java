@@ -10,6 +10,7 @@
 package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
@@ -28,6 +29,7 @@ import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+import edu.uci.ics.jung.visualization.transform.MutableTransformer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
@@ -318,9 +320,6 @@ public class NetViewer extends JFrame implements ActionListener {
         // Init the VisualizationViewer and set all Renderer ect.
         vv = new VisualizationViewer<>(layout);//, gridSize, oo);
         
-//        JPanel gridPanel = gridLayout(); // TODO put grid into the background / change or delete
-//        gridPanel.setLayout(null);
-//        vv.add(gridPanel);
         
         vv.setPreferredSize(nvDimension);
         vv.setSize(nvDimension);
@@ -401,12 +400,8 @@ public class NetViewer extends JFrame implements ActionListener {
 
         cardLayout = new CardLayout();
         
-        //JPanel gridPanel = gridLayout(); // TODO put grid into the background / change or delete
-        //gridPanel.add(vv, VVPANEL);
-        
         mainPanel = new JPanel();
         mainPanel.setLayout(cardLayout);
-        //mainPanel.add(gridPanel);
         mainPanel.add(vv, VVPANEL);
         mainSplitPane = new JSplitPane();
         mainSplitPane.setSize(nvDimension);
@@ -516,9 +511,40 @@ public class NetViewer extends JFrame implements ActionListener {
      * Centers the Petri net in the VisualizationViewer
      */
     protected void center() {
-        vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).setToIdentity();
-        vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).setToIdentity();
+        Dimension d = vv.getSize();
+        Point2D viewCenter = new Point2D.Float(d.width / 2, d.height / 2);
+        Point2D graphCenter = calculateGraphCenter();
+        if (graphCenter != null) { // moves the graph to the center
+            viewCenter = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(viewCenter);
+            double xdist = viewCenter.getX() - graphCenter.getX();
+            double ydist = viewCenter.getY() - graphCenter.getY();
+            vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).translate(xdist, ydist);
+        }
+        
+        float scale = (float) vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
+        if (scale <= 1) { // sets the zoom to 100%
+            vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).setToIdentity(); 
+        } else if (scale > 1) {
+            this.gm.getScalingPlugin().getScaler().scale(vv, 1/scale, viewCenter);
+        }
         setZoomScale(100.0);
+    }
+    
+    /**
+     * Calculates the center of the graph.
+     * @return Point2D
+     */
+    private Point2D calculateGraphCenter() {
+        double sumX = 0, sumY = 0;
+        if (!g.getVertices().isEmpty()) {
+            for (NetViewerNode n : g.getVertices()) {
+                Point2D nodePosition = vv.getModel().getGraphLayout().transform(n);
+                sumX += nodePosition.getX();
+                sumY += nodePosition.getY();
+            }
+            return new Point((int) sumX / g.getVertices().size(), (int) sumY / g.getVertices().size());
+        }
+        return null;
     }
 
     /**
@@ -818,11 +844,7 @@ public class NetViewer extends JFrame implements ActionListener {
         for (NetViewerNode n : g.getVertices()) {
             Point2D nodePosition = layout.transform(n);
             nodePosition.setLocation(formatCoordinates(nodePosition.getX()), formatCoordinates(nodePosition.getY()));
-            Point2D newPosition = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(nodePosition);
-            int x = (int) formatCoordinates(newPosition.getX());
-            int y = (int) formatCoordinates(newPosition.getY());
-            LOGGER.info("new Point " + new Point(x, y));
-            layout.setLocation(n, new Point(x, y));
+            layout.setLocation(n, nodePosition);
         }
         vv.repaint();
     }
@@ -3916,40 +3938,6 @@ public class NetViewer extends JFrame implements ActionListener {
         return point;
     }
     
-    private static final int DRAWING_SIZE_X = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(); // TODO change position
-    private static final int DRAWING_SIZE_Y = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    private static final int SUBDIVISION_SIZE_X = 50;
-    private static final int SUBDIVISION_SIZE_Y = 50;
-    private static final int SUBDIVISIONS_X = (int) ceil(DRAWING_SIZE_X / SUBDIVISION_SIZE_X);
-    private static final int SUBDIVISIONS_Y = (int) ceil(DRAWING_SIZE_Y / SUBDIVISION_SIZE_Y);
-   
-    /**
-     * 
-     */
-    private JPanel gridLayout() {
-        setSize(800, 800); // TODO change
-        JPanel panel = new JPanel() {
-            @Override public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setPaint(Color.GRAY);
-                for (int i = 0; i < SUBDIVISIONS_X; i++) {
-                    int x = i * SUBDIVISION_SIZE_X;
-                    g2.drawLine(x, 0, x, getSize().height);
-                }
-                for (int i = 0; i < SUBDIVISIONS_Y; i++) {
-                    int y = i * SUBDIVISION_SIZE_Y;
-                    g2.drawLine(0, y, getSize().width, y);
-                }
-            }          
-        };
-        panel.setPreferredSize(new Dimension(DRAWING_SIZE_X, DRAWING_SIZE_Y)); // TODO change
-        //panel.setOpaque(false);
-        panel.setBackground(BACKGROUND_COLOR);
-        //add(panel);
-        //setVisible(true);
-        return panel;
-    }
     
     public NetViewerMouseListener getMouseListener() {
         return mml;

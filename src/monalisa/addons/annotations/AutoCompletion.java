@@ -8,7 +8,6 @@ import javax.swing.text.*;
 
 /* This work is hereby released into the Public Domain.
  * To view a copy of the public domain dedication, visit
- * http://creativecommons.org/licenses/publicdomain/
  * Source: https://stackoverflow.com/questions/16418925/using-jcombobox-as-a-search
  */
 public class AutoCompletion extends PlainDocument {

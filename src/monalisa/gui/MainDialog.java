@@ -163,7 +163,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
                 if (keyCode.equals(KeyEvent.VK_S) && e.isControlDown()) {
                     try {
-                        //save();
                         exportPetriNet();
                     } catch (IOException ex) {
                         LOGGER.error("Caught IOException while trying to save project on Ctrl + S: ", ex);
@@ -600,7 +599,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                                 updateProjectStorage();
                                 project.save();
                             } else {
-                                //save();
                                 exportPetriNet();
                             }
                             LOGGER.info("Successfully saved project on application exit");
@@ -1191,63 +1189,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         this.showTVButton.setEnabled(false);
     }
 
-    /**
-     * Save the whole Project with asking for a path
-     *
-     * @return
-     * @throws IOException
-     */
-    public boolean save() throws IOException { // TODO delete?
-        LOGGER.info("Saving project");
-        boolean ret = false;
-        if (project.getPath() == null) {
-            File projectFile;
-            MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
-            projectLocationChooser.setFileFilter(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory();
-                }
-
-                @Override
-                public String getDescription() {
-                    return strings.get("ProjectFileType");
-                }
-            });
-            projectLocationChooser.setDialogTitle(strings.get("SaveEmptyProjectLocation"));
-            if (projectLocationChooser.showDialog(null, strings.get("NVSave")) != JFileChooser.APPROVE_OPTION) {
-                LOGGER.info("Aborted saving of project");
-                return false;
-            }
-            projectFile = projectLocationChooser.getSelectedFile();
-            project.setPath(projectFile);
-            String recentlyProjects = Settings.get("recentlyProjects");
-            // If project are in the list, set it to the last place
-            if (recentlyProjects.contains(projectFile.getAbsolutePath())) {
-                recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath() + ",", "");
-            } else {
-                // Check if the list is to large and delte the first element
-                String[] projects = recentlyProjects.split(",");
-                if (projects.length == 10) {
-                    String tmp = "";
-                    for (int i = 1; i < 10; i++) {
-                        tmp += projects[i] + ",";
-                    }
-                    recentlyProjects = tmp;
-                }
-            }
-            // Add the new project at the last place
-            recentlyProjects += projectFile.getAbsolutePath() + ",";
-            Settings.set("recentlyProjects", recentlyProjects);
-            Settings.writeToFile(Settings.getConfigFile());
-            ret = true;
-        }
-        netViewer.updateNVS();
-        updateProjectStorage();
-        project.save();
-        LOGGER.info("Successfully saved project");
-        return ret;
-    }
 
     /**
      * Gathers objects for storage from all addonPanels and puts then into the

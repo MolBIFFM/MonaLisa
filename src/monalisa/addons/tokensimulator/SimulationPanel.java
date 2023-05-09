@@ -721,7 +721,7 @@ public class SimulationPanel extends AddonPanel implements GuiListener {
      */
     private void createTokenSim(String simType) {
         //create an instance of choosen token simulator
-        LOGGER.info("simType: " + simType);
+        LOGGER.info("Simulationtype: " + simType);
         if (simType.equalsIgnoreCase(strings.get("ATSName"))) {
             simulationMan.setTokenSim(new AsynchronousTokenSim(simulationMan));
             this.customTSControls = new AsynchronousTokenSimPanel((AsynchronousTokenSim) simulationMan.getTokenSim(), this);

@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Set;
 import monalisa.synchronisation.Synchronizer;
 
-import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER; // TODO delete
-import static monalisa.addons.netviewer.NetViewer.BEND;
 
 /**
  * MouseListener to react on mouse clicks for creating new nodes
@@ -50,14 +48,12 @@ public class NetViewerMouseListener implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            LOGGER.info("coord: " + e.getPoint()); // TODO delete
             if (this.mouseMode.equalsIgnoreCase(PLACE)) {
                 Point.Double point = new Point.Double();
                 if (nv.tb.getEnableGrid()) {
                     // start trying to change coordinates to spezific numbers (grid)
-                    point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+                    point.x = nv.formatCoordinates(e.getX());
                     point.y = nv.formatCoordinates(e.getY());
-                    LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
                 } else {
                     point.x = e.getX();
                     point.y = e.getY(); 
@@ -69,9 +65,8 @@ public class NetViewerMouseListener implements MouseListener {
                 Point.Double point = new Point.Double();
                 if (nv.tb.getEnableGrid()) {
                     // start trying to change coordinates to spezific numbers (grid)
-                    point.x = nv.formatCoordinates(e.getX()); // TODO change or delete
+                    point.x = nv.formatCoordinates(e.getX());
                     point.y = nv.formatCoordinates(e.getY());
-                    LOGGER.info(point.x+"" + " " + point.y+""); // TODO delete
                 } else {
                     point.x = e.getX();
                     point.y = e.getY();
@@ -87,12 +82,12 @@ public class NetViewerMouseListener implements MouseListener {
                 for (Object o : psN.getPicked()) {
                     selectedNodes.add((NetViewerNode) o);
                 }
-                nv.showVertexSetup(selectedNodes); //, e.getX(), e.getY());
+                nv.showVertexSetup(selectedNodes);
             }
 
             psE = nv.vv.getPickedEdgeState();
             if (psE.getPicked().size() >= 1) {
-                nv.showEdgeSetup((NetViewerEdge) psE.getPicked().toArray()[0]); //, e.getX(), e.getY());
+                nv.showEdgeSetup((NetViewerEdge) psE.getPicked().toArray()[0]);
             }
         }
 

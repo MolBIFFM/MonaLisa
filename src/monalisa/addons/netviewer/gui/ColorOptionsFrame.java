@@ -143,6 +143,8 @@ public class ColorOptionsFrame extends javax.swing.JFrame {
 
         setTitle("Color options");
         setIconImage(resources.getImage("icon-16.png"));
+        setMinimumSize(new java.awt.Dimension(320, 420));
+        setPreferredSize(new java.awt.Dimension(380, 480));
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 

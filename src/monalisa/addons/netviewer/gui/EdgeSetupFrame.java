@@ -35,7 +35,7 @@ public class EdgeSetupFrame extends javax.swing.JFrame {
         this.netViewer = netViewer;
         this.nvEdge = nvEdge;
 
-        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
 
         initComponents();
 

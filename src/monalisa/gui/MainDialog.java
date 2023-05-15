@@ -163,7 +163,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
                 if (keyCode.equals(KeyEvent.VK_S) && e.isControlDown()) {
                     try {
-                        save();
+                        exportPetriNet();
                     } catch (IOException ex) {
                         LOGGER.error("Caught IOException while trying to save project on Ctrl + S: ", ex);
                     }
@@ -482,8 +482,9 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             break;
             case MENU_FILE_SAVE_ACTION:
                 try {
-                saveProject();
-            } catch (ClassNotFoundException | IOException ex) {
+                //saveProject();
+                exportPetriNet();
+            } catch (IOException ex) {
                 LOGGER.error("Caught exception while trying to save project: ", ex);
             }
             break;
@@ -598,7 +599,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
                                 updateProjectStorage();
                                 project.save();
                             } else {
-                                save();
+                                exportPetriNet();
                             }
                             LOGGER.info("Successfully saved project on application exit");
                         } catch (IOException ex) {
@@ -639,7 +640,10 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      */
     private void createEmptyProject() throws ClassNotFoundException, IOException, InterruptedException {
         LOGGER.info("Creating new empty project");
-        askForSavingTheProject();
+        if (askForSavingTheProject()) {
+            //saveProject();
+            exportPetriNet();
+        }
         project = new Project();
         projectLoaded();
         LOGGER.info("Successfully created new empty project");
@@ -656,7 +660,8 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
     private void createNewProject() throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Creating new project from a chosen Petri net file");
         if (askForSavingTheProject()) {
-            saveProject();
+            //saveProject();
+            exportPetriNet();
         }
 
         // PN File
@@ -729,7 +734,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
      * @throws java.lang.ClassNotFoundException
      * @throws java.lang.InterruptedException
      */
-    public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException {
+    public void createNewProject(Project oldProject) throws IOException, ClassNotFoundException, InterruptedException { // TODO doesn't work right
         File newProjectFile;
 
         if (oldProject != null) {
@@ -738,9 +743,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
             projectLocationChooser.setFileFilter(new FileFilter() {
                 @Override
                 public boolean accept(File f) {
-                    return f.isDirectory()
-                            || Project.FILENAME_EXTENSION.equalsIgnoreCase(
-                                    FileUtils.getExtension(f));
+                    return f.isDirectory();
                 }
 
                 @Override
@@ -756,9 +759,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
             newProjectFile = projectLocationChooser.getSelectedFile();
 
-            if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(newProjectFile))) {
-                newProjectFile = new File(newProjectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-            }
             netViewer.updateNVS();
             updateProjectStorage();
             Project newProj = Project.create(oldProject, newProjectFile);
@@ -816,16 +816,17 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
     private void openProject() throws IOException, ClassNotFoundException, InterruptedException {
         LOGGER.info("Gathering file to open project from");
-        askForSavingTheProject();
+        if (askForSavingTheProject()) {
+            //saveProject();
+            exportPetriNet();
+        }
 
         MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
 
         projectLocationChooser.setFileFilter(new FileFilter() {
             @Override
             public boolean accept(File f) {
-                return f.isDirectory()
-                        || Project.FILENAME_EXTENSION.equalsIgnoreCase(
-                                FileUtils.getExtension(f));
+                return f.isDirectory();
             }
 
             @Override
@@ -884,19 +885,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
 
         toolUI.setResults(toolUI.getToolManager().getAllResults());
         LOGGER.info("Successfully opened project from file");
-    }
-
-    private void saveProject() throws ClassNotFoundException, IOException {
-        if (project != null) {
-//            try {
-            if (netViewer != null) {
-                netViewer.updatePetriNet();
-            }
-            save();
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(this, strings.get("ErrorWritingFileMessage"), strings.get("ErrorWritingFileTitle"), JOptionPane.ERROR_MESSAGE);
-//            }
-        }
     }
 
     public void exportPetriNet() throws IOException {
@@ -1201,66 +1189,6 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         this.showTVButton.setEnabled(false);
     }
 
-    /**
-     * Save the whole Project with asking for a path
-     *
-     * @return
-     * @throws IOException
-     */
-    public boolean save() throws IOException {
-        LOGGER.info("Saving project");
-        boolean ret = false;
-        if (project.getPath() == null) {
-            File projectFile;
-            MonaLisaFileChooser projectLocationChooser = new MonaLisaFileChooser();
-            projectLocationChooser.setFileFilter(new FileFilter() {
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory() || Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(f));
-                }
-
-                @Override
-                public String getDescription() {
-                    return strings.get("ProjectFileType");
-                }
-            });
-            projectLocationChooser.setDialogTitle(strings.get("SaveEmptyProjectLocation"));
-            if (projectLocationChooser.showDialog(null, strings.get("NVSave")) != JFileChooser.APPROVE_OPTION) {
-                LOGGER.info("Aborted saving of project");
-                return false;
-            }
-            projectFile = projectLocationChooser.getSelectedFile();
-            if (!Project.FILENAME_EXTENSION.equalsIgnoreCase(FileUtils.getExtension(projectFile))) {
-                projectFile = new File(projectFile.getAbsolutePath() + "." + Project.FILENAME_EXTENSION);
-            }
-            project.setPath(projectFile);
-            String recentlyProjects = Settings.get("recentlyProjects");
-            // If project are in the list, set it to the last place
-            if (recentlyProjects.contains(projectFile.getAbsolutePath())) {
-                recentlyProjects = recentlyProjects.replace(projectFile.getAbsolutePath() + ",", "");
-            } else {
-                // Check if the list is to large and delte the first element
-                String[] projects = recentlyProjects.split(",");
-                if (projects.length == 10) {
-                    String tmp = "";
-                    for (int i = 1; i < 10; i++) {
-                        tmp += projects[i] + ",";
-                    }
-                    recentlyProjects = tmp;
-                }
-            }
-            // Add the new project at the last place
-            recentlyProjects += projectFile.getAbsolutePath() + ",";
-            Settings.set("recentlyProjects", recentlyProjects);
-            Settings.writeToFile(Settings.getConfigFile());
-            ret = true;
-        }
-        netViewer.updateNVS();
-        updateProjectStorage();
-        project.save();
-        LOGGER.info("Successfully saved project");
-        return ret;
-    }
 
     /**
      * Gathers objects for storage from all addonPanels and puts then into the

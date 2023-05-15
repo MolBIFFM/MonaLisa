@@ -24,12 +24,12 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.transformer.VertexIconTransformerPlace;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
 import monalisa.addons.reachability.ReachabilityDialog;
-import monalisa.data.pn.Compartment;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.TInvariant;
@@ -100,37 +100,6 @@ public class ToolBar extends javax.swing.JPanel {
 
         blockMenuPaneChangeListener = true;
         initComponents();
-
-        this.showCompartmentsCb.addItemListener(new ItemListener() {
-
-            Boolean showMe;
-
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    netViewer.getVertexDrawPaintTransformer().setShowCompartments(false);
-                } else if (e.getStateChange() == ItemEvent.SELECTED) {
-                    netViewer.getVertexDrawPaintTransformer().setShowCompartments(true);
-                }
-                netViewer.repaint();
-            }
-        });
-
-        this.compartmentCb.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent ie) {
-                if (ie.getStateChange() == ItemEvent.SELECTED) {
-                    editCompartmentButton.setEnabled(true);
-                    deleteCompartmentButton.setEnabled(true);
-                }
-            }
-        });
-
-        if (!this.netViewer.getProject().getPetriNet().getCompartments().isEmpty()) {
-            for (Compartment c : this.netViewer.getProject().getPetriNet().getCompartments()) {
-                this.compartmentCb.addItem(c);
-            }
-        }
 
         if (this.netViewer.getProject().hasProperty("fontSize")) {
             int fontSize = (int) this.netViewer.getProject().getProperty("fontSize");
@@ -232,13 +201,8 @@ public class ToolBar extends javax.swing.JPanel {
         iconSizeSpinner = new javax.swing.JSpinner();
         arrowSizeSpinner = new javax.swing.JSpinner();
         edgeSizeSpinner = new javax.swing.JSpinner();
-        compartmentPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        compartmentCb = new javax.swing.JComboBox();
-        newCompartmentButton = new javax.swing.JButton();
-        editCompartmentButton = new javax.swing.JButton();
-        deleteCompartmentButton = new javax.swing.JButton();
-        showCompartmentsCb = new javax.swing.JCheckBox();
+        enableGridCheckBox = new javax.swing.JCheckBox();
+        jPanel2 = new javax.swing.JPanel();
         analysisPane = new javax.swing.JPanel();
         InvPanel = new javax.swing.JPanel();
         emLabel = new javax.swing.JLabel();
@@ -307,6 +271,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.gridy = 3;
         controlButtonPanel.add(enableHighlightingButton, gridBagConstraints);
 
+        enableLabelsButton.setFocusable(false);
         enableLabelsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/hide_labels.png"))); // NOI18N
         enableLabelsButton.setToolTipText(strings.get("NVHideAllLabels"));
         enableLabelsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -342,7 +307,7 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 5, 0);
         controlButtonPanel.add(zoomLabel, gridBagConstraints);
 
-        zoomSpinner.setModel(new SpinnerNumberModel(100, 1, 6000, 1));
+        zoomSpinner.setModel(new SpinnerNumberModel(100, 46, 313, 1));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -357,7 +322,7 @@ public class ToolBar extends javax.swing.JPanel {
                 if(!blockSpinner) {
                     value = (Integer)zoomSpinner.getValue();
                     inOrOut = (value >= lastValue) ? 1 : -1;
-                    netViewer.zommToValue(inOrOut);
+                    netViewer.zoomToValue(inOrOut);
                 }
             }
         });
@@ -387,7 +352,7 @@ public class ToolBar extends javax.swing.JPanel {
         addTransitionPanel.setLayout(new java.awt.GridBagLayout());
 
         addTransitionButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/transition.png"))); // NOI18N
-        addTransitionButton.setToolTipText(strings.get("NVTransition"));
+        addTransitionButton.setToolTipText(strings.get("NVCreateTransition"));
         addTransitionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTransitionButtonActionPerformed(evt);
@@ -575,6 +540,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         mousePickingPanel.setLayout(new java.awt.GridBagLayout());
 
+        mousePickingButton.setFocusable(false);
         mousePickingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/mouse_picking.png"))); // NOI18N
         mousePickingButton.setToolTipText(strings.get("NVGMPicking"));
         mousePickingButton.addActionListener(new java.awt.event.ActionListener() {
@@ -616,7 +582,8 @@ public class ToolBar extends javax.swing.JPanel {
         controlButtonPanel.add(mouseTransformingPanel, gridBagConstraints);
 
         saveProjectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/save_project.png"))); // NOI18N
-        saveProjectButton.setToolTipText("Save Project");
+        saveProjectButton.setToolTipText("");
+        saveProjectButton.setToolTipText(strings.get("NVFileSave"));
         saveProjectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveProjectButtonActionPerformed(evt);
@@ -678,7 +645,7 @@ public class ToolBar extends javax.swing.JPanel {
             }
         });
 
-        iconSizeSpinner.setModel(new SpinnerNumberModel(12, 5, 150, 1));
+        iconSizeSpinner.setModel(new SpinnerNumberModel(16, 5, 150, 1));
         iconSizeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -736,6 +703,20 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 5);
         styleButtonPanel.add(edgeSizeSpinner, gridBagConstraints);
 
+        enableGridCheckBox.setSelected(true);
+        enableGridCheckBox.setText("Enable Grid");
+        enableGridCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enableGridCheckBoxActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        styleButtonPanel.add(enableGridCheckBox, gridBagConstraints);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -743,87 +724,8 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
         controlPane.add(styleButtonPanel, gridBagConstraints);
 
-        compartmentPanel.setMinimumSize(new java.awt.Dimension(215, 108));
-        compartmentPanel.setPreferredSize(new java.awt.Dimension(215, 108));
-        compartmentPanel.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setFont(new java.awt.Font("Cantarell", 0, 13));
-        jLabel1.setText("Compartments:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
-        compartmentPanel.add(jLabel1, gridBagConstraints);
-
-        compartmentCb.setModel(new DefaultComboBoxModel());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        compartmentPanel.add(compartmentCb, gridBagConstraints);
-
-        newCompartmentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/new_project.png"))); // NOI18N
-        newCompartmentButton.setToolTipText("Create a new compartment");
-        newCompartmentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newCompartmentButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        compartmentPanel.add(newCompartmentButton, gridBagConstraints);
-
-        editCompartmentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/edit.png"))); // NOI18N
-        editCompartmentButton.setToolTipText("Edit current compartment");
-        editCompartmentButton.setEnabled(false);
-        editCompartmentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editCompartmentButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 5);
-        compartmentPanel.add(editCompartmentButton, gridBagConstraints);
-
-        deleteCompartmentButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/delete.png"))); // NOI18N
-        deleteCompartmentButton.setToolTipText("Delete current compartment");
-        deleteCompartmentButton.setEnabled(false);
-        deleteCompartmentButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteCompartmentButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        compartmentPanel.add(deleteCompartmentButton, gridBagConstraints);
-
-        showCompartmentsCb.setText("Show compartements");
-        showCompartmentsCb.setToolTipText("Species or reactions get color coded by there compartments. (The color assigned to the compartments are used)");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
-        compartmentPanel.add(showCompartmentsCb, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
-        controlPane.add(compartmentPanel, gridBagConstraints);
+        jPanel2.setLayout(new java.awt.GridBagLayout());
+        controlPane.add(jPanel2, new java.awt.GridBagConstraints());
 
         menuPane.addTab("Control", controlPane);
 
@@ -903,18 +805,101 @@ public class ToolBar extends javax.swing.JPanel {
 
         Tinv_list.setModel(allInvList);
         Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));
+        Tinv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        netViewer.switchColors();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        netViewer.switchColors();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane1.setViewportView(Tinv_list);
 
         InvTabbedPane.addTab("T - Invariants", jScrollPane1);
 
         Minv_list.setModel(MinvList);
         Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));
+        Minv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        netViewer.switchColors();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        netViewer.switchColors();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane2.setViewportView(Minv_list);
 
         InvTabbedPane.addTab("M - Invariants", jScrollPane2);
 
         Pinv_list.setModel(PinvList);
         Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));
+        Pinv_list.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        netViewer.switchColors();
+                        return;
+                    }
+                }
+                super.setSelectionInterval(index0, index1);
+            }
+
+            @Override
+            public void addSelectionInterval(int index0, int index1) {
+                if (index0 == index1) {
+                    if (isSelectedIndex(index0)) {
+                        removeSelectionInterval(index0, index0);
+                        netViewer.resetColor();
+                        return;
+                    }
+                    super.addSelectionInterval(index0, index1);
+                }
+            }
+
+        });
         jScrollPane4.setViewportView(Pinv_list);
 
         InvTabbedPane.addTab("P - Invariants", jScrollPane4);
@@ -1178,36 +1163,6 @@ public class ToolBar extends javax.swing.JPanel {
         this.netViewer.saveProject();
     }//GEN-LAST:event_saveProjectButtonActionPerformed
 
-    private void newCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCompartmentButtonActionPerformed
-        LOGGER.debug("AddCompartment button used from ToolBar");
-        CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer);
-        csf.setVisible(true);
-        LOGGER.debug("Done handling use of AddCompartment button from ToolBar");
-    }//GEN-LAST:event_newCompartmentButtonActionPerformed
-
-    private void editCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCompartmentButtonActionPerformed
-        LOGGER.debug("EditCompartment button used from ToolBar");
-        CompartmentSetupFrame csf = new CompartmentSetupFrame(this.netViewer, (Compartment) this.compartmentCb.getSelectedItem());
-        csf.setVisible(true);
-        LOGGER.debug("Done handling use of EditCompartment button from ToolBar");
-    }//GEN-LAST:event_editCompartmentButtonActionPerformed
-
-    private void deleteCompartmentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCompartmentButtonActionPerformed
-        LOGGER.debug("DeleteCompartment button used from ToolBar");
-        Compartment c = (Compartment) this.compartmentCb.getSelectedItem();
-        this.compartmentCb.removeItem(c);
-        this.netViewer.getProject().getPetriNet().removeCompartment(c);
-
-        if (this.compartmentCb.getItemCount() == 0) {
-            LOGGER.debug("No Compartments left, disabling EditCompartment and DeleteCompartment button");
-            this.editCompartmentButton.setEnabled(false);
-            this.deleteCompartmentButton.setEnabled(false);
-        }
-
-        this.repaint();
-        LOGGER.debug("Done handling use of DeleteCompartment button from ToolBar");
-    }//GEN-LAST:event_deleteCompartmentButtonActionPerformed
-
     private void heatmapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatmapButtonActionPerformed
         LOGGER.debug("HeatMap button used from ToolBar");
         if (this.netViewer.heatMap()) {
@@ -1290,6 +1245,7 @@ public class ToolBar extends javax.swing.JPanel {
         netViewer.resetColor();
         Tinv_list.clearSelection();
         Pinv_list.clearSelection();
+        Minv_list.clearSelection();
     }//GEN-LAST:event_reset_color_buttonActionPerformed
 
     private void reachabilityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reachabilityButtonActionPerformed
@@ -1301,7 +1257,7 @@ public class ToolBar extends javax.swing.JPanel {
             rd.setVisible(true);
         } else {
             LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
-            JOptionPane.showMessageDialog(this, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+            JOptionPane.showMessageDialog(null, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
         }
     }//GEN-LAST:event_reachabilityButtonActionPerformed
 
@@ -1313,6 +1269,12 @@ public class ToolBar extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_iconSizeSpinnerPropertyChange
 
+    private void enableGridCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableGridCheckBoxActionPerformed
+        if (enableGridCheckBox.isSelected()) {
+            netViewer.correctCoordinates();
+        }
+    }//GEN-LAST:event_enableGridCheckBoxActionPerformed
+
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
     }
@@ -1320,7 +1282,27 @@ public class ToolBar extends javax.swing.JPanel {
     public boolean manuellColorSelection() {
         return this.manuellColorSelection.isSelected();
     }
+    
+    /**
+     * Returns the JButton, which controls the Labels.
+     * @return JButton
+     */
+    public javax.swing.JButton getEnableLabelsButton() {
+        return this.enableLabelsButton;
+    }
 
+        /**
+     * Returns the JButton, which controls whether color is shown or not.
+     * @return JButton
+     */
+    public javax.swing.JButton getEnableHighlightingButton() {
+        return this.enableHighlightingButton;
+    }
+    
+    public boolean getEnableGrid() {
+        return enableGridCheckBox.isSelected();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JLabel CPILabel;
     protected javax.swing.JLabel CTILabel;
@@ -1348,18 +1330,15 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel analysisPane;
     private javax.swing.JLabel arrowSizeLabel;
     protected javax.swing.JSpinner arrowSizeSpinner;
-    protected javax.swing.JComboBox compartmentCb;
-    private javax.swing.JPanel compartmentPanel;
     private javax.swing.JButton computeInvsButton;
     private javax.swing.JPanel controlButtonPanel;
     private javax.swing.JPanel controlPane;
     protected javax.swing.JButton deleteButton;
-    private javax.swing.JButton deleteCompartmentButton;
     protected javax.swing.JPanel deletePanel;
     private javax.swing.JLabel edgeSizeLabel;
     protected javax.swing.JSpinner edgeSizeSpinner;
-    private javax.swing.JButton editCompartmentButton;
     private javax.swing.JLabel emLabel;
+    private javax.swing.JCheckBox enableGridCheckBox;
     protected javax.swing.JButton enableHighlightingButton;
     protected javax.swing.JButton enableLabelsButton;
     private javax.swing.JLabel fontSizeLabel;
@@ -1371,8 +1350,8 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
@@ -1388,7 +1367,6 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JPanel mousePickingPanel;
     protected javax.swing.JButton mouseTransformingButton;
     protected javax.swing.JPanel mouseTransformingPanel;
-    private javax.swing.JButton newCompartmentButton;
     private javax.swing.JPanel optionsPanel;
     protected javax.swing.JButton outEdgeButton;
     protected javax.swing.JPanel outEdgePanel;
@@ -1398,7 +1376,6 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JButton reset_color_button;
     protected javax.swing.JButton saveImageButton;
     private javax.swing.JButton saveProjectButton;
-    private javax.swing.JCheckBox showCompartmentsCb;
     private javax.swing.JScrollPane sp;
     protected javax.swing.JCheckBox stackSelection;
     private javax.swing.JPanel styleButtonPanel;

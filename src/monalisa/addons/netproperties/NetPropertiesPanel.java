@@ -500,116 +500,101 @@ public class NetPropertiesPanel extends AddonPanel {
     private void jCheckBoxTransitionWithoutPrePlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
         Color color = jLabelTransitionWithoutPrePlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPrePlace.isSelected()) {
-            LOGGER.info("Colouring transitions without pre-places");
+            LOGGER.info("Coloring transitions without pre-places");
             transitionWithoutPrePlace = new TransitionWithoutPrePlace(pnf);
             transitionWithoutPrePlace.runAlgorithm();
 
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
+                colorMap.addDefaultColorToList(t.id(), netViewer.getNodeFromVertex(t).getMasterNode().getColor());
                 this.setColorOfNetViewerNode(t, color);
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPrePlaceColor.removeMouseListener(jLabelTransitionWithoutPrePlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured transitions without pre-places");
+            LOGGER.info("Successfully colored transitions without pre-places");
 
         } else {
-            LOGGER.info("Removing colouring from transitions without pre-places");
+            LOGGER.info("Removing coloring from transitions without pre-places");
             for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
-                if (colorMap.getColorFromList(t.id()) == null) {
-                    this.setColorOfNetViewerNode(t, NetViewer.DEFAULT_COLOR_TRANSITIONS);
-                } else {
-                    this.setColorOfNetViewerNode(t, colorMap.getColorFromList(t.id()));
-                }
+                changeTransitionToDefaultColor(t);
             }
             jLabelTransitionWithoutPrePlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPrePlaceColor));
-            LOGGER.info("Successfully removed colouring from transitions without pre-places");
+            LOGGER.info("Successfully removed coloring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPrePlaceActionPerformed
 
     private void jCheckBoxTransitionWithoutPostPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
         Color color = jLabelTransitionWithoutPostPlaceColor.getBackground();
         if (jCheckBoxTransitionWithoutPostPlace.isSelected()) {
-            LOGGER.info("Colouring transitions without post-places");
+            LOGGER.info("coloring transitions without post-places");
             transitionWithoutPostPlace = new TransitionWithoutPostPlace(pnf);
             transitionWithoutPostPlace.runAlgorithm();
 
             for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
+                colorMap.addDefaultColorToList(t.id(), netViewer.getNodeFromVertex(t).getMasterNode().getColor());
                 this.setColorOfNetViewerNode(t, color);
-
                 colorMap.addColorToList(t.id(), color);
             }
             jLabelTransitionWithoutPostPlaceColor.removeMouseListener(jLabelTransitionWithoutPostPlaceColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured transitions without post-places");
+            LOGGER.info("Successfully colored transitions without post-places");
         } else {
-            LOGGER.info("Removing colouring from transitions without post-places");
+            LOGGER.info("Removing coloring from transitions without post-places");
             for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(t.id(), color);
-                if (colorMap.getColorFromList(t.id()) == null) {
-                    this.setColorOfNetViewerNode(t, NetViewer.DEFAULT_COLOR_TRANSITIONS);
-                } else {
-                    this.setColorOfNetViewerNode(t, colorMap.getColorFromList(t.id()));
-                }
+                changeTransitionToDefaultColor(t);
             }
             jLabelTransitionWithoutPostPlaceColor.addMouseListener(new MyColorOptionsMouseListener(jLabelTransitionWithoutPostPlaceColor));
-            LOGGER.info("Successfully removed colouring from transitions without pre-places");
+            LOGGER.info("Successfully removed coloring from transitions without pre-places");
         }
     }//GEN-LAST:event_jCheckBoxTransitionWithoutPostPlaceActionPerformed
 
     private void jCheckBoxPlaceWithoutPreTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
         Color color = jLabelPlaceWithoutPreTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPreTransition.isSelected()) {
-            LOGGER.info("Colouring places without pre-transitions");
+            LOGGER.info("Coloring places without pre-transitions");
             placeWithoutPreTransition = new PlaceWithoutPreTransition(pnf);
             placeWithoutPreTransition.runAlgorithm();
 
             for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
+                colorMap.addDefaultColorToList(p.id(), netViewer.getNodeFromVertex(p).getMasterNode().getColor());
                 this.setColorOfNetViewerNode(p, color);
-
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPreTransitionColor.removeMouseListener(jLabelPlaceWithoutPreTransitionColor.getMouseListeners()[0]);//removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured places without pre-transitions");
+            LOGGER.info("Successfully colored places without pre-transitions");
         } else {
-            LOGGER.info("Removing colouring from places without pre-transitions");
+            LOGGER.info("Removing coloring from places without pre-transitions");
             for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
-                if (colorMap.getColorFromList(p.id()) == null) {
-                    this.setColorOfNetViewerNode(p, NetViewer.DEFAULT_COLOR_PLACES);
-                } else {
-                    this.setColorOfNetViewerNode(p, colorMap.getColorFromList(p.id()));
-                }
+                changePlaceToDefaultColor(p);
             }
             jLabelPlaceWithoutPreTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPreTransitionColor));
-            LOGGER.info("Successfully removed colouring from places without pre-transitions");
+            LOGGER.info("Successfully removed coloring from places without pre-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPreTransitionActionPerformed
 
     private void jCheckBoxPlaceWithoutPostTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
         Color color = jLabelPlaceWithoutPostTransitionColor.getBackground();
         if (jCheckBoxPlaceWithoutPostTransition.isSelected()) {
-            LOGGER.info("Colouring places without post-transitions");
+            LOGGER.info("Coloring places without post-transitions");
             placeWithoutPostTransition = new PlaceWithoutPostTransition(pnf);
             placeWithoutPostTransition.runAlgorithm();
 
             for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
+                colorMap.addDefaultColorToList(p.id(), netViewer.getNodeFromVertex(p).getMasterNode().getColor());
                 this.setColorOfNetViewerNode(p, color);
-
                 colorMap.addColorToList(p.id(), color);
             }
             jLabelPlaceWithoutPostTransitionColor.removeMouseListener(jLabelPlaceWithoutPostTransitionColor.getMouseListeners()[0]); //removes the first MouseListener (MyColorOptionsMouseListener)
-            LOGGER.info("Successfully coloured places without post-transitions");
+            LOGGER.info("Successfully colored places without post-transitions");
         } else {
-            LOGGER.info("Removing colouring from places without post-transitions");
+            LOGGER.info("Removing coloring from places without post-transitions");
             for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
                 colorMap.removeColorFromList(p.id(), color);
-                if (colorMap.getColorFromList(p.id()) == null) {
-                    this.setColorOfNetViewerNode(p, NetViewer.DEFAULT_COLOR_PLACES);
-                } else {
-                    this.setColorOfNetViewerNode(p, colorMap.getColorFromList(p.id()));
-                }
+                changePlaceToDefaultColor(p);
             }
             jLabelPlaceWithoutPostTransitionColor.addMouseListener(new MyColorOptionsMouseListener(jLabelPlaceWithoutPostTransitionColor));
-            LOGGER.info("Successfully removed colouring from places without post-transitions");
+            LOGGER.info("Successfully removed coloring from places without post-transitions");
         }
     }//GEN-LAST:event_jCheckBoxPlaceWithoutPostTransitionActionPerformed
 
@@ -621,6 +606,7 @@ public class NetPropertiesPanel extends AddonPanel {
         } else {
             LOGGER.info("Deselected all algorithms");
             netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected();
+            netPropertiesPanelLogic.checkAlgorithmsNot();
         }
     }//GEN-LAST:event_jRadioButtonSelectAllAlgorithmsActionPerformed
 
@@ -755,13 +741,103 @@ public class NetPropertiesPanel extends AddonPanel {
         return labelMap;
     }
 
+    /**
+     * Dynamically changes the colors of the net and resets the net properties 
+     * panel, when the net structure is changed. 
+     */
     @Override
     public void netChanged() {
         LOGGER.debug("Handling net change for NetPropertiesPanel");
         if (netPropertiesPanelLogic != null) {
             netPropertiesPanelLogic.checkAlgorithmsNot();
-            netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected();
+            //netPropertiesPanelLogic.selectAllAlgorithmsIsNotSelected(); checkboxes aren't automatically unselected anymore
+            
         }
+        // coloring new nodes
+        if (jCheckBoxTransitionWithoutPrePlace.isSelected()) {
+            // remove colors
+            for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
+                colorMap.removeColorFromList(t.id(), jLabelTransitionWithoutPrePlaceColor.getBackground());
+                changeTransitionToDefaultColor(t);
+            } 
+            LOGGER.info("Coloring transitions without pre-places");
+            transitionWithoutPrePlace.runAlgorithm();
+            // add colors again
+            for (Transition t : transitionWithoutPrePlace.returnAlgorithmValue()) {
+                this.setColorOfNetViewerNode(t, jLabelTransitionWithoutPrePlaceColor.getBackground());
+                colorMap.addColorToList(t.id(), jLabelTransitionWithoutPrePlaceColor.getBackground());
+            }
+            LOGGER.info("Successfully colored transitions without pre-places");
+        }
+        if (jCheckBoxTransitionWithoutPostPlace.isSelected()) {
+            // remove colors
+            for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
+                colorMap.removeColorFromList(t.id(), jLabelTransitionWithoutPostPlaceColor.getBackground());
+                changeTransitionToDefaultColor(t);
+            }    
+            LOGGER.info("Coloring transitions without post-places");
+            transitionWithoutPostPlace.runAlgorithm();
+            // add colors again
+            for (Transition t : transitionWithoutPostPlace.returnAlgorithmValue()) {
+                this.setColorOfNetViewerNode(t, jLabelTransitionWithoutPostPlaceColor.getBackground());
+                colorMap.addColorToList(t.id(), jLabelTransitionWithoutPostPlaceColor.getBackground());
+            }
+            LOGGER.info("Successfully colored transitions without post-places");
+        }
+        if (jCheckBoxPlaceWithoutPreTransition.isSelected()) {
+            // remove colors
+            for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
+                colorMap.removeColorFromList(p.id(), jLabelPlaceWithoutPreTransitionColor.getBackground());
+                changePlaceToDefaultColor(p);
+            }
+            LOGGER.info("Coloring places without pre-transitions");
+            placeWithoutPreTransition.runAlgorithm();
+            // add colors again
+            for (Place p : placeWithoutPreTransition.returnAlgorithmValue()) {
+                this.setColorOfNetViewerNode(p, jLabelPlaceWithoutPreTransitionColor.getBackground());
+                colorMap.addColorToList(p.id(), jLabelPlaceWithoutPreTransitionColor.getBackground());
+            }
+            LOGGER.info("Successfully colored places without pre-transitions");
+        } 
+        if (jCheckBoxPlaceWithoutPostTransition.isSelected()) {
+            // remove colors
+            for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
+                colorMap.removeColorFromList(p.id(), jLabelPlaceWithoutPostTransitionColor.getBackground());
+                changePlaceToDefaultColor(p);
+            }
+            LOGGER.info("Coloring places without post-transitions");
+            placeWithoutPostTransition.runAlgorithm();
+            // add colors again
+            for (Place p : placeWithoutPostTransition.returnAlgorithmValue()) {
+                this.setColorOfNetViewerNode(p, jLabelPlaceWithoutPostTransitionColor.getBackground());
+                colorMap.addColorToList(p.id(), jLabelPlaceWithoutPostTransitionColor.getBackground());
+            }
+            LOGGER.info("Successfully colored places without post-transitions");
+        } 
         LOGGER.debug("Successfully handled net change for NetPropertiesPanel");
+    }
+    
+    /**
+     * Resets place colors to original ones.
+     * @param p (Place)
+     */
+    private void changePlaceToDefaultColor(Place p) {
+        if (colorMap.getColorFromList(p.id()) == null) {
+            this.setColorOfNetViewerNode(p, NetViewer.DEFAULT_COLOR_PLACES);
+        } else {
+            this.setColorOfNetViewerNode(p, colorMap.getColorFromList(p.id()));
+        }
+    }
+    
+    /**
+     * Resets transition colors to original ones.
+     * @param t (Transition)
+     */
+    private void changeTransitionToDefaultColor(Transition t) {
+        if (colorMap.getColorFromList(t.id()) == null) {
+            this.setColorOfNetViewerNode(t, NetViewer.DEFAULT_COLOR_TRANSITIONS);
+        } else {
+            this.setColorOfNetViewerNode(t, colorMap.getColorFromList(t.id()));
+        }
     }
 }

@@ -18,7 +18,13 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import static java.lang.Math.abs;
+import static java.lang.Math.round;
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  *
@@ -28,6 +34,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
 
     private GraphPopupMousePlugin gpmp;
     private NetViewerModalGraphMouse gm;
+    private Map<Object, Point2D> distMap = new HashMap<>();
 
     public NetViewerPickingGraphMousePlugin(NetViewerModalGraphMouse gm, GraphPopupMousePlugin gpmp) {
         super(16, 17);
@@ -42,6 +49,10 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void mousePressed(MouseEvent e) {
         this.down = e.getPoint();
+        if (gpmp.getNetViewer().tb.getEnableGrid()) {
+            this.down.x = (int) gpmp.getNetViewer().formatCoordinates(this.down.x); // important for dragging on spezific coordinates
+            this.down.y = (int) gpmp.getNetViewer().formatCoordinates(this.down.y);
+        }
         VisualizationViewer vv = (VisualizationViewer) e.getSource();
         GraphElementAccessor pickSupport = vv.getPickSupport();
         PickedState pickedVertexState = vv.getPickedVertexState();
@@ -57,6 +68,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
                 if (this.vertex != null) {
                     if (!pickedVertexState.isPicked(this.vertex)) {
                         pickedVertexState.clear();
+                        pickedEdgeState.clear();
                         pickedVertexState.pick(this.vertex, true);
                     }
 
@@ -74,6 +86,7 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
                         }
                     } catch (ConcurrentModificationException cme) {
                     } else {
+                        pickedVertexState.clear();
                         pickedEdgeState.pick(edge, true);
                     }
                 } else {
@@ -110,35 +123,83 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     @Override
     public void mouseDragged(MouseEvent e) {
         if (locked == false) {
-            VisualizationViewer<V, E> vv = (VisualizationViewer) e.getSource();
-            if (vertex != null) {
-                Point p = e.getPoint();
-                Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
-                Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(down);
-                Layout<V, E> layout = vv.getGraphLayout();
-                double dx = graphPoint.getX() - graphDown.getX();
-                double dy = graphPoint.getY() - graphDown.getY();
-                PickedState<V> ps = vv.getPickedVertexState();
-
-                for (V v : ps.getPicked()) {
-                    Point2D vp = layout.transform(v);
-                    vp.setLocation(vp.getX() + dx, vp.getY() + dy);
-                    layout.setLocation(v, vp);
-                }
-                down = p;
-
-            } else {
-                Point2D out = e.getPoint();
-                if (e.getModifiers() == this.addToSelectionModifiers
-                        || e.getModifiers() == modifiers) {
-                    rect.setFrameFromDiagonal(down, out);
-                }
+            VisualizationViewer vv = (VisualizationViewer) e.getSource();
+            Layout layout = vv.getGraphLayout();
+            int dx, dy;
+            
+            Point p = e.getPoint();
+            if (gpmp.getNetViewer().tb.getEnableGrid()) {
+                p.x = (int) gpmp.getNetViewer().formatCoordinates(p.x); // dragging on specific coordinates only
+                p.y = (int) gpmp.getNetViewer().formatCoordinates(p.y);
             }
-            if (vertex != null) {
-                e.consume();
+            Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+            if (gpmp.getNetViewer().tb.getEnableGrid()) {
+                graphPoint.setLocation(gpmp.getNetViewer().formatCoordinates(graphPoint.getX()), gpmp.getNetViewer().formatCoordinates(graphPoint.getY()));
+            } else {
+                graphPoint.setLocation(round(graphPoint.getX()), round(graphPoint.getY()));
+            }
+            
+            Collection nodeCollection = gpmp.getGraph().getVertices();
+            if (!gpmp.getNetViewer().getMouseMode() && !nodeCollection.isEmpty()) { // transforming mode
+                for (Object v : nodeCollection) {
+                    Point2D vp = (Point2D) layout.transform(v);
+                    if (gpmp.getNetViewer().getMouseListener().getReleased()) { // new distance calculation when mouse has been released
+                        if (graphPoint.getX() < vp.getX()) {
+                            dx = (int) abs(vp.getX() - graphPoint.getX());
+                        } else {
+                            dx = (int) (-1 * abs(vp.getX() - graphPoint.getX()));
+                        }
+                        if (graphPoint.getY() < vp.getY()) {
+                            dy = (int) abs(vp.getY() - graphPoint.getY());
+                        } else {
+                            dy = (int) (-1 * abs(vp.getY() - graphPoint.getY()));
+                        }
+                        if (!distMap.containsKey(v)) {
+                            distMap.put(v, new Point(dx, dy));
+                        } else {
+                            distMap.replace(v, new Point(dx, dy));
+                        } 
+                    }
+                    layout.setLocation(v, new Point((int) (graphPoint.getX() + distMap.get(v).getX()), (int) (graphPoint.getY() + distMap.get(v).getY())));
+                }
+            } else if (gpmp.getNetViewer().getMouseMode()) {
+                if (vertex != null) { // marking vertices and dragging them
+                    PickedState<V> ps = vv.getPickedVertexState();
+                    Point2D pickedPoint = (Point2D) layout.transform(this.vertex);
+                    pickedPoint.setLocation(round(pickedPoint.getX()), round(pickedPoint.getY()));
+                    for (V v : ps.getPicked()) {
+                        if (!v.equals(this.vertex)) {                        
+                            Point2D vp = (Point2D) layout.transform(v);
+                            if (pickedPoint.getX() < vp.getX()) {
+                                dx = (int) abs(pickedPoint.getX() - vp.getX());
+                            } else {
+                                dx = (int) (-1 * abs(pickedPoint.getX() - vp.getX()));
+                            }
+                            if (pickedPoint.getY() < vp.getY()) {
+                                dy = (int) abs(pickedPoint.getY() - vp.getY());
+                            } else {
+                                dy = (int) (-1 * abs(pickedPoint.getY() - vp.getY()));
+                            }                        
+                            layout.setLocation(v, new Point((int) (graphPoint.getX() + dx), (int) (graphPoint.getY() + dy)));
+                        } else {
+                            layout.setLocation(v, graphPoint);
+                        }
+                    }
+                    down = p;
+                } else {
+                    Point2D out = e.getPoint();
+                    if (e.getModifiers() == this.addToSelectionModifiers
+                            || e.getModifiers() == modifiers) {
+                        rect.setFrameFromDiagonal(down, out);
+                    }
+                }
+                if (vertex != null) {
+                    e.consume();
+                }
             }
             vv.repaint();
         }
+        gpmp.getNetViewer().getMouseListener().setReleased(false);
     }
 
     /**
@@ -148,5 +209,4 @@ public class NetViewerPickingGraphMousePlugin<V, E> extends PickingGraphMousePlu
     public void setLocked(boolean locked) {
         this.locked = locked;
     }
-
 }

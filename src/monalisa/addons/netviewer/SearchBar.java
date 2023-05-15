@@ -141,6 +141,11 @@ public class SearchBar extends javax.swing.JFrame {
         mainPanel.add(doubleTransitionsWarning, gridBagConstraints);
 
         searchTextField.addKeyListener(new SearchFieldKeyListener(this.netViewer, searchTextField));
+        searchTextField.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                searchTextFieldMouseReleased(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -198,6 +203,10 @@ public class SearchBar extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void searchTextFieldMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchTextFieldMouseReleased
+        this.netViewer.updateSearchField();
+    }//GEN-LAST:event_searchTextFieldMouseReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JList allPlacesList;

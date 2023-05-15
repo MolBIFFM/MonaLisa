@@ -63,9 +63,7 @@ public class AStar extends AbstractReachabilityAlgorithm {
                 LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                /*for (Place p : tar.getMarking().keySet()) {                
-                    LOGGER.info(p.getProperty("name") + "\t" + newNode.getMarking().get(p));
-                }*/
+                
                 if (newNode.equals(tar)) {                    
                     tar = newNode;
                     vertices.add(tar);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[300, 550]"/>
@@ -109,7 +109,8 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enableLabelsButtonActionPerformed"/>
                       </Events>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="enableLabelsButton.setToolTipText(strings.get(&quot;NVHideAllLabels&quot;));"/>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="enableLabelsButton.setToolTipText(strings.get(&quot;NVHideAllLabels&quot;));&#xd;&#xa;"/>
+                        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="enableLabelsButton.setFocusable(false);"/>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                       </AuxValues>
                       <Constraints>
@@ -156,11 +157,11 @@
                     <Component class="javax.swing.JSpinner" name="zoomSpinner">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new SpinnerNumberModel(100, 1, 6000, 1)" type="code"/>
+                          <Connection code="new SpinnerNumberModel(100, 46, 313, 1)" type="code"/>
                         </Property>
                       </Properties>
                       <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="zoomSpinner.addChangeListener(new ChangeListener() {&#xa;    int value, inOrOut;            &#xa;    @Override&#xa;    public void stateChanged(ChangeEvent e) {&#xa;        if(!blockSpinner) {                          &#xa;            value = (Integer)zoomSpinner.getValue();&#xa;            inOrOut = (value &gt;= lastValue) ? 1 : -1;&#xa;            netViewer.zommToValue(inOrOut);    &#xa;        }&#xa;    }&#xa;});       &#xa;zoomSpinner.setEditor(new JSpinner.NumberEditor(zoomSpinner, &quot;0&apos;%&apos;&quot;));"/>
+                        <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="zoomSpinner.addChangeListener(new ChangeListener() {&#xa;    int value, inOrOut;            &#xa;    @Override&#xa;    public void stateChanged(ChangeEvent e) {&#xa;        if(!blockSpinner) {                          &#xa;            value = (Integer)zoomSpinner.getValue();&#xa;            inOrOut = (value &gt;= lastValue) ? 1 : -1;&#xa;            netViewer.zoomToValue(inOrOut);    &#xa;        }&#xa;    }&#xa;});       &#xa;zoomSpinner.setEditor(new JSpinner.NumberEditor(zoomSpinner, &quot;0&apos;%&apos;&quot;));"/>
                         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                       </AuxValues>
                       <Constraints>
@@ -224,7 +225,7 @@
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addTransitionButtonActionPerformed"/>
                           </Events>
                           <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="addTransitionButton.setToolTipText(strings.get(&quot;NVTransition&quot;));"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="addTransitionButton.setToolTipText(strings.get(&quot;NVCreateTransition&quot;));"/>
                             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                           </AuxValues>
                           <Constraints>
@@ -522,6 +523,7 @@
                           </Events>
                           <AuxValues>
                             <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="mousePickingButton.setToolTipText(strings.get(&quot;NVGMPicking&quot;));"/>
+                            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="mousePickingButton.setFocusable(false);"/>
                             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
                           </AuxValues>
                           <Constraints>
@@ -570,11 +572,14 @@
                         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                           <Image iconType="3" name="/monalisa/resources/save_project.png"/>
                         </Property>
-                        <Property name="toolTipText" type="java.lang.String" value="Save Project"/>
+                        <Property name="toolTipText" type="java.lang.String" value=""/>
                       </Properties>
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveProjectButtonActionPerformed"/>
                       </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="saveProjectButton.setToolTipText(strings.get(&quot;NVFileSave&quot;));"/>
+                      </AuxValues>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
@@ -663,7 +668,7 @@
                     <Component class="javax.swing.JSpinner" name="iconSizeSpinner">
                       <Properties>
                         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new SpinnerNumberModel(12, 5, 150, 1)" type="code"/>
+                          <Connection code="new SpinnerNumberModel(16, 5, 150, 1)" type="code"/>
                         </Property>
                       </Properties>
                       <Events>
@@ -712,115 +717,30 @@
                         </Constraint>
                       </Constraints>
                     </Component>
+                    <Component class="javax.swing.JCheckBox" name="enableGridCheckBox">
+                      <Properties>
+                        <Property name="selected" type="boolean" value="true"/>
+                        <Property name="text" type="java.lang.String" value="Enable Grid"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enableGridCheckBoxActionPerformed"/>
+                      </Events>
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                          <GridBagConstraints gridX="1" gridY="2" gridWidth="2" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="10" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                        </Constraint>
+                      </Constraints>
+                    </Component>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="compartmentPanel">
-                  <Properties>
-                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[215, 108]"/>
-                    </Property>
-                    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                      <Dimension value="[215, 108]"/>
-                    </Property>
-                  </Properties>
+                <Container class="javax.swing.JPanel" name="jPanel2">
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                      <GridBagConstraints gridX="0" gridY="3" gridWidth="1" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="15" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                      <GridBagConstraints gridX="-1" gridY="-1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
                     </Constraint>
                   </Constraints>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout"/>
-                  <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel1">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new java.awt.Font(&quot;Cantarell&quot;, 0, 13)" type="code"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Compartments:"/>
-                      </Properties>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="0" gridY="0" gridWidth="3" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JComboBox" name="compartmentCb">
-                      <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                          <Connection code="new DefaultComboBoxModel()" type="code"/>
-                        </Property>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
-                      </AuxValues>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="0" gridY="1" gridWidth="3" gridHeight="1" fill="2" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="newCompartmentButton">
-                      <Properties>
-                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/monalisa/resources/new_project.png"/>
-                        </Property>
-                        <Property name="toolTipText" type="java.lang.String" value="Create a new compartment"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newCompartmentButtonActionPerformed"/>
-                      </Events>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="editCompartmentButton">
-                      <Properties>
-                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/monalisa/resources/edit.png"/>
-                        </Property>
-                        <Property name="toolTipText" type="java.lang.String" value="Edit current compartment"/>
-                        <Property name="enabled" type="boolean" value="false"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editCompartmentButtonActionPerformed"/>
-                      </Events>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="1" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="5" insetsBottom="0" insetsRight="5" anchor="18" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="deleteCompartmentButton">
-                      <Properties>
-                        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                          <Image iconType="3" name="/monalisa/resources/delete.png"/>
-                        </Property>
-                        <Property name="toolTipText" type="java.lang.String" value="Delete current compartment"/>
-                        <Property name="enabled" type="boolean" value="false"/>
-                      </Properties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteCompartmentButtonActionPerformed"/>
-                      </Events>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="2" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="18" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JCheckBox" name="showCompartmentsCb">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Show compartements"/>
-                        <Property name="toolTipText" type="java.lang.String" value="Species or reactions get color coded by there compartments. (The color assigned to the compartments are used)"/>
-                      </Properties>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="0" gridY="3" gridWidth="3" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>
@@ -977,7 +897,7 @@
                                 </Property>
                               </Properties>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));"/>
+                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Tinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.TinvSelectionListener(this.netViewer, this, Tinv_list, true));&#xa;Tinv_list.setSelectionModel(new DefaultListSelectionModel() {&#xa;      @Override&#xa;      public void setSelectionInterval(int index0, int index1) {&#xa;        if (index0 == index1) {&#xa;          if (isSelectedIndex(index0)) {&#xa;            removeSelectionInterval(index0, index0);&#xa;            netViewer.resetColor();&#xa;            netViewer.switchColors();&#xa;            return;&#xa;          }&#xa;        }&#xa;        super.setSelectionInterval(index0, index1);&#xa;      }&#xa;&#xa;      @Override&#xa;      public void addSelectionInterval(int index0, int index1) {&#xa;        if (index0 == index1) {&#xa;          if (isSelectedIndex(index0)) {&#xa;            removeSelectionInterval(index0, index0);&#xa;            netViewer.resetColor();&#xa;            netViewer.switchColors();&#xa;            return;&#xa;          }&#xa;          super.addSelectionInterval(index0, index1);&#xa;        }&#xa;      }&#xa;&#xa;    });"/>
                                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                               </AuxValues>
                             </Component>
@@ -1004,7 +924,7 @@
                                 </Property>
                               </Properties>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));"/>
+                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Minv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.MinvSelectionListener(this.netViewer, this, Minv_list, true));&#xa;Minv_list.setSelectionModel(new DefaultListSelectionModel() {&#xa;    @Override&#xa;        public void setSelectionInterval(int index0, int index1) {&#xa;            if (index0 == index1) {&#xa;                if (isSelectedIndex(index0)) {&#xa;                    removeSelectionInterval(index0, index0);&#xa;                    netViewer.resetColor();&#xa;                    netViewer.switchColors();&#xa;                    return;&#xa;                }&#xa;            }&#xa;            super.setSelectionInterval(index0, index1);&#xa;        }&#xa;&#xa;    @Override&#xa;        public void addSelectionInterval(int index0, int index1) {&#xa;            if (index0 == index1) {&#xa;                if (isSelectedIndex(index0)) {&#xa;                    removeSelectionInterval(index0, index0);&#xa;                    netViewer.resetColor();&#xa;                    netViewer.switchColors();&#xa;                    return;&#xa;                }&#xa;            super.addSelectionInterval(index0, index1);&#xa;            }&#xa;        }&#xa;&#xa;    });"/>
                                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                               </AuxValues>
                             </Component>
@@ -1031,7 +951,7 @@
                                 </Property>
                               </Properties>
                               <AuxValues>
-                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));"/>
+                                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="Pinv_list.addListSelectionListener(new monalisa.addons.netviewer.listener.PinvSelectionListener(this.netViewer, this, Pinv_list));&#xa;Pinv_list.setSelectionModel(new DefaultListSelectionModel() {&#xa;    @Override&#xa;        public void setSelectionInterval(int index0, int index1) {&#xa;            if (index0 == index1) {&#xa;                if (isSelectedIndex(index0)) {&#xa;                    removeSelectionInterval(index0, index0);&#xa;                    netViewer.resetColor();&#xa;                    netViewer.switchColors();&#xa;                    return;&#xa;                }&#xa;            }&#xa;            super.setSelectionInterval(index0, index1);&#xa;        }&#xa;&#xa;    @Override&#xa;        public void addSelectionInterval(int index0, int index1) {&#xa;            if (index0 == index1) {&#xa;                if (isSelectedIndex(index0)) {&#xa;                    removeSelectionInterval(index0, index0);&#xa;                    netViewer.resetColor();&#xa;                    return;&#xa;                }&#xa;                super.addSelectionInterval(index0, index1);&#xa;            }&#xa;        }&#xa;&#xa;    });"/>
                                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                               </AuxValues>
                             </Component>

@@ -26,6 +26,7 @@ import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import monalisa.util.MonaLisaFileChooser;
+import monalisa.util.MonaLisaFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.ChartFactory;
@@ -409,6 +410,8 @@ public class TopologyPanel extends AddonPanel {
         LOGGER.info("Exporting vertex degree distributions");
         MonaLisaFileChooser fc = new MonaLisaFileChooser();
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        MonaLisaFileFilter csvFilter = new MonaLisaFileFilter("csv", "Comma-sparated values");
+        fc.addChoosableFileFilter(csvFilter);
         fc.setAcceptAllFileFilterUsed(false);
         fc.setApproveButtonText("Export here");
 

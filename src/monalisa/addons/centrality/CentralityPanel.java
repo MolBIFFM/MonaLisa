@@ -26,6 +26,7 @@ import monalisa.addons.netviewer.NetViewerNode;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.util.FileUtils;
 import monalisa.util.MonaLisaFileChooser;
+import monalisa.util.MonaLisaFileFilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,6 +39,7 @@ public class CentralityPanel extends AddonPanel {
 
     private static final Logger LOGGER = LogManager.getLogger(CentralityPanel.class);
     private Color heatMapColor;
+    private Boolean heatMapSelected = false;
 
     private DefaultTableModel modelPlaces;
     private DefaultTableModel modelTransitions;
@@ -515,6 +517,8 @@ public class CentralityPanel extends AddonPanel {
 
         LOGGER.info("Exporting centralities");
         MonaLisaFileChooser fileCh = new MonaLisaFileChooser();
+        MonaLisaFileFilter csvFilter = new MonaLisaFileFilter("csv", "Comma-sparated values");
+        fileCh.addChoosableFileFilter(csvFilter);
         int returnValue = fileCh.showSaveDialog(null);
         File file = fileCh.getSelectedFile();
         if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -551,6 +555,9 @@ public class CentralityPanel extends AddonPanel {
      */
     private void heatMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_heatMapActionPerformed
         LOGGER.info("New centrality selected for heatmap");
+        heatMap.setFocusPainted(true);
+        if (!heatMapSelected) {
+            netViewer.switchColors();
         //Why do we calculate these again on every seletion?
         if (getComboElement().equals("Closeness")) {
             LOGGER.info("New centrality for heatmap will be closeness");
@@ -584,6 +591,14 @@ public class CentralityPanel extends AddonPanel {
             Map<Integer, Double> rankingPlaces = ec.getRankingForPlaces();
             labelNodes(rankingTransitions, rankingPlaces);
             LOGGER.info("Successfully changed heatmap centrality to eigenvector");
+        }
+        heatMapSelected = true;
+        } else { // deselect button
+            heatMap.setSelected(false);
+            heatMap.setFocusPainted(false);
+            heatMapSelected = false;
+            netViewer.resetColor();
+            netViewer.switchColors();
         }
     }//GEN-LAST:event_heatMapActionPerformed
 

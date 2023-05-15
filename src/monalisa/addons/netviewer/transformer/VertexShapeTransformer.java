@@ -44,10 +44,6 @@ public class VertexShapeTransformer implements Transformer<NetViewerNode, Shape>
             int corners = n.getCorners();
             if (corners == 0) {
                 shape = this.nodesFactory.getEllipse(n);
-            } else if (corners >= 3 && corners <= 4) {
-                shape = this.nodesFactory.getRegularPolygon(n, corners);
-            } else if (corners >= 5) {
-                shape = this.nodesFactory.getRegularStar(n, corners);
             } else {
                 shape = this.nodesFactory.getRegularPolygon(n, 4);
             }

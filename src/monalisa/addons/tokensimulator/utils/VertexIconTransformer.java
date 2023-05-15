@@ -87,15 +87,18 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
             }
             Graphics2D graphics = (Graphics2D) image.getGraphics();
             graphics.setColor(Color.BLACK);
-            graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
+            graphics.fillRect(0, 0, this.vertexSize, this.vertexSize); // vertex size of transition doesn't change during simulation anymore
+            //graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
 
             //if transition is active
             if (this.simulationMan.getActiveTransitions().contains(simulationMan.getPetriNet().findTransition(id))) {
                 graphics.setColor(Color.GREEN);
-                graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
+                graphics.fillRect(0, 0, this.vertexSize, this.vertexSize); // vertex size doesn't change anymore
+                //graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
                 graphics.setColor(Color.BLACK);
                 int offset = new Double(this.vertexSize * 0.2).intValue();
-                graphics.fillRect(offset, offset, this.vertexSize - 1 - offset * 2, this.vertexSize - 1 - offset * 2);
+                graphics.fillRect(offset, offset, this.vertexSize - offset * 2, this.vertexSize - offset * 2); // vertex size doesn't change anymore
+                //graphics.fillRect(offset, offset, this.vertexSize - 1 - offset * 2, this.vertexSize - 1 - offset * 2);
             }
 
             //if the transition was fired in last step, return black square with red border
@@ -104,13 +107,15 @@ public class VertexIconTransformer implements Transformer<NetViewerNode, Icon> {
                 for (Transition t : this.simulationMan.historyArrayList.get(lastFired)) {
                     if (id == t.id()) {
                         graphics.setColor(Color.RED);
-                        graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
+                        graphics.fillRect(0, 0, this.vertexSize, this.vertexSize); // vertex size doesn't change anymore
+                        //graphics.fillRect(0, 0, this.vertexSize - 1, this.vertexSize - 1);
                         graphics.setColor(Color.BLACK);
                         if (simulationMan.getActiveTransitions().contains(this.simulationMan.getPetriNet().findTransition(id))) {
                             graphics.setColor(Color.GREEN);
                         }
                         int offset = (int) Math.round(this.vertexSize * 0.2);
-                        graphics.fillRect(offset, offset, this.vertexSize - 1 - offset * 2, this.vertexSize - 1 - offset * 2);
+                        graphics.fillRect(offset, offset, this.vertexSize - offset * 2, this.vertexSize - offset * 2); // vertex size doesn't change anymore
+                        //graphics.fillRect(offset, offset, this.vertexSize - 1 - offset * 2, this.vertexSize - 1 - offset * 2);
 
                         break;
                     }

@@ -227,7 +227,7 @@ public class StochasticSimulatorRunPanel extends javax.swing.JPanel implements S
                         Generate graph.
                          */
                         LOGGER.debug("Generating the graph for the stochastic simulation data");
-                        final JFreeChart chart = ChartFactory.createScatterPlot("Simulation results", "Passed time [sec]", "Nr. of molecules", chartDataset, PlotOrientation.VERTICAL, true, false, false);
+                        final JFreeChart chart = ChartFactory.createScatterPlot("Simulation results", "Number of steps", "Number of molecules", chartDataset, PlotOrientation.VERTICAL, true, false, false);
                         ChartFrame frame = new ChartFrame("Simulation results", chart);
                         frame.setSize(800, 600);
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

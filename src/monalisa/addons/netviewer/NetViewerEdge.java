@@ -32,7 +32,7 @@ public class NetViewerEdge implements Serializable {
     private final NetViewerEdge masterEdge;
     private final List<NetViewerEdge> bendEdges = new ArrayList<>();
     private Boolean visible;
-    private Color color;
+    private Color color, defaultColor;
 
     private final PropertyList properties;
     private static final Logger LOGGER = LogManager.getLogger(NetViewerEdge.class);
@@ -56,6 +56,7 @@ public class NetViewerEdge implements Serializable {
         source.addOutEdge(this);
         aim.addInEdge(this);
         this.color = Color.BLACK;
+        this.defaultColor = Color.BLACK;
 
         this.properties = new PropertyList();
         LOGGER.debug("Successfully created new NetViewerEdge");
@@ -81,6 +82,7 @@ public class NetViewerEdge implements Serializable {
         source.addOutEdge(this);
         aim.addInEdge(this);
         this.color = color;
+        this.defaultColor = Color.BLACK;
 
         this.properties = new PropertyList();
         LOGGER.debug("Successfully created new NetViewerEdge with custom color");
@@ -94,8 +96,9 @@ public class NetViewerEdge implements Serializable {
      * @param source
      * @param aim
      * @param masterEdge
+     * @param color
      */
-    public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge) {
+    public NetViewerEdge(String name, int weight, NetViewerNode source, NetViewerNode aim, NetViewerEdge masterEdge, Color color) {
         LOGGER.debug("Creating new NetViewerEdge with bend");
         this.name = name;
         this.weight = weight;
@@ -106,7 +109,8 @@ public class NetViewerEdge implements Serializable {
         aim.addInEdge(this);
         this.masterEdge = masterEdge;
         masterEdge.addBendEdge(this);
-        this.color = Color.BLACK;
+        this.color = color;
+        this.defaultColor = Color.BLACK;
 
         this.properties = new PropertyList();
         LOGGER.debug("Successfully created new NetViewerEdge with bend");
@@ -253,6 +257,15 @@ public class NetViewerEdge implements Serializable {
     public void setColor(Color color) {
         this.color = color;
     }
+    
+    /**
+     * Set the default color of an edge
+     *
+     * @param color
+     */
+    public void setDefaultColor(Color color) {
+        this.defaultColor = color;
+    }
 
     /**
      * Set the color of all bend edges
@@ -275,6 +288,15 @@ public class NetViewerEdge implements Serializable {
         return this.color;
     }
 
+    /**
+     * returns the default color of an edge
+     *
+     * @return
+     */
+    public Color getDefaultColor() {
+        return this.defaultColor;
+    }
+    
     /**
      * Add a property to the Petri net entity.
      *

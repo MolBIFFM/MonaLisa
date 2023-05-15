@@ -41,7 +41,7 @@ public class NetViewerNode implements Serializable {
     private final List<NetViewerNode> logicalPlaces;
     private final List<NetViewerEdge> inEgdes = new ArrayList<>();
     private final List<NetViewerEdge> outEgdes = new ArrayList<>();
-    private Color color, searchBarColor, strokeColor;
+    private Color color, searchBarColor, strokeColor, defaultColor, defaultStrokeColor;
 
     private Long tokens = 0L;
 
@@ -68,16 +68,20 @@ public class NetViewerNode implements Serializable {
         if (nodeType.equalsIgnoreCase(NetViewer.TRANSITION)) {
             this.corners = 4;
             this.color = Color.BLACK;
+            this.defaultColor = Color.BLACK;
         } else if (nodeType.equalsIgnoreCase(NetViewer.PLACE)) {
             this.corners = 0;
             this.color = Color.WHITE;
+            this.defaultColor = Color.WHITE;
         } else if (nodeType.equalsIgnoreCase(NetViewer.BEND)) {
             this.corners = 4;
             this.color = transparent;
+            this.defaultColor = transparent;
         }
 
         this.searchBarColor = Color.BLACK;
-        this.strokeColor = color.BLACK;
+        this.strokeColor = Color.BLACK;
+        this.defaultStrokeColor = Color.BLACK;
 
         this.logicalPlaces = new ArrayList<>();
         this.masterNode = this;
@@ -106,6 +110,9 @@ public class NetViewerNode implements Serializable {
         this.nodeType = NetViewer.PLACE;
         this.labelName = masterNode.labelName;
         this.color = Color.LIGHT_GRAY;
+        this.defaultColor = Color.WHITE;
+        this.strokeColor = Color.BLACK;
+        this.defaultStrokeColor = Color.BLACK;
         this.searchBarColor = Color.BLACK;
         this.corners = 0;
         this.logicalPlaces = new ArrayList<>();
@@ -116,7 +123,7 @@ public class NetViewerNode implements Serializable {
         this.labelPosition = Position.SE;
         LOGGER.debug("Successfully created new logical place for '" + masterNode.getName() + "'");
     }
-
+    
     /**
      * generates a new logical place
      *
@@ -200,9 +207,11 @@ public class NetViewerNode implements Serializable {
      */
     public void setColorForAllNodes(Color color) {
         LOGGER.debug("Changing color for all logical places");
-        this.setColor(color);
+        //this.setColor(color);
         for (NetViewerNode n : this.logicalPlaces) {
-            n.setColor(color);
+            if (!n.isLogical && !n.isMasterNode()) {
+                n.setColor(color);
+            }
         }
         LOGGER.debug("Successfully changed color for all logical places");
     }
@@ -267,6 +276,15 @@ public class NetViewerNode implements Serializable {
     public Color getColor() {
         return this.color;
     }
+    
+    /**
+     * Returns the default color.
+     * 
+     * @return Color
+     */
+    public Color getDefaultColor() {
+        return this.defaultColor;
+    }
 
     /**
      * Set to given color
@@ -277,6 +295,14 @@ public class NetViewerNode implements Serializable {
         this.color = color;
     }
 
+    /**
+     * Set to given defaultColor.
+     *
+     * @param color
+     */
+    public void setDefaultColor(Color color) {
+        this.defaultColor = color;
+    }
     /**
      *
      * @return
@@ -291,6 +317,22 @@ public class NetViewerNode implements Serializable {
      */
     public void setStrokeColor(Color strokeColor) {
         this.strokeColor = strokeColor;
+    }
+    
+    /**
+     *
+     * @return Color
+     */
+    public Color getDefaultStrokeColor() {
+        return defaultStrokeColor;
+    }
+
+    /**
+     *
+     * @param strokeColor
+     */
+    public void setDefaultStrokeColor(Color strokeColor) {
+        this.defaultStrokeColor = strokeColor;
     }
 
     /**
@@ -401,25 +443,13 @@ public class NetViewerNode implements Serializable {
      */
     public void setStrokeColorForAllNodes(Color color) {
         LOGGER.info("Setting stroke color for all logical places of '" + this.getName() + "'");
-        this.setStrokeColor(color);
+        //this.setStrokeColor(color);
         for (NetViewerNode n : this.logicalPlaces) {
-            n.setStrokeColor(color);
+            if (!n.isLogical && !n.isMasterNode()) {
+                n.setStrokeColor(color);
+            }
         }
         LOGGER.info("Successfully set stroke color for all logical places of '" + this.getName() + "'");
-    }
-
-    /**
-     * Change the corners of all logical places
-     *
-     * @param corners
-     */
-    public void setCornersForAllNodes(int corners) {
-        LOGGER.info("Setting corner for all logical places of '" + this.getName() + "'");
-        this.setCorners(corners);
-        for (NetViewerNode n : this.logicalPlaces) {
-            n.setCorners(corners);
-        }
-        LOGGER.info("Successfully set corner for all logical places of '" + this.getName() + "'");
     }
 
     /**
@@ -477,7 +507,7 @@ public class NetViewerNode implements Serializable {
         return this.isLogical;
     }
 
-    private void setLogical(boolean b) {
+    protected void setLogical(boolean b) {
         this.isLogical = b;
     }
 

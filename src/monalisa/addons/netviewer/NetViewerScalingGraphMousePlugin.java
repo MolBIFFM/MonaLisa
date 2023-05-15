@@ -15,6 +15,7 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
+import static monalisa.addons.centrality.AdjacencyMatrix.LOGGER;
 
 /**
  * Zoom in: on mouse, zoom out: at center
@@ -38,28 +39,47 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-
         boolean accepted = checkModifiers(e);
         if (accepted == true) {
+            
             VisualizationViewer vv = (VisualizationViewer) e.getSource();
+            newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
+            newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
+            double zoomScale = getZoomScale(newViewScale, newLayoutScale);
+            
             Point2D mouse = e.getPoint();
             Point2D center = vv.getCenter();
             int amount = e.getWheelRotation();
+            
+            if ((50 <= zoomScale & zoomScale <= 300) | (zoomScale < 50 & amount < 0) | (zoomScale > 300 & amount > 0)) {
+                if (amount > 0) {
+                    this.scaler.scale(vv, this.in, center);
+                } else if (amount < 0) {
+                    this.scaler.scale(vv, this.out, mouse);
+                }
 
-            if (amount > 0) {
-                this.scaler.scale(vv, this.in, center);
-            } else if (amount < 0) {
-                this.scaler.scale(vv, this.out, mouse);
+                if (owner.tb.getEnableGrid()) {
+                    owner.correctCoordinates();
+                }
+                newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
+                newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
+
+                owner.setZoomScale((newViewScale * newLayoutScale) * 100);
+
+                e.consume();
+                vv.repaint();
             }
-
-            newViewScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.VIEW).getScale();
-            newLayoutScale = vv.getRenderContext().getMultiLayerTransformer().getTransformer(Layer.LAYOUT).getScale();
-
-            owner.setZoomScale((newViewScale * newLayoutScale) * 100);
-
-            e.consume();
-            vv.repaint();
         }
+    }
+    
+    /**
+     * @param viewScale
+     * @param layoutScale
+     * 
+     * @return int (current zoom scale)
+     */
+    public int getZoomScale(double viewScale, double layoutScale) {
+        return (int) (newViewScale * newLayoutScale * 100);
     }
 
     @Override

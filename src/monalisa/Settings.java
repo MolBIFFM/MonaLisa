@@ -135,6 +135,10 @@ public class Settings {
         defSet("pinvColorR", "255");
         defSet("pinvColorG", "0");
         defSet("pinvColorB", "0");
+        
+        defSet("minvColorR", "255");
+        defSet("minvColorG", "0");
+        defSet("minvColorB", "0");
 
         defSet("mctsColorR", "0");
         defSet("mctsColorG", "0");

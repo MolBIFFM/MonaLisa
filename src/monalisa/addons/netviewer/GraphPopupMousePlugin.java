@@ -81,7 +81,23 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
     public void changeGraph(Graph<NetViewerNode, NetViewerEdge> g) {
         this.g = g;
     }
-
+    
+    /**
+     * 
+     * @return NetViewer
+     */
+    public NetViewer getNetViewer() {
+        return nv;
+    }
+    
+    /**
+     * 
+     * @return Graph
+     */
+    public Graph getGraph() {
+        return g;
+    }
+    
     @Override
     protected void handlePopup(final MouseEvent me) {
         LOGGER.debug("Handling right-click popup in NetViewer");
@@ -111,7 +127,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering vertex setup");
-                        nv.showVertexSetup(pickedVerticesList, me.getX(), me.getY());
+                        nv.showVertexSetup(pickedVerticesList); //, me.getX(), me.getY());
                         LOGGER.info("Leaving vertex setup");
                     }
                 });
@@ -200,7 +216,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering edge setup");
-                        nv.showEdgeSetup(edge, me.getX(), me.getY());
+                        nv.showEdgeSetup(edge); //, me.getX(), me.getY());
                         LOGGER.info("Leaving edge setup");
                     }
                 });
@@ -212,7 +228,11 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Adding bend to edge");
-                        nv.addBend(edge, (double) me.getX(), (double) me.getY());
+                        if (nv.tb.getEnableGrid()) {
+                            nv.addBend(edge, nv.formatCoordinates((double) me.getX()), nv.formatCoordinates((double) me.getY()));
+                        } else {
+                            nv.addBend(edge, (double) me.getX(), (double) me.getY());
+                        }
                     }
                 });
 
@@ -265,7 +285,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Entering vertex setup");
-                        nv.showVertexSetup(node, me.getX(), me.getY());
+                        nv.showVertexSetup(node); //, me.getX(), me.getY());
                         LOGGER.info("Leaving vertex setup");
                     }
                 });
@@ -285,7 +305,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     case NetViewer.PLACE:
                         LOGGER.debug("Place selected for popup");
                         // Add Transition
-                        JMenu addTransitionMenu = new JMenu(strings.get("NVCreateTransition"));
+                        JMenu addTransitionMenu = new JMenu(strings.get("NVTransition"));
                         addTransitionMenu.add(new AbstractAction(strings.get("NVIn")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -304,7 +324,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         });
                         popup.add(addTransitionMenu);
                         // Delete Place
-                        popup.add(new AbstractAction(strings.get("NVDeleteVertex")) {
+                        popup.add(new AbstractAction(strings.get("NVDelVertex")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 LOGGER.info("Deleting place");
@@ -316,7 +336,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                     case NetViewer.TRANSITION:
                         LOGGER.debug("Transition selected for popup");
                         // Add Place
-                        JMenu addPlaceMenu = new JMenu(strings.get("NVCreateVertex"));
+                        JMenu addPlaceMenu = new JMenu(strings.get("NVPlace"));
                         addPlaceMenu.add(new AbstractAction(strings.get("NVIn")) {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -347,7 +367,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 }
 
                 // Insert Edge
-                popup.add(new AbstractAction(strings.get("NVCreateEdge")) {
+                popup.add(new AbstractAction(strings.get("NVEdge")) {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Inserting edge");
@@ -375,7 +395,11 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Creating reverse transition");
-                            nv.reverseTransition(node, me.getX(), me.getY());
+                            if (nv.tb.getEnableGrid()) {
+                                nv.reverseTransition(node, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
+                            } else {
+                                nv.reverseTransition(node, me.getX(), me.getY());
+                            }
                             nv.modificationActionHappend();
                         }
                     });
@@ -401,8 +425,8 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                             for (NetViewerNode n : node.getMasterNode().getLogicalPlaces()) {
                                 allPlaces.add(n);
                             }
-                            for (NetViewerNode n : allPlaces) {
-                                nv.removeNode(node);
+                            for (NetViewerNode n : allPlaces.subList(1, allPlaces.size())) {
+                                nv.removeNode(n);
                             }
                             nv.modificationActionHappend();
                         }
@@ -469,7 +493,7 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
                 LOGGER.debug("No nodes or edges selected for popup");
                 // MouseMode
                 if (nv.getMouseMode()) {
-                    popup.add(new AbstractAction(strings.get("NVGMTransforming")) {
+                    popup.add(new AbstractAction(strings.get("NVGMTransform")) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             LOGGER.info("Changing mouse mode to 'Transforming'");
@@ -599,6 +623,10 @@ public class GraphPopupMousePlugin extends AbstractPopupGraphMousePlugin impleme
             case ADD_BEND:
                 LOGGER.debug("Add_bend mode");
                 Point mousePoint = vv.getMousePosition();
+                if (nv.tb.getEnableGrid()) {
+                    mousePoint.x = (int) nv.formatCoordinates(mousePoint.x);
+                    mousePoint.y = (int) nv.formatCoordinates(mousePoint.y);
+                }
                 nv.addBend(clickedEdge, (double) mousePoint.x, (double) mousePoint.y);
                 break;
             case DELETE_BEND:

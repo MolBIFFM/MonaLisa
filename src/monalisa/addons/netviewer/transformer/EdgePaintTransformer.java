@@ -35,11 +35,11 @@ public class EdgePaintTransformer implements Transformer<NetViewerEdge, Paint> {
         if (vv.getRenderContext().getPickedEdgeState().getPicked().contains(e)) {
             return Color.CYAN;
         }
-        if (hideColor) {
-            return Color.BLACK;
-        } else {
+//        if (hideColor) { hole arrow is painted in hide color modus, not only the arrowhead
+//            return Color.BLACK;
+//        } else {
             return e.getColor();
-        }
+//        }
     }
 
     public Boolean getHideColor() {

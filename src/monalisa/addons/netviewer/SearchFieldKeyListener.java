@@ -14,7 +14,6 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JTextField;
 
 /**
@@ -23,8 +22,7 @@ import javax.swing.JTextField;
  * @author Jens Einloft
  */
 public class SearchFieldKeyListener implements KeyListener {
-
-    private final Map<NetViewerNode, String> nvToName;
+    
     private final JTextField owner;
     private final NetViewer nv;
 
@@ -32,23 +30,24 @@ public class SearchFieldKeyListener implements KeyListener {
         this.owner = owner;
         this.nv = nv;
 
-        this.nvToName = new HashMap<>();
-        for (NetViewerNode nvNode : nv.getAllVertices()) {
-            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-                nvToName.put(nvNode, nvNode.getName());
-            }
-        }
+//        this.nvToName = new HashMap<>();
+//        for (NetViewerNode nvNode : nv.getAllVertices()) {
+//            if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
+//                nvToName.put(nvNode, nvNode.getName());
+//            }
+//        }
     }
+    
 
     @Override
     public void keyReleased(KeyEvent ke) {
+        HashMap<NetViewerNode, String> nvToName = this.nv.getNvToName();
         Collection<NetViewerNode> toShow = new ArrayList<>();
-
         if (owner.getText().isEmpty()) {
-            toShow = new ArrayList(this.nvToName.keySet());
+            toShow = new ArrayList(nvToName.keySet());
         } else {
             // Check every name for match
-            for (NetViewerNode nvNode : this.nvToName.keySet()) {
+            for (NetViewerNode nvNode : nvToName.keySet()) {
                 if (nvNode.getName().toLowerCase().contains(owner.getText().toLowerCase())) {
                     toShow.add(nvNode);
                 }

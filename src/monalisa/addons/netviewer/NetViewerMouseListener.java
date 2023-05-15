@@ -14,7 +14,11 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import monalisa.synchronisation.Synchronizer;
+
 
 /**
  * MouseListener to react on mouse clicks for creating new nodes
@@ -28,6 +32,7 @@ public class NetViewerMouseListener implements MouseListener {
     private static final String TRANSITION = "TRANSITION";
 
     private String mouseMode = NORMAL;
+    boolean released = true;
 
     private final NetViewer nv;
     private final Synchronizer synchronizer;
@@ -39,47 +44,64 @@ public class NetViewerMouseListener implements MouseListener {
         this.nv = nv;
         this.synchronizer = synchronizer;
     }
-
+    
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
             if (this.mouseMode.equalsIgnoreCase(PLACE)) {
                 Point.Double point = new Point.Double();
-                point.x = e.getX();
-                point.y = e.getY();
+                if (nv.tb.getEnableGrid()) {
+                    // start trying to change coordinates to spezific numbers (grid)
+                    point.x = nv.formatCoordinates(e.getX());
+                    point.y = nv.formatCoordinates(e.getY());
+                } else {
+                    point.x = e.getX();
+                    point.y = e.getY(); 
+                }
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.PLACE, "P" + (++nv.placeCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             } else if (this.mouseMode.equalsIgnoreCase(TRANSITION)) {
                 Point.Double point = new Point.Double();
-                point.x = e.getX();
-                point.y = e.getY();
+                if (nv.tb.getEnableGrid()) {
+                    // start trying to change coordinates to spezific numbers (grid)
+                    point.x = nv.formatCoordinates(e.getX());
+                    point.y = nv.formatCoordinates(e.getY());
+                } else {
+                    point.x = e.getX();
+                    point.y = e.getY();
+                }
                 Point2D pointInVV = nv.vv.getRenderContext().getMultiLayerTransformer().inverseTransform(point);
                 nv.addNode(NetViewer.TRANSITION, "T" + (++nv.transitionCount), pointInVV.getX(), pointInVV.getY());
                 nv.modificationActionHappend();
             }
-        } else if (e.getClickCount() == 2 && nv.getMouseMode()) {
+        } else if (e.getClickCount() == 2 && nv.getMouseMode() && !nv.getGM().getSimulatorMode()) {
             psN = nv.vv.getRenderContext().getPickedVertexState();
-            if (psN.getPicked().size() == 1) {
-                nv.showVertexSetup((NetViewerNode) psN.getPicked().toArray()[0], e.getX(), e.getY());
+            if (psN.getPicked().size() >= 1) {
+                List<NetViewerNode> selectedNodes = new ArrayList<>();
+                for (Object o : psN.getPicked()) {
+                    selectedNodes.add((NetViewerNode) o);
+                }
+                nv.showVertexSetup(selectedNodes);
             }
 
             psE = nv.vv.getPickedEdgeState();
-            if (psE.getPicked().size() == 1) {
-                nv.showEdgeSetup((NetViewerEdge) psE.getPicked().toArray()[0], e.getX(), e.getY());
+            if (psE.getPicked().size() >= 1) {
+                nv.showEdgeSetup((NetViewerEdge) psE.getPicked().toArray()[0]);
             }
         }
 
     }
 
+    
     @Override
     public void mousePressed(MouseEvent e) {
-
+    
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-
+    public void mouseReleased(MouseEvent e) { 
+        released = true;
     }
 
     @Override
@@ -104,4 +126,11 @@ public class NetViewerMouseListener implements MouseListener {
         this.mouseMode = NORMAL;
     }
 
+    public void setReleased(boolean b) {
+        released = b;
+    }
+    
+    public boolean getReleased() {
+        return released;
+    }
 }

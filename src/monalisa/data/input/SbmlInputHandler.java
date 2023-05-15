@@ -162,25 +162,11 @@ public final class SbmlInputHandler implements InputHandler {
             petriNet.putProperty(AnnotationUtils.MIRIAM_MODEL_QUALIFIERS, tmp);
         }
 
-        Map<org.sbml.jsbml.Compartment, monalisa.data.pn.Compartment> compartmentMap = new HashMap<>();
-        if (!model.getListOfCompartments().isEmpty()) {
-            for (org.sbml.jsbml.Compartment c : model.getListOfCompartments()) {
-                monalisa.data.pn.Compartment pnComp = new monalisa.data.pn.Compartment(c.getName());
-                pnComp.putProperty("size", c.getSize());
-                pnComp.putProperty("constant", c.getConstant());
-                pnComp.putProperty("spatialDimensions", c.getSpatialDimensions());
-                pnComp.putProperty(AnnotationUtils.SBO_TERM, c.getSBOTermID());
-                tmp = c.getCVTerms();
-                pnComp.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
-                petriNet.addCompartment(pnComp);
-                compartmentMap.put(c, pnComp);
-            }
-        }
 
         Double weight;
         int countPlaces = 0, countTransitions = 0;
         Long tokens;
-        String name, id, reactantName, productName, compartmentId;
+        String name, id, reactantName, productName;
         double posX = 0, posY = 0;
         Boolean reversible;
         Place place;
@@ -214,9 +200,7 @@ public final class SbmlInputHandler implements InputHandler {
             tmp = s.getCVTerms();
             place.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, tmp);
 
-            if (s.getCompartmentInstance() != null) {
-                petriNet.setCompartment(place, compartmentMap.get(s.getCompartmentInstance()));
-            }
+            
 
             petriNet.setTokens(place, tokens);
             species.put(id, countPlaces);
@@ -230,19 +214,8 @@ public final class SbmlInputHandler implements InputHandler {
                     continue;
                 }
 
-                if (p1.getProperty("name").equals(p2.getProperty("name"))) {
-                    if (p2.getCompartment() != null) {
-                        doubleName = true;
-                        p2.putProperty("name", p2.getProperty("name") + "_" + p2.getCompartment().getName());
-                    }
-                }
             }
-            if (doubleName) {
-                if (p1.getCompartment() != null) {
-                    p1.putProperty("name", p1.getProperty("name") + "_" + p1.getCompartment().getName());
-                    doubleName = false;
-                }
-            }
+            
         }
 
         // Transition data section.
@@ -275,9 +248,6 @@ public final class SbmlInputHandler implements InputHandler {
                 transition.putProperty("posY", posY);
             }
 
-            if (r.getCompartmentInstance() != null) {
-                petriNet.setCompartment(transition, compartmentMap.get(r.getCompartmentInstance()));
-            }
 
             if (!r.getSBOTermID().isEmpty()) {
                 transition.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
@@ -292,9 +262,7 @@ public final class SbmlInputHandler implements InputHandler {
                 transition_rev = findTransition(countTransitions, petriNet);
                 transition_rev.putProperty("name", name + "_rev");
 
-                if (r.getCompartmentInstance() != null) {
-                    petriNet.setCompartment(transition_rev, compartmentMap.get(r.getCompartmentInstance()));
-                }
+               
 
                 if (!r.getSBOTermID().isEmpty()) {
                     transition_rev.putProperty(AnnotationUtils.SBO_TERM, r.getSBOTermID());
@@ -392,19 +360,6 @@ public final class SbmlInputHandler implements InputHandler {
                 if (t1.equals(t2)) {
                     continue;
                 }
-
-                if (t1.getProperty("name").equals(t2.getProperty("name"))) {
-                    if (t2.getCompartment() != null) {
-                        doubleName = true;
-                        t2.putProperty("name", t2.getProperty("name") + "_" + t2.getCompartment().getName());
-                    }
-                }
-            }
-            if (doubleName) {
-                if (t1.getCompartment() != null) {
-                    t1.putProperty("name", t1.getProperty("name") + "_" + t1.getCompartment().getName());
-                    doubleName = false;
-                }
             }
         }
 
@@ -460,8 +415,10 @@ public final class SbmlInputHandler implements InputHandler {
                 for (String nodeName : connectedNodes) {
                     connectedNetViewerNodes.add(nameMap.get(nodeName));
                 }
-                Double posX = Double.parseDouble(logPlaceInfo.get(3).getValue());
-                Double posY = Double.parseDouble(logPlaceInfo.get(4).getValue());
+                Double posX = Double.valueOf(logPlaceInfo.get(3).getValue());
+                Double posY = Double.valueOf(logPlaceInfo.get(4).getValue());
+//                Double posX = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(3).getValue()));
+//                Double posY = netViewer.formatCoordinates(Double.parseDouble(logPlaceInfo.get(4).getValue()));
                 netViewer.addLogicalPlace(nameMap.get(masterNodeString), connectedNetViewerNodes, new Point2D.Double(posX, posY));
                 nameMap.put(logPlace.getAttributeValue("Name"), nameMap.get(masterNodeString).getLogicalPlaces().get(nameMap.get(masterNodeString).getLogicalPlaces().size() - 1));
             }
@@ -507,7 +464,8 @@ public final class SbmlInputHandler implements InputHandler {
                 while (task.size() > 2){
                     NetViewerEdge oldEdge = netViewer.g.findEdge(nameMap.get(task.get(0)), nameMap.get(task.get(task.size() - 1)));
                     Element currBend = bendElementMap.get(task.get(1));
-                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.valueOf(currBend.getChildren().get(0).getValue()) - 30, Double.valueOf(currBend.getChildren().get(1).getValue()) - 30);
+//                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(0).getValue())) - 30, netViewer.formatCoordinates(Double.parseDouble(currBend.getChildren().get(1).getValue())) - 30);
+                    NetViewerEdge newEdge = netViewer.addBend(oldEdge, Double.parseDouble(currBend.getChildren().get(0).getValue()) - 30, Double.parseDouble(currBend.getChildren().get(1).getValue()) - 30);
                     nameMap.put(task.get(1), newEdge.getSource());
                     task.remove(0);
                 }

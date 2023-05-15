@@ -208,7 +208,7 @@ public class ExactSSA implements Runnable {
          * Create the header of output file.
          */
         StringBuilder outSB = new StringBuilder();
-        outSB.append("Step\tTime[sec]\tReaction");
+        outSB.append("Number of steps");
         /*
          * Write the names of non-constant places.
          */

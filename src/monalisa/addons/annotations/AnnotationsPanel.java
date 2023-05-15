@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,6 @@ import javax.swing.JOptionPane;
 import monalisa.addons.AddonPanel;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.data.pn.Compartment;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.UniquePetriNetEntity;
 import monalisa.resources.ResourceManager;
@@ -58,6 +58,8 @@ public class AnnotationsPanel extends AddonPanel {
 
     private boolean editMiriamIdentifierEntry;
     private MiriamWrapper identifierInEditEntry;
+    
+    //private ArrayList<MiriamRegistryWrapper> test = new ArrayList<>();
 
     private ModelInformationFrame mif;
     private final AnnotationUtils annUtils;
@@ -72,7 +74,7 @@ public class AnnotationsPanel extends AddonPanel {
     public AnnotationsPanel(final NetViewer netViewer, final PetriNetFacade petriNet) {
         super(netViewer, petriNet, "Annotations");
         LOGGER.info("Initializing AnnotationsPanel");
-        helpText = "<html><center>&nbsp;&nbsp;&nbsp;Publication on MIRIAM: <a href=\"https://doi.org/10.1038/nbt1156\">Novère, N., Finney, A., Hucka, M. et al. Minimum information requested in the annotation of biochemical models (MIRIAM). Nat Biotechnol 23, 1509–1515 (2005).</a>&nbsp;&nbsp;&nbsp;"
+        helpText = "<html><center>&nbsp;&nbsp;&nbsp;Publication on MIRIAM: <a href=\"https://doi.org/10.1038/nbt1156\">here</a>&nbsp;&nbsp;&nbsp;"
                 + "<br />&nbsp;&nbsp;&nbsp;For an overview over SBO click <a href=\"http://www.ebi.ac.uk/sbo/\">here</a>&nbsp;&nbsp;&nbsp;</center></html>";
         initComponents();
 
@@ -202,7 +204,7 @@ public class AnnotationsPanel extends AddonPanel {
         }
         root = doc.getRootElement();
         MiriamRegistryWrapper mrw;
-        Integer counter = 0;
+        ArrayList<MiriamRegistryWrapper> mrwList = new ArrayList<>();
         String name, comment, url = "";
         Pattern pattern;
         LOGGER.debug("Adding MIRIAM URLs");
@@ -230,12 +232,16 @@ public class AnnotationsPanel extends AddonPanel {
                     break;
                 }
             }
-
             mrw = new MiriamRegistryWrapper(name, url, comment, pattern);
-            miriamRegistryEntry.addItem(mrw);
-            mif.miriamRegistryModel.addItem(mrw);
-            miriamRegistryToolTips.add("<html>" + mrw.getComment() + "</html>");
-            miriamRegistryMap.put(url, counter);
+            mrwList.add(mrw);
+        }
+        mrwList = sortMiriam(mrwList);
+        Integer counter = 0;
+        for (MiriamRegistryWrapper elem : mrwList) {
+            miriamRegistryEntry.addItem(elem);
+            mif.miriamRegistryModel.addItem(elem);
+            miriamRegistryToolTips.add("<html>" + elem.getComment() + "</html>");
+            miriamRegistryMap.put(elem.getURL(), counter);
             counter++;
         }
         miriamRegistryCbRenderer.setTooltips(miriamRegistryToolTips);
@@ -245,6 +251,22 @@ public class AnnotationsPanel extends AddonPanel {
         editMiriamIdentifierEntry = false;
         mif.editMiriamIdentifierModel = false;
         LOGGER.info("Successfully initialized AnnotationsPanel");
+    }
+    
+    /**
+     * Sorts the ArrayList alphabetically using bubble sort.
+     * @param mrwList ArrayList<MiriamRegistryWrapper>
+     * @return ArrayList<MiriamRegistryWrapper>
+     */
+    private ArrayList<MiriamRegistryWrapper> sortMiriam(ArrayList<MiriamRegistryWrapper> mrwList) {
+        for (int i = 0; i < mrwList.size(); i++) {
+            for (int j = 0; j < mrwList.size() - i - 1; j++) {
+                if (mrwList.get(j).getName().compareToIgnoreCase(mrwList.get(j + 1).getName()) > 0) {
+                    Collections.swap(mrwList, j + 1, j);
+                }
+            }
+        }
+        return mrwList;
     }
 
     private void fillIdentifierList(List<CVTerm> cvts) {
@@ -399,6 +421,7 @@ public class AnnotationsPanel extends AddonPanel {
         entryQualifier.setModel(new javax.swing.DefaultComboBoxModel());
         entryQualifier.setMinimumSize(new java.awt.Dimension(175, 24));
         entryQualifier.setPreferredSize(new java.awt.Dimension(175, 24));
+        AutoCompletion.enable(entryQualifier);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -482,6 +505,7 @@ public class AnnotationsPanel extends AddonPanel {
         miriamRegistryEntry.setModel(new javax.swing.DefaultComboBoxModel());
         miriamRegistryEntry.setMinimumSize(new java.awt.Dimension(175, 24));
         miriamRegistryEntry.setPreferredSize(new java.awt.Dimension(175, 24));
+        AutoCompletion.enable(miriamRegistryEntry);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -518,6 +542,7 @@ public class AnnotationsPanel extends AddonPanel {
         sboCb.setToolTipText("A list of all SBO Terms which can be assigned to the selected entity");
         sboCb.setMinimumSize(new java.awt.Dimension(125, 24));
         sboCb.setPreferredSize(new java.awt.Dimension(125, 24));
+        AutoCompletion.enable(sboCb);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;

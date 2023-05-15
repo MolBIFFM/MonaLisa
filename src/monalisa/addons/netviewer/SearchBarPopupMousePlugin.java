@@ -92,7 +92,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     LOGGER.info("Entering node setup from SearchBar");
-                    nv.showVertexSetup(nvNode, me.getX(), me.getY());
+                    nv.showVertexSetup(nvNode); //, me.getX(), me.getY());
                     LOGGER.info("Leaving node setup from SearchBar");
                 }
             });
@@ -133,7 +133,11 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         LOGGER.info("Reverse Transitions");
-                        nv.reverseTransition(nvNode, me.getX(), me.getY());
+                        if (nv.tb.getEnableGrid()) {
+                            nv.reverseTransition(nvNode, (int) nv.formatCoordinates(me.getX()), (int) nv.formatCoordinates(me.getY()));
+                        } else {
+                            nv.reverseTransition(nvNode, me.getX(), me.getY());
+                        }
                         nv.modificationActionHappend();
                     }
                 });
@@ -165,7 +169,7 @@ public class SearchBarPopupMousePlugin extends AbstractPopupGraphMousePlugin imp
                     for (Object o : selectedValues) {
                         selectedNodes.add((NetViewerNode) o);
                     }
-                    nv.showVertexSetup(selectedNodes, me.getX(), me.getY());
+                    nv.showVertexSetup(selectedNodes); //, me.getX(), me.getY());
                     LOGGER.info("Leaving vertex setup for several vertices");
                 }
             });

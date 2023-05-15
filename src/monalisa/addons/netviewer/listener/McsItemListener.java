@@ -60,6 +60,9 @@ public class McsItemListener implements ItemListener {
             Color chosenColor;
             if (tb.manuellColorSelection()) {
                 chosenColor = JColorChooser.showDialog(null, "Select color", null);
+                if (chosenColor == null) {
+                    chosenColor = NetViewer.MCS_COLOR;
+                }
             } else {
                 chosenColor = NetViewer.MCS_COLOR;
             }

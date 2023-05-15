@@ -62,20 +62,6 @@ public final class Place extends UniquePetriNetEntity implements Comparable<Plac
         return container.getInputTransitionsFor(this);
     }
 
-    public Compartment getCompartment() {
-        return container.getCompartmentMap().get(this);
-    }
-
-    public void setCompartment(Compartment c) {
-        container.setCompartment(this, c);
-        this.putProperty("compartment", c);
-    }
-
-    public void unsetCompartment(Compartment c) {
-        container.unsetCompartment(this, c);
-        this.putProperty("compartment", null);
-    }
-
     /**
      * Returns true, if the place is constant and the number of tokens should
      * not be modified, disregarding simulation steps.

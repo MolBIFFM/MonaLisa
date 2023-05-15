@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import monalisa.addons.netviewer.listener.MyColorOptionsMouseListener;
 import monalisa.addons.netviewer.NetViewer;
 import monalisa.addons.netviewer.NetViewerNode;
-import monalisa.data.pn.Compartment;
 import monalisa.data.pn.UniquePetriNetEntity;
 import monalisa.util.MonaLisaWindowListener;
 import monalisa.resources.ResourceManager;
@@ -47,7 +46,7 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         this.nvNodes = nvNodes;
         this.netViewer = netViewer;
 
-        setAlwaysOnTop(true);
+        setAlwaysOnTop(false);
 
         initComponents();
 
@@ -69,11 +68,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         vertexNameLabel.setText("Multi selection");
         vertexTypeLabel.setText("");
         vertexTypeLabel.setEnabled(false);
-        circleRadioButon.setEnabled(false);
-        circleRadioButon.setSelected(false);
-        polygoneRadioButton.setEnabled(false);
-        polygoneRadioButton.setSelected(false);
-        cornerSpinner.setEnabled(false);
 
         showColorLabel.setForeground(nvNodes.get(0).getColor());
         showColorLabel.setBackground(nvNodes.get(0).getColor());
@@ -89,11 +83,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         vertexNoteTextArea.setText("");
         vertexNoteTextArea.setEnabled(false);
 
-        if (netViewer.getProject().getPetriNet().getCompartments().size() > 0) {
-            for (Compartment c : netViewer.getProject().getPetriNet().getCompartments()) {
-                compartmentCb.addItem(c);
-            }
-        }
         LOGGER.debug("Successfully loaded properties for multiple vertices");
     }
 
@@ -106,12 +95,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
 
         vertexNameLabel.setText(nvNode.getName());
         vertexTypeLabel.setText("[" + nvNode.getReadableNodeType() + "]");
-        if (nvNode.getCorners() == 0) {
-            circleRadioButon.setSelected(true);
-        } else {
-            polygoneRadioButton.setSelected(true);
-        }
-        cornerSpinner.setValue((nvNode.getCorners() == 0) ? 4 : nvNode.getCorners());
         showColorLabel.setForeground(nvNode.getColor());
         showColorLabel.setBackground(nvNode.getColor());
         showStrokeColorLabel.setForeground(nvNode.getStrokeColor());
@@ -169,20 +152,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
                     break;
             }
         }
-
-        if (netViewer.getProject().getPetriNet().getCompartments().size() > 0) {
-            for (Compartment c : netViewer.getProject().getPetriNet().getCompartments()) {
-                compartmentCb.addItem(c);
-            }
-
-            UniquePetriNetEntity upne = netViewer.getProject().getPetriNet().findPlace(nvNode.getId());
-            if (upne == null) {
-                upne = netViewer.getProject().getPetriNet().findTransition(nvNode.getId());
-            }
-            if (netViewer.getProject().getPetriNet().getCompartmentMap().containsKey(upne)) {
-                compartmentCb.setSelectedItem(netViewer.getProject().getPetriNet().getCompartmentMap().get(upne));
-            }
-        }
         LOGGER.debug("Successfully loaded properties for single vertex");
     }
 
@@ -202,10 +171,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         vertexNameLabel = new javax.swing.JLabel();
         vertexTypeLabel = new javax.swing.JLabel();
-        shapeLabel = new javax.swing.JLabel();
-        circleRadioButon = new javax.swing.JRadioButton();
-        polygoneRadioButton = new javax.swing.JRadioButton();
-        cornerSpinner = new javax.swing.JSpinner();
         sytleLabel = new javax.swing.JLabel();
         nameLabel = new javax.swing.JLabel();
         vertexNameTextField = new javax.swing.JTextField();
@@ -231,8 +196,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         noteLabel = new javax.swing.JLabel();
         saveButton = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        compartmentCb = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         showStrokeColorLabel = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -266,42 +229,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(19, 20, 10, 0);
         jPanel1.add(vertexTypeLabel, gridBagConstraints);
-
-        shapeLabel.setFont(new java.awt.Font("Cantarell", 1, 14)); // NOI18N
-        shapeLabel.setText("Shape");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 5, 0);
-        jPanel1.add(shapeLabel, gridBagConstraints);
-
-        shapeBG.add(circleRadioButon);
-        circleRadioButon.setFont(new java.awt.Font("Cantarell", 0, 14)); // NOI18N
-        circleRadioButon.setText("Circle");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 20);
-        jPanel1.add(circleRadioButon, gridBagConstraints);
-
-        shapeBG.add(polygoneRadioButton);
-        polygoneRadioButton.setFont(new java.awt.Font("Cantarell", 0, 14)); // NOI18N
-        polygoneRadioButton.setText("Polygone");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 20, 0, 0);
-        jPanel1.add(polygoneRadioButton, gridBagConstraints);
-
-        cornerSpinner.setModel(new javax.swing.SpinnerNumberModel(3, 3, 7, 1));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        jPanel1.add(cornerSpinner, gridBagConstraints);
 
         sytleLabel.setFont(new java.awt.Font("Cantarell", 1, 14)); // NOI18N
         sytleLabel.setText("Style");
@@ -516,19 +443,6 @@ public class VertexSetupFrame extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(10, 20, 20, 20);
         jPanel1.add(saveButton, gridBagConstraints);
 
-        jLabel5.setText("Compartment:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel1.add(jLabel5, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel1.add(compartmentCb, gridBagConstraints);
-
         jLabel6.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jLabel6.setText("Stroke color:");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -593,13 +507,7 @@ public class VertexSetupFrame extends javax.swing.JFrame {
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         LOGGER.info("Saving vertex properties");
-        int corners = 0;
-        if (circleRadioButon.isSelected()) {
-            corners = 0;
-        } else if (polygoneRadioButton.isSelected()) {
-            corners = (Integer) cornerSpinner.getValue();
-        }
-
+        
         Position lablePosition = Position.CNTR;
         if (C.isSelected()) {
             lablePosition = Position.CNTR;
@@ -634,11 +542,11 @@ public class VertexSetupFrame extends javax.swing.JFrame {
 
         boolean error = false;
         if (nvNodes.size() == 1) {
-            error = !netViewer.writeVertexSetup(nvNodes.get(0), showColorLabel.getForeground(), showStrokeColorLabel.getForeground(), corners, vertexNameTextField.getText(), tokens, vertexNoteTextArea.getText(), lablePosition, (Compartment) compartmentCb.getSelectedItem());
+            error = !netViewer.writeVertexSetup(nvNodes.get(0), showColorLabel.getForeground(), showStrokeColorLabel.getForeground(), vertexNameTextField.getText(), tokens, vertexNoteTextArea.getText(), lablePosition);
         } else {
             for (NetViewerNode nvNode : nvNodes) {
                 if (!nvNode.getNodeType().equalsIgnoreCase(NetViewer.BEND)) {
-                    netViewer.writeVertexSetup(nvNode, lablePosition, (Compartment) compartmentCb.getSelectedItem(), showColorLabel.getForeground(), showStrokeColorLabel.getForeground());
+                    netViewer.writeVertexSetup(nvNode, lablePosition, showColorLabel.getForeground(), showStrokeColorLabel.getForeground());
                 }
             }
         }
@@ -663,16 +571,12 @@ public class VertexSetupFrame extends javax.swing.JFrame {
     protected javax.swing.JRadioButton SE;
     protected javax.swing.JRadioButton SW;
     protected javax.swing.JRadioButton W;
-    private javax.swing.JRadioButton circleRadioButon;
     private javax.swing.JLabel colorLabel;
-    private javax.swing.JComboBox compartmentCb;
-    private javax.swing.JSpinner cornerSpinner;
     private javax.swing.JLabel hintLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -682,11 +586,9 @@ public class VertexSetupFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lablePositionLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel noteLabel;
-    private javax.swing.JRadioButton polygoneRadioButton;
     private javax.swing.JPanel rbPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.ButtonGroup shapeBG;
-    private javax.swing.JLabel shapeLabel;
     private javax.swing.JLabel showColorLabel;
     private javax.swing.JLabel showStrokeColorLabel;
     private javax.swing.JLabel sytleLabel;

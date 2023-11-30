@@ -144,7 +144,7 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(continuousModeCheckBox, gridBagConstraints);
 
-        stepField.setText("1");
+        stepField.setText("1000");
         stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -226,8 +226,8 @@ public class AsynchronousTokenSimPanel extends AbstractTokenSimPanel implements 
             JOptionPane.showMessageDialog(null, SimulationManager.strings.get("TSNumberFormatExceptionM"));
         } finally {
             if (steps < 1) {
-                steps = 1;
-                stepField.setText("1");
+                steps = 1000;
+                stepField.setText("1000");
             }
             //Create new thread that will perform all firing steps.
             asyncTS.setSimSwingWorker(new AsynchronousSimulationSwingWorker(asyncTS.getSimulationMan(), asyncTS, isContinuous(), steps));

@@ -12,6 +12,7 @@ package monalisa.addons.tokensimulator;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 import monalisa.data.pn.Place;
@@ -320,6 +322,21 @@ public class SimulationPrefFrame extends javax.swing.JFrame {
         for (Entry<Place, JCheckBox> entr : this.placesToPlot.entrySet()) {
             frame.add(entr.getValue());
         }
+        selectAllJButton = new JButton("Select all");
+        selectAllJButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                selectAll();
+            }
+        });
+        frame.add(selectAllJButton);
+
+        deselectAllJButton = new JButton("Deselect all");
+        deselectAllJButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                deselectAll();
+            }
+        });
+        frame.add(deselectAllJButton);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Close");
@@ -334,7 +351,17 @@ public class SimulationPrefFrame extends javax.swing.JFrame {
         frame.pack();
         frame.setVisible(true);
     }//GEN-LAST:event_placesToPlotBActionPerformed
-
+    
+    public void selectAll(){
+        for (Entry<Place, JCheckBox> entr : this.placesToPlot.entrySet()) {
+            entr.getValue().setSelected(true);
+        }
+    }
+    public void deselectAll(){
+        for (Entry<Place, JCheckBox> entr : this.placesToPlot.entrySet()) {
+            entr.getValue().setSelected(false);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -364,6 +391,8 @@ public class SimulationPrefFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JButton cancelJButton;
+    protected javax.swing.JButton selectAllJButton;
+    protected javax.swing.JButton deselectAllJButton;
     private javax.swing.JCheckBox chartPlottingCB;
     protected javax.swing.JCheckBox createLogJCheckBox;
     protected javax.swing.JScrollPane customSimulatorJScrollPane;

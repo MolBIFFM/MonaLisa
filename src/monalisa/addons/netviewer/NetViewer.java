@@ -11,6 +11,8 @@ package monalisa.addons.netviewer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.algorithms.layout.LayoutDecorator;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import monalisa.addons.netviewer.gui.ColorOptionsFrame;
 import monalisa.addons.netviewer.transformer.MyEdgeRenderer;
 import monalisa.addons.netviewer.listener.NetViewerWindowsListener;
@@ -311,7 +313,9 @@ public class NetViewer extends JFrame implements ActionListener {
         if (g == null) {
             LOGGER.warn("Graph is null, initializing new graph");
             g = translatePNtoGraph();
-            layout = new MonaLisaLayout<>(new FRLayout<>(g));
+            //following is a staticlayout for LARGE nets
+            layout = new MonaLisaLayout<>(new StaticLayout(g));
+            //layout = new MonaLisaLayout<>(new FRLayout<>(g));
         } else {
             LOGGER.info("Using imported Graph and Layout");
         }
@@ -2664,14 +2668,14 @@ public class NetViewer extends JFrame implements ActionListener {
         for (Transition t : pn.transitions()) {
             nvNode = getNodeFromVertex(t);
             t.putProperty("name", nvNode.getName());
-            t.putProperty("posX", layout.transform(nvNode).getX());
-            t.putProperty("posY", layout.transform(nvNode).getY());
+            //t.putProperty("posX", layout.transform(nvNode).getX());
+            //t.putProperty("posY", layout.transform(nvNode).getY());
         }
         for (Place p : pn.places()) {
             nvNode = getNodeFromVertex(p);
             p.putProperty("name", nvNode.getName());
-            p.putProperty("posX", layout.transform(nvNode).getX());
-            p.putProperty("posY", layout.transform(nvNode).getY());
+            //p.putProperty("posX", layout.transform(nvNode).getX());
+            //p.putProperty("posY", layout.transform(nvNode).getY());
         }
 
         String aimType, sourceType;

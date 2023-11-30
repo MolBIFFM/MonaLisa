@@ -66,7 +66,8 @@ public class KeggInputHandler implements InputHandler {
             return false;
         }
     }
-
+    
+    
     @Override
     public PetriNet load(InputStream in, File file) throws IOException {
         LOGGER.info("Loading Petri net from KEGG file");
@@ -212,9 +213,16 @@ public class KeggInputHandler implements InputHandler {
 //            }
 
             if (e.getChild("graphics") != null) {
-                if (e.getChild("graphics").getAttributeValue("x") != null) {
-                    t.putProperty("posX", new Double(e.getChild("graphics").getAttributeValue("x")));
-                    t.putProperty("posY", new Double(e.getChild("graphics").getAttributeValue("y")));
+                if (e.getChild("graphics").getAttributeValue("coords") != null) {
+                    Double posX1 = Double.parseDouble(e.getChild("graphics").getAttributeValue("coords").split(",")[0]);
+                    Double posY1 = Double.parseDouble(e.getChild("graphics").getAttributeValue("coords").split(",")[1]);
+                    Double posX2 = Double.parseDouble(e.getChild("graphics").getAttributeValue("coords").split(",")[2]);
+                    Double posY2 = Double.parseDouble(e.getChild("graphics").getAttributeValue("coords").split(",")[3]);
+                    // divide this by some number times two (see which number below!) for large nets
+                    Double posX = (posX1 + posX2) / 2;
+                    Double posY = (posY1 + posY2) / 2;
+                    t.putProperty("posX", posX);
+                    t.putProperty("posY", posY);
                 }
             }
 
@@ -247,8 +255,11 @@ public class KeggInputHandler implements InputHandler {
 
             if (e.getChild("graphics") != null) {
                 if (e.getChild("graphics").getAttributeValue("x") != null) {
-                    p.putProperty("posX", new Double(e.getChild("graphics").getAttributeValue("x")));
-                    p.putProperty("posY", new Double(e.getChild("graphics").getAttributeValue("y")));
+                    // divide this by some value for large nets (10 e.g.)
+                    Double posX = Double.parseDouble(e.getChild("graphics").getAttributeValue("x"));
+                    Double posY = Double.parseDouble(e.getChild("graphics").getAttributeValue("y"));
+                    p.putProperty("posX", posX);
+                    p.putProperty("posY", posY);
                 }
             }
             p.putProperty(AnnotationUtils.MIRIAM_BIO_QUALIFIERS, getCVTerms(e));

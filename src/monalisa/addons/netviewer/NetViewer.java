@@ -2668,14 +2668,14 @@ public class NetViewer extends JFrame implements ActionListener {
         for (Transition t : pn.transitions()) {
             nvNode = getNodeFromVertex(t);
             t.putProperty("name", nvNode.getName());
-            //t.putProperty("posX", layout.transform(nvNode).getX());
-            //t.putProperty("posY", layout.transform(nvNode).getY());
+            t.putProperty("posX", layout.transform(nvNode).getX());
+            t.putProperty("posY", layout.transform(nvNode).getY());
         }
         for (Place p : pn.places()) {
             nvNode = getNodeFromVertex(p);
             p.putProperty("name", nvNode.getName());
-            //p.putProperty("posX", layout.transform(nvNode).getX());
-            //p.putProperty("posY", layout.transform(nvNode).getY());
+            p.putProperty("posX", layout.transform(nvNode).getX());
+            p.putProperty("posY", layout.transform(nvNode).getY());
         }
 
         String aimType, sourceType;

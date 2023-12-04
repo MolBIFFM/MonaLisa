@@ -3606,6 +3606,23 @@ public class NetViewer extends JFrame implements ActionListener {
     }
 
     /**
+     * Add a edge to the Graph and the PetriNet.
+     *
+     * @param weight Weight of the edge
+     * @param source Source of the edge
+     * @param aim Aim of the edge
+     * @return The new created NetViewerEdge
+     */
+    public NetViewerEdge addNetViewerEdge(int weight, NetViewerNode source, NetViewerNode aim) {
+        LOGGER.debug("Adding new edge to NetViewer and Petri net");
+        NetViewerEdge ret = new NetViewerEdge("n" + getNewEdgeId(), weight, source, aim);
+        g.addEdge(ret, source, aim, EdgeType.DIRECTED);
+        netStructureChanged = true;
+        LOGGER.debug("Successfully added new edge to NetViewer");
+        return ret;
+    }
+
+    /**
      * Removes a logical place. All edges a go back to master node or to a other
      * given logical places
      *
@@ -3622,11 +3639,11 @@ public class NetViewer extends JFrame implements ActionListener {
         LOGGER.debug("Removing logical place from NetViewer");
         List<NetViewerEdge> edgesToDelete = new ArrayList<>();
         for (NetViewerEdge e : nvNode.getInEdges()) {
-            addEdge(e.getWeight(), e.getSource(), aim);
+            addNetViewerEdge(e.getWeight(), e.getSource(), aim);
             edgesToDelete.add(g.findEdge(e.getSource(), nvNode));
         }
         for (NetViewerEdge e : nvNode.getOutEdges()) {
-            addEdge(e.getWeight(), aim, e.getAim());
+            addNetViewerEdge(e.getWeight(), aim, e.getAim());
             edgesToDelete.add(g.findEdge(nvNode, e.getAim()));
         }
         for (NetViewerEdge nvEdge : edgesToDelete) {

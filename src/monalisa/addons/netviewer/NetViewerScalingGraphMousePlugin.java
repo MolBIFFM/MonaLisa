@@ -51,7 +51,7 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
             Point2D center = vv.getCenter();
             int amount = e.getWheelRotation();
             
-            if ((50 <= zoomScale & zoomScale <= 300) | (zoomScale < 50 & amount < 0) | (zoomScale > 300 & amount > 0)) {
+            //if ((50 <= zoomScale & zoomScale <= 300) | (zoomScale < 50 & amount < 0) | (zoomScale > 300 & amount > 0)) {
                 if (amount > 0) {
                     this.scaler.scale(vv, this.in, center);
                 } else if (amount < 0) {
@@ -68,7 +68,7 @@ public class NetViewerScalingGraphMousePlugin extends ScalingGraphMousePlugin {
 
                 e.consume();
                 vv.repaint();
-            }
+            //}
         }
     }
     

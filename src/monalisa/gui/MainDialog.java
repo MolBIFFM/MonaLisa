@@ -399,10 +399,12 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         fileNewButton.setActionCommand(EMPTY_PROJECT);
         fileNewButton.addActionListener(this);
 
-        fileOpenButton = new JButton(fileOpenIcon);
-        fileOpenButton.setToolTipText(strings.get("FileOpen"));
-        fileOpenButton.setActionCommand(MENU_FILE_OPEN_ACTION);
-        fileOpenButton.addActionListener(this);
+        //This got removed during removal of project functionality
+        //Might still be useful/useable for the normal import
+        //fileOpenButton = new JButton(fileOpenIcon);
+        //fileOpenButton.setToolTipText(strings.get("FileOpen"));
+        //fileOpenButton.setActionCommand(MENU_FILE_OPEN_ACTION);
+        //fileOpenButton.addActionListener(this);
 
         fileSaveButton = new JButton(fileSaveIcon);
         fileSaveButton.setToolTipText(strings.get("FileSave"));
@@ -439,7 +441,7 @@ public final class MainDialog extends JFrame implements ActionListener, Hierarch
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
         toolBar.add(fileNewButton);
-        toolBar.add(fileOpenButton);
+        //toolBar.add(fileOpenButton);
         toolBar.add(fileSaveButton);
         toolBar.addSeparator();
         toolBar.addSeparator();

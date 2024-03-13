@@ -62,7 +62,7 @@ public class AboutDialog extends JFrame implements ActionListener {
                 + "Version: " + strings.get("CurrentVersion") + "<br /><br />"
                 + "(c) <a href=\"http://www.bioinformatik.uni-frankfurt.de/\">Molekulare Bioinformatik</a>, Goethe University Frankfurt, Frankfurt am Main, Germany<br /><br />"
                 + "Project members in alphabetical order (recent and former):<br /><br />"
-                + "Anja Thormann, Daniel Noll, Ina Koch, Jens Einloft, Jennifer Scheidel, Joachim Nöthen, Jörg Ackermann, Leonie Amstein, Lilya Mirzoyan, Pavel Balazki, Stefan Marchi<br /><br />"
+                + "Anja Thormann, Daniel Noll, Heiko Giese, Ina Koch, Jens Einloft, Jennifer Scheidel, Joachim Nöthen, Jörg Ackermann, Lara Klemt, Lilya Mirzoyan, Marcel Gehrmann, Marius Kirchner, Pavel Balazki, Stefan Marchi, Tim Stadager<br /><br />"
                 + "<a href=\"http://www.bioinformatik.uni-frankfurt.de/tools/monalisa/index.html\">Project homepage</a>"
                 + "</html>";
 

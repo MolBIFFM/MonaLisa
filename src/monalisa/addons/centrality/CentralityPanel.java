@@ -56,7 +56,7 @@ public class CentralityPanel extends AddonPanel {
      * Creates a new form CentralityPanel
      */
     public CentralityPanel(final NetViewer netViewer, final PetriNetFacade petriNet) {
-        super(netViewer, petriNet, "Centrality");
+        super(netViewer, petriNet, "Centralities");
         LOGGER.info("Initializing CentralityPanel");
         initComponents();
 
@@ -251,7 +251,7 @@ public class CentralityPanel extends AddonPanel {
         content.add(computeRankingButton, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel1.setText("Species");
+        jLabel1.setText("Places");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -311,7 +311,7 @@ public class CentralityPanel extends AddonPanel {
         content.add(jScrollPane1, gridBagConstraints);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel2.setText("Reactions");
+        jLabel2.setText("Transitions");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;

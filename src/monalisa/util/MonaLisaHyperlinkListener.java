@@ -28,10 +28,9 @@ public class MonaLisaHyperlinkListener implements HyperlinkListener {
         if (HyperlinkEvent.EventType.ACTIVATED.equals(hle.getEventType())) {
             if (Desktop.isDesktopSupported())
                 try {
-                Desktop.getDesktop().browse(hle.getURL().toURI());
-            } catch (IOException | URISyntaxException ex) {
-                LogManager.getLogger(MonaLisaHyperlinkListener.class)
-                        .error("Caught exception while trying to make Hyperlink clickable in JEditorPane: ", ex);
+                    Desktop.getDesktop().browse(hle.getURL().toURI());
+                } catch (IOException | URISyntaxException ex) {
+                    LogManager.getLogger(MonaLisaHyperlinkListener.class).error("Caught exception while trying to make Hyperlink clickable in JEditorPane: ", ex);
             }
         }
     }

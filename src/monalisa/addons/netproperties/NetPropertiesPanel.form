@@ -75,7 +75,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelOrdinary">
       <Properties>
-        <Property name="text" type="java.lang.String" value="ordinary"/>
+        <Property name="text" type="java.lang.String" value="Ordinary"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -99,7 +99,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelHomogenous">
       <Properties>
-        <Property name="text" type="java.lang.String" value="homogenous"/>
+        <Property name="text" type="java.lang.String" value="Homogenous"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -116,7 +116,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelNonBlockingMultiplicity">
       <Properties>
-        <Property name="text" type="java.lang.String" value="non-blocking multiplicity"/>
+        <Property name="text" type="java.lang.String" value="Non-blocking multiplicity"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -126,7 +126,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelPure">
       <Properties>
-        <Property name="text" type="java.lang.String" value="pure"/>
+        <Property name="text" type="java.lang.String" value="Pure"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -136,7 +136,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelConservative">
       <Properties>
-        <Property name="text" type="java.lang.String" value="conservative"/>
+        <Property name="text" type="java.lang.String" value="Conservative"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -146,7 +146,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelStaticConflictFree">
       <Properties>
-        <Property name="text" type="java.lang.String" value="static conflict free"/>
+        <Property name="text" type="java.lang.String" value="Conflict free"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -156,7 +156,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelConnected">
       <Properties>
-        <Property name="text" type="java.lang.String" value="connected"/>
+        <Property name="text" type="java.lang.String" value="Connected"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -166,7 +166,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelStronglyConnected">
       <Properties>
-        <Property name="text" type="java.lang.String" value="strongly connected"/>
+        <Property name="text" type="java.lang.String" value="Strongly connected"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -270,7 +270,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Elementary net properties"/>
+        <Property name="text" type="java.lang.String" value="Static net properties"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -296,7 +296,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="13" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="select all Algorithms"/>
+        <Property name="text" type="java.lang.String" value="Select all algorithms"/>
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jLabelSelectAllAlgorithms.setToolTipText(&quot;Select all elementary net properties.&quot;);"/>
@@ -319,7 +319,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelTransitionWithoutPrePlace">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Reactions without pre-species"/>
+        <Property name="text" type="java.lang.String" value="Transitions without pre-places"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -329,7 +329,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelTransitionWithoutPostPlace">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Reactions without post-species"/>
+        <Property name="text" type="java.lang.String" value="Transitions without post-places"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -339,7 +339,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelPlaceWithoutPreTransition">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Species without pre-reactions"/>
+        <Property name="text" type="java.lang.String" value="Places without pre-transitions"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -349,7 +349,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelPlaceWithoutPostTransition">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Species without post-reactions"/>
+        <Property name="text" type="java.lang.String" value="Places without post-transitions"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -439,7 +439,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButtonCheckAlgorithms">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Check Algorithms"/>
+        <Property name="text" type="java.lang.String" value="Check algorithms"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCheckAlgorithmsActionPerformed"/>
@@ -452,7 +452,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabelSubConservative">
       <Properties>
-        <Property name="text" type="java.lang.String" value="sub-conservative"/>
+        <Property name="text" type="java.lang.String" value="Sub-conservative"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

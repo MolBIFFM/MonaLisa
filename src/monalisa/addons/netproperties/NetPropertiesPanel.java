@@ -193,7 +193,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 3, 0, 0);
         add(jCheckBoxPlaceWithoutPostTransition, gridBagConstraints);
 
-        jLabelOrdinary.setText("ordinary");
+        jLabelOrdinary.setText("Ordinary");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 6;
@@ -211,7 +211,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 2);
         add(jLabelOrdinaryReturn, gridBagConstraints);
 
-        jLabelHomogenous.setText("homogenous");
+        jLabelHomogenous.setText("Homogenous");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
@@ -224,7 +224,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jCheckBoxHomogenous, gridBagConstraints);
 
-        jLabelNonBlockingMultiplicity.setText("non-blocking multiplicity");
+        jLabelNonBlockingMultiplicity.setText("Non-blocking multiplicity");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
@@ -232,7 +232,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jLabelNonBlockingMultiplicity, gridBagConstraints);
 
-        jLabelPure.setText("pure");
+        jLabelPure.setText("Pure");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 9;
@@ -240,7 +240,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jLabelPure, gridBagConstraints);
 
-        jLabelConservative.setText("conservative");
+        jLabelConservative.setText("Conservative");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 10;
@@ -248,7 +248,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jLabelConservative, gridBagConstraints);
 
-        jLabelStaticConflictFree.setText("static conflict free");
+        jLabelStaticConflictFree.setText("Conflict free");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 12;
@@ -256,7 +256,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jLabelStaticConflictFree, gridBagConstraints);
 
-        jLabelConnected.setText("connected");
+        jLabelConnected.setText("Connected");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 13;
@@ -264,7 +264,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         add(jLabelConnected, gridBagConstraints);
 
-        jLabelStronglyConnected.setText("strongly connected");
+        jLabelStronglyConnected.setText("Strongly connected");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 14;
@@ -338,7 +338,7 @@ public class NetPropertiesPanel extends AddonPanel {
         add(jLabelStronglyConnectedReturn, gridBagConstraints);
 
         jLabelElementaryNetPropertiesHeadline.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabelElementaryNetPropertiesHeadline.setText("Elementary net properties");
+        jLabelElementaryNetPropertiesHeadline.setText("Static net properties");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -356,7 +356,7 @@ public class NetPropertiesPanel extends AddonPanel {
         add(jLabelOneSidedNodesHeadline, gridBagConstraints);
 
         jLabelSelectAllAlgorithms.setFont(new java.awt.Font("Dialog", 1, 13)); // NOI18N
-        jLabelSelectAllAlgorithms.setText("select all Algorithms");
+        jLabelSelectAllAlgorithms.setText("Select all algorithms");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 15;
@@ -376,28 +376,28 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         add(jRadioButtonSelectAllAlgorithms, gridBagConstraints);
 
-        jLabelTransitionWithoutPrePlace.setText("Reactions without pre-species");
+        jLabelTransitionWithoutPrePlace.setText("Transitions without pre-places");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(jLabelTransitionWithoutPrePlace, gridBagConstraints);
 
-        jLabelTransitionWithoutPostPlace.setText("Reactions without post-species");
+        jLabelTransitionWithoutPostPlace.setText("Transitions without post-places");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(jLabelTransitionWithoutPostPlace, gridBagConstraints);
 
-        jLabelPlaceWithoutPreTransition.setText("Species without pre-reactions");
+        jLabelPlaceWithoutPreTransition.setText("Places without pre-transitions");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         add(jLabelPlaceWithoutPreTransition, gridBagConstraints);
 
-        jLabelPlaceWithoutPostTransition.setText("Species without post-reactions");
+        jLabelPlaceWithoutPostTransition.setText("Places without post-transitions");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
@@ -452,7 +452,7 @@ public class NetPropertiesPanel extends AddonPanel {
         add(jLabelPlaceWithoutPostTransitionColor, gridBagConstraints);
         //jLabelPlaceWithoutPostTransitionColor.setToolTipText("Change color if 'place without pre-transition' is not selected");
 
-        jButtonCheckAlgorithms.setText("Check Algorithms");
+        jButtonCheckAlgorithms.setText("Check algorithms");
         jButtonCheckAlgorithms.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCheckAlgorithmsActionPerformed(evt);
@@ -465,7 +465,7 @@ public class NetPropertiesPanel extends AddonPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(jButtonCheckAlgorithms, gridBagConstraints);
 
-        jLabelSubConservative.setText("sub-conservative");
+        jLabelSubConservative.setText("Sub-conservative");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 11;

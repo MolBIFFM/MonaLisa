@@ -121,6 +121,6 @@ public class MetaToolOutputHandler implements OutputHandler {
     }
 
     public String getDescription() {
-        return "MetaTool";
+        return "MetaTool (DAT)";
     }
 }

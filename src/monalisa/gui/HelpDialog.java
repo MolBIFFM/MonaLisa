@@ -54,9 +54,9 @@ public class HelpDialog extends JFrame implements ActionListener {
         close.setActionCommand(CLOSE_ACTION);
         close.addActionListener(this);
 
-        jep = new JEditorPane("text/html", "<html>The documentation of MonaLisa is available at "
-                + "Sourceforge: <br /><br /><a href=\"https://sourceforge.net"
-                + "/p/monalisa4pn/wiki/Home/\">Help</a></html>");
+        jep = new JEditorPane("text/html", "<html>The documentation of MonaLisa is available on "
+                + "our Website. The github repository also be found there.: <br /><br /><a href=\"http://www.bioinformatik.uni-frankfurt.de"
+                + "/tools/monalisa/index.html\">Project Website</a></html>");
         jep.setEditable(false);
         jep.addHyperlinkListener(new MonaLisaHyperlinkListener());
 

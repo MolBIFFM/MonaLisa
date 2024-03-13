@@ -115,7 +115,7 @@ public class ApnnOutputHandler implements OutputHandler {
     }
 
     public String getDescription() {
-        return "Abstract Petri Net Notation";
+        return "Abstract Petri Net Notation (APNN)";
     }
 
     private int placeId(Place p) {

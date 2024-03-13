@@ -209,7 +209,7 @@ public class TopologyPanel extends AddonPanel {
         jPanel1.add(jScrollPane1, gridBagConstraints);
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel1.setText("Species");
+        jLabel1.setText("Places");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;

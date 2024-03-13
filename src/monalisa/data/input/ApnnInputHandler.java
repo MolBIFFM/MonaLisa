@@ -128,6 +128,6 @@ public class ApnnInputHandler implements InputHandler {
 
     @Override
     public String getDescription() {
-        return "APNN";
+        return "Abstract Petri Net Notation (APNN)";
     }
 }

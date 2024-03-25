@@ -1283,7 +1283,7 @@ public class NetViewer extends JFrame implements ActionListener {
                     }
                     String name = strings.get(tinvModelMap.get(dl), (dl.size() == 0) ? 0 : dl.size());
                     dl.insertElementAt(new TinvWrapper(new TInvariant(-1, transitions), name), 0);
-                    counter++;
+                    //removed because wrong counting: counter++;
                 }
             }
             if (!tb.ioInvList.isEmpty()) {
@@ -1292,35 +1292,35 @@ public class NetViewer extends JFrame implements ActionListener {
                     tb.allInvList.addElement(tw);
                 }
             }
-
+            
             if (!tb.inputInvList.isEmpty()) {
                 counter++;
                 for (Object tw : tb.inputInvList.toArray()) {
                     tb.allInvList.addElement(tw);
                 }
             }
-
+            
             if (!tb.outputInvList.isEmpty()) {
                 counter++;
                 for (Object tw : tb.outputInvList.toArray()) {
                     tb.allInvList.addElement(tw);
                 }
             }
-
+            
             if (!tb.cyclicInvList.isEmpty()) {
                 counter++;
                 for (Object tw : tb.cyclicInvList.toArray()) {
                     tb.allInvList.addElement(tw);
                 }
             }
-
+            
             if (!tb.trivialInvList.isEmpty()) {
                 counter++;
                 for (Object tw : tb.trivialInvList.toArray()) {
                     tb.allInvList.addElement(tw);
                 }
             }
-
+            
             itemCount = tb.allInvList.size();
             if (itemCount > 0) {
                 transitions = new HashMap<>();

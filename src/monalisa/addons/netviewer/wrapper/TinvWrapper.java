@@ -42,7 +42,7 @@ public class TinvWrapper {
     @Override
     public String toString() {
         if (this.tinv.id() >= 0) {
-            return "Elementary mode " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")";
+            return "Transition invariant " + (this.tinv.id() + 1) + " (" + this.tinv.size() + ")";
         } else {
             return name;
         }

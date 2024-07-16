@@ -989,6 +989,25 @@
                         </Constraint>
                       </Constraints>
                     </Component>
+                    <Component class="javax.swing.JButton" name="reachabilityButton">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Reachability"/>
+                        <Property name="actionCommand" type="java.lang.String" value="Reach"/>
+                      </Properties>
+                      <AccessibilityProperties>
+                        <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                          <ComponentRef name="analysisPane"/>
+                        </Property>
+                      </AccessibilityProperties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reachabilityButtonActionPerformed"/>
+                      </Events>
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
+                          <GridBagConstraints gridX="-1" gridY="-1" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
+                        </Constraint>
+                      </Constraints>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="mctsPanel">
@@ -1105,25 +1124,6 @@
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                           <GridBagConstraints gridX="0" gridY="2" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="5" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
-                        </Constraint>
-                      </Constraints>
-                    </Component>
-                    <Component class="javax.swing.JButton" name="reachabilityButton">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" value="Reachability"/>
-                        <Property name="actionCommand" type="java.lang.String" value="Reach"/>
-                      </Properties>
-                      <AccessibilityProperties>
-                        <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.ComponentChooserEditor">
-                          <ComponentRef name="analysisPane"/>
-                        </Property>
-                      </AccessibilityProperties>
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="reachabilityButtonActionPerformed"/>
-                      </Events>
-                      <Constraints>
-                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
-                          <GridBagConstraints gridX="0" gridY="4" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="15" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="10" weightX="0.0" weightY="0.0"/>
                         </Constraint>
                       </Constraints>
                     </Component>

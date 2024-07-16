@@ -222,6 +222,7 @@ public class ToolBar extends javax.swing.JPanel {
         CTILabel = new javax.swing.JLabel();
         CPILabel = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
+        reachabilityButton = new javax.swing.JButton();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -231,7 +232,6 @@ public class ToolBar extends javax.swing.JPanel {
         manuellColorSelection = new javax.swing.JCheckBox();
         reset_color_button = new javax.swing.JButton();
         heatMap_CheckBox = new javax.swing.JCheckBox();
-        reachabilityButton = new javax.swing.JButton();
         mcsPanel = new javax.swing.JPanel();
         mcsLabel = new javax.swing.JLabel();
         mcsCb = new javax.swing.JComboBox();
@@ -927,6 +927,16 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         InvPanel.add(jCheckBox1, gridBagConstraints);
 
+        reachabilityButton.setText("Reachability");
+        reachabilityButton.setActionCommand("Reach");
+        reachabilityButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reachabilityButtonActionPerformed(evt);
+            }
+        });
+        InvPanel.add(reachabilityButton, new java.awt.GridBagConstraints());
+        reachabilityButton.getAccessibleContext().setAccessibleParent(analysisPane);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -1010,20 +1020,6 @@ public class ToolBar extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         optionsPanel.add(heatMap_CheckBox, gridBagConstraints);
-
-        reachabilityButton.setText("Reachability");
-        reachabilityButton.setActionCommand("Reach");
-        reachabilityButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reachabilityButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.insets = new java.awt.Insets(15, 0, 0, 0);
-        optionsPanel.add(reachabilityButton, gridBagConstraints);
-        reachabilityButton.getAccessibleContext().setAccessibleParent(analysisPane);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

@@ -23,16 +23,41 @@ import org.apache.logging.log4j.Logger;
  * @author Kristin Haas
  */
 public class ConstraintFrame extends javax.swing.JFrame {
+    // What is tht number for?
+    private static final long serialVersionUID = -8541347764965669414L;
+
+    public Pathfinder path;
+    public PetriNetFacade pn;
+    private static final Logger LOGGER = LogManager.getLogger(ConstraintFrame.class);
+
+    private final HashMap<Place, Long> start;
+    private final HashMap<Place, Long> target;
+    private final HashMap<Place, Long> capacities; 
+    private final PInvariants pinvs;
+    private HashSet<Transition> knockouts;
     
     
-    
+  
    
 
     /**
      * Creates new form ConstraintFrame
+     * @param pn
+     * @param start
+     * @param pinvs
      */
-    public ConstraintFrame() {
+    public ConstraintFrame(PetriNetFacade pn, HashMap<Place, Long> start, PInvariants pinvs) {
+        this.start = new HashMap<>();
+        this.start.putAll(start);
+        this.pn = pn;
+        this.target = new HashMap<>();
+        this.target.putAll(start);
+        this.capacities = new HashMap<>();
+        this.pinvs = pinvs;
         initComponents();
+
+
+        
     }
 
     /**
@@ -238,7 +263,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ConstraintFrame().setVisible(true);
+                //new ConstraintFrame().setVisible(true);
                 
                  
             }

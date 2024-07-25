@@ -148,6 +148,11 @@ public class ConstraintFrame extends javax.swing.JFrame {
         });
 
         jButton4.setText("Reset");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Switch ON transition");
 
@@ -271,17 +276,12 @@ public class ConstraintFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     
    
-    // Save button transition knockout.
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void algoSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algoSelectActionPerformed
         // TODO add your handling code here:
         String selectedCombo = algoSelect.getSelectedItem().toString();
         switch (selectedCombo) {
             case "Breadth First Search":
+                
                 System.out.println("111");
                 break;
             case "Best First Search":
@@ -302,6 +302,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
         // Get selected startNode
         String selectedStartNode = startNode.getSelectedItem().toString();
         // Use start Node in Algorithm
+        
 
     }//GEN-LAST:event_startNodeActionPerformed
 
@@ -313,7 +314,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_onTransitionActionPerformed
-    //Reset button on transition
+    //Reset button on transition side.
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         Object back = save.elements().nextElement().equals(offTransition.getItem(0));
@@ -322,6 +323,22 @@ public class ConstraintFrame extends javax.swing.JFrame {
         System.out.println("RESET: "+back.toString());
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    // Save button off transition side.
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String selectedString = offTransition.getSelectedItem();
+        offTransition.remove(selectedString);
+        onTransition.add(selectedString, 0);
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+    // Reset button off transition side.
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        Object back = save.elements().nextElement().equals(onTransition.getItem(0));
+        offTransition.add(onTransition.getItem(0));
+        onTransition.remove(onTransition.getItem(0));
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments

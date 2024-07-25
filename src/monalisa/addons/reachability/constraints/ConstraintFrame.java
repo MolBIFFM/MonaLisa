@@ -157,6 +157,11 @@ public class ConstraintFrame extends javax.swing.JFrame {
         jLabel4.setText("Switch ON transition");
 
         jButton5.setText("Compute");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         algoSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Breadth First Search", "Best First Search", "A*" }));
         algoSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -339,6 +344,34 @@ public class ConstraintFrame extends javax.swing.JFrame {
         offTransition.add(onTransition.getItem(0));
         onTransition.remove(onTransition.getItem(0));
     }//GEN-LAST:event_jButton4ActionPerformed
+    // Compute button. Magic should happen here. Delete transitions.
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO delete transition out of PN
+        PetriNetFacade copyPN = this.pn;
+       
+        System.out.println("PN BEFORE: "+copyPN.transitions().iterator().next());
+
+        
+        // iterates over transitions in copied PN.
+        for(Transition t : copyPN.transitions()){
+            System.out.println("TRANSITION: "+t.id()+" ; "+t);
+            for(int i = 0; i < offTransition.getItemCount(); i++){
+                System.out.println("TASTYTAST: "+offTransition.getItem(i));
+            }
+                  
+        }
+        
+        System.out.println("PN AFTER: "+copyPN.transitions().iterator().next());
+
+        
+
+        // iterates over OFF transitions
+        for(int i = 0; i<offTransition.getItemCount();i++){
+            System.out.println("GANZ UNTEN: "+offTransition.getItem(i));
+        }
+        
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments

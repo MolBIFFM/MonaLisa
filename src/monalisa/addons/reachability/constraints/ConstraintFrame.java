@@ -298,6 +298,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
             case "A*":
                 System.out.println("333");
                 break;
+           
             default:
                 throw new AssertionError();
         }
@@ -342,12 +343,16 @@ public class ConstraintFrame extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
         PetriNetFacade copyPN = this.pn;
-        
+        String selectedCombo = algoSelect.getSelectedItem().toString();
         // Getting transition to delete by iterating over list of transitions in 
         // Place object
         System.out.println("PN BEFORE: "+copyPN.transitions().iterator().next());
 
         JList<Transition> transitionList = new JList<>();
+        if(selectedCombo == "None"){
+            JOptionPane.showMessageDialog(null, "No algorithm selected.\n"
+                    +                           "     Please select!");
+        }
         // iterates over transitions in copied PN.
         for(Transition t : copyPN.transitions()){
             System.out.println("TRANSITION: "+t.id()+" ; "+t);

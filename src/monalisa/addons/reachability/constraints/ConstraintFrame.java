@@ -271,7 +271,8 @@ public class ConstraintFrame extends javax.swing.JFrame {
         String selectedString = onTransition.getSelectedItem();
 
         if(selectedString == null){
-            JOptionPane.showMessageDialog(null, "No transition selected.");
+            JOptionPane.showMessageDialog(null, "No transition selected.\n"
+                    +                           "     Please select!");
         }
         else{
             onTransition.remove(selectedString);

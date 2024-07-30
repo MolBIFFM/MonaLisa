@@ -13,9 +13,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import monalisa.addons.reachability.AlgorithmRunner;
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityDialog;
+import monalisa.addons.reachability.ReachabilityEvent;
+import monalisa.addons.reachability.ReachabilityListener;
+import monalisa.addons.reachability.algorithms.ReachabilityAlgorithm;
 import monalisa.data.pn.Arc;
+import monalisa.data.pn.PetriNet;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
@@ -29,21 +34,22 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Kristin Haas
  */
-public class ConstraintFrame extends javax.swing.JFrame {
+public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addons.reachability.ReachabilityListener {
     // What is tht number for?
     private static final long serialVersionUID = -8541347764965669414L;
 
+    private AlgorithmRunner algorithmRunner;
     public Pathfinder path;
     public PetriNetFacade pn;
     private static final Logger LOGGER = LogManager.getLogger(ConstraintFrame.class);
 
-    private final HashMap<Place, Long> start;
-    private final HashMap<Place, Long> target;
+    private HashMap<Place, Long> start;
+    private HashMap<Place, Long> target;
     private final HashMap<Place, Long> capacities; 
     private final PInvariants pinvs;
     private HashSet<Transition> transitions;
-    
-    private ReachabilityDialog reachabilityDialog = null;
+    private ReachabilityDialog reachabilityDialog;
+
     
     
     
@@ -65,6 +71,8 @@ public class ConstraintFrame extends javax.swing.JFrame {
         this.capacities = new HashMap<>();
         this.pinvs = pinvs;
         initComponents();
+        reachabilityDialog = new ReachabilityDialog(this.pn, this.start, this.pinvs);
+
         String[] columnsNames = {"Transition", "PrePlace", "PostPlace"};
         // Fill combo boxes with places
         //DefaultListModel model = new DefaultListModel();
@@ -97,7 +105,21 @@ public class ConstraintFrame extends javax.swing.JFrame {
             for(Transition out : entry.getKey().outputs()){
                 String sTrans = out.toString();
            }
+        
         }
+        
+
+        algoSelect.setActionCommand("Breadth First Search");
+        algoSelect.setActionCommand("Best First Search");
+        algoSelect.setActionCommand("A*");
+        
+        //aStarRButton.addActionListener(this);
+        //aStarRButton.setActionCommand("A*");
+        //breadthRButton.addActionListener(this);
+        //breadthRButton.setActionCommand("Breadth First Search");
+        //bestRButton.addActionListener(this);
+        //bestRButton.setActionCommand("Best First Search");
+        LOGGER.info("Successfully initialized ReachabilityDialog.");
         
         
 
@@ -133,13 +155,14 @@ public class ConstraintFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         markingTable = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
+        progressLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         Reachability.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         Reachability.setText("Reachability with constraints");
 
-        jLabel1.setText("Switch OFF transition");
+        jLabel1.setText("Switched OFF transitions");
 
         jLabel2.setText("Choose algorithm");
 
@@ -157,7 +180,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Switch ON transition");
+        jLabel4.setText("Switched ON transitions");
 
         jButton5.setText("Compute");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -219,6 +242,8 @@ public class ConstraintFrame extends javax.swing.JFrame {
 
         jLabel6.setText("Place overview");
 
+        progressLabel.setText("Number of nodes extended: 0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -230,9 +255,6 @@ public class ConstraintFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -269,7 +291,11 @@ public class ConstraintFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(66, 66, 66))))
+                        .addGap(66, 66, 66))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +330,9 @@ public class ConstraintFrame extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
+                .addGap(18, 18, 18)
+                .addComponent(progressLabel)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(restorePN))
@@ -335,7 +363,13 @@ public class ConstraintFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
     
+    
    
+    public void addListenerToAlgorithm(ReachabilityListener listener) {
+        //algorithmRunner = new AlgorithmRunner(algorithm);
+
+        //algorithm.addListener(listener);
+    }
     private void algoSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algoSelectActionPerformed
         // TODO add your handling code here:
         String selectedCombo = algoSelect.getSelectedItem().toString();
@@ -401,6 +435,7 @@ public class ConstraintFrame extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
         PetriNetFacade copyPN = this.pn;
+        PetriNetFacade backUpPN = this.pn;
         String selectedCombo = algoSelect.getSelectedItem().toString();
         // Getting transition to delete by iterating over list of transitions in 
         // Place object
@@ -415,27 +450,66 @@ public class ConstraintFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "No algorithm selected.\n"
                     +                           "     Please select!");
         }
-        // iterates over transitions in copied PN.
-        for(Transition t : copyPN.transitions()){
-            System.out.println("TRANSITION: "+t.id()+" ; "+t);
-            String searchTransition = t.toString();
-            Transition objTransition = t;
-            for(int i = 0; i < offTransition.getItemCount(); i++){
-                System.out.println("TASTYTAST: "+offTransition.getItem(i));
-                String trans = offTransition.getItem(i);
-                // If transition strings (names) are equal
-                if(searchTransition == trans){
-                    // Delete object transition from copied PN
-                    copyPN.removeProperty(trans);
-                    System.out.println("PETRiNET: "+ copyPN.hasProperty(trans));
-                    System.out.println("TESTEN zum LÖSCHEN: "+ trans+" ,"+searchTransition+" ,");
+        
+        /**
+         * Checks if transitions are turned off.
+         * If that's the case delete them from PN.
+         * TODO: check if arcs need to be deleted too.
+         */
+        
+        if(offTransition.getItemCount()>0){
+          // iterates over transitions in copied PN.
+            for(Transition t : copyPN.transitions()){
+                System.out.println("TRANSITION: "+t.id()+" ; "+t);
+                String searchTransition = t.toString();
+                //Transition objTransition = t;
+                for(int i = 0; i < offTransition.getItemCount(); i++){
+                    System.out.println("TASTYTAST: "+offTransition.getItem(i));
+                    String trans = offTransition.getItem(i);
+                    // If transition strings (names) are equal
+                    if(searchTransition == trans){
+                        // Delete object transition from copied PN
+                        copyPN.removeProperty(trans);
+                        System.out.println("PETRiNET: "+ copyPN.hasProperty(trans));
+                        System.out.println("TESTEN zum LÖSCHEN: "+ trans+" ,"+searchTransition+" ,");
                     
                 }
             }
-                  
+                
+          }
         }
+        for(int i=0; i<copyPN.marking().size();i++){
+            System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
+        }
+
+        
+        
+        Place targetPlace = pn.findPlace(sinkNode.getSelectedItem().hashCode());
+        Place startPlace = pn.findPlace(startNode.getSelectedItem().hashCode());
+        this.target.put(targetPlace, serialVersionUID);
+        this.start.put(startPlace, serialVersionUID);
+
+        reachabilityDialog.useUpdateMarkings();       
+        LOGGER.info("Requested computation of full reachability graph.");
+        path = new Pathfinder(copyPN, start, target, capacities, null, "FullReach");
+        path.addListenerToAlgorithm(this.reachabilityDialog);
+        path.run();
         
         System.out.println("PN AFTER: "+copyPN.transitions().iterator().next());
+        LOGGER.info("Requested computation of a path from start to target marking.");
+        String algo = algoSelect.getSelectedItem().toString();
+        if (algo.equals("Breadth First Search")) {
+            path = new Pathfinder(copyPN, start, target, capacities, null, algo);
+        } else {
+            path = new Pathfinder(copyPN, start, target, capacities, null, algo);
+        }
+        if (!path.checkPIs(pinvs, start, target)) {
+            LOGGER.warn("Aborting reachability analysis.");
+            JOptionPane.showMessageDialog(this, "Start marking and target marking are incompatible. Sums for place invariants do not match.");            
+            return;
+        }        
+        path.addListenerToAlgorithm(this.reachabilityDialog);
+        path.run();
 
         
 
@@ -546,8 +620,14 @@ public class ConstraintFrame extends javax.swing.JFrame {
     private javax.swing.JTable markingTable;
     private java.awt.List offTransition;
     private java.awt.List onTransition;
+    private javax.swing.JLabel progressLabel;
     private javax.swing.JButton restorePN;
     private javax.swing.JComboBox<String> sinkNode;
     private javax.swing.JComboBox<String> startNode;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update(ReachabilityEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

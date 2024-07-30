@@ -270,7 +270,10 @@ public class ConstraintFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String selectedString = onTransition.getSelectedItem();
 
-        if(selectedString == null){
+        if(onTransition.getItemCount()==0 && selectedString == null){
+            JOptionPane.showMessageDialog(null, "No transition turned on.");
+        }
+        if(selectedString == null && onTransition.getItemCount()>0){
             JOptionPane.showMessageDialog(null, "No transition selected.\n"
                     +                           "     Please select!");
         }
@@ -326,18 +329,23 @@ public class ConstraintFrame extends javax.swing.JFrame {
    // Reset button off transition side.
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        if(offTransition.getItemCount()>0){
-            Object back = save.elements().nextElement().equals(offTransition.getItem(0));
-            onTransition.add(offTransition.getItem(0));
-            offTransition.remove(offTransition.getItem(0));
-            //Object back = save.elements().nextElement().equals(onTransition.getItem(0));
-            //offTransition.add(onTransition.getItem(0));
-            //onTransition.remove(onTransition.getItem(0));
-        }
-        else{
-              JOptionPane.showMessageDialog(null, "No transition turned off.");
+        String selectedString = offTransition.getSelectedItem();
 
+        if(offTransition.getItemCount()==0 && selectedString == null){
+            JOptionPane.showMessageDialog(null, "No transition turned off.");
         }
+        if(selectedString == null && offTransition.getItemCount()>0){
+            JOptionPane.showMessageDialog(null, "No transition selected.\n"
+                    +                           "     Please select!");
+        }
+        
+        else{
+            offTransition.remove(selectedString);
+            save.add(0, selectedString);
+            onTransition.add(selectedString, 0);
+        }
+        
+        
     }//GEN-LAST:event_jButton4ActionPerformed
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -348,6 +356,10 @@ public class ConstraintFrame extends javax.swing.JFrame {
         // Place object
         System.out.println("PN BEFORE: "+copyPN.transitions().iterator().next());
 
+        if(onTransition.getItemCount()==0){
+            JOptionPane.showMessageDialog(null, "***No transition switched on.***\n"
+                    +                           "   Computation not possible!");
+        }
         JList<Transition> transitionList = new JList<>();
         if(selectedCombo == "None"){
             JOptionPane.showMessageDialog(null, "No algorithm selected.\n"

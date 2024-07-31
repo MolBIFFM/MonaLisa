@@ -4,7 +4,9 @@
  */
 package monalisa.addons.reachability.constraints;
 
+import java.awt.Color;
 import java.awt.PopupMenu;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +19,12 @@ import monalisa.addons.reachability.AlgorithmRunner;
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.addons.reachability.ReachabilityEvent;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.ABORTED;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.FAILURE;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.FINISHED;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.PROGRESS;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.STARTED;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.SUCCESS;
 import monalisa.addons.reachability.ReachabilityListener;
 import monalisa.addons.reachability.algorithms.ReachabilityAlgorithm;
 import monalisa.data.pn.Arc;
@@ -156,6 +164,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         markingTable = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         progressLabel = new javax.swing.JLabel();
+        what = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -255,9 +264,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -286,16 +295,18 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(66, 66, 66))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,13 +341,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
                 .addComponent(progressLabel)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
+                .addComponent(what)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(restorePN))
-                .addGap(73, 73, 73))
+                .addGap(39, 39, 39))
         );
 
         pack();
@@ -482,17 +495,19 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
         }
 
+        //TODO search Place 
+        String startPlace = startNode.getSelectedItem().toString();
+        //Place targetPlace = pn.findPlace(sinkNode.getSelectedItem());
+        String sinkPlace = sinkNode.getSelectedItem().toString();
+        //this.target.put(targetPlace, serialVersionUID);
+        //this.start.put(startPlace, serialVersionUID);
         
-        
-        Place targetPlace = pn.findPlace(sinkNode.getSelectedItem().hashCode());
-        Place startPlace = pn.findPlace(startNode.getSelectedItem().hashCode());
-        this.target.put(targetPlace, serialVersionUID);
-        this.start.put(startPlace, serialVersionUID);
-
+        //this.start = startPlace;
+        System.out.println("TARGET TEST: "+sinkPlace+" "+startPlace);
         reachabilityDialog.useUpdateMarkings();       
         LOGGER.info("Requested computation of full reachability graph.");
         path = new Pathfinder(copyPN, start, target, capacities, null, "FullReach");
-        path.addListenerToAlgorithm(this.reachabilityDialog);
+        path.addListenerToAlgorithm(this);
         path.run();
         
         System.out.println("PN AFTER: "+copyPN.transitions().iterator().next());
@@ -508,7 +523,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             JOptionPane.showMessageDialog(this, "Start marking and target marking are incompatible. Sums for place invariants do not match.");            
             return;
         }        
-        path.addListenerToAlgorithm(this.reachabilityDialog);
+        path.addListenerToAlgorithm(this);
         path.run();
 
         
@@ -521,6 +536,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    
+   
+    
     // Restore PN.
     private void restorePNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restorePNActionPerformed
         // TODO add your handling code here:
@@ -624,10 +642,62 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JButton restorePN;
     private javax.swing.JComboBox<String> sinkNode;
     private javax.swing.JComboBox<String> startNode;
+    private javax.swing.JLabel what;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * @author Marcel Germann
+     * @param e 
+     */
     @Override
     public void update(ReachabilityEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        reachabilityDialog.update(e);
+        switch (e.getStatus()) {
+            case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
+                //lock(false);
+                // Do a popup that says things have been terminated at X steps?
+                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
+                progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
+                what.setText("Aborted");
+                break;
+            case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
+                //lock(true); // Ensures that only one algorithm runs at a time.
+                break;
+            case SUCCESS: // Fired when an algorithm successfully finds the target marking.
+                //lock(false);
+                ArrayList<Transition> path = e.getBacktrack();
+                // Should probably handle displaying output
+                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
+                progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
+                what.setForeground(Color.GREEN);
+                what.setText("[Success] Target node reached!");
+                break;
+            case FAILURE: // Fired when an algorithm fails to find the target marking.
+                //lock(false);
+                // Should output failure.
+                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
+                progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
+                what.setForeground(Color.RED);
+                what.setText("[Failure] Target node not reachable!");
+                break;
+            case PROGRESS: // Fired every 100 expanded nodes.
+                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
+                progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
+                what.setText("Progress");
+                break;
+            case FINISHED: // Fired by FullReachability and FullCoverability on completion
+               // lock(false);
+                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
+                progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
+                // Somehow display the graph? Otherwise this doesn't do much.
+                what.setText("Finished");
+                break;
+            default:
+                break;
+        }
+    
     }
 }

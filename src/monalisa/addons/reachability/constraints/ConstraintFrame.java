@@ -15,6 +15,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import static jdk.internal.org.jline.keymap.KeyMap.key;
 import monalisa.addons.reachability.AlgorithmRunner;
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityDialog;
@@ -60,7 +61,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
     
     
-    
+    // Deleted  reachability Object -> not functioning now
   
    
 
@@ -69,8 +70,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
      * @param pn
      * @param start
      * @param pinvs
+     * @param target
      */
-    public ConstraintFrame(PetriNetFacade pn, HashMap<Place, Long> start, PInvariants pinvs) {
+    public ConstraintFrame(PetriNetFacade pn, HashMap<Place, Long> start, HashMap<Place, Long> target, PInvariants pinvs) {
         this.start = new HashMap<>();
         this.start.putAll(start);
         this.pn = pn;
@@ -79,8 +81,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         this.capacities = new HashMap<>();
         this.pinvs = pinvs;
         initComponents();
-        reachabilityDialog = new ReachabilityDialog(this.pn, this.start, this.pinvs);
-
+        //reachabilityDialog = new ReachabilityDialog(this.pn, this.start, target, this.pinvs);
+        //ConstraintFrame = new ConstraintFrame(this.pn, this.start, this.target, this.pinvs);
         String[] columnsNames = {"Transition", "PrePlace", "PostPlace"};
         // Fill combo boxes with places
         //DefaultListModel model = new DefaultListModel();
@@ -494,23 +496,47 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(int i=0; i<copyPN.marking().size();i++){
             System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
         }
-
+        //Place testPlace = (Place) startNode.getSelectedItem();;
         //TODO search Place 
-        String startPlace = startNode.getSelectedItem().toString();
-        //Place targetPlace = pn.findPlace(sinkNode.getSelectedItem());
-        String sinkPlace = sinkNode.getSelectedItem().toString();
-        //this.target.put(targetPlace, serialVersionUID);
-        //this.start.put(startPlace, serialVersionUID);
+        System.out.println("TESTTEST: "+ copyPN.places().stream().findFirst());
+        String trimStart = startNode.getSelectedItem().toString().substring(0, (startNode.getSelectedItem().toString().indexOf("=")));
+        System.out.println("STRING_STRIP: "+trimStart);
+        for(HashMap.Entry<Place, Long> entry : start.entrySet()){
+            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
+            System.out.println("VERGLEICH: "+trimStart);
+            if(trimStart == null ? entry.getKey().toString() == null : trimStart.equals(entry.getKey().toString())){
+                HashMap<Place, Long> newStart = new HashMap<>();
+                newStart.put(entry.getKey(), entry.getValue());
+                start = newStart;
+                System.out.println("START_FOR: "+start);
+            }
+            
+        }
         
-        //this.start = startPlace;
-        System.out.println("TARGET TEST: "+sinkPlace+" "+startPlace);
-        reachabilityDialog.useUpdateMarkings();       
+        
+        String trimEnd = sinkNode.getSelectedItem().toString().substring(0, (sinkNode.getSelectedItem().toString().indexOf("=")));
+        System.out.println("STRING_STRIP: "+trimEnd);
+        for(HashMap.Entry<Place, Long> entry : target.entrySet()){
+            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
+            if(trimEnd == null ? entry.getKey().toString() == null : trimEnd.equals(entry.getKey().toString())){
+                HashMap<Place, Long> newTarget = new HashMap<>();
+                newTarget.put(entry.getKey(), entry.getValue());
+                target = newTarget;
+                System.out.println("TARGET_FOR: "+ target);
+            }
+            
+        }
+        
+       
+        
+        
+        System.out.println("Test getting Start: "+start+" and Target: "+target);
+        updateMarkings();       
         LOGGER.info("Requested computation of full reachability graph.");
         path = new Pathfinder(copyPN, start, target, capacities, null, "FullReach");
         path.addListenerToAlgorithm(this);
         path.run();
         
-        System.out.println("PN AFTER: "+copyPN.transitions().iterator().next());
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoSelect.getSelectedItem().toString();
         if (algo.equals("Breadth First Search")) {
@@ -536,6 +562,16 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    
+    private void updateMarkings() {
+        LOGGER.info("Updating markings from table.");
+        for (int i = 0; i < markingTable.getRowCount(); ++i) {
+            start.put((Place) markingTable.getValueAt(i, 0), (Long) markingTable.getValueAt(i, 1));
+            target.put((Place) markingTable.getValueAt(i, 0), (Long) markingTable.getValueAt(i, 2));
+            LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
+        }
+        LOGGER.info("Successfully updated markings from table.");
+    }
     
    
     
@@ -654,7 +690,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
         
-        reachabilityDialog.update(e);
+       
         switch (e.getStatus()) {
             case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
                 //lock(false);
@@ -693,6 +729,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
                 progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
                 // Somehow display the graph? Otherwise this doesn't do much.
+                what.setForeground(Color.GREEN);
+
                 what.setText("Finished");
                 break;
             default:

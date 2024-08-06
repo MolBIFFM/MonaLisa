@@ -96,6 +96,11 @@ public class GillespieTokenSim extends AbstractTokenSim {
     protected Map<Integer, MathematicalExpression> deterministicReactionConstants;
     /**
      * Volume of simulated system.
+     * This is the volume for insulin response binding (Pavel Paper)
+     * Alternative for Cytosolic Volume: 2600E-6 L. Zhao, C. D. Kroenke, J. Song, D. Piwnica-Worms, J. J. H. Ack-
+erman, and J. J. Neil, “Intracellular water-specific MR of microbead-
+adherent cells: the HeLa cell intracellular water exchange lifetime,”
+NMR in Biomedicine, vol. 21, no. 2, pp. 159–164, 2008.
      */
     protected double volume = 1E-9;
     /**
@@ -147,7 +152,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
                         LOGGER.error("Factorial too big while trying to determine the order of the reaction in the gillespie simulation, even after trying to fix it internally", ex2);
                     }
                 }
-                order += weight;
+                // changed to += 1 instead of += weight
+                order += 1;
             }
             long[] inf = {order, multiplier};
             this.reactionOrder.put(t.id(), inf);
@@ -398,6 +404,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
         this.time += nextFiringTime;
         this.stepsSimulated++;
         LOGGER.debug("Finished calculating the next Transition to fire, it will be " + Integer.toString(transitionToFire.id()));
+        System.out.println(this.volume);
         return (transitionToFire);
     }
 
@@ -560,6 +567,8 @@ public class GillespieTokenSim extends AbstractTokenSim {
                             getSimulationMan().setPlaceConstant(id, placeConstant);
                             if (!placeConstant) {
                                 try {
+                                    //System.out.println(id);
+                                    //System.out.println(placeTokens);
                                     getSimulationMan().setTokens(id, placeTokens);
                                 } catch (PlaceConstantException ex) {
                                     LOGGER.error("Error while setting tokens for places: ", ex);
@@ -583,14 +592,23 @@ public class GillespieTokenSim extends AbstractTokenSim {
                                 }
                             }
                             //find a transition with the id.
+                            //System.out.println(id);
                             Transition transition = getPetriNet().findTransition(id);
+                            //System.out.println((String)transition.getProperty("name"));
                             //only proceed if the Petri net has a transition with such an ID and the same name
                             if (transition == null) {
                                 break;
                             }
                             //set the properties of the transition
+                            System.out.println((String)transition.getProperty("name"));
+                            System.out.println(Double.toString(firingRate));
+                            System.out.println(Double.toString(this.convertCToK(transition, firingRate)));
                             firingRates.put(id, firingRate);
+                            this.deterministicReactionConstants.put(id, new MathematicalExpression(Double.toString(this.convertCToK(transition, firingRate))));
                             break;
+                        case "volume":
+                            volume = Double.parseDouble(parser.getAttributeValue(0));
+                            volMol = volume * 6E23;
                         case "detReactionRateConstant":
                             variables.clear();
                             break;
@@ -632,7 +650,7 @@ public class GillespieTokenSim extends AbstractTokenSim {
                                 sb = new StringBuilder();
                                 break;
                             }
-                            mathExp = new MathematicalExpression(sb.toString(), variables);
+                            mathExp = new MathematicalExpression(sb.toString());
                             sb = new StringBuilder();
                             deterministicReactionConstants.put(id, mathExp);
                             break;

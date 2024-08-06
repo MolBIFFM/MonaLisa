@@ -48,6 +48,7 @@ public final class MathematicalExpression {
     /*
      * Expression with all sub-expressions (cases)
      */
+    private String detConstantRate = "";
     private String wholeExp = "";
     private final ArrayList<ExpressionML> expressions = new ArrayList<>();
     /**
@@ -81,6 +82,7 @@ public final class MathematicalExpression {
 
     public MathematicalExpression(String exp) throws RuntimeException {
         this(exp.trim(), new HashMap<String, Integer>());
+        this.detConstantRate = exp.trim();
     }
 
     public MathematicalExpression(MathematicalExpression exp) throws RuntimeException {
@@ -126,6 +128,10 @@ public final class MathematicalExpression {
             }
         }
         return 0;
+    }
+    
+    public double evaluateML() {
+        return Double.parseDouble(this.detConstantRate);
     }
 
     public Map<String, Integer> getVariables() {

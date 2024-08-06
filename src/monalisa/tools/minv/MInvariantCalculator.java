@@ -149,6 +149,9 @@ public final class MInvariantCalculator {
             } else if (os.contains("win")) {
                 LOGGER.debug("OS determined to be Windows");
                 toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
+            } else if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
+                LOGGER.debug("OS determined to be MAC");
+                toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             }
         } catch (IOException e) {
             throw new ExtractResourceException(e);

@@ -145,7 +145,7 @@ public final class PInvariantCalculator {
                 toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             } else if (System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
                 LOGGER.debug("OS determined to be MAC");
-                toolFile = FileUtils.extractResource("tinv_macos.exe", "monalisa", "bin");
+                toolFile = FileUtils.extractResource("manatee.exe", "monalisa", "bin");
             }
         } catch (IOException e) {
             throw new ExtractResourceException(e);

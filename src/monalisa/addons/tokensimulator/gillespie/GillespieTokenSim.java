@@ -404,7 +404,6 @@ NMR in Biomedicine, vol. 21, no. 2, pp. 159–164, 2008.
         this.time += nextFiringTime;
         this.stepsSimulated++;
         LOGGER.debug("Finished calculating the next Transition to fire, it will be " + Integer.toString(transitionToFire.id()));
-        System.out.println(this.volume);
         return (transitionToFire);
     }
 
@@ -600,9 +599,9 @@ NMR in Biomedicine, vol. 21, no. 2, pp. 159–164, 2008.
                                 break;
                             }
                             //set the properties of the transition
-                            System.out.println((String)transition.getProperty("name"));
-                            System.out.println(Double.toString(firingRate));
-                            System.out.println(Double.toString(this.convertCToK(transition, firingRate)));
+                            //System.out.println((String)transition.getProperty("name"));
+                            //System.out.println(Double.toString(firingRate));
+                            //System.out.println(Double.toString(this.convertCToK(transition, firingRate)));
                             firingRates.put(id, firingRate);
                             this.deterministicReactionConstants.put(id, new MathematicalExpression(Double.toString(this.convertCToK(transition, firingRate))));
                             break;

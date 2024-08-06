@@ -112,8 +112,8 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         setPreferredSize(this.getPreferredSize());
         setLayout(new java.awt.GridBagLayout());
 
-        fireTransitionsButton.setText(SimulationManager.strings.get("ATSFireTransitionsB"));
-        fireTransitionsButton.setToolTipText(SimulationManager.strings.get("ATSFireTransitionsBT"));
+        fireTransitionsButton.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSFireTransitionsB"));
+        fireTransitionsButton.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSFireTransitionsBT"));
         fireTransitionsButton.setEnabled(false);
         fireTransitionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,7 +145,7 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         add(simName, gridBagConstraints);
 
         stepField.setText("1");
-        stepField.setToolTipText(SimulationManager.strings.get("ATSFiringPerStepT"));
+        stepField.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSFiringPerStepT"));
         stepField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 enterPressed(evt);
@@ -159,7 +159,7 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepField, gridBagConstraints);
 
-        stepLabel.setText(SimulationManager.strings.get("ATSStepLabel"));
+        stepLabel.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSStepLabel"));
         stepLabel.setToolTipText("Number of steps to perform, if \"Start simulation sequence\" is used.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -168,8 +168,8 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(stepLabel, gridBagConstraints);
 
-        inputDataButton.setText(SimulationManager.strings.get("GilTSInputDataFrameTitle"));
-        inputDataButton.setToolTipText(SimulationManager.strings.get("GilTSInputDataT"));
+        inputDataButton.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSInputDataFrameTitle"));
+        inputDataButton.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSInputDataT"));
         inputDataButton.setEnabled(false);
         inputDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -184,8 +184,8 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(inputDataButton, gridBagConstraints);
 
-        continuousModeCheckBox.setText(SimulationManager.strings.get("ATSContinuousModeCheckBox"));
-        continuousModeCheckBox.setToolTipText(SimulationManager.strings.get("ATSContinuousModeCheckBoxT"));
+        continuousModeCheckBox.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSContinuousModeCheckBox"));
+        continuousModeCheckBox.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("ATSContinuousModeCheckBoxT"));
         continuousModeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 continuousModeCheckBoxActionPerformed(evt);
@@ -198,8 +198,8 @@ public class GillespieTokenSimPanel extends AbstractTokenSimPanel implements Sim
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 3, 0);
         add(continuousModeCheckBox, gridBagConstraints);
 
-        bgModeB.setText(SimulationManager.strings.get("GilTSBGModeButton"));
-        bgModeB.setToolTipText(SimulationManager.strings.get("GilTSBGModeTT"));
+        bgModeB.setText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSBGModeButton"));
+        bgModeB.setToolTipText(monalisa.addons.tokensimulator.SimulationManager.strings.get("GilTSBGModeTT"));
         bgModeB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bgModeBActionPerformed(evt);

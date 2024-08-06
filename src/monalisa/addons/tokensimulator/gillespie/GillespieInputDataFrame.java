@@ -359,7 +359,7 @@ public class GillespieInputDataFrame extends javax.swing.JFrame implements Chang
                     reactionTable.getTableHeader().getColumnModel().getColumn(1).setHeaderValue("Stocastic rate constant 1/[s]");
                     reactionTable.getTableHeader().repaint();
 
-                    String message = "Mathematical expression can not be converted to stochastic rate constants. All reactions with amathematical expressions are blocked to edit.";
+                    String message = "Mathematical expression can not be converted to stochastic rate constants. All reactions with a mathematical expressions are blocked to edit.";
                     JOptionPane.showMessageDialog(GillespieInputDataFrame.this, message, "Error", JOptionPane.WARNING_MESSAGE);
                 }
             }

@@ -72,8 +72,11 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 
     
             }
-            ReachabilityNode root = new ReachabilityNode(eStart, null);
-            tar = new ReachabilityNode(eTarget, null);
+            //Somewhere here seems to be the problem
+            ReachabilityNode root = new ReachabilityNode(marking, null);
+            System.out.println("REACHABILITYNODE: "+root.getMarking());
+           // ReachabilityNode root = new ReachabilityNode(start, null);
+            tar = new ReachabilityNode(target, null);
             vertices.add(root);
             ArrayList<ReachabilityNode> workingList = new ArrayList<>();
             workingList.add(root);
@@ -84,36 +87,38 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
                 }
                 ReachabilityNode workingNode = workingList.get(0);
-
+                System.out.println("COUNTER: "+counter+" WorkingList: "+workingList.get(0).getMarking()+" 0 "+pf.computeActive(workingNode.getMarking()));
                 LOGGER.debug("Current marking:" + workingNode.getMarking().toString());
                 workingList.remove(0);
                 HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
                 for (Transition t : activeTransitions) {
-                    LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug
-                    HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
-                    ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                    // Algorithm terminates on finding m*
-                    if (newNode.equals(tar)) {
-                        tar = newNode;
-                        vertices.add(tar);
-                        edges.add(new ReachabilityEdge(workingNode, tar, t));
-                        g = new ReachabilityGraph(vertices, edges);
-                        fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
-                        LOGGER.debug("Target marking has been reached.");
-                        return;
-                    }
-                    boolean unvisited = true;
-                    for (ReachabilityNode v : vertices) {
-                        if (v.equals(newNode)) {
-                            unvisited = false;
-                            edges.add(new ReachabilityEdge(workingNode, v, t));
-                            break;
+                    if(workingNode.getMarking()!= null && t != null){
+                        LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug
+                        HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
+                        ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
+                        // Algorithm terminates on finding m*
+                        if (newNode.equals(tar)) {
+                            tar = newNode;
+                            vertices.add(tar);
+                            edges.add(new ReachabilityEdge(workingNode, tar, t));
+                            g = new ReachabilityGraph(vertices, edges);
+                            fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
+                            LOGGER.debug("Target marking has been reached.");
+                            return;
                         }
-                    }
-                    if (unvisited) {
-                        vertices.add(newNode);
-                        workingList.add(newNode);
-                        edges.add(new ReachabilityEdge(workingNode, newNode, t));
+                        boolean unvisited = true;
+                        for (ReachabilityNode v : vertices) {
+                            if (v.equals(newNode)) {
+                                unvisited = false;
+                                edges.add(new ReachabilityEdge(workingNode, v, t));
+                                break;
+                            }
+                        }
+                        if (unvisited) {
+                            vertices.add(newNode);
+                            workingList.add(newNode);
+                            edges.add(new ReachabilityEdge(workingNode, newNode, t));
+                        }
                     }
                 }
 

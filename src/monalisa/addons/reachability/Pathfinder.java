@@ -41,6 +41,9 @@ public class Pathfinder {
     private final HashMap<Place, Long> capacities;
     private final boolean capacities_active;
     private final HashSet<Transition> transitions;
+    private HashMap<Place, Long> eStart;
+    private HashMap<Place, Long> eTarget;
+    private HashSet<Transition> knockout;
 
     /**
      * Constructor used for algorithms without a heuristic.
@@ -98,6 +101,39 @@ public class Pathfinder {
         initializeAlgorithm(alg, heuristic);
         LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
     }
+    
+    /**
+     * Pathfinder used by ConstrainFrame
+     * @param pnf
+     * @param marking
+     * @param target
+     * @param capacities
+     * @param knockouts
+     * @param alg
+     * @param heuristic 
+     * @param eStart
+     * @param eTarget
+     * 
+     */
+    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities,HashSet<Transition> knockout , String alg, HashMap<Place, Long> eStart, HashMap<Place,Long> eTarget) {
+        LOGGER.info("Initializing pathfinder for reachability analysis with a heuristic.");
+        this.pnf = pnf;
+        this.marking = new HashMap<>();
+        this.marking.putAll(marking);
+        this.target = new HashMap<>();
+        this.target.putAll(target);
+        this.capacities = capacities;
+        this.capacities_active = checkCapacityActive();
+        this.transitions = new HashSet<>();
+        this.transitions.addAll(pnf.transitions());
+        LOGGER.warn(this.transitions.toString());
+        this.eStart = eStart;
+        this.eTarget = eTarget;
+        this.transitions.removeAll(knockout);
+        this.alg = alg;
+        initializeAlgorithmExplicit(alg, null);
+        LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
+    }
 
     private void initializeAlgorithm(String alg, String heuristic) {
         LOGGER.info("Initializing algorithm: " + alg + ".");
@@ -138,23 +174,89 @@ public class Pathfinder {
             LOGGER.info("Failed to initialize algorithm: " + alg + ".");
         }
     }
+    
+    private void initializeAlgorithmExplicit(String alg, String heuristic ) {
+        LOGGER.info("Initializing algorithm: " + alg + ".");
+        if (heuristic != null) {
+            LOGGER.info("Initializing with heuristic: " + heuristic);
+            if (alg == null) return;
+            switch (alg) {
+                case "A*":
+                    this.algorithm = new AStar(this, pnf, marking, target, heuristic);
+                    break;
+                case "Best First Search":
+                    this.algorithm = new BestFirst(this, marking, target, heuristic);
+                    break;
+            }
+        } else {
+            if (alg == null) return;
+            switch (alg) {
+                case "Breadth First Search":
+                    System.out.println("Pathfinder>BSF: "+eStart+" "+eTarget);
+                    this.algorithm = new BreadthFirst(this,marking, target, eStart, eTarget);
+                    break;
+                // Move FullReach and FullCover into separate classes and treat like algorithms
+                case "FullReach": {
+                    this.algorithm = new FullReachability(this, marking, target);
+                    break;
+                }
+                case "FullCover": {
+                    this.algorithm = new FullCoverability(this, marking, target);
+                    break;
+                }
+                default:
+                    this.algorithm = null;
+                    break;
+            }
+        }
+        if (this.algorithm != null) {
+            LOGGER.info("Successfully initialized algorithm: " + alg + ".");
+        } else {
+            LOGGER.info("Failed to initialize algorithm: " + alg + ".");
+        }
+    }
 
+    /**
+     * Checks if transition is active
+     * @param m
+     * @return 
+     */
     public HashSet<Transition> computeActive(HashMap<Place, Long> m) {
+        // Problem because m is one place
         LOGGER.debug("Computing active transitions");  // debug
         HashSet<Transition> activeTransitions = new HashSet<>();
         for (Transition t : transitions) {
             boolean active = true;
+            System.out.println("TRANSITIONS: "+t);
             for (Place p : t.inputs()) {
+                System.out.println("PLACES: "+p.toString()+" m:"+m.toString()+" transition: "+t);
                 if (m.containsKey(p)) {
                 }
+                // Check if input exists
+               // if(m.get(p) != null){
+                System.out.println("Transition active: "+t+" "+active+" "+m.get(p)+" "+m.keySet().toString());
+                System.out.println("M(P): "+m.get(p)+" WEIGHT: "+pnf.getArc(p, t).weight());
                 if (m.get(p) < pnf.getArc(p, t).weight()) {
                     active = false;
                     break;
-                }
+               }
+                if (active) {
+
+                    System.out.println("Active transition: "+t+" adding: "+active);
+                    activeTransitions.add(t);
+                    System.out.println("ActiveList; "+activeTransitions);
+                
             }
-            if (active) {
+               // }
+            }
+            /**if (active) {
+                
+                System.out.println("Active transition: "+t+" adding: "+active);
                 activeTransitions.add(t);
-            }
+                System.out.println("ActiveList; "+activeTransitions);
+                
+            }*/
+            System.out.println("LIST: "+activeTransitions.size()+" "+activeTransitions.iterator()+" "+activeTransitions);
         }
         if (capacities_active) {
             activeTransitions = removeOverCapacity(activeTransitions, m);
@@ -167,9 +269,11 @@ public class Pathfinder {
         HashSet<Transition> toRemove = new HashSet<>();
         for (Transition t : activeTransitions) {
             for (Place p : t.outputs()) {
-                if (((m.get(p) + pnf.getArc(t, p).weight()) > capacities.get(p)) && capacities.get(p) != 0) {
-                    toRemove.add(t);
-                    break;
+                if(m.get(p)!= null){
+                    if (((m.get(p) + pnf.getArc(t, p).weight()) > capacities.get(p)) && capacities.get(p) != 0) {
+                        toRemove.add(t);
+                        break;
+                    }
                 }
             }
         }
@@ -184,13 +288,17 @@ public class Pathfinder {
         mNew.putAll(old);
         // deduct tokens from input places
         for (Place p : t.inputs()) {
-            long oldToken = mNew.get(p);
-            mNew.put(p, oldToken - pnf.getArc(p, t).weight());
+            if(mNew.get(p) != null){
+                long oldToken = mNew.get(p);
+                mNew.put(p, oldToken - pnf.getArc(p, t).weight());
+            }
         }
         // add tokens to output places
         for (Place p : t.outputs()) {
-            long oldToken = mNew.get(p);
-            mNew.put(p, oldToken + pnf.getArc(t, p).weight());
+            if(mNew.get(p)!= null){
+                long oldToken = mNew.get(p);
+                mNew.put(p, oldToken + pnf.getArc(t, p).weight());
+            }
         }
         LOGGER.debug("Successfully computed new marking.");  // debug
         return mNew;

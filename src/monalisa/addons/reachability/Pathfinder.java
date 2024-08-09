@@ -108,15 +108,15 @@ public class Pathfinder {
      * @param marking
      * @param target
      * @param capacities
-     * @param knockouts
-     * @param alg
-     * @param heuristic 
+     * @param knockout
+     * @param alg 
      * @param eStart
      * @param eTarget
+     * @throws java.lang.InterruptedException
      * 
      */
-    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities,HashSet<Transition> knockout , String alg, HashMap<Place, Long> eStart, HashMap<Place,Long> eTarget) {
-        LOGGER.info("Initializing pathfinder for reachability analysis with a heuristic.");
+    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities,HashSet<Transition> knockout , String alg, HashMap<Place, Long> eStart, HashMap<Place,Long> eTarget) throws InterruptedException {
+        LOGGER.info("Initializing pathfinder for reachability analysis with specific start and target.");
         this.pnf = pnf;
         this.marking = new HashMap<>();
         this.marking.putAll(marking);
@@ -132,7 +132,7 @@ public class Pathfinder {
         this.transitions.removeAll(knockout);
         this.alg = alg;
         initializeAlgorithmExplicit(alg, null);
-        LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
+        LOGGER.info("Successfully initialized pathfinder for reachability analysis.");        
     }
 
     private void initializeAlgorithm(String alg, String heuristic) {
@@ -175,7 +175,13 @@ public class Pathfinder {
         }
     }
     
-    private void initializeAlgorithmExplicit(String alg, String heuristic ) {
+    /**
+     * Initializes algorithm. Should be used when explicit start and target 
+     * are needed.
+     * @param alg
+     * @param heuristic 
+     */
+    private void initializeAlgorithmExplicit(String alg, String heuristic ) throws InterruptedException {
         LOGGER.info("Initializing algorithm: " + alg + ".");
         if (heuristic != null) {
             LOGGER.info("Initializing with heuristic: " + heuristic);
@@ -192,7 +198,7 @@ public class Pathfinder {
             if (alg == null) return;
             switch (alg) {
                 case "Breadth First Search":
-                    System.out.println("Pathfinder>BSF: "+eStart+" "+eTarget);
+                    System.out.println("We are in pathfinder. Choosing Alg");
                     this.algorithm = new BreadthFirst(this,marking, target, eStart, eTarget);
                     break;
                 // Move FullReach and FullCover into separate classes and treat like algorithms
@@ -215,53 +221,65 @@ public class Pathfinder {
             LOGGER.info("Failed to initialize algorithm: " + alg + ".");
         }
     }
-
-    /**
-     * Checks if transition is active
-     * @param m
-     * @return 
-     */
-    public HashSet<Transition> computeActive(HashMap<Place, Long> m) {
-        // Problem because m is one place
+    
+    public HashSet<Transition> computeActiveTransitions(HashMap<Place, Long> m) {
         LOGGER.debug("Computing active transitions");  // debug
         HashSet<Transition> activeTransitions = new HashSet<>();
         for (Transition t : transitions) {
             boolean active = true;
-            System.out.println("TRANSITIONS: "+t);
+            System.out.println("Transitions[Pathfinder|computeActive]: "+t);
             for (Place p : t.inputs()) {
-                System.out.println("PLACES: "+p.toString()+" m:"+m.toString()+" transition: "+t);
                 if (m.containsKey(p)) {
                 }
-                // Check if input exists
-               // if(m.get(p) != null){
-                System.out.println("Transition active: "+t+" "+active+" "+m.get(p)+" "+m.keySet().toString());
-                System.out.println("M(P): "+m.get(p)+" WEIGHT: "+pnf.getArc(p, t).weight());
                 if (m.get(p) < pnf.getArc(p, t).weight()) {
+                    System.out.println("Transitions[Pathfinder|computeActive|False]: "+t+" T->P: "+p);
                     active = false;
                     break;
-               }
-                if (active) {
-
-                    System.out.println("Active transition: "+t+" adding: "+active);
-                    activeTransitions.add(t);
-                    System.out.println("ActiveList; "+activeTransitions);
-                
+                }
             }
-               // }
-            }
-            /**if (active) {
-                
-                System.out.println("Active transition: "+t+" adding: "+active);
+           if (active) {
                 activeTransitions.add(t);
-                System.out.println("ActiveList; "+activeTransitions);
-                
-            }*/
-            System.out.println("LIST: "+activeTransitions.size()+" "+activeTransitions.iterator()+" "+activeTransitions);
+                System.out.println("Transitions[Pathfinder|computeActive|Active]: "+t);
+            }
         }
-        if (capacities_active) {
-            activeTransitions = removeOverCapacity(activeTransitions, m);
-        }
+        
         LOGGER.debug("Successfully computed active transitions.");  // debug
+        System.out.println("Transitions[Pathfinder|computeActive]: "+activeTransitions);
+        return activeTransitions;
+    }
+
+    /**
+     * Checks if transition is active
+     * Creates list with active transitions
+     * @param m
+     * @return 
+     */
+     public HashSet<Transition> computeActive(HashMap<Place, Long> m) {
+        LOGGER.debug("Computing active transitions");  // debug
+        HashSet<Transition> activeTransitions = new HashSet<>();
+        for (Transition t : transitions) {
+            boolean active = true;
+            System.out.println("Transitions[Pathfinder|computeActive]: "+t);
+            for (Place p : t.inputs()) {
+                if (m.containsKey(p)) {
+                }
+                if (m.get(p) < pnf.getArc(p, t).weight()) {
+                    System.out.println("Transitions[Pathfinder|computeActive|False]: "+t+" T->P: "+p);
+                    active = false;
+                    break;
+                }
+            }
+           if (active) {
+                activeTransitions.add(t);
+                System.out.println("Transitions[Pathfinder|computeActive|Active]: "+t);
+            }
+        }
+        // Deactivated -> deleted active Transitions -> Backtracking didn't work
+        /**if (capacities_active) {
+            activeTransitions = removeOverCapacity(activeTransitions, m);
+        }*/
+        LOGGER.debug("Successfully computed active transitions.");  // debug
+        System.out.println("Transitions[Pathfinder|computeActive]: "+activeTransitions);
         return activeTransitions;
     }
 
@@ -282,6 +300,12 @@ public class Pathfinder {
         return activeTransitions;
     }
 
+    /**
+     * Adjusts tokens 
+     * @param old
+     * @param t
+     * @return 
+     */
     public HashMap<Place, Long> computeMarking(HashMap<Place, Long> old, Transition t) {
         LOGGER.debug("Computing new marking.");  // debug
         HashMap<Place, Long> mNew = new HashMap<>();
@@ -341,6 +365,27 @@ public class Pathfinder {
         algoThread = new Thread() {
             @Override
             public void run() {
+                algorithm.start();
+                try {
+                    algorithm.join();
+                } catch (InterruptedException e) {
+                    algorithm.interrupt();
+                    LOGGER.warn("Interrupt caught.");
+                    Thread.currentThread().interrupt();
+                    LOGGER.warn("Interrupt propagated.");
+                    return;
+                }
+                LOGGER.info("Algorithm " + alg + " finished running.");
+            }
+        };
+        algoThread.start();
+    }
+    
+    public void runExplicit() {
+        LOGGER.info("Running the algorithm: " + alg + ".");
+        algoThread = new Thread() {
+            
+            public void runExplixit() {
                 algorithm.start();
                 try {
                     algorithm.join();

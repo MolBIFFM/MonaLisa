@@ -66,7 +66,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             LOGGER.debug("Starting BFS with specific start and target node");
             // If start and target are equal. Stop program.
             if(eStart.equals(eTarget)){
-                fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, 0, null);
+                fireReachabilityUpdate(ReachabilityEvent.Status.EQUALNODE, 0, null);
                 return;
             }
             HashMap<Place, Long> collect = new HashMap<>();
@@ -82,6 +82,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
              * Every node is initialized as reachabilitynode
              * With prenode
              */
+            //TODO: Include here computeMarking?
             for(Map.Entry<Place, Long> entry: marking.entrySet()){
                 System.out.println("Erstellen: "+ entry);
                 HashMap<Place, Long> work = new HashMap<>();
@@ -135,7 +136,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             ArrayList<ReachabilityNode> reachabilityNodesList = new ArrayList<>();
             ArrayList<Transition> backtrack = new ArrayList<>();
             reachabilityNodesList.addAll(rNodeList);
-            while(!rNodeList.isEmpty()){
+            while(!rNodeList.isEmpty() && !isInterrupted()){
                 if (counter % 100 == 0) {
                     fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
                 }

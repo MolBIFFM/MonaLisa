@@ -23,6 +23,7 @@ import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.security.util.Debug;
 
 /**
  *
@@ -68,7 +69,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, 0, null);
                 return;
             }
-            
+            HashMap<Place, Long> collect = new HashMap<>();
             fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
             int counter = 0;
             HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -135,31 +136,23 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             ArrayList<Transition> backtrack = new ArrayList<>();
             reachabilityNodesList.addAll(rNodeList);
             while(!rNodeList.isEmpty()){
+                if (counter % 100 == 0) {
+                    fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
+                }
                  ReachabilityNode workingNode = rNodeList.get(0);//Nimm den workingNode und gucke ihn an
-                 
                  rNodeList.remove(rNodeList.get(0));// Angefasste nodes müssen aus der Liste entfernt werden
-                 
-                 System.out.println("workingNode: "+workingNode.getMarking()+" NodeListSize: "+rNodeList.size());
                  // Iterate over active transitions. If transition is active between 
                  // two nodes, add edge in Reachabilitygraph
                  for(Transition t : activeTransitions){
                      
                      
-                     System.out.println("TRANSITION: "+t+" "+" input: "+t.inputs()+" output: "+t.outputs());
-                     //System.out.println("input: "+t.inputs()+" workingNode: "+workingNode.getMarking().keySet());
                      // If workingNode and transition input are equal -> create edge in reachabilitygraph 
                      // between those two nodes
                      HashMap<Place, Long> vNew = eTarget;
                      if(t.inputs().get(0).equals(workingNode.getMarking().keySet().iterator().next())){
                          System.out.println("Input: "+t.inputs().iterator().next().toString()+" workingNodeString: "+workingNode.getMarking().toString());
                          vertices.add(workingNode);
-                         System.out.println("Track: "+vertices.iterator().next().getMarking());
-                         if(!backtrack.contains(t)){
-                            counter +=1;
-                            backtrack.add(t);
-                        }
-                         
-                         //edge.add(new ReachabilityEdge(workingNode, workingNode.getPrev(), t));
+                        
                          // Somewhere here seems to be a problem with the quere
                          // Algo terminates, but success doesn't show...but it's there
                          System.out.println("IF: "+t.inputs().get(0)+" "+vNew.keySet()+" "+t.inputs().get(0).equals(vNew.keySet().iterator().next()));
@@ -167,12 +160,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                              //Last node create edge
                              edge.add(new ReachabilityEdge(workingNode, workingNode.getPrev(), t));
                              vertices.add(workingNode);
-                             System.out.println("LAST EDGE: "+edge.toString()+" VERTICES: "+vertices.toString());
+                             LOGGER.debug("LAST EDGE: "+edge.toString()+" VERTICES: "+vertices.toString());
                              g = new ReachabilityGraph(vertices, edge);
-                             // Need to put the success somewhere else
-                             // if graph exists start backtrack to check if path exists
-                             //fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack);
-                             //return;
+                           
                          }
                          // t.input is prenode
                          //Collections.reverse(verticesList);
@@ -184,15 +174,23 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                               System.out.println("If input=v.prev: "+t.inputs().equals(v.getPrev().getMarking().keySet()));
                             if(v.getPrev().getMarking().keySet().contains(t.inputs().get(0))){
                                 edge.add(new ReachabilityEdge(v.getPrev(), v, t));
-                                // System.out.println("VERTICE1: "+v.getMarking()+" PrevNode: "+v.getPrev().getMarking());
                                  v.setVisited();
                                  v.getPrev().setVisited();
+                                 
                                 }
                             if((eStart.equals(v.getPrev().getMarking())|| eStart.equals(v.getMarking()))){
-                                 System.out.println("SUCCI: "+eStart+" Prev: "+v.getPrev().getMarking()+" P: "+v.getMarking());
-                                 if(v.getPrev().getVisited()|| v.getVisited()){
+                                 
+                                   if(v.getVisited()){
+                                     if(!backtrack.contains(t)){
+                                        counter +=1;
+                                        backtrack.add(t);
+                                    }
+                                     collect.putIfAbsent(v.getMarking().keySet().iterator().next(), v.getMarking().values().iterator().next());
+
                                      System.out.println("VisitOBEN: "+v.getPrev().getVisited()+" "+v.getVisited());
-                                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack); 
+                                     tar = new ReachabilityNode(collect, null);
+                                     System.out.println("tar: "+tar.getMarking());
+                                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack()); 
                                      
                                  }
                              }
@@ -201,7 +199,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                            
                             
                          }
-                         boolean check = false;
                          for(ReachabilityNode v : verticesList){
                              System.out.println("visitedPrev: "+v.getPrev().getVisited()+" visited V: "+v.getVisited());
 
@@ -210,6 +207,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                  System.out.println("Success2: "+eStart+" Prev: "+v.getPrev().getMarking()+" P: "+v.getMarking());
                                  if(v.getPrev().getVisited()|| v.getVisited()){
                                      System.out.println("VisS: "+v.getPrev().getVisited()+" "+v.getVisited());
+                                     
                                     //fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack); 
                                      
                                  }

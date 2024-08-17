@@ -69,15 +69,18 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.EQUALNODE, 0, null);
                 return;
             }
-            HashMap<Place, Long> collect = new HashMap<>();
             fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
             int counter = 0;
+            
+            HashMap<Place, Long> collect = new HashMap<>();
+            
             HashSet<ReachabilityNode> vertices = new HashSet<>();
-            ArrayList<ReachabilityNode> verticesList = new ArrayList<>();
             HashSet<ReachabilityEdge> edge = new HashSet<>();
+           
+            ArrayList<ReachabilityNode> verticesList = new ArrayList<>();
             ArrayList<ReachabilityNode> rNodeList = new ArrayList<>();
-            System.out.println("MarkingSize; "+marking.size());
-            ReachabilityNode checkNode = new ReachabilityNode(null, null);
+            
+            ReachabilityNode root = new ReachabilityNode(null, null);
             /**
              * Every node is initialized as reachabilitynode
              * With prenode
@@ -91,7 +94,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     work.put(entry.getKey(), entry.getValue());
                     ReachabilityNode firstNode = new ReachabilityNode(work, null);
                     rNodeList.add(firstNode);
-                    checkNode = firstNode;
+                    root = firstNode;
                     
 
                 }
@@ -117,16 +120,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             }
             verticesList.addAll(rNodeList);
             
-
-            for(int i = 0; i < rNodeList.size(); i++){
-                try {
-                    System.out.println("LISTE: "+ rNodeList.get(i).getMarking()+" Prev: "+rNodeList.get(i).getPrev().getMarking());
-                    
-                } catch (NullPointerException e) {
-                    System.out.println("LISTE: "+ rNodeList.get(i).getMarking()+ " Prev: none");
-
-                }
-            }
             // Getting active transitions
             HashSet<Transition> activeTransitions =  pf.computeActive(marking);
             System.out.println("Transition: "+ activeTransitions);
@@ -135,104 +128,139 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             // rNodeList contents reachabilitynodes with prenode
             ArrayList<ReachabilityNode> reachabilityNodesList = new ArrayList<>();
             ArrayList<Transition> backtrack = new ArrayList<>();
-            reachabilityNodesList.addAll(rNodeList);
-            while(!rNodeList.isEmpty() && !isInterrupted()){
+            //reachabilityNodesList.addAll(rNodeList);
+            HashMap<Place, Long> newMarkingMap = new HashMap<>();
+           // while(!rNodeList.isEmpty() && !isInterrupted() && reachabilityNodesList.size()<= rNodeList.size()){
+            while(!rNodeList.isEmpty() && !isInterrupted()){   
+                counter +=1;
                 if (counter % 100 == 0) {
                     fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
                 }
+                 // Grab node out of rNodeList. Remove same node out of list.
                  ReachabilityNode workingNode = rNodeList.get(0);//Nimm den workingNode und gucke ihn an
-                 rNodeList.remove(rNodeList.get(0));// Angefasste nodes müssen aus der Liste entfernt werden
-                 // Iterate over active transitions. If transition is active between 
-                 // two nodes, add edge in Reachabilitygraph
+                 //rNodeList.remove(rNodeList.get(0));// Angefasste nodes müssen aus der Liste entfernt werden
+                 reachabilityNodesList.add(workingNode);
+                 rNodeList.forEach((a)->System.out.println("rNodeList: "+a.getMarking()));
+                 System.out.println("DepthOben: "+workingNode.getDepth());
+                 // Examine transitions. Look for t that belongs to working node.
                  for(Transition t : activeTransitions){
-                     
-                     
+                     System.out.println("Start ForLoop Transition: "+t+ " boolean: "+t.getActive());
+                     if(t.getUsed()== false){
+                     System.out.println("Number of transitions: "+activeTransitions.size()+" Transition: "+t);
                      // If workingNode and transition input are equal -> create edge in reachabilitygraph 
                      // between those two nodes
                      HashMap<Place, Long> vNew = eTarget;
-                     if(t.inputs().get(0).equals(workingNode.getMarking().keySet().iterator().next())){
-                         System.out.println("Input: "+t.inputs().iterator().next().toString()+" workingNodeString: "+workingNode.getMarking().toString());
-                         vertices.add(workingNode);
-                        
-                         // Somewhere here seems to be a problem with the quere
-                         // Algo terminates, but success doesn't show...but it's there
-                         System.out.println("IF: "+t.inputs().get(0)+" "+vNew.keySet()+" "+t.inputs().get(0).equals(vNew.keySet().iterator().next()));
-                         if(t.inputs().get(0).equals(vNew.keySet().iterator().next())){
-                             //Last node create edge
-                             edge.add(new ReachabilityEdge(workingNode, workingNode.getPrev(), t));
-                             vertices.add(workingNode);
-                             LOGGER.debug("LAST EDGE: "+edge.toString()+" VERTICES: "+vertices.toString());
-                             g = new ReachabilityGraph(vertices, edge);
-                           
-                         }
-                         // t.input is prenode
-                         //Collections.reverse(verticesList);
-                         for(ReachabilityNode v : verticesList){
-                             
-                             System.out.println("v.getMarking: "+v.getMarking()+" v.getPrev.getMarking: "+v.getPrev().getMarking());
-                             System.out.println("T: "+t.toString()+" t.Input: "+t.inputs()+" t.outputs: "+t.outputs());
-                            // If node has prenode and transition is active, add edge and mark as visited
-                              System.out.println("If input=v.prev: "+t.inputs().equals(v.getPrev().getMarking().keySet()));
-                            if(v.getPrev().getMarking().keySet().contains(t.inputs().get(0))){
-                                edge.add(new ReachabilityEdge(v.getPrev(), v, t));
-                                 v.setVisited();
-                                 v.getPrev().setVisited();
-                                 
-                                }
-                            if((eStart.equals(v.getPrev().getMarking())|| eStart.equals(v.getMarking()))){
-                                 
-                                   if(v.getVisited()){
-                                     if(!backtrack.contains(t)){
-                                        counter +=1;
-                                        backtrack.add(t);
-                                    }
-                                     collect.putIfAbsent(v.getMarking().keySet().iterator().next(), v.getMarking().values().iterator().next());
-
-                                     System.out.println("VisitOBEN: "+v.getPrev().getVisited()+" "+v.getVisited());
-                                     tar = new ReachabilityNode(collect, null);
-                                     System.out.println("tar: "+tar.getMarking());
-                                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack()); 
-                                     
-                                 }
-                             }
-
-                                
-                           
-                            
-                         }
-                         for(ReachabilityNode v : verticesList){
-                             System.out.println("visitedPrev: "+v.getPrev().getVisited()+" visited V: "+v.getVisited());
-
-                             
-                             if((eStart.equals(v.getPrev().getMarking())|| eStart.equals(v.getMarking()))){
-                                 System.out.println("Success2: "+eStart+" Prev: "+v.getPrev().getMarking()+" P: "+v.getMarking());
-                                 if(v.getPrev().getVisited()|| v.getVisited()){
-                                     System.out.println("VisS: "+v.getPrev().getVisited()+" "+v.getVisited());
-                                     
-                                    //fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack); 
-                                     
-                                 }
-                             }
-                                 
-                            
-                              if((eStart.equals(v.getPrev().getMarking())&& v.getPrev().getVisited()== false)||(eStart.equals(v.getMarking())&& v.getVisited()== false)){
-                                  System.out.println("Failure: "+eStart+" "+v.getPrev().getMarking()+" "+v.getMarking());
-                                  fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrack);
-                            }
-               
-                         }
-                        
-                             
+                     // [Prenode] Compute new marking for input and output of t.
+                     //HashMap<Place, Long> newMarkingInputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getFirst();
+                     // [Postnode]
+                     //HashMap<Place, Long> newMarkingOutputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getLast();
+                     // Put these in If clauses?
+                     //ReachabilityNode newReachabilityInputNode = new ReachabilityNode(newMarkingInputPlace, null);
+                     //ReachabilityNode newReachabilityOutputNode = new ReachabilityNode(newMarkingOutputPlace, newReachabilityInputNode);
                      
+                     System.out.println("T: "+t+" input: "+t.inputs()+" outputs: "+t.outputs()+" workingNode: "+workingNode.getMarking());
+                     // If no prenode exists. Transition only updates output.
+                   
+                    if(t.inputs().isEmpty()){
+                         //Hier: for all outputs aktualisiere places
+                     if(t.outputs().get(0).equals(workingNode.getMarking().keySet().iterator().next())){
+                         HashMap<Place, Long> newMarkingOutputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getLast();
+                         System.out.println("New outputMarking: "+ newMarkingOutputPlace);
+                         for(ReachabilityNode n : reachabilityNodesList){
+                             if(n.getMarking().keySet().equals(newMarkingOutputPlace.keySet())){
+                                 System.out.println("Old: "+n.getMarking());
+                                 n.getMarking().put(n.getMarking().keySet().iterator().next(), newMarkingOutputPlace.values().iterator().next());
+                                 System.out.println("New: "+n.getMarking());
+                                 // if marking is updated. Replace in rNodeList. Clear other list
+                                 for(ReachabilityNode old : rNodeList){
+                                     if(n.getMarking().keySet().equals(old.getMarking().keySet())){
+                                        System.out.println("rNodeOld: "+old.getMarking());
+                                         //n = old;7
+                                        old.getMarking().put(old.getMarking().keySet().iterator().next(), newMarkingOutputPlace.values().iterator().next());
+                                        rNodeList.addFirst(old);
+                                        newMarkingMap.put(old.getMarking().keySet().iterator().next(), newMarkingOutputPlace.values().iterator().next());
+                                         
+                                         //System.out.println("NeueActive: "+ transition);
+                                        System.out.println("rNodeNew: "+old.getMarking());
+                                        break; // Not sure if that's needed
+                                     }
+                                     
+                                 }
+                                 //break;
+                             }
+                             //break; doesnt do anything
+                         }
                          
-                     }
 
+                     }
+                     
+                     rNodeList.forEach(v->System.out.println("END1: "+v.getMarking()));
+                     rNodeList.remove(0);
+                     rNodeList.forEach(v->System.out.println("ENDDanach: "+v.getMarking()));
+                     }t.setUsed();
+                    /**
+                     * If transition has input
+                     * Check if output exist. Either update in and output or just input
+                     */
+                    if(!t.inputs().isEmpty()){
+                        if(!t.outputs().isEmpty()){
+                            if(t.inputs().get(0).equals(workingNode.getMarking().keySet().iterator().next())){
+                                System.out.println("VORallem: "+workingNode.getMarking()+" t: "+t+ " tInput: "+t.inputs()+" tout: "+t.outputs());
+                                HashMap<Place, Long> newMarkingInputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getFirst();
+                                HashMap<Place, Long> newMarkingOutputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getLast();
+                                System.out.println("NeueIf newMarkingInput: "+newMarkingInputPlace+" newOutput: "+newMarkingOutputPlace);
+                                // New input and output TODO update in list and compute active again
+                                for(ReachabilityNode old : rNodeList){
+                                    if(old.getMarking().keySet().equals(newMarkingInputPlace.keySet())){
+                                        //Update input in list
+                                        old.getMarking().put(old.getMarking().keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
+                                        System.out.println("New Token for input: "+old.getMarking());
+                                        newMarkingMap.put(old.getMarking().keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
+                                    }
+                                    if(old.getMarking().keySet().equals(newMarkingOutputPlace.keySet())){
+                                        old.getMarking().put(old.getMarking().keySet().iterator().next(), newMarkingOutputPlace.values().iterator().next());
+                                        System.out.println("New Token for output: "+old.getMarking());
+                                        newMarkingMap.put(old.getMarking().keySet().iterator().next(), newMarkingOutputPlace.values().iterator().next());
+                                    }
+                                    
+                                }
+                            }//End t.inputs.get(0).equals
+                        }//End if(!t.inputs().isEmpty())
+                        
+                        // if output is empty only update input places
+                        if(t.outputs().isEmpty()){
+                            HashMap<Place, Long> newMarkingInputPlace = pf.computeSingleMarking(workingNode.getMarking(), t).getFirst();
+                            for(ReachabilityNode old : rNodeList){
+                                    if(old.getMarking().keySet().equals(newMarkingInputPlace.keySet())){
+                                        //Update input in list
+                                        old.getMarking().put(old.getMarking().keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
+                                        System.out.println("New Token for input: "+old.getMarking());
+                                        newMarkingMap.put(old.getMarking().keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
+                                    }
+                        }
+                        }
+                    }t.setUsed();// End !t.output.isEmpty()
+                    if(t.getUsed()==true){
+                        backtrack.add(t);
+                    }
+                   
+                     }
                  }
                  
+                 rNodeList.remove(0);
+                 HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
+                 System.out.println("Update Transition "+activeTransitions);
+                 activeTransitions = activeTransitionsUpdate;
+                 System.out.println("Updated Transitions: "+activeTransitions);
+                 rNodeList.forEach((a)->System.out.println("#"+a.getMarking()));
                  
-
-
+                 activeTransitions.forEach((a)->System.out.println("active and used: "+a+" #"+a.getUsed()+" #"+a.getActive()));
+                 if(workingNode.getMarking().keySet().equals(eTarget.keySet())){
+                     backtrack.reversed();
+                     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack);
+                 }
             }
+         
         }
         else{
             

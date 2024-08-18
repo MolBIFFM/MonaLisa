@@ -101,11 +101,29 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
            // capacities.put(p, 0L); -> Not sure if capacities need to be 0
             System.out.println("CAPACITIES: "+capacities);
         }
+        HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : pn.places()) {
             //model.addElement(p.inputs().getFirst());
-            onTransition.add(p.inputs().getFirst().toString());
-            System.out.println("TESTING: "+p.inputs().getFirst());
+            
+            if(p.inputs().size()>=1){
+                for(Transition t : p.inputs()){
+                    //onTransition.add(t.toString());
+                    transitionSet.add(t);
+                }
+            }
+
+            if(p.outputs().size()>=1){
+                for(Transition t : p.outputs()){
+                    transitionSet.add(t);
+                }
+                
+            }
+            
         }
+        for(Transition t : transitionSet){
+                onTransition.add(t.toString());
+            }
+            
         
         for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
             startNode.addItem(entry.toString());
@@ -169,9 +187,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         restorePN = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         markingTable = new javax.swing.JTable();
-        jLabel6 = new javax.swing.JLabel();
+        PlaceTitel = new javax.swing.JLabel();
         progressLabel = new javax.swing.JLabel();
         what = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        used = new java.awt.List();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -256,9 +276,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         ));
         jScrollPane1.setViewportView(markingTable);
 
-        jLabel6.setText("Place overview");
+        PlaceTitel.setText("Place and token before fireing");
 
         progressLabel.setText("Number of nodes extended: 0");
+
+        what.setText("what");
+
+        jLabel7.setText("Active transitions");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -271,9 +295,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(progressLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(progressLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -299,21 +323,28 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(sinkNode, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(PlaceTitel, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(66, 66, 66))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(what, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(66, 66, 66))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(used, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(61, 61, 61))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,29 +365,34 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(onTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(offTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(31, 31, 31)
-                .addComponent(jLabel6)
-                .addGap(7, 7, 7)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
-                .addComponent(jLabel2)
+                    .addComponent(onTransition, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(offTransition, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(PlaceTitel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(34, 34, 34)
                 .addComponent(progressLabel)
                 .addGap(18, 18, 18)
                 .addComponent(what)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(used, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(restorePN))
-                .addGap(39, 39, 39))
+                .addGap(27, 27, 27))
         );
 
         pack();
@@ -449,6 +485,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
+        
 
         PetriNetFacade copyPN = this.pn;
         PetriNetFacade backUpPN = this.pn;
@@ -615,31 +652,39 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             offTransition.removeAll();
             }
         }
+        HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : backupPN.places()) {
             //model.addElement(p.inputs().getFirst());
-            onTransition.add(p.inputs().getFirst().toString());
-            System.out.println("TESTING: "+p.inputs().getFirst());
-        }
-        progressLabel.setText("Number of nodes extended: 0");
-        what.setText("");
-        /**
-         * 
-         
-        for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
-            startNode.addItem(entry.toString());
-            for(Transition in: entry.getKey().inputs()){
-                System.out.println("OBEN: "+in);
-               
+            
+            if(p.inputs().size()>=1){
+                for(Transition t : p.inputs()){
+                    //onTransition.add(t.toString());
+                    transitionSet.add(t);
+                }
+            }
+
+            if(p.outputs().size()>=1){
+                for(Transition t : p.outputs()){
+                    transitionSet.add(t);
+                }
                 
             }
+            
         }
-        //DefaultListModel listMod = (DefaultListModel) off.getModel();
-        for(HashMap.Entry<Place, Long> entry :this.target.entrySet()){
-            sinkNode.addItem(entry.toString());
-            for(Transition out : entry.getKey().outputs()){
-                String sTrans = out.toString();
-           }
-        }*/
+        for(Transition t : transitionSet){
+                onTransition.add(t.toString());
+            }
+        progressLabel.setText("Number of nodes extended: 0");
+        what.setText("");
+        
+        for(int i = 0; i < used.getItemCount(); i++){
+            used.remove(0);
+            used.removeAll();
+            
+        }
+        PlaceTitel.setForeground(Color.BLACK);
+        PlaceTitel.setText("Places and token before firing");
+    
     }//GEN-LAST:event_restorePNActionPerformed
 
     private void sinkNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sinkNodeActionPerformed
@@ -687,6 +732,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel PlaceTitel;
     private javax.swing.JLabel Reachability;
     private javax.swing.JComboBox<String> algoSelect;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -698,7 +744,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable markingTable;
     private java.awt.List offTransition;
@@ -707,6 +753,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JButton restorePN;
     private javax.swing.JComboBox<String> sinkNode;
     private javax.swing.JComboBox<String> startNode;
+    private java.awt.List used;
     private javax.swing.JLabel what;
     // End of variables declaration//GEN-END:variables
 
@@ -715,6 +762,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         markingTable.setEnabled(!b);
         
         algoSelect.enableInputMethods(!b);
+    }
+    
+    public void setUsedTransitionTable(){
+        for(Transition t : BreadthFirst.usedTransitions){
+            used.add(t.toString());
+        }
+       
     }
     /**
      * @author Marcel Germann
@@ -734,6 +788,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(204, 0, 0));
                 what.setText("Aborted");
+                PlaceTitel.setForeground(new Color(0, 0, 153));
+                PlaceTitel.setText("Places and token after firing.");
                 updateMarkings();
                 break;
             case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
@@ -755,6 +811,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(0, 102, 0));
                 what.setText("[Success] Target node reached!");
+                PlaceTitel.setForeground(new Color(0, 0, 153));
+                PlaceTitel.setText("Places and token after firing");
+                setUsedTransitionTable();
                 break;
             case FAILURE: // Fired when an algorithm fails to find the target marking.
                 lock(false);
@@ -763,6 +822,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(204, 0, 0));
                 what.setText("[Failure] Target node not reachable!");
+                PlaceTitel.setForeground(new Color(0, 0, 153));
+                PlaceTitel.setText("Places and token after firing");
                 updateMarkings();
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
@@ -770,6 +831,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(102, 0, 253));
                 what.setText("Progress");
+                PlaceTitel.setForeground(new Color(0, 0, 153));
+                PlaceTitel.setText("Places and token after firing");
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
                 lock(false);
@@ -778,6 +841,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 // Somehow display the graph? Otherwise this doesn't do much.
                 what.setForeground(new Color(0, 102, 0));
                 what.setText("Finished");
+                PlaceTitel.setForeground(new Color(0, 0, 153));
+                PlaceTitel.setText("Places and token after firing");
                 updateMarkings();
                 break;
             default:

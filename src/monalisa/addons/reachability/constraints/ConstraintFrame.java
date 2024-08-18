@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -28,6 +29,7 @@ import static monalisa.addons.reachability.ReachabilityEvent.Status.STARTED;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.SUCCESS;
 import monalisa.addons.reachability.ReachabilityListener;
 import monalisa.addons.reachability.ReachabilityNode;
+import monalisa.addons.reachability.algorithms.BreadthFirst;
 import monalisa.addons.reachability.algorithms.ReachabilityAlgorithm;
 import monalisa.data.pn.Arc;
 import monalisa.data.pn.PetriNet;
@@ -47,11 +49,12 @@ import org.apache.logging.log4j.Logger;
 public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addons.reachability.ReachabilityListener {
     // What is tht number for?
     private static final long serialVersionUID = -8541347764965669414L;
-
     //private AlgorithmRunner algorithmRunner;
     public Pathfinder path;
     public PetriNetFacade pn;
+    private PetriNetFacade backUFacade;
     private PetriNet backupPN;
+   // private BreadthFirst bf;
     private static final Logger LOGGER = LogManager.getLogger(ConstraintFrame.class);
 
     private HashMap<Place, Long> start;
@@ -60,11 +63,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private final PInvariants pinvs;
     private HashMap<Place, Long> eStart = null;
     private HashMap<Place, Long> eTarget = null;
-   // private HashSet<Transition> transitions;
-    
-    // Backtrack stil includes deleted Transition-> Deleting not working
-    
-    // Deleted  reachability Object -> not functioning now
+    private boolean computed = false;
   
     
 
@@ -79,6 +78,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         this.start = new HashMap<>();
         this.start.putAll(start);
         this.pn = pn;
+        this.backUFacade = pn;
         this.backupPN = pn.getPNCopy();
         this.target = new HashMap<>();
         this.target.putAll(start);
@@ -136,7 +136,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         //bestRButton.addActionListener(this);
         //bestRButton.setActionCommand("Best First Search");
         LOGGER.info("Successfully initialized ConstraintFrame.");
-        
         
 
 
@@ -450,6 +449,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
+
         PetriNetFacade copyPN = this.pn;
         PetriNetFacade backUpPN = this.pn;
         String selectedCombo = algoSelect.getSelectedItem().toString();
@@ -466,7 +466,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             JOptionPane.showMessageDialog(null, "No algorithm selected.\n"
                     +                           "     Please select!");
         }
-        
+
+
+
         /**
          * Checks if transitions are turned off.
          * If that's the case delete them from PN.
@@ -488,138 +490,109 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         // Add deleted Transition to knockout
                         knockout.add(t);
                         copyPN.removeProperty(trans);
-                        // Delete arcs
-                        
-                        
-                        // PetriNet has remove Arc 
-                        System.out.println("Number of Edges before: "+copyPN.getNumberOfEdges());
-                        copyPN.deletePTArc(t.inputs().getFirst(), t);
-                        copyPN.deleteTPArc(t, t.outputs().getFirst());
-                        System.out.println("ARC Number of Edges: "+copyPN.getNumberOfEdges());
-                        
-                        
-                    
+
+
+
+
                 }
             }
-                
+
           }
         }
         for(int i=0; i<copyPN.marking().size();i++){
             System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
         }
         //Place testPlace = (Place) startNode.getSelectedItem();;
-        
-        updateMarkings();
+
         //  Start and Target Hashmap change in if
         System.out.println("Test getting Start: "+this.start+" and Target: "+this.target+" Capacities: "+capacities);
-        
+
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoSelect.getSelectedItem().toString();
         if (algo.equals("Breadth First Search")) {
-            System.out.println("FEHLER in CONSTRAINT: "+start+" Target: "+target);
-        String trimStart = startNode.getSelectedItem().toString().substring(0, (startNode.getSelectedItem().toString().indexOf("=")));
-        System.out.println("STRING_STRIP: "+trimStart);
-        for(HashMap.Entry<Place, Long> entry : start.entrySet()){
-            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
-            System.out.println("VERGLEICH: "+trimStart);
-            if(trimStart == null ? entry.getKey().toString() == null : trimStart.equals(entry.getKey().toString())){
-                HashMap<Place, Long> newStart = new HashMap<>();
-                newStart.put(entry.getKey(), entry.getValue());
-                eStart = newStart;
-                System.out.println("START_FOR: "+start);
+            try {
+                System.out.println("FEHLER in CONSTRAINT: "+start+" Target: "+target);
+                String trimStart = startNode.getSelectedItem().toString().substring(0, (startNode.getSelectedItem().toString().indexOf("=")));
+                System.out.println("STRING_STRIP: "+trimStart);
+                for(HashMap.Entry<Place, Long> entry : start.entrySet()){
+                    System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
+                    System.out.println("VERGLEICH: "+trimStart);
+                    if(trimStart == null ? entry.getKey().toString() == null : trimStart.equals(entry.getKey().toString())){
+                        HashMap<Place, Long> newStart = new HashMap<>();
+                        newStart.put(entry.getKey(), entry.getValue());
+                        eStart = newStart;
+                        System.out.println("START_FOR: "+start);
+                    }
+
+                }
+                String trimEnd = sinkNode.getSelectedItem().toString().substring(0, (sinkNode.getSelectedItem().toString().indexOf("=")));
+                System.out.println("STRING_STRIP: "+trimEnd);
+                for(HashMap.Entry<Place, Long> entry : target.entrySet()){
+                    System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
+                    if(trimEnd == null ? entry.getKey().toString() == null : trimEnd.equals(entry.getKey().toString())){
+                        HashMap<Place, Long> newTarget = new HashMap<>();
+                        newTarget.put(entry.getKey(), entry.getValue());
+                        eTarget = newTarget;
+                        System.out.println("TARGET_FOR: "+ target);
+                    }
+
+                }
+
+
+
+
+                System.out.println("Test getting Start: "+start+" and Target: "+target+" E's "+eStart+" eEnd; "+eTarget);
+                path = new Pathfinder(copyPN, start, target, capacities, knockout, algo, eStart, eTarget);
+                
+
+
+            } catch (InterruptedException ex) {
+                java.util.logging.Logger.getLogger(ConstraintFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        }
-        String trimEnd = sinkNode.getSelectedItem().toString().substring(0, (sinkNode.getSelectedItem().toString().indexOf("=")));
-        System.out.println("STRING_STRIP: "+trimEnd);
-        for(HashMap.Entry<Place, Long> entry : target.entrySet()){
-            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
-            if(trimEnd == null ? entry.getKey().toString() == null : trimEnd.equals(entry.getKey().toString())){
-                HashMap<Place, Long> newTarget = new HashMap<>();
-                newTarget.put(entry.getKey(), entry.getValue());
-                eTarget = newTarget;
-                System.out.println("TARGET_FOR: "+ target);
-            }
-          
-        }
-            
-            
-            
-            System.out.println("Test getting Start: "+start+" and Target: "+target+" Capacities: "+capacities);
-            path = new Pathfinder(copyPN, start, target, capacities, knockout, algo, eStart, eTarget);
         } else {
             path = new Pathfinder(copyPN, start, target, capacities, null, algo);
+
         }
         if (!path.checkPIs(pinvs, start, target)) {
             LOGGER.warn("Aborting reachability analysis.");
             JOptionPane.showMessageDialog(this, "Start marking and target marking are incompatible. Sums for place invariants do not match.");            
             return;
-        }        
+        }  
         path.addListenerToAlgorithm(this);
+        System.out.println("??? ");
         path.run();
-        
-        
-        System.out.println("FEHLER in CONSTRAINT: "+start+" Target: "+target);
-        String trimStart = startNode.getSelectedItem().toString().substring(0, (startNode.getSelectedItem().toString().indexOf("=")));
-        System.out.println("STRING_STRIP: "+trimStart);
-        for(HashMap.Entry<Place, Long> entry : start.entrySet()){
-            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
-            System.out.println("VERGLEICH: "+trimStart);
-            if(trimStart == null ? entry.getKey().toString() == null : trimStart.equals(entry.getKey().toString())){
-                HashMap<Place, Long> newStart = new HashMap<>();
-                newStart.put(entry.getKey(), entry.getValue());
-                start = newStart;
-                System.out.println("START_FOR: "+start);
-            }
-            
-        }
-        
-        
-        String trimEnd = sinkNode.getSelectedItem().toString().substring(0, (sinkNode.getSelectedItem().toString().indexOf("=")));
-        System.out.println("STRING_STRIP: "+trimEnd);
-        for(HashMap.Entry<Place, Long> entry : target.entrySet()){
-            System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
-            if(trimEnd == null ? entry.getKey().toString() == null : trimEnd.equals(entry.getKey().toString())){
-                HashMap<Place, Long> newTarget = new HashMap<>();
-                newTarget.put(entry.getKey(), entry.getValue());
-                eTarget = newTarget;
-                System.out.println("TARGET_FOR: "+ target);
-            }
-          
-        }
-        System.out.println("CHECKMAL: "+start+" "+target);
-            
-        
-       
-        
-        
-        
-        //updateMarkings();       
-        /**LOGGER.info("Requested computation of full reachability graph.");
-        path = new Pathfinder(copyPN, start, target, capacities, null, "Fullreach");//Fullreach
-        path.addListenerToAlgorithm(this);
-        path.run();*/
-        
+        //Here update marking?
+        System.out.println("Ist hier das Ende???"); // -> 
         
 
-        
-
-        
-        
         
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
-     * @author Marcel Germann
+     * Updates table in JFrame
      */
     private void updateMarkings() {
-        LOGGER.info("Updating markings from table.");
+        
+        DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
+        
         for (int i = 0; i < markingTable.getRowCount(); ++i) {
-            start.put((Place) markingTable.getValueAt(i, 0), (Long) markingTable.getValueAt(i, 1));
-            target.put((Place) markingTable.getValueAt(i, 0), (Long) markingTable.getValueAt(i, 2));
+            for(int j = 0; j < BreadthFirst.getUpdateFrame().size(); j++){
+                Object keyC = markingTable.getValueAt(0, i);
+                Place p = pn.findPlace(j); //gibt place aus
+             
+                model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 1);
+                model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 2);
+               
+               
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
         }
+        }
+        
         LOGGER.info("Successfully updated markings from table.");
+    }
+    
+    public void useUpdateMarking(){
+        updateMarkings();
     }
     
    
@@ -628,6 +601,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void restorePNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restorePNActionPerformed
         // TODO add your handling code here:
         // First clear all panels, then fill them again
+        System.out.println("RESTORE");
+        backUFacade = pn;
+        
         for(int i = 0; i<onTransition.getItemCount();i++){
             onTransition.remove(onTransition.getItem(i));
             onTransition.removeAll();
@@ -756,18 +732,28 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 // Do a popup that says things have been terminated at X steps?
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
                 progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
+                what.setForeground(new Color(204, 0, 0));
                 what.setText("Aborted");
+                updateMarkings();
                 break;
             case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
                 lock(true); // Ensures that only one algorithm runs at a time.
                 break;
+            case EQUALNODE:
+                lock(false);
+                progressLabel.setForeground(new Color(0, 0, 153));
+                progressLabel.setText("Start- and targetnode are equal!");
+                what.setForeground(new Color(0, 102, 0));
+                what.setText("[Success]"); 
+                break;
             case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                 lock(false);
                 ArrayList<Transition> path = e.getBacktrack();
+                updateMarkings();
                 // Should probably handle displaying output
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
                 progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
-                what.setForeground(Color.GREEN);
+                what.setForeground(new Color(0, 102, 0));
                 what.setText("[Success] Target node reached!");
                 break;
             case FAILURE: // Fired when an algorithm fails to find the target marking.
@@ -775,12 +761,14 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 // Should output failure.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
                 progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
-                what.setForeground(Color.RED);
+                what.setForeground(new Color(204, 0, 0));
                 what.setText("[Failure] Target node not reachable!");
+                updateMarkings();
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
                 progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
+                what.setForeground(new Color(102, 0, 253));
                 what.setText("Progress");
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
@@ -788,9 +776,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
                 progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
                 // Somehow display the graph? Otherwise this doesn't do much.
-                what.setForeground(Color.GREEN);
-
+                what.setForeground(new Color(0, 102, 0));
                 what.setText("Finished");
+                updateMarkings();
                 break;
             default:
                 break;

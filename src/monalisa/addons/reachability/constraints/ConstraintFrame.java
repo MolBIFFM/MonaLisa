@@ -313,6 +313,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         visitedNodeText.setText("Visited Nodes [completely]:");
 
+        transitionList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transitionListActionPerformed(evt);
+            }
+        });
+
         jLabel8.setText("Transition must be used [only one possible]:");
 
         chooseButton.setText("Choose transition");
@@ -769,6 +775,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // TODO add your handling code here:
     }//GEN-LAST:event_nodesActionPerformed
 
+    private void transitionListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transitionListActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_transitionListActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -891,6 +901,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
+                setUsedTransitionTable();
                 setVisitedNodes();
                 break;
             case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
@@ -905,6 +916,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 setVisitedNodes();
+                setUsedTransitionTable();
                 break;
             case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                 lock(false);
@@ -921,6 +933,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 setUsedTransitionTable();
                 setVisitedNodes();
+                setUsedTransitionTable();
                 break;
             case FAILURE: // Fired when an algorithm fails to find the target marking.
                 lock(false);
@@ -934,6 +947,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
+                setUsedTransitionTable();
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
@@ -944,6 +958,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 PlaceTitel.setText("Places and token after firing");
                 firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                setUsedTransitionTable();
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
                 lock(false);
@@ -958,6 +973,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
                 setVisitedNodes();
+                setUsedTransitionTable();
                 break;
             default:
                 break;

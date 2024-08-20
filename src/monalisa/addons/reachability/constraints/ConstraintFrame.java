@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -64,6 +65,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private HashMap<Place, Long> eStart = null;
     private HashMap<Place, Long> eTarget = null;
     private boolean computed = false;
+    private boolean pushed = false;
   
     
 
@@ -120,8 +122,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
             
         }
+        //Fills list [transition musst be used] with transitions
         for(Transition t : transitionSet){
                 onTransition.add(t.toString());
+                transitionList.add(t.toString());
             }
             
         
@@ -141,7 +145,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
            }
         
         }
-        
 
         algoSelect.setActionCommand("Breadth First Search");
         algoSelect.setActionCommand("Best First Search");
@@ -188,12 +191,20 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         jScrollPane1 = new javax.swing.JScrollPane();
         markingTable = new javax.swing.JTable();
         PlaceTitel = new javax.swing.JLabel();
-        progressLabel = new javax.swing.JLabel();
         what = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         used = new java.awt.List();
+        firedTransitionText = new javax.swing.JLabel();
+        nodes = new java.awt.List();
+        visitedNodeText = new javax.swing.JLabel();
+        transitionList = new java.awt.List();
+        jLabel8 = new javax.swing.JLabel();
+        chooseButton = new javax.swing.JButton();
+        chooseText = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(getSize());
+        setPreferredSize(new java.awt.Dimension(667, 800));
+        setSize(new java.awt.Dimension(667, 800));
 
         Reachability.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
         Reachability.setText("Reachability with constraints");
@@ -253,11 +264,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         });
 
+        onTransition.setMaximumSize(new java.awt.Dimension(80, 60));
+        onTransition.setMinimumSize(new java.awt.Dimension(80, 60));
+        onTransition.setPreferredSize(new java.awt.Dimension(60, 80));
         onTransition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onTransitionActionPerformed(evt);
             }
         });
+
+        offTransition.setMaximumSize(new java.awt.Dimension(80, 60));
+        offTransition.setMinimumSize(new java.awt.Dimension(80, 60));
 
         restorePN.setText("Restore PN");
         restorePN.addActionListener(new java.awt.event.ActionListener() {
@@ -278,11 +295,41 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         PlaceTitel.setText("Place and token before fireing");
 
-        progressLabel.setText("Number of nodes extended: 0");
+        what.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
-        what.setText("what");
+        used.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usedActionPerformed(evt);
+            }
+        });
 
-        jLabel7.setText("Active transitions");
+        firedTransitionText.setText("Fired transitions:");
+
+        nodes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nodesActionPerformed(evt);
+            }
+        });
+
+        visitedNodeText.setText("Visited Nodes [completely]:");
+
+        jLabel8.setText("Transition must be used [only one possible]:");
+
+        chooseButton.setText("Choose transition");
+        chooseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseButtonActionPerformed(evt);
+            }
+        });
+
+        chooseText.setText("Chosen transition:");
+
+        jButton2.setText("Reset transition");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -291,108 +338,119 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Reachability)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(212, 212, 212))
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chooseText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(progressLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                                            .addComponent(startNode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(onTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGap(36, 36, 36)
-                                        .addComponent(offTransition, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addGap(0, 144, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(sinkNode, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(PlaceTitel, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(66, 66, 66))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(what, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addGap(66, 66, 66))
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                    .addComponent(startNode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(onTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(offTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sinkNode, 0, 147, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1)
+                    .addComponent(algoSelect, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(used, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PlaceTitel, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(transitionList, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(restorePN, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(61, 61, 61))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(chooseButton, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(used, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(firedTransitionText, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 247, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(nodes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(restorePN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(visitedNodeText, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))))
+                .addGap(60, 60, 60))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(Reachability)
-                .addGap(49, 49, 49)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(startNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sinkNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(88, 88, 88)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(startNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(sinkNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(Reachability)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(onTransition, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(offTransition, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(PlaceTitel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4))
+                    .addComponent(onTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(offTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(50, 50, 50)
+                .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(transitionList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(chooseButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chooseText)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(progressLabel)
-                .addGap(18, 18, 18)
-                .addComponent(what)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
+                .addComponent(PlaceTitel)
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(used, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(firedTransitionText)
+                    .addComponent(visitedNodeText))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(nodes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(used, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(restorePN))
-                .addGap(27, 27, 27))
+                .addGap(41, 41, 41))
         );
 
         pack();
@@ -461,6 +519,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_onTransitionActionPerformed
 
+    private boolean PushButton(){
+        return pushed = true;
+    }
+    
+    
+    
    // Reset button off transition side.
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
@@ -485,14 +549,16 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
+        if(pushed==true){
+            restorePNActionPerformed(evt);
+        }
+        PushButton();
         
-
         PetriNetFacade copyPN = this.pn;
         PetriNetFacade backUpPN = this.pn;
         String selectedCombo = algoSelect.getSelectedItem().toString();
         // Getting transition to delete by iterating over list of transitions in 
         // Place object
-        System.out.println("PN BEFORE: "+copyPN.transitions().iterator().next());
 
         if(onTransition.getItemCount()==0){
             JOptionPane.showMessageDialog(null, "***No transition switched on.***\n"
@@ -515,11 +581,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         if(offTransition.getItemCount()>0){
           // iterates over transitions in copied PN.
             for(Transition t : copyPN.transitions()){
-                System.out.println("TRANSITION: "+t.id()+" ; "+t);
                 String searchTransition = t.toString();
                 //Transition objTransition = t;
                 for(int i = 0; i < offTransition.getItemCount(); i++){
-                    System.out.println("TASTYTAST: "+offTransition.getItem(i));
                     String trans = offTransition.getItem(i);
                     // If transition strings (names) are equal
                     if(searchTransition == null ? trans == null : searchTransition.equals(trans)){
@@ -542,35 +606,26 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         //Place testPlace = (Place) startNode.getSelectedItem();;
 
         //  Start and Target Hashmap change in if
-        System.out.println("Test getting Start: "+this.start+" and Target: "+this.target+" Capacities: "+capacities);
 
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoSelect.getSelectedItem().toString();
         if (algo.equals("Breadth First Search")) {
             try {
-                System.out.println("FEHLER in CONSTRAINT: "+start+" Target: "+target);
                 String trimStart = startNode.getSelectedItem().toString().substring(0, (startNode.getSelectedItem().toString().indexOf("=")));
-                System.out.println("STRING_STRIP: "+trimStart);
                 for(HashMap.Entry<Place, Long> entry : start.entrySet()){
-                    System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
-                    System.out.println("VERGLEICH: "+trimStart);
                     if(trimStart == null ? entry.getKey().toString() == null : trimStart.equals(entry.getKey().toString())){
                         HashMap<Place, Long> newStart = new HashMap<>();
                         newStart.put(entry.getKey(), entry.getValue());
                         eStart = newStart;
-                        System.out.println("START_FOR: "+start);
                     }
 
                 }
                 String trimEnd = sinkNode.getSelectedItem().toString().substring(0, (sinkNode.getSelectedItem().toString().indexOf("=")));
-                System.out.println("STRING_STRIP: "+trimEnd);
                 for(HashMap.Entry<Place, Long> entry : target.entrySet()){
-                    System.out.println("PLACE: "+entry.getKey()+" Value: "+entry.getValue());
                     if(trimEnd == null ? entry.getKey().toString() == null : trimEnd.equals(entry.getKey().toString())){
                         HashMap<Place, Long> newTarget = new HashMap<>();
                         newTarget.put(entry.getKey(), entry.getValue());
                         eTarget = newTarget;
-                        System.out.println("TARGET_FOR: "+ target);
                     }
 
                 }
@@ -578,7 +633,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
 
 
-                System.out.println("Test getting Start: "+start+" and Target: "+target+" E's "+eStart+" eEnd; "+eTarget);
                 path = new Pathfinder(copyPN, start, target, capacities, knockout, algo, eStart, eTarget);
                 
 
@@ -596,10 +650,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             return;
         }  
         path.addListenerToAlgorithm(this);
-        System.out.println("??? ");
         path.run();
         //Here update marking?
-        System.out.println("Ist hier das Ende???"); // -> 
         
 
         
@@ -674,7 +726,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(Transition t : transitionSet){
                 onTransition.add(t.toString());
             }
-        progressLabel.setText("Number of nodes extended: 0");
+        visitedNodeText.setText("Visited nodes [CPLT]:");
+        firedTransitionText.setText("Fired transitions: ");
         what.setText("");
         
         for(int i = 0; i < used.getItemCount(); i++){
@@ -684,12 +737,37 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
         PlaceTitel.setForeground(Color.BLACK);
         PlaceTitel.setText("Places and token before firing");
+        
+        for(int i = 0; i < nodes.getItemCount(); i++){
+            nodes.remove(0);
+            nodes.removeAll();
+            
+        }
     
     }//GEN-LAST:event_restorePNActionPerformed
 
     private void sinkNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sinkNodeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_sinkNodeActionPerformed
+
+    private void usedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usedActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usedActionPerformed
+
+    private void chooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseButtonActionPerformed
+        // TODO add your handling code here:
+        String selectedTransition = transitionList.getSelectedItem();
+        chooseText.setText("Chosen transition: "+selectedTransition);
+    }//GEN-LAST:event_chooseButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        chooseText.setText("Chosen transition: ");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void nodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nodesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nodesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -736,7 +814,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JLabel Reachability;
     private javax.swing.JComboBox<String> algoSelect;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton chooseButton;
+    private javax.swing.JLabel chooseText;
+    private javax.swing.JLabel firedTransitionText;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
@@ -744,16 +826,18 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable markingTable;
+    private java.awt.List nodes;
     private java.awt.List offTransition;
     private java.awt.List onTransition;
-    private javax.swing.JLabel progressLabel;
     private javax.swing.JButton restorePN;
     private javax.swing.JComboBox<String> sinkNode;
     private javax.swing.JComboBox<String> startNode;
+    private java.awt.List transitionList;
     private java.awt.List used;
+    private javax.swing.JLabel visitedNodeText;
     private javax.swing.JLabel what;
     // End of variables declaration//GEN-END:variables
 
@@ -770,6 +854,20 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
        
     }
+    
+    public void setVisitedNodes(){
+        for(Map.Entry<Place, Long> entry : BreadthFirst.visitedNodes.entrySet()){
+            nodes.add(entry.getKey().toString()+"      ID: "+entry.getKey().id());
+        }
+    }
+    
+    public int getNumberVisitedNodes(){
+        return BreadthFirst.visitedNodes.size();
+    }
+    
+    public int getNumberFiredTransitions(){
+        return BreadthFirst.usedTransitions.size();
+    }
     /**
      * @author Marcel Germann
      * @param e 
@@ -785,22 +883,28 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 lock(false);
                 // Do a popup that says things have been terminated at X steps?
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
-                progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
+                //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(204, 0, 0));
                 what.setText("Aborted");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing.");
+                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
+                setVisitedNodes();
                 break;
             case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
                 lock(true); // Ensures that only one algorithm runs at a time.
                 break;
             case EQUALNODE:
                 lock(false);
-                progressLabel.setForeground(new Color(0, 0, 153));
-                progressLabel.setText("Start- and targetnode are equal!");
+               // progressLabel.setForeground(new Color(0, 0, 153));
+                //progressLabel.setText("Start- and targetnode are equal!");
                 what.setForeground(new Color(0, 102, 0));
                 what.setText("[Success]"); 
+                firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                setVisitedNodes();
                 break;
             case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                 lock(false);
@@ -808,42 +912,52 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 updateMarkings();
                 // Should probably handle displaying output
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
-                progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
+                //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(0, 102, 0));
                 what.setText("[Success] Target node reached!");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
+                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 setUsedTransitionTable();
+                setVisitedNodes();
                 break;
             case FAILURE: // Fired when an algorithm fails to find the target marking.
                 lock(false);
                 // Should output failure.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
-                progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
+                //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(204, 0, 0));
                 what.setText("[Failure] Target node not reachable!");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
+                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
-                progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
+               // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
                 what.setForeground(new Color(102, 0, 253));
                 what.setText("Progress");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
+                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
                 lock(false);
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
-                progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
+                //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
                 // Somehow display the graph? Otherwise this doesn't do much.
                 what.setForeground(new Color(0, 102, 0));
                 what.setText("Finished");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
+                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                 updateMarkings();
+                setVisitedNodes();
                 break;
             default:
                 break;

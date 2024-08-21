@@ -476,6 +476,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     }
 
                     }
+                
 
 
 
@@ -501,6 +502,15 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                  workingNode.setVisited();
                  rNodeList.remove(0);
 
+                /** for(Transition k : activeTransitions){
+                    if(k.getUsed()== true){
+                        updateFrame.putAll(newMarkingMap);// Token are right
+                        usedTransitions = backtrack;
+                        fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
+                        return;
+                 
+                    }
+                }*/
 
                  /**HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
                  System.out.println("Update Transition "+activeTransitions);

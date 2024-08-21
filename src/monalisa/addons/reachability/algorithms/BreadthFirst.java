@@ -299,8 +299,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                                 resetMap.entrySet().forEach(a -> System.out.println("## "+a.getKey()+" value: "+a.getValue()));
                                                 updateFrame.putAll(newMarkingMap);// Token are right
                                                 System.out.println("TABLE: "+updateFrame);
-                                                t.setUsed();
-                                                backtrack.add(t);
+                                                
                                                 usedTransitions = backtrack;
                                                 fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
                                                 return;
@@ -382,7 +381,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 
                          
                     
-                    if(t.getUsed()==true){
+                    if(t.getUsed()==true && workingNode.getVisited()==true){
                         if(!eStart.equals(eTarget)){
                             if(t.getUsed()==true && t.getActive()==true){
                         backtrack.add(t);

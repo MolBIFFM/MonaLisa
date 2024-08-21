@@ -176,7 +176,7 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="91" max="-2" attributes="0"/>
-              <EmptySpace pref="24" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="algoSelect" min="-2" max="-2" attributes="0"/>
@@ -341,9 +341,9 @@
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="3" rowCount="0">
-                <Column editable="true" title="Place" type="java.lang.Object"/>
-                <Column editable="true" title="Starting Token Amount" type="java.lang.Object"/>
-                <Column editable="true" title="Target Token Amount" type="java.lang.Object"/>
+                <Column editable="true" title="Place [Name]" type="java.lang.Object"/>
+                <Column editable="true" title="Available [#Token]" type="java.lang.Object"/>
+                <Column editable="true" title="Arc P-&gt;T [Weight]" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

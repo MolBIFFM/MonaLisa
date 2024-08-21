@@ -94,14 +94,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         //DefaultListModel model = new DefaultListModel();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         for (Place p : pn.places()) {
+            for(Transition t : p.outputs()){
             model.addRow(new Object[]{
                 p,
                 start.get(p),
-                target.get(p),
-                capacities.put(p, pn.getTokens(p))
+                //target.get(p),
+               // capacities.put(p, pn.getTokens(p))
+                pn.getArc(p, t).weight(),
+               
             });
-           // capacities.put(p, 0L); -> Not sure if capacities need to be 0
-            System.out.println("CAPACITIES: "+capacities);
+                System.out.println("C: "+ pn.getArc(p, t).weight());
+        }
         }
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : pn.places()) {
@@ -145,6 +148,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
            }
         
         }
+        
         
         algoSelect.setActionCommand("Breadth First Search");
         algoSelect.setActionCommand("Best First Search");
@@ -281,7 +285,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
             },
             new String [] {
-                "Place", "Starting Token Amount", "Target Token Amount"
+                "Place [Name]", "Available [#Token]", "Arc P->T [Weight]"
             }
         ));
         jScrollPane1.setViewportView(markingTable);
@@ -442,7 +446,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     .addComponent(tryAgain, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(algoSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -682,7 +686,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 Place p = pn.findPlace(j); //gibt place aus
              
                 model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 1);
-                model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 2);
+               // model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 2);
+               for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
+                   model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
+               }
+                
                
                
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
@@ -954,8 +962,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 what.setText("[Success] Target node reached!");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 setVisitedNodes();
                 setUsedTransitionTable();
                 break;
@@ -968,8 +976,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 what.setText("[Failure] Target node not reachable!");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 updateMarkings();
                 setUsedTransitionTable();
                 break;
@@ -980,8 +988,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 what.setText("Progress");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 setUsedTransitionTable();
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
@@ -993,8 +1001,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 what.setText("Finished");
                 PlaceTitel.setForeground(new Color(0, 0, 153));
                 PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 updateMarkings();
                 setVisitedNodes();
                 setUsedTransitionTable();

@@ -34,7 +34,6 @@ import sun.security.util.Debug;
 public class BreadthFirst extends AbstractReachabilityAlgorithm {
 
    private static final Logger LOGGER = LogManager.getLogger(BreadthFirst.class);
-
    private HashMap<Place, Long> eTarget;
    private HashMap<Place, Long> eStart;
    public static HashMap<Place, Long> updateFrame = new HashMap<>();
@@ -77,6 +76,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         */
         if(eStart != null && eTarget !=null){
             resetAll();
+            
             LOGGER.debug("Starting BFS with specific start and target node");
             // If start and target are equal. Stop program.
             PetriNet newPN = new PetriNet();
@@ -146,12 +146,15 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             //reachabilityNodesList.addAll(rNodeList);
             
             
+            
             HashMap<Place, Long> resetMap = new HashMap<>();
             firstNode = eStart;
+            
 
             while(!rNodeList.isEmpty() && !isInterrupted()){   
                 counter +=1;
                 updateFrame.putAll(newMarkingMap);
+                
                 if (counter % 100 == 0) {
                     fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
                 }
@@ -165,7 +168,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 System.out.println("");
                 System.out.println("");
                 for(Transition t : activeTransitions){
-                    System.out.println("Start ForLoop Transition: "+t+ " boolean: "+t.getActive());
+                    System.out.println("Start ForLoop Transition: "+t+ " boolean: "+t.getActive()+" used: "+t.getUsed());
                     if(t.getUsed()== false){
                      // If workingNode and transition input are equal -> create edge in reachabilitygraph 
                      // between those two nodes
@@ -185,20 +188,39 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                     newMarkingMap.putAll(newMarkingOutputPlace);
                                     counter +=1;
                                     updateFrame.putAll(newMarkingOutputPlace);
-                                    if(updateNode.equals(eTarget)){
-                                        t.setUsed();
-                                        if(t.getUsed()==true && t.getActive()==true){
-                                            backtrack.add(t);
-                                            edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
-                                        }
-                                        rNodeList.forEach((a)->System.out.println("rNodeListLAST: "+a.getMarking()));
-                                        resetMap.entrySet().forEach(a -> System.out.println("## "+a.getKey()+" value: "+a.getValue()));
+                                    t.setUsed();
+                                    System.out.println("START: "+eStart+" Target: "+eTarget+" bool "+eStart.equals(eTarget));
+                                    
+                                    // Can be deleted?
+                                    if(eStart.equals(eTarget)&& workingNode.getSecondVisit()==true){
+                                        workingNode.setUnvisited();
+                                        rNodeList.addLast(workingNode);
+                                        System.out.println("SecondVisit: "+workingNode.getSecondVisit()+" Node: "+workingNode.getMarking());
                                         updateFrame.putAll(newMarkingMap);// Token are right
                                         System.out.println("TABLE: "+updateFrame);
+                                        t.setUsed();
                                         usedTransitions = backtrack;
                                         fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
                                         return;
-                                                        }
+                                     }
+                                   /** if(eStart.equals(eTarget)&& workingNode.getSecondVisit()==false){
+                                         workingNode.setSecondVisit();
+                                         rNodeList.addLast(workingNode);
+                                         
+                                     }*/
+                                    if(!eStart.equals(eTarget)){
+                                        if(updateNode.equals(eTarget)){
+                                            //t.setUsed();
+                                          
+                                            rNodeList.forEach((a)->System.out.println("rNodeListLAST: "+a.getMarking()));
+                                            resetMap.entrySet().forEach(a -> System.out.println("## "+a.getKey()+" value: "+a.getValue()));
+                                            updateFrame.putAll(newMarkingMap);// Token are right
+                                            System.out.println("TABLE: "+updateFrame);
+                                            t.setUsed();
+                                            usedTransitions = backtrack;
+                                            fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
+                                            return;
+                                    }               }
                                     // Update reachabilitynode value
                                     for(ReachabilityNode n : reachabilityNodesList){
                                         if(n.getMarking().keySet().equals(newMarkingOutputPlace.keySet())){
@@ -210,9 +232,18 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                              }
                      }
                     t.setUsed();
+                    if(t.getUsed()==true && t.getActive()==true){
+                            backtrack.add(t);
+                            System.out.println("BACKTRACK: "+t);
+                            edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
+                        }
+                    
                     System.out.println("--------------------------------");
                     System.out.println("--- NewMarking: "+newMarkingMap+" ---");
                     System.out.println("--------------------------------");
+                    System.out.println("--- WorkingNode: "+workingNode.getMarking()+" First visit: "+workingNode.getVisited()+" second visit: "+workingNode.getSecondVisit()+"------");
+                    System.out.println("--------------------------------");
+                    System.out.println("---- PreNode: "+workingNode.getPrev().getMarking()+" visited once: "+workingNode.getPrev().getVisited()+" visited twice: "+workingNode.getPrev().getSecondVisit());
                     System.out.println("---------- "+t+" is used: "+t.getUsed()+" ------------");
                     System.out.println("----------Only Output End--------------");
                     System.out.println("");
@@ -250,28 +281,67 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                         updateFrame.putAll(newMarkingOutputPlace);
                                         ReachabilityNode rNode = new ReachabilityNode(updateNodeOUT, workingNode);
                                         System.out.println("Output: "+newMarkingOutputPlace);
-                                        if(updateNodeOUT.equals(eTarget)){
-                                            t.setUsed();
-                                            if(t.getUsed()==true && t.getActive()==true){
+                                        System.out.println("START: "+eStart+" Target: "+eTarget+" bool: "+eStart.equals(eTarget));
+                                       
+                                        
+                                        
+                                        if(!eStart.equals(eTarget)){
+                                            System.out.println("HIER: "+!eStart.equals(eTarget));
+                                            if(updateNodeOUT.equals(eTarget)){
+                                                t.setUsed();
+                                                if(t.getUsed()==true && t.getActive()==true){
+                                                    backtrack.add(t);
+                                                    System.out.println("BACKTRACK: "+t);
+                                                    edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
+                                                }
+                                                //HIER gucken
+                                                rNodeList.forEach((a)->System.out.println("rNodeListLAST: "+a.getMarking()));
+                                                resetMap.entrySet().forEach(a -> System.out.println("## "+a.getKey()+" value: "+a.getValue()));
+                                                updateFrame.putAll(newMarkingMap);// Token are right
+                                                System.out.println("TABLE: "+updateFrame);
+                                                t.setUsed();
                                                 backtrack.add(t);
-                                                edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
+                                                usedTransitions = backtrack;
+                                                fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
+                                                return;
                                             }
-                                            rNodeList.forEach((a)->System.out.println("rNodeListLAST: "+a.getMarking()));
-                                            resetMap.entrySet().forEach(a -> System.out.println("## "+a.getKey()+" value: "+a.getValue()));
-                                            updateFrame.putAll(newMarkingMap);// Token are right
-                                            System.out.println("TABLE: "+updateFrame);
-                                            usedTransitions = backtrack;
-                                            fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
-                                            return;
-                                        }
+                                        
+                                      }
                                     }
                                     
                                 }
+                                if(eStart.equals(eTarget)&& workingNode.getPrev().getSecondVisit()==true && updateNodeOUT.equals(eTarget)){
+                            rNodeList.addLast(workingNode);
+                            updateFrame.putAll(newMarkingMap);// Token are right
+                            
+                            System.out.println("TABLE: "+updateFrame);
+                            t.setUsed();
+                            backtrack.add(t);
+                            usedTransitions = backtrack;
+                            fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
+                            return;
+                         }
                             }
+                            
                         }
+                        if(eStart.equals(eTarget)&& workingNode.getSecondVisit()==false){
+                            workingNode.setSecondVisit();
+                            rNodeList.addLast(workingNode);
+                        }
+                        
+                        workingNode.setVisited();
                         t.setUsed();
+                        if(t.getUsed()==true && t.getActive()==true){
+                                backtrack.add(t);
+                                System.out.println("BACKTRACK: "+t);
+                                edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
+                            }
                         System.out.println("--------------------------------");
                         System.out.println("--- NewMarking: "+newMarkingMap+" ---");
+                        System.out.println("--------------------------------");
+                        System.out.println("--- WorkingNode: "+workingNode.getMarking()+" First visit: "+workingNode.getVisited()+" second visit: "+workingNode.getSecondVisit()+"------");
+                        System.out.println("--------------------------------");
+                        System.out.println("---- PreNode: "+workingNode.getPrev().getMarking()+" visited once: "+workingNode.getPrev().getVisited()+" visited twice: "+workingNode.getPrev().getSecondVisit());
                         System.out.println("--------------------------------");
                         System.out.println("---------- "+t+" is used: "+t.getUsed()+" ------------");
                         System.out.println("----------In/Output End--------------");
@@ -308,12 +378,24 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     }
                     
                     }
+                    
                 
                          
-                    if(t.getUsed()==true && t.getActive()==true){
+                    
+                    if(t.getUsed()==true){
+                        if(!eStart.equals(eTarget)){
+                            if(t.getUsed()==true && t.getActive()==true){
                         backtrack.add(t);
+                        System.out.println("BACKTRACK: "+t);
                         edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
                     }
+                        updateFrame.putAll(newMarkingMap);// Token are right
+                        usedTransitions = backtrack;
+                        System.out.println("UNTEN: "+usedTransitions);
+                        fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
+                        return;
+                        }
+}
                   
                    
                 }  
@@ -321,9 +403,13 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                  rNodeList.get(0).setVisited();
                  vertices.add(workingNode);
                  workingNode.setVisited();
-                 
-                
                  rNodeList.remove(0);
+                 /**System.out.println("START: "+eStart+" Target: "+eTarget);
+                 if(eStart.toString()== eTarget.toString()){
+                     workingNode.setUnvisited();
+                     rNodeList.addLast(workingNode);
+                 }*/
+                 
                  HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
                  System.out.println("Update Transition "+activeTransitions);
                  activeTransitions = activeTransitionsUpdate;
@@ -333,7 +419,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                  activeTransitions.forEach((a)->System.out.println("active and used: "+a+" #"+a.getUsed()+" #"+a.getActive()));
                  System.out.println("Visited: "+workingNode.getVisited()+" Node: "+workingNode.getMarking());
                  System.out.println("WORK: "+workingNode.getMarking()+" visit: "+workingNode.getVisited());
-                 if(workingNode.getMarking().keySet().equals(eTarget.keySet()) ){
+                /** if(workingNode.getMarking().keySet().equals(eTarget.keySet()) ){
                      System.out.println("ENDE "+workingNode.getMarking());
                      if(eStart.equals(eTarget)){
                          
@@ -353,7 +439,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                      usedTransitions = backtrack;
                      fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrackList(backtrack));
                      return;
-                 }}
+                 }}*/
                  if(workingNode.getMarking().keySet().equals(eTarget.keySet())&& workingNode.getVisited()==false){
                      fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
                      return;
@@ -434,6 +520,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
     }
    
    public void resetAll(){
+       
        for(Transition t : pf.getBackup().transitions()){
            t.resetTransitions();
        }

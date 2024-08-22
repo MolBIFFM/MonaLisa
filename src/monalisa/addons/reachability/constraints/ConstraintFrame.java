@@ -70,7 +70,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
 
     /**
-     * Creates new form ConstraintFrame
+     * ConstraintFrame
      * @param pn
      * @param start
      * @param pinvs
@@ -98,8 +98,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             model.addRow(new Object[]{
                 p,
                 start.get(p),
-                //target.get(p),
-               // capacities.put(p, pn.getTokens(p))
                 pn.getArc(p, t).weight(),
                
             });
@@ -285,7 +283,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
             },
             new String [] {
-                "Place [Name]", "Available [#Token]", "Arc P->T [Weight]"
+                "Place [Name]", "Available [#Token]", "Arc P=>T [Weight]"
             }
         ));
         jScrollPane1.setViewportView(markingTable);
@@ -564,15 +562,19 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO delete transition out of PN
         if(pushed==true){
-            restorePNActionPerformed(evt);
+            //restorePNActionPerformed(evt);
+            tryAgain.setText("");
+            chosenAND.setText("");
+            chooseButton.setText("Check if already used");
+
+            used.clear();
+            nodes.clear();
+            pushed =false;
         }
-        tryAgain.setText("");
-        chosenAND.setText("");
-        chooseButton.setText("Check if already used");
+        
         PushButton();
         
         PetriNetFacade copyPN = this.pn;
-        PetriNetFacade backUpPN = this.pn;
         String selectedCombo = algoSelect.getSelectedItem().toString();
         // Getting transition to delete by iterating over list of transitions in 
         // Place object
@@ -620,7 +622,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(int i=0; i<copyPN.marking().size();i++){
             System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
         }
-        //Place testPlace = (Place) startNode.getSelectedItem();;
 
         //  Start and Target Hashmap change in if
 
@@ -644,22 +645,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         newTarget.put(entry.getKey(), entry.getValue());
                         eTarget = newTarget;
                     }
-
                 }
-
-
-
-
                 path = new Pathfinder(copyPN, start, target, capacities, knockout, algo, eStart, eTarget);
-                
-
-
             } catch (InterruptedException ex) {
                 java.util.logging.Logger.getLogger(ConstraintFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             path = new Pathfinder(copyPN, start, target, capacities, null, algo);
-
         }
         if (!path.checkPIs(pinvs, start, target)) {
             LOGGER.warn("Aborting reachability analysis.");
@@ -668,9 +660,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }  
         path.addListenerToAlgorithm(this);
         path.run();
-        
-
-        
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -690,11 +679,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
                    model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
                }
-                
-               
-               
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
-        }
+            }
         }
         
         LOGGER.info("Successfully updated markings from table.");
@@ -714,6 +700,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         backUFacade = pn;
         chooseButton.setText("Choose transition");
         tryAgain.setText("");
+        chosenAND.setText("");
         for(int i = 0; i<onTransition.getItemCount();i++){
             onTransition.remove(onTransition.getItem(i));
             onTransition.removeAll();
@@ -764,6 +751,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             nodes.removeAll();
             
         }
+        for(int i = 0; i < used.getItemCount(); i++){
+            used.remove(0);
+            used.removeAll();   
+            
+        }
     
     }//GEN-LAST:event_restorePNActionPerformed
 
@@ -776,7 +768,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     }//GEN-LAST:event_usedActionPerformed
 
     private void chooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseButtonActionPerformed
-        // TODO add your handling code here:
         String selectedTransition = transitionList.getSelectedItem();
         chooseText.setText("Chosen transition: "+selectedTransition);
         boolean hasBeenUsed = false;
@@ -901,6 +892,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     public void setVisitedNodes(){
         for(Map.Entry<Place, Long> entry : BreadthFirst.visitedNodes.entrySet()){
             nodes.add(entry.getKey().toString()+"      ID: "+entry.getKey().id());
+            
         }
     }
     
@@ -980,6 +972,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 updateMarkings();
                 setUsedTransitionTable();
+                if(eStart.equals(eTarget)){
+                    nodes.add("[Startnode NOT visited as target]");
+                }
+                setVisitedNodes();
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");

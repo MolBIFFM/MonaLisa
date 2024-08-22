@@ -343,7 +343,7 @@
               <Table columnCount="3" rowCount="0">
                 <Column editable="true" title="Place [Name]" type="java.lang.Object"/>
                 <Column editable="true" title="Available [#Token]" type="java.lang.Object"/>
-                <Column editable="true" title="Arc P-&gt;T [Weight]" type="java.lang.Object"/>
+                <Column editable="true" title="Arc P=&gt;T [Weight]" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">

@@ -100,6 +100,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
          * @author Marcel Gehrmann
          */
         LOGGER.debug("Starting Breadth First Algorithm.");
+        
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -235,7 +236,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         verticesList.addAll(rNodeList);
         // Getting active transitions
         HashSet<Transition> activeTransitions =  pf.computeActiveTransitions(marking);
-
+        //STOP
 
         // Iterate over activated transitions
         // rNodeList contents reachabilitynodes with prenode
@@ -244,7 +245,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         //reachabilityNodesList.addAll(rNodeList);
 
 
-
+        visitedNodes.clear();//VISITCLEAR
         HashMap<Place, Long> resetMap = new HashMap<>();
         firstNode = eStart;
 
@@ -446,6 +447,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                         HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
                         System.out.println("Update Transition "+activeTransitions);
                         activeTransitions = activeTransitionsUpdate;
+                        System.out.println("Update Transition22 "+activeTransitions);
                     }
 
 
@@ -502,15 +504,22 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                  workingNode.setVisited();
                  rNodeList.remove(0);
 
-                /** for(Transition k : activeTransitions){
-                    if(k.getUsed()== true){
-                        updateFrame.putAll(newMarkingMap);// Token are right
-                        usedTransitions = backtrack;
-                        fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
-                        return;
+                int usedTCounter = 0;
+                for(Transition k : activeTransitions){
+                    if(k.getUsed()== true && k.getActive()==true){
+                        usedTCounter +=1;
+                        if(usedTCounter==activeTransitions.size()){
+                            System.out.println("ENDE: "+k+" | "+k.getUsed());
+                            updateFrame.putAll(newMarkingMap);// Token are right
+                            usedTransitions = backtrack;
+                            
+                            fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
+                            return;
+                        
+                        }
                  
                     }
-                }*/
+                }
 
                  /**HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
                  System.out.println("Update Transition "+activeTransitions);
@@ -600,7 +609,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         verticesList.addAll(rNodeList);
         // Getting active transitions
         HashSet<Transition> activeTransitions =  pf.computeActiveTransitions(marking);
-
 
         // Iterate over activated transitions
         // rNodeList contents reachabilitynodes with prenode

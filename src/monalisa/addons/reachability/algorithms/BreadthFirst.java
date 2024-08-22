@@ -177,13 +177,16 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         resetAll(); // needs to be fixed
             
         LOGGER.debug("Starting BFS with specific start and target node");
-        // If start and target are equal. Stop program.
         PetriNet newPN = new PetriNet();
-
-        /**if(eStart.equals(eTarget)){
+        
+        /**If start and target are equal. Stop program.
+         * Can be used. Now computes complete path through PN
+         * back to the startnode.
+        if(eStart.equals(eTarget)){
             fireReachabilityUpdate(ReachabilityEvent.Status.EQUALNODE, 0, null);
             return;
         }*/
+        
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
 
@@ -201,13 +204,13 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
          * Every node is initialized as reachabilitynode
          * With prenode
          */
-        //TODO: Include here computeMarking?
         for(Map.Entry<Place, Long> entry: marking.entrySet()){
             newMarkingMap.put(entry.getKey(), entry.getValue());
             HashMap<Place, Long> work = new HashMap<>();
 
             if(rNodeList.isEmpty()){
                 work.put(entry.getKey(), entry.getValue());
+                
                 ReachabilityNode firstNode = new ReachabilityNode(work, null);
                 rNodeList.add(firstNode);
                 root = firstNode;
@@ -228,6 +231,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             rNodeList.remove(0);
             ReachabilityNode exchange = new ReachabilityNode(rNodeList.getFirst().getMarking(), rNodeList.getLast());
             //rNodeList.remove(1);
+            
             rNodeList.remove(0);
             rNodeList.add(0, exchange);
 
@@ -248,8 +252,14 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         visitedNodes.clear();//VISITCLEAR
         HashMap<Place, Long> resetMap = new HashMap<>();
         firstNode = eStart;
+        for(ReachabilityNode r : rNodeList){
+            r.setUnvisited();
+        }
 
-
+        /**
+         * Actual algorithm starts here.
+         * Go through all nodes and compute its transitions.
+         */
         while(!rNodeList.isEmpty() && !isInterrupted()){   
             counter +=1;
             updateFrame.putAll(newMarkingMap);
@@ -259,7 +269,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             }
              // Grab node out of rNodeList. Remove same node out of list.
             ReachabilityNode workingNode = rNodeList.get(0);//Nimm den workingNode und gucke ihn an
-             //rNodeList.remove(rNodeList.get(0));// Angefasste nodes müssen aus der Liste entfernt werden
             reachabilityNodesList.add(workingNode);
             System.out.println("StartWork: "+workingNode.getMarking()+" visit: "+workingNode.getVisited());
              // Examine transitions. Look for t that belongs to working node.
@@ -478,25 +487,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     }
 
                     }
-                
-
-
-
-
-             /**       if(t.getUsed()==true && workingNode.getVisited()==true){
-                        if(!eStart.equals(eTarget)){
-                            if(t.getUsed()==true && t.getActive()==true){
-                        backtrack.add(t);
-                        System.out.println("BACKTRACK: "+t);
-                        edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, t));
-                    }
-                        updateFrame.putAll(newMarkingMap);// Token are right
-                        usedTransitions = backtrack;
-                        System.out.println("UNTEN: "+usedTransitions);
-                        fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));
-                        return;
-                        }
-                     }*/
+          
             }  
                  visitedNodes.putAll(workingNode.getMarking());
                  rNodeList.get(0).setVisited();
@@ -504,6 +495,10 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                  workingNode.setVisited();
                  rNodeList.remove(0);
 
+                 /**
+                  * If all active transitions have been used
+                  * and target isn't reached yet, label as failure
+                  */
                 int usedTCounter = 0;
                 for(Transition k : activeTransitions){
                     if(k.getUsed()== true && k.getActive()==true){
@@ -521,10 +516,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     }
                 }
 
-                 /**HashSet<Transition> activeTransitionsUpdate =  pf.computeActiveTransitions(newMarkingMap);
-                 System.out.println("Update Transition "+activeTransitions);
-                 activeTransitions = activeTransitionsUpdate;
-                 System.out.println("Updated Transitions: "+activeTransitions);*/
 
                  if(workingNode.getMarking().keySet().equals(eTarget.keySet())&& workingNode.getVisited()==false){
                      fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrackList(backtrack));

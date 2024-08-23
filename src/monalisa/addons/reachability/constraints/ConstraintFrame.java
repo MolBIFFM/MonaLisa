@@ -66,6 +66,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private HashMap<Place, Long> eTarget = null;
     private boolean computed = false;
     private boolean pushed = false;
+    private HashSet<Transition> transitions = new HashSet<>();
+    
+    public static Transition chooseTransition = null;
   
     
 
@@ -147,7 +150,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
         }
         
-        
+        transitions = transitionSet;
         algoSelect.setActionCommand("Breadth First Search");
         algoSelect.setActionCommand("Best First Search");
         algoSelect.setActionCommand("A*");
@@ -451,9 +454,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addGap(18, 18, 18)
                 .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(firedTransitionText)
-                    .addComponent(visitedNodeText))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(visitedNodeText, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(firedTransitionText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(nodes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -785,6 +788,14 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         String selectedTransition = transitionList.getSelectedItem();
         chooseText.setText("Chosen transition: "+selectedTransition);
         boolean hasBeenUsed = false;
+
+        for(Transition t : transitions){
+            if(t.toString()== selectedTransition){
+                chooseTransition = t;
+            }
+        }
+        
+        
         if(pushed==true){
             for(Transition t : BreadthFirst.usedTransitions){
                 if(t.toString()==selectedTransition ){
@@ -805,6 +816,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         chooseText.setText("Chosen transition: ");
+        chooseTransition = null;
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void nodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nodesActionPerformed
@@ -896,15 +908,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         algoSelect.enableInputMethods(!b);
     }
     
-    public void setUsedTransitionTable(){
-        for(Transition t : BreadthFirst.usedTransitions){
+    public void setUsedTransitionTable(ArrayList<Transition> tList){
+        for(Transition t : tList){
             used.add(t.toString());
         }
        
     }
     
-    public void setVisitedNodes(){
-        for(Map.Entry<Place, Long> entry : BreadthFirst.visitedNodes.entrySet()){
+    public void setVisitedNodes(HashMap<Place, Long> map){
+        for(Map.Entry<Place, Long> entry : map.entrySet()){
             nodes.add(entry.getKey().toString()+"      ID: "+entry.getKey().id());
             
         }
@@ -917,6 +929,30 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     public int getNumberFiredTransitions(){
         return BreadthFirst.usedTransitions.size();
     }
+    
+    public ArrayList<Transition> getAllTransitions(){
+        ArrayList<Transition> allTransitions = new ArrayList<>();
+        for(ArrayList<Transition> a : BreadthFirst.returnForAllUsedTransitions()){
+            for(Transition t : a){
+                if(!allTransitions.contains(t)){
+                    allTransitions.add(t);
+                }
+            }
+        }
+        return allTransitions;
+    }
+    
+    public HashMap<Place, Long> getAllVisitedNodes(){
+        HashMap<Place, Long> allUsedNodes = new HashMap<>();
+        for(HashMap<Place, Long> v : BreadthFirst.returnForAllVisitedNodes()){
+            for(Map.Entry<Place,Long> entry : v.entrySet()){
+                allUsedNodes.put(entry.getKey(), entry.getValue());
+            }
+            
+        }
+        return allUsedNodes;
+    }
+    
     /**
      * @author Marcel Germann
      * @param e 
@@ -939,10 +975,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 PlaceTitel.setText("Places and token after firing.");
                 firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                updateMarkings();
-                setUsedTransitionTable();
-                setVisitedNodes();
-                break;
+                if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                    updateMarkings();
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    setVisitedNodes(BreadthFirst.visitedNodes);
+                    break; 
+                }
+                
+                
+                
             case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
                 lock(true); // Ensures that only one algorithm runs at a time.
                 break;
@@ -954,8 +995,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 what.setText("[Success]"); 
                 firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                setVisitedNodes();
-                setUsedTransitionTable();
+                setVisitedNodes(BreadthFirst.visitedNodes);
+                setUsedTransitionTable(BreadthFirst.usedTransitions);
                 break;
             case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                 lock(false);
@@ -970,9 +1011,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 PlaceTitel.setText("Places and token after firing");
                 firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                setVisitedNodes();
-                setUsedTransitionTable();
-                break;
+                if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                    updateMarkings();
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    setVisitedNodes(BreadthFirst.visitedNodes);
+                    break; 
+                }
+                if(!BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                    updateMarkings();
+                    setUsedTransitionTable(getAllTransitions());
+                    setVisitedNodes(getAllVisitedNodes());
+                }
             case FAILURE: // Fired when an algorithm fails to find the target marking.
                 lock(false);
                 // Should output failure.
@@ -985,11 +1034,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 updateMarkings();
-                setUsedTransitionTable();
+                setUsedTransitionTable(BreadthFirst.usedTransitions);
                 if(eStart.equals(eTarget)){
                     nodes.add("[Startnode NOT visited as target]");
                 }
-                setVisitedNodes();
+                setVisitedNodes(BreadthFirst.visitedNodes);
                 break;
             case PROGRESS: // Fired every 100 expanded nodes.
                 LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
@@ -1000,7 +1049,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 PlaceTitel.setText("Places and token after firing");
                 firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                setUsedTransitionTable();
+                setUsedTransitionTable(BreadthFirst.usedTransitions);
                 break;
             case FINISHED: // Fired by FullReachability and FullCoverability on completion
                 lock(false);
@@ -1014,8 +1063,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                 visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
                 updateMarkings();
-                setVisitedNodes();
-                setUsedTransitionTable();
+                setVisitedNodes(BreadthFirst.visitedNodes);
+                setUsedTransitionTable(BreadthFirst.usedTransitions);
                 break;
             default:
                 break;

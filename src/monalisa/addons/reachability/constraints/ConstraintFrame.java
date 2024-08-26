@@ -306,6 +306,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         visitedNodeText.setText("Visited Nodes [completely]:");
 
+        transitionList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                transitionListMouseClicked(evt);
+            }
+        });
         transitionList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 transitionListActionPerformed(evt);
@@ -563,12 +568,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // If program has been used already, clear all outputs.
+        restorePNActionPerformed(evt);// Hinzugefügt
         if(pushed==true){
             //restorePNActionPerformed(evt);
             tryAgain.setText("");
             chosenAND.setText("");
             chooseButton.setText("Check if already used");
-
+            BreadthFirst.usedTransitions.clear();
+            BreadthFirst.getTUpdateFrame().clear();
+            BreadthFirst.clearTBacktrack();
             //used.clear();
             //nodes.clear();
             for(int i = 0; i < nodes.getItemCount(); i++){
@@ -583,7 +591,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
             pushed =false;
         }
-        
+        pushed = true;
         PushButton();
         
         PetriNetFacade copyPN = this.pn;
@@ -664,6 +672,24 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         path.run();
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void resetTable(){
+        DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
+        for (int i = 0; i < markingTable.getRowCount(); ++i) {
+           // for(int j = 0; j < BreadthFirst.getUpdateFrame().size(); j++){
+            for(int j = 0; j < pn.marking().size(); j++){
+                Object keyC = markingTable.getValueAt(0, i);
+                Place p = pn.findPlace(j); //gibt place aus           
+               
+               model.setValueAt(pn.marking().get(p), j, 1);
+              
+              for(Map.Entry<Place, Long> entry : pn.marking().entrySet()){
+                  model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
+              }
+            LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
+            }
+        }
+        
+    }
     /**
      * Updates table in JFrame
      */
@@ -685,11 +711,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             for(int j = 0; j < placesInTable.size(); j++){
                 Object keyC = markingTable.getValueAt(0, i);
                 Place p = pn.findPlace(j); //gibt place aus           
-               // model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 1);
+               
                model.setValueAt(placesInTable.get(p), j, 1);
-              /** for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
-                   model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
-               }*/
+              
               for(Map.Entry<Place, Long> entry : placesInTable.entrySet()){
                   model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
               }
@@ -711,6 +735,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // TODO add your handling code here:
         // First clear all panels, then fill them again
         System.out.println("RESTORE");
+        resetTable();
         backUFacade = pn;
         chooseButton.setText("Choose transition");
         tryAgain.setText("");
@@ -793,6 +818,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         String selectedTransition = transitionList.getSelectedItem();
         chooseText.setText("Chosen transition: "+selectedTransition);
         
+        if(selectedTransition == ""){
+            JOptionPane.showMessageDialog(null, "No transition selected.\n"
+                    +                           "     Please select!");
+            
+        }
+        
         boolean hasBeenUsed = false;
         resetTransition = false;
         setForcedTransitionTrue();
@@ -806,22 +837,24 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // When computed without forced transition. Check if transition has 
         // been used
         ArrayList<Transition> search = new ArrayList<>();
-        if(BreadthFirst.forcedTransitionBacktrack() != null){
+        if(BreadthFirst.forcedTransitionBacktrack().size() > 0){
             search.addAll(BreadthFirst.forcedTransitionBacktrack());
         }
-        if(BreadthFirst.forcedTransitionBacktrack() == null){
+        if(BreadthFirst.forcedTransitionBacktrack().size()== 0){
             search.addAll(BreadthFirst.usedTransitions);
         }
         if(pushed==true){
-            
+            System.out.println("HASbeenUSED: "+hasBeenUsed+" pushed: "+pushed+" List: "+search);
             for(Transition t : search){
-
+                System.out.println("Transition in GUI: "+t+" selected: "+selectedTransition);
                 if(t.toString()==selectedTransition ){
                     hasBeenUsed = true;
                     chosenAND.setForeground(new Color(0, 102, 0));
                     chosenAND.setText("Transition has been used.");
                     tryAgain.setText("");
                 }
+                
+                
             }
             if(hasBeenUsed == false){
                 chosenAND.setForeground(new Color(204, 0, 0));
@@ -839,6 +872,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         setForcedTransitionFalse();
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    
     private void nodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nodesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nodesActionPerformed
@@ -846,6 +880,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void transitionListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transitionListActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_transitionListActionPerformed
+
+    private void transitionListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_transitionListMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_transitionListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -987,129 +1025,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
   
     
-    /**
-     * @author Marcel Germann
-     * @param e 
-     
-    @Override
-    public void update(ReachabilityEvent e) {
-        
-        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-        
-        System.out.println("STATUS: "+e.getStatus()+" "+e.getBacktrack());
-        if(getForcedTransition()== false){
-            switch (e.getStatus()) {
-                case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
-                    lock(false);
-                    // Do a popup that says things have been terminated at X steps?
-                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
-                    //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
-                    what.setForeground(new Color(204, 0, 0));
-                    what.setText("Aborted");
-                    PlaceTitel.setForeground(new Color(0, 0, 153));
-                    PlaceTitel.setText("Places and token after firing.");
-                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                    if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
-                        updateMarkings();
-                        setUsedTransitionTable(BreadthFirst.usedTransitions);
-                        setVisitedNodes(BreadthFirst.visitedNodes);
-                        break; 
-                    }
-
-
-
-                case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
-                    lock(true); // Ensures that only one algorithm runs at a time.
-                    break;
-                case EQUALNODE:
-                    lock(false);
-                   // progressLabel.setForeground(new Color(0, 0, 153));
-                    //progressLabel.setText("Start- and targetnode are equal!");
-                    what.setForeground(new Color(0, 102, 0));
-                    what.setText("[Success]"); 
-                    firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                    setVisitedNodes(BreadthFirst.visitedNodes);
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    break;
-                case SUCCESS: // Fired when an algorithm successfully finds the target marking.
-                    lock(false);
-                    ArrayList<Transition> path = e.getBacktrack();
-                    updateMarkings();
-                    // Should probably handle displaying output
-                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
-                    //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
-                    what.setForeground(new Color(0, 102, 0));
-                    what.setText("[Success] Target node reached!");
-                    PlaceTitel.setForeground(new Color(0, 0, 153));
-                    PlaceTitel.setText("Places and token after firing");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                    if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
-                        updateMarkings();
-                        setUsedTransitionTable(BreadthFirst.usedTransitions);
-                        setVisitedNodes(BreadthFirst.visitedNodes);
-                        break; 
-                    }
-                    if(!BreadthFirst.returnForAllUsedTransitions().isEmpty()){
-                        updateMarkings();
-                        setUsedTransitionTable(getAllTransitions());
-                        setVisitedNodes(getAllVisitedNodes());
-                    }
-                case FAILURE: // Fired when an algorithm fails to find the target marking.
-                    lock(false);
-                    // Should output failure.
-                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
-                    //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
-                    what.setForeground(new Color(204, 0, 0));
-                    what.setText("[Failure] Target node not reachable!");
-                    PlaceTitel.setForeground(new Color(0, 0, 153));
-                    PlaceTitel.setText("Places and token after firing");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                    updateMarkings();
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    if(eStart.equals(eTarget)){
-                        nodes.add("[Startnode NOT visited as target]");
-                    }
-                    setVisitedNodes(BreadthFirst.visitedNodes);
-                    break;
-                case PROGRESS: // Fired every 100 expanded nodes.
-                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
-                   // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
-                    what.setForeground(new Color(102, 0, 253));
-                    what.setText("Progress");
-                    PlaceTitel.setForeground(new Color(0, 0, 153));
-                    PlaceTitel.setText("Places and token after firing");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    break;
-                case FINISHED: // Fired by FullReachability and FullCoverability on completion
-                    lock(false);
-                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
-                    //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
-                    // Somehow display the graph? Otherwise this doesn't do much.
-                    what.setForeground(new Color(0, 102, 0));
-                    what.setText("Finished");
-                    PlaceTitel.setForeground(new Color(0, 0, 153));
-                    PlaceTitel.setText("Places and token after firing");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                    updateMarkings();
-                    setVisitedNodes(BreadthFirst.visitedNodes);
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }*/
+    
     
     /**
-     * @author Marcel Germann
      * @param e 
      */
     @Override

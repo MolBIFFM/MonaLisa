@@ -23,6 +23,7 @@ import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityDialog;
 import monalisa.addons.reachability.ReachabilityEvent;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.ABORTED;
+import static monalisa.addons.reachability.ReachabilityEvent.Status.EQUALNODE;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.FAILURE;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.FINISHED;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.PROGRESS;
@@ -50,12 +51,12 @@ import org.apache.logging.log4j.Logger;
 public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addons.reachability.ReachabilityListener {
     // What is tht number for?
     private static final long serialVersionUID = -8541347764965669414L;
-    //private AlgorithmRunner algorithmRunner;
+    BreadthFirst bf;
     public Pathfinder path;
     public PetriNetFacade pn;
     private PetriNetFacade backUFacade;
     private PetriNet backupPN;
-   // private BreadthFirst bf;
+  
     private static final Logger LOGGER = LogManager.getLogger(ConstraintFrame.class);
 
     private HashMap<Place, Long> start;
@@ -67,10 +68,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private boolean computed = false;
     private boolean pushed = false;
     private HashSet<Transition> transitions = new HashSet<>();
-    
     public static Transition chooseTransition = null;
-  
     
+
 
     /**
      * ConstraintFrame
@@ -90,9 +90,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         this.capacities = new HashMap<>();
         this.pinvs = pinvs;
         initComponents();
-        //reachabilityDialog = new ReachabilityDialog(this.pn, this.start, target, this.pinvs);
-        //ConstraintFrame = new ConstraintFrame(this.pn, this.start, this.target, this.pinvs);
-        String[] columnsNames = {"Transition", "PrePlace", "PostPlace"};
+       
         // Fill combo boxes with places
         //DefaultListModel model = new DefaultListModel();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
@@ -104,7 +102,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 pn.getArc(p, t).weight(),
                
             });
-                System.out.println("C: "+ pn.getArc(p, t).weight());
+               
         }
         }
         HashSet<Transition> transitionSet = new HashSet<>();
@@ -136,12 +134,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
             startNode.addItem(entry.toString());
             for(Transition in: entry.getKey().inputs()){
-                System.out.println("OBEN: "+in);
-               
-                
+             
             }
         }
-        //DefaultListModel listMod = (DefaultListModel) off.getModel();
         for(HashMap.Entry<Place, Long> entry :this.target.entrySet()){
             sinkNode.addItem(entry.toString());
             for(Transition out : entry.getKey().outputs()){
@@ -627,21 +622,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         // Add deleted Transition to knockout
                         knockout.add(t);
                         copyPN.removeProperty(trans);
-
-
-
-
                 }
             }
-
           }
         }
-        for(int i=0; i<copyPN.marking().size();i++){
-            System.out.println("copyPN: "+copyPN.findPlace(i)+", Transiton: "+copyPN.transitions().iterator().next());
-        }
-
         //  Start and Target Hashmap change in if
-
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoSelect.getSelectedItem().toString();
         if (algo.equals("Breadth First Search")) {
@@ -683,19 +668,31 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
      * Updates table in JFrame
      */
     private void updateMarkings() {
-        
+        HashMap<Place, Long> placesInTable = new HashMap<>();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
+        if(getForcedTransition()== true){
+            placesInTable.putAll(BreadthFirst.getTUpdateFrame());
+        }
+        
+        if(getForcedTransition()==false){
+            placesInTable.putAll(BreadthFirst.getUpdateFrame());
+        }
+        
+        
         
         for (int i = 0; i < markingTable.getRowCount(); ++i) {
-            for(int j = 0; j < BreadthFirst.getUpdateFrame().size(); j++){
+           // for(int j = 0; j < BreadthFirst.getUpdateFrame().size(); j++){
+            for(int j = 0; j < placesInTable.size(); j++){
                 Object keyC = markingTable.getValueAt(0, i);
-                Place p = pn.findPlace(j); //gibt place aus
-             
-                model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 1);
-               // model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 2);
-               for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
+                Place p = pn.findPlace(j); //gibt place aus           
+               // model.setValueAt(BreadthFirst.getUpdateFrame().get(p), j, 1);
+               model.setValueAt(placesInTable.get(p), j, 1);
+              /** for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
                    model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
-               }
+               }*/
+              for(Map.Entry<Place, Long> entry : placesInTable.entrySet()){
+                  model.setValueAt(pn.getArc(entry.getKey(), entry.getKey().outputs().getFirst()).weight(), j, 2);
+              }
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
             }
         }
@@ -732,7 +729,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : backupPN.places()) {
             //model.addElement(p.inputs().getFirst());
-            
             if(p.inputs().size()>=1){
                 for(Transition t : p.inputs()){
                     //onTransition.add(t.toString());
@@ -744,9 +740,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 for(Transition t : p.outputs()){
                     transitionSet.add(t);
                 }
-                
             }
-            
         }
         for(Transition t : transitionSet){
                 onTransition.add(t.toString());
@@ -766,7 +760,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(int i = 0; i < nodes.getItemCount(); i++){
             nodes.remove(0);
             nodes.removeAll();
-            
         }
         for(int i = 0; i < used.getItemCount(); i++){
             used.remove(0);
@@ -783,21 +776,46 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void usedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usedActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_usedActionPerformed
-
+    
+    public static boolean forcedTransition = false;
+    public boolean getForcedTransition(){
+        return forcedTransition;
+    }
+    
+    public boolean setForcedTransitionTrue(){
+        return forcedTransition = true;
+    }
+    
+    public boolean setForcedTransitionFalse(){
+        return forcedTransition = false;
+    }
     private void chooseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseButtonActionPerformed
         String selectedTransition = transitionList.getSelectedItem();
         chooseText.setText("Chosen transition: "+selectedTransition);
+        
         boolean hasBeenUsed = false;
-
+        resetTransition = false;
+        setForcedTransitionTrue();
+        
+        
         for(Transition t : transitions){
             if(t.toString()== selectedTransition){
                 chooseTransition = t;
             }
         }
-        
-        
+        // When computed without forced transition. Check if transition has 
+        // been used
+        ArrayList<Transition> search = new ArrayList<>();
+        if(BreadthFirst.forcedTransitionBacktrack() != null){
+            search.addAll(BreadthFirst.forcedTransitionBacktrack());
+        }
+        if(BreadthFirst.forcedTransitionBacktrack() == null){
+            search.addAll(BreadthFirst.usedTransitions);
+        }
         if(pushed==true){
-            for(Transition t : BreadthFirst.usedTransitions){
+            
+            for(Transition t : search){
+
                 if(t.toString()==selectedTransition ){
                     hasBeenUsed = true;
                     chosenAND.setForeground(new Color(0, 102, 0));
@@ -812,11 +830,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         }
     }//GEN-LAST:event_chooseButtonActionPerformed
-
+    public boolean resetTransition = false;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         chooseText.setText("Chosen transition: ");
         chooseTransition = null;
+        resetTransition = true;
+        setForcedTransitionFalse();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void nodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nodesActionPerformed
@@ -923,11 +943,23 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     }
     
     public int getNumberVisitedNodes(){
-        return BreadthFirst.visitedNodes.size();
-    }
+        if(getForcedTransition() == false){
+            return BreadthFirst.visitedNodes.size();
+        }
+        if(getForcedTransition() == true){
+            return BreadthFirst.getTUpdateFrame().size();
+        }
+        return 0;
+    } 
     
     public int getNumberFiredTransitions(){
-        return BreadthFirst.usedTransitions.size();
+        if(forcedTransition == true){
+            return BreadthFirst.forcedTransitionBacktrack().size();
+        }
+        if(forcedTransition == false){
+            return BreadthFirst.usedTransitions.size();
+        }
+        return 0;
     }
     
     public ArrayList<Transition> getAllTransitions(){
@@ -953,6 +985,129 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         return allUsedNodes;
     }
     
+  
+    
+    /**
+     * @author Marcel Germann
+     * @param e 
+     
+    @Override
+    public void update(ReachabilityEvent e) {
+        
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        System.out.println("STATUS: "+e.getStatus()+" "+e.getBacktrack());
+        if(getForcedTransition()== false){
+            switch (e.getStatus()) {
+                case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
+                    lock(false);
+                    // Do a popup that says things have been terminated at X steps?
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
+                    //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(204, 0, 0));
+                    what.setText("Aborted");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                    if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                        updateMarkings();
+                        setUsedTransitionTable(BreadthFirst.usedTransitions);
+                        setVisitedNodes(BreadthFirst.visitedNodes);
+                        break; 
+                    }
+
+
+
+                case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
+                    lock(true); // Ensures that only one algorithm runs at a time.
+                    break;
+                case EQUALNODE:
+                    lock(false);
+                   // progressLabel.setForeground(new Color(0, 0, 153));
+                    //progressLabel.setText("Start- and targetnode are equal!");
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("[Success]"); 
+                    firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                    setVisitedNodes(BreadthFirst.visitedNodes);
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    break;
+                case SUCCESS: // Fired when an algorithm successfully finds the target marking.
+                    lock(false);
+                    ArrayList<Transition> path = e.getBacktrack();
+                    updateMarkings();
+                    // Should probably handle displaying output
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
+                    //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("[Success] Target node reached!");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                        updateMarkings();
+                        setUsedTransitionTable(BreadthFirst.usedTransitions);
+                        setVisitedNodes(BreadthFirst.visitedNodes);
+                        break; 
+                    }
+                    if(!BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                        updateMarkings();
+                        setUsedTransitionTable(getAllTransitions());
+                        setVisitedNodes(getAllVisitedNodes());
+                    }
+                case FAILURE: // Fired when an algorithm fails to find the target marking.
+                    lock(false);
+                    // Should output failure.
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
+                    //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(204, 0, 0));
+                    what.setText("[Failure] Target node not reachable!");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    updateMarkings();
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    if(eStart.equals(eTarget)){
+                        nodes.add("[Startnode NOT visited as target]");
+                    }
+                    setVisitedNodes(BreadthFirst.visitedNodes);
+                    break;
+                case PROGRESS: // Fired every 100 expanded nodes.
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
+                   // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(102, 0, 253));
+                    what.setText("Progress");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    break;
+                case FINISHED: // Fired by FullReachability and FullCoverability on completion
+                    lock(false);
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
+                    //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
+                    // Somehow display the graph? Otherwise this doesn't do much.
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("Finished");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    updateMarkings();
+                    setVisitedNodes(BreadthFirst.visitedNodes);
+                    setUsedTransitionTable(BreadthFirst.usedTransitions);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }*/
+    
     /**
      * @author Marcel Germann
      * @param e 
@@ -961,114 +1116,132 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     public void update(ReachabilityEvent e) {
         
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ArrayList<Transition> showTransition = new ArrayList<>();
+        HashMap<Place, Long> showPlaces = new HashMap<>();
+        String placeTextSuccess = "Transition has been used.";
+        String placeTextFailure = "Transition has NOT been used.";
+        if(getForcedTransition()== true){
+            showTransition.addAll(BreadthFirst.forcedTransitionBacktrack());
+            showPlaces.putAll(BreadthFirst.getTUpdateFrame());
+            if(e.getStatus()== SUCCESS){
+                chosenAND.setForeground(new Color(0, 102, 0));
+                chosenAND.setText("Transition has been used.");
+            }
+            if(e.getStatus() ==  FAILURE){
+                chosenAND.setForeground(new Color(204, 0, 0));
+                chosenAND.setText("Transition has NOT been used");
+            }
+            
+        }
         
-        System.out.println("STATUS: "+e.getStatus()+" "+e.getBacktrack());
-        switch (e.getStatus()) {
-            case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
-                lock(false);
-                // Do a popup that says things have been terminated at X steps?
-                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
-                //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
-                what.setForeground(new Color(204, 0, 0));
-                what.setText("Aborted");
-                PlaceTitel.setForeground(new Color(0, 0, 153));
-                PlaceTitel.setText("Places and token after firing.");
-                firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+        if(getForcedTransition()==false){
+            showTransition.addAll(BreadthFirst.usedTransitions);
+            showPlaces.putAll(BreadthFirst.visitedNodes);
+        }
+        System.out.println("STATUS: "+e.getStatus()+" Transitions: "+ showTransition+" Places: "+showPlaces);
+            switch (e.getStatus()) {
+                case ABORTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
+                    lock(false);
+                    // Do a popup that says things have been terminated at X steps?
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
+                    //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(204, 0, 0));
+                    what.setText("Aborted");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                     updateMarkings();
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    setVisitedNodes(BreadthFirst.visitedNodes);
-                    break; 
-                }
-                
-                
-                
-            case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
-                lock(true); // Ensures that only one algorithm runs at a time.
-                break;
-            case EQUALNODE:
-                lock(false);
-               // progressLabel.setForeground(new Color(0, 0, 153));
-                //progressLabel.setText("Start- and targetnode are equal!");
-                what.setForeground(new Color(0, 102, 0));
-                what.setText("[Success]"); 
-                firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
-                setVisitedNodes(BreadthFirst.visitedNodes);
-                setUsedTransitionTable(BreadthFirst.usedTransitions);
-                break;
-            case SUCCESS: // Fired when an algorithm successfully finds the target marking.
-                lock(false);
-                ArrayList<Transition> path = e.getBacktrack();
-                updateMarkings();
-                // Should probably handle displaying output
-                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
-                //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
-                what.setForeground(new Color(0, 102, 0));
-                what.setText("[Success] Target node reached!");
-                PlaceTitel.setForeground(new Color(0, 0, 153));
-                PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                if(BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                   break;
+
+
+
+                case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
+                    lock(true); // Ensures that only one algorithm runs at a time.
+                    break;
+                case EQUALNODE:
+                    lock(false);
+                   // progressLabel.setForeground(new Color(0, 0, 153));
+                    //progressLabel.setText("Start- and targetnode are equal!");
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("[Success]"); 
+                    firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
                     updateMarkings();
-                    setUsedTransitionTable(BreadthFirst.usedTransitions);
-                    setVisitedNodes(BreadthFirst.visitedNodes);
-                    break; 
-                }
-                if(!BreadthFirst.returnForAllUsedTransitions().isEmpty()){
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    break;
+                case SUCCESS: // Fired when an algorithm successfully finds the target marking.
+                    lock(false);
+                    System.out.println("WIESO?!");
+                    // Should probably handle displaying output
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
+                    //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("[Success] Target node reached!");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    if(eStart.equals(eTarget)){
+                        nodes.add("[Startnode visited as target]");
+                    }
                     updateMarkings();
-                    setUsedTransitionTable(getAllTransitions());
-                    setVisitedNodes(getAllVisitedNodes());
-                }
-            case FAILURE: // Fired when an algorithm fails to find the target marking.
-                lock(false);
-                // Should output failure.
-                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
-                //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
-                what.setForeground(new Color(204, 0, 0));
-                what.setText("[Failure] Target node not reachable!");
-                PlaceTitel.setForeground(new Color(0, 0, 153));
-                PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                updateMarkings();
-                setUsedTransitionTable(BreadthFirst.usedTransitions);
-                if(eStart.equals(eTarget)){
-                    nodes.add("[Startnode NOT visited as target]");
-                }
-                setVisitedNodes(BreadthFirst.visitedNodes);
-                break;
-            case PROGRESS: // Fired every 100 expanded nodes.
-                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
-               // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
-                what.setForeground(new Color(102, 0, 253));
-                what.setText("Progress");
-                PlaceTitel.setForeground(new Color(0, 0, 153));
-                PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                setUsedTransitionTable(BreadthFirst.usedTransitions);
-                break;
-            case FINISHED: // Fired by FullReachability and FullCoverability on completion
-                lock(false);
-                LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
-                //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
-                // Somehow display the graph? Otherwise this doesn't do much.
-                what.setForeground(new Color(0, 102, 0));
-                what.setText("Finished");
-                PlaceTitel.setForeground(new Color(0, 0, 153));
-                PlaceTitel.setText("Places and token after firing");
-                firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
-                updateMarkings();
-                setVisitedNodes(BreadthFirst.visitedNodes);
-                setUsedTransitionTable(BreadthFirst.usedTransitions);
-                break;
-            default:
-                break;
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    break;
+                case FAILURE: // Fired when an algorithm fails to find the target marking.
+                    lock(false);
+                    // Should output failure.
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
+                    //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(204, 0, 0));
+                    what.setText("[Failure] Target node not reachable!");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    if(eStart.equals(eTarget)){
+                        nodes.add("[Startnode NOT visited as target]");
+                    }
+                    updateMarkings();
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    break;
+                case PROGRESS: // Fired every 100 expanded nodes.
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
+                   // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
+                    what.setForeground(new Color(102, 0, 253));
+                    what.setText("Progress");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    updateMarkings();
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    break;
+                case FINISHED: // Fired by FullReachability and FullCoverability on completion
+                    lock(false);
+                    LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
+                    //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
+                    // Somehow display the graph? Otherwise this doesn't do much.
+                    what.setForeground(new Color(0, 102, 0));
+                    what.setText("Finished");
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing");
+                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    updateMarkings();
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    break;
+                default:
+                    break;
+            }
+
         }
     
-    }
 }

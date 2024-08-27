@@ -855,11 +855,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         if(BreadthFirst.forcedTransitionBacktrack().size()== 0){
             search.addAll(BreadthFirst.usedTransitions);
         }
-        if(pushed==true){
+        if(used.getItemCount() > 0){
             System.out.println("HASbeenUSED: "+hasBeenUsed+" pushed: "+pushed+" List: "+search);
-            for(Transition t : search){
-                System.out.println("Transition in GUI: "+t+" selected: "+selectedTransition);
-                if(t.toString()==selectedTransition ){
+            //for(Transition t : search){
+                for(int i = 0; i < used.getItemCount(); i++){
+               // System.out.println("Transition in GUI: "+t+" selected: "+selectedTransition);
+                if(used.getItem(i).toString()==selectedTransition ){
                     hasBeenUsed = true;
                     chosenAND.setForeground(new Color(0, 102, 0));
                     chosenAND.setText("Transition has been used.");

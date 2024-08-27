@@ -347,12 +347,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(what, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(104, 104, 104))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(104, 350, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(what, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(PlaceTitel, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                                 .addGap(43, 43, 43)
@@ -537,6 +536,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_onTransitionActionPerformed
 
+    private void clearMapsAndLists(){
+        BreadthFirst.clearEnabledTransitions();
+        BreadthFirst.clearMarkingHashMap();
+        BreadthFirst.clearNodeslist();
+        BreadthFirst.clearTUpdatFrame();
+        BreadthFirst.clearTBacktrack();
+        BreadthFirst.clearUpdatedMarking();
+        System.out.println("CLEAR: "+BreadthFirst.forcedTransitionBacktrack()+" | "+BreadthFirst.getUpdateFrame());
+    }
     private boolean PushButton(){
         return pushed = true;
     }
@@ -568,9 +576,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     // Compute button. Magic should happen here. Delete transitions.
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // If program has been used already, clear all outputs.
-        restorePNActionPerformed(evt);// Hinzugefügt
+        BreadthFirst.usedTransitions.clear();
+        BreadthFirst.getTUpdateFrame().clear();
+        BreadthFirst.clearTBacktrack();
+        
         if(pushed==true){
-            //restorePNActionPerformed(evt);
             tryAgain.setText("");
             chosenAND.setText("");
             chooseButton.setText("Check if already used");
@@ -736,6 +746,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // First clear all panels, then fill them again
         System.out.println("RESTORE");
         resetTable();
+        clearMapsAndLists();
         backUFacade = pn;
         chooseButton.setText("Choose transition");
         tryAgain.setText("");
@@ -791,6 +802,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             used.removeAll();   
             
         }
+        clearMapsAndLists();
     
     }//GEN-LAST:event_restorePNActionPerformed
 
@@ -1072,12 +1084,26 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                    break;
-
-
+                case PROBLEM:
+                    what.setForeground(new Color(0, 0, 153));
+                    what.setText("[Problem] target reached before transition could be used!"); 
+                    setUsedTransitionTable(showTransition);
+                    setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
+                    break;
 
                 case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
                     lock(true); // Ensures that only one algorithm runs at a time.
+                    break;
+                    
+                case ALWAYSUSED:
+                    JOptionPane.showMessageDialog(null, "                 Transition has no input.    \n"
+                                                                     +"               Transition will always fire!    \n"
+                            +"\n"
+                    +                                                 "       [Press reset transition and compute again!]                ");
+                    clearMapsAndLists();
                     break;
                 case EQUALNODE:
                     lock(false);
@@ -1090,10 +1116,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                     break;
                 case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                     lock(false);
-                    System.out.println("WIESO?!");
                     // Should probably handle displaying output
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
                     //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
@@ -1109,6 +1135,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                     break;
                 case FAILURE: // Fired when an algorithm fails to find the target marking.
                     lock(false);
@@ -1127,6 +1154,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                     break;
                 case PROGRESS: // Fired every 100 expanded nodes.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
@@ -1140,6 +1168,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                     break;
                 case FINISHED: // Fired by FullReachability and FullCoverability on completion
                     lock(false);
@@ -1155,6 +1184,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
+                    clearMapsAndLists();
                     break;
                 default:
                     break;

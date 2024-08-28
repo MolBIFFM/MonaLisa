@@ -266,7 +266,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         jLabel3.setText("Choose start node");
 
-        jLabel5.setText("Choose sink node");
+        jLabel5.setText("Choose target node");
 
         startNode.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -1113,7 +1113,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     // Do a popup that says things have been terminated at X steps?
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
                     //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
-                    what.setForeground(Color.MAGENTA);
+                    what.setForeground(new Color(0, 0, 153));
                     what.setText("[Restricted success] target node reached. Chosen Transition NOT used.");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");

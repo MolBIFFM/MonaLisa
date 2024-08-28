@@ -273,7 +273,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Choose sink node"/>
+        <Property name="text" type="java.lang.String" value="Choose target node"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="startNode">

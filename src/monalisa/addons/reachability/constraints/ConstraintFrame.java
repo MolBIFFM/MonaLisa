@@ -69,6 +69,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private boolean pushed = false;
     private HashSet<Transition> transitions = new HashSet<>();
     public static Transition chooseTransition = null;
+    private HashMap<Place, Long> possibleStartNodes = new HashMap<>();
     
 
 
@@ -79,7 +80,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
      * @param pinvs
      * @param target
     */
-    public ConstraintFrame(PetriNetFacade pn, HashMap<Place, Long> start, HashMap<Place, Long> target, PInvariants pinvs) {
+    public ConstraintFrame(PetriNetFacade pn, HashMap<Place, Long> start, HashMap<Place, Long> target, PInvariants pinvs) throws InterruptedException {
         this.start = new HashMap<>();
         this.start.putAll(start);
         this.pn = pn;
@@ -90,6 +91,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         this.capacities = new HashMap<>();
         this.pinvs = pinvs;
         initComponents();
+        getPossibleStartNodes();
        
         // Fill combo boxes with places
         //DefaultListModel model = new DefaultListModel();
@@ -131,11 +133,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
             
         
-        for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
+        /**for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
             startNode.addItem(entry.toString());
             for(Transition in: entry.getKey().inputs()){
              
             }
+        }*/
+        for(Map.Entry<Place, Long> entry : possibleStartNodes.entrySet()){
+            startNode.addItem(entry.toString());
+            
         }
         for(HashMap.Entry<Place, Long> entry :this.target.entrySet()){
             sinkNode.addItem(entry.toString());
@@ -155,6 +161,25 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
 
         
+    }
+    
+    private void getPossibleStartNodes() throws InterruptedException{
+        Pathfinder pathfinder = new Pathfinder(pn, target, target, capacities, transitions, selectedTargetNodeVisible);
+        HashSet<Transition> transitions = pathfinder.computeActiveTransitions(start);
+        for(Transition t : transitions){
+            if(t.getActive() == true){
+                if(!t.inputs().isEmpty()){
+                    for(Place pIN : t.inputs()){
+                        possibleStartNodes.put(pIN, pn.getTokens(pIN) );
+                    }
+                }
+                if(!t.outputs().isEmpty()){
+                    for(Place pOUT : t.outputs()){
+                        possibleStartNodes.put(pOUT, pn.getTokens(pOUT));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -523,6 +548,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void startNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startNodeActionPerformed
         // Get selected startNode
         String selectedStartNode = startNode.getSelectedItem().toString();
+        
         // Use start Node in Algorithm
         
     }//GEN-LAST:event_startNodeActionPerformed
@@ -806,8 +832,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
     }//GEN-LAST:event_restorePNActionPerformed
 
+    private static String selectedTargetNodeVisible = "";
+    
+    public static String getSelectedTargetNode(){
+        return selectedTargetNodeVisible;
+    }
     private void sinkNodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sinkNodeActionPerformed
         // TODO add your handling code here:
+        String selectedTarget = sinkNode.getSelectedItem().toString();
+        selectedTargetNodeVisible = selectedTarget;
     }//GEN-LAST:event_sinkNodeActionPerformed
 
     private void usedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usedActionPerformed
@@ -1062,6 +1095,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 chosenAND.setForeground(new Color(204, 0, 0));
                 chosenAND.setText("Transition has NOT been used");
             }
+            if(e.getStatus() == ABORTED){
+               chosenAND.setForeground(new Color(204, 0, 0));
+               chosenAND.setText("Transition has NOT been used");  
+            }
             
         }
         
@@ -1076,8 +1113,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     // Do a popup that says things have been terminated at X steps?
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
                     //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
-                    what.setForeground(new Color(204, 0, 0));
-                    what.setText("Aborted");
+                    what.setForeground(Color.MAGENTA);
+                    what.setText("[Aborted] target node reached. Transition NOT used.");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());

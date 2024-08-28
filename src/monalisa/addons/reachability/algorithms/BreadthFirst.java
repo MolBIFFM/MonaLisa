@@ -720,6 +720,14 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, count, backtrackList(tBacktrack));
                     return;
                 }
+                if(stringBFS == "Aborted"){
+                    fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, count, tBacktrack);
+                    return;
+                }
+                if(stringBFS == "Aborted"){
+                    fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, count, tBacktrack);
+                    return;
+                }
                 
                 //inputNodes.remove(0);
                 
@@ -922,7 +930,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                HashMap<Place, Long> updateNodeOut = new HashMap<>();
                                for(Map.Entry<Place, Long> entry : updatedMarking.entrySet()){
                                    System.out.println("pIN: "+pIN+" pOut: "+pOUT+" | "+entry);
-                                    if(pIN.equals(entry.getKey())){
+                                    if(pIN.equals(entry.getKey()) && updateNodeIN.size() == 0){
                                        updateNodeIN.put(entry.getKey(), entry.getValue());
                                        HashMap<Place, Long>  newMarkingInputPlace = pf.computeSingleMarking(updateNodeIN, transition, tUpdateFrame).getFirst();
                                        updatedMarking.put(newMarkingInputPlace.keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
@@ -930,7 +938,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                        updateNodeIN = newMarkingInputPlace;
                                        
                                        //ReachabilityNode rNode = new ReachabilityNode(updateNodeIN, workingNode);
-                                        System.out.println("UPDATE_in: "+updateNodeIN);
+                                       System.out.println("UPDATE_in: "+updateNodeIN);
                                        System.out.println("IN/OUT_1: "+updatedMarking+" newMarkIn: "+newMarkingInputPlace+" Transition: "+tBacktrack+" Frame: "+tUpdateFrame);
                                        //break;
                                    }
@@ -947,25 +955,47 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                         tBacktrack.add(transition);
                                         System.out.println("UpdateIN "+updateNodeIN);
                                         if(updateNodeIN.size() == 0){
+                                            updateNodeIN.put(newMarkingInputPlace.keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
                                             updatedMarking.put(newMarkingInputPlace.keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
                                             tUpdateFrame.put(newMarkingInputPlace.keySet().iterator().next(), newMarkingInputPlace.values().iterator().next());
                                         }
                                         System.out.println("UpdateOUT: "+updateNodeOut+" marking: "+updatedMarking+" newOut: "+newMarkingOutputPlace+" newIn ");
                                         System.out.println("Used Transition: "+transition+ " BacktrackList: "+tBacktrack);
                                         System.out.println("HIER: "+newMarkingOutputPlace.keySet()+" "+target.keySet()+" bool: "+newMarkingOutputPlace.keySet().iterator().next().equals(target.keySet().iterator().next()));
+                                        System.out.println("TEST: "+ConstraintFrame.getSelectedTargetNode()+" "+updateNodeOut.keySet());
                                         if(newMarkingOutputPlace.keySet().iterator().next().equals(target.keySet().iterator().next())){
                                            transition.setUsed();
+                                            System.out.println("Tra: "+transition+" compare; "+ConstraintFrame.getSelectedTargetNode().trim());
+                                               System.out.println("NOPE: "+ updateNodeOut.keySet().iterator().next().toString() == ConstraintFrame.getSelectedTargetNode().toString());
+                                                if(secondPart == false && (!transition.equals(ConstraintFrame.chooseTransition)) ){
+                                                       if(( updateNodeOut.keySet().iterator().next().toString() == ConstraintFrame.getSelectedTargetNode().toString())){
+                                                           return "Aborted";
+                                                       }
+                                                   }
                                                 if(transition.getUsed() == true && transition.getActive() ==  true ){
                                                     tBacktrack.add(transition);
                                                     edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, transition));
+                                                    if(secondPart == true && (!transition.equals(ConstraintFrame.chooseTransition))){
+                                                        return "Aborted";
+                                                }
                                                    
                                                 }
+                                                 if(secondPart == false && (!transition.equals(ConstraintFrame.chooseTransition)) ){
+                                                     String compare = ConstraintFrame.getSelectedTargetNode().substring(0, ConstraintFrame.getSelectedTargetNode().indexOf("="));
+                                                     System.out.println("ABBO: "+compare+" "+(updateNodeOut.keySet().iterator().next().toString().equals(compare)));  
+                                                     if((updateNodeOut.keySet().iterator().next().toString().equals(compare))){
+                                                           return "Aborted";
+                                                       }
+                                                   }
+                                                
 
                                                 return "Success";
                                         }
+                                     
                                         
                                         
                                     }//TEST
+                                 
                                  
                                     
                                         if(!start.equals(target)){
@@ -976,6 +1006,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                                     tBacktrack.add(transition);
                                                     edge.add(new ReachabilityEdge(workingNode.getPrev(), workingNode, transition));
                                                 }
+                                                
                                                 tUpdateFrame.putAll(updatedMarking);
 
                                                 tUsedTransition = tBacktrack;

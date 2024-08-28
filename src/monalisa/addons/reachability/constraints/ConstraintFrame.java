@@ -1114,7 +1114,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
                     //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
                     what.setForeground(Color.MAGENTA);
-                    what.setText("[Aborted] target node reached. Transition NOT used.");
+                    what.setText("[Restricted success] target node reached. Chosen Transition NOT used.");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());

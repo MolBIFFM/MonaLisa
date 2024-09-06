@@ -234,7 +234,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         jButton3 = new javax.swing.JButton();
 
         setMinimumSize(getSize());
-        setPreferredSize(new java.awt.Dimension(667, 800));
         setSize(new java.awt.Dimension(667, 800));
 
         Reachability.setFont(new java.awt.Font("Dialog", 0, 20)); // NOI18N
@@ -267,7 +266,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         });
 
-        algoSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Breadth First Search", "Best First Search", "A*" }));
+        algoSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Breadth First Search" }));
         algoSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 algoSelectActionPerformed(evt);

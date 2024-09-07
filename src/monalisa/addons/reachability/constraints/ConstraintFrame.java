@@ -338,7 +338,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         });
 
-        visitedNodeText.setText("Visited Nodes [completely]:");
+        visitedNodeText.setText("Token changed within nodes:");
 
         transitionList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -429,7 +429,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(nodes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(restorePN, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                                    .addComponent(visitedNodeText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(visitedNodeText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(chooseText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -756,14 +756,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void updateMarkings() {
         HashMap<Place, Long> placesInTable = new HashMap<>();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
-        if(getForcedTransition()== true){
+        placesInTable.putAll(BreadthFirst.getUpdateFrame());
+        /**if(getForcedTransition()== true){
             placesInTable.putAll(BreadthFirst.getUpdateFrame());
         }
         
         if(getForcedTransition()==false){
             placesInTable.putAll(BreadthFirst.getUpdateFrame());
            
-        }
+        }*/
         
         
         //markingTable.getRowCount()  
@@ -1061,23 +1062,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     }
     
     public int getNumberVisitedNodes(){
-        if(getForcedTransition() == false){
-            return BreadthFirst.getVisitiedNodes().size();
-        }
-        if(getForcedTransition() == true){
-            return BreadthFirst.getTUpdateFrame().size();
-        }
-        return 0;
+       
+        return BreadthFirst.getVisitiedNodes().size();
     } 
     
     public int getNumberFiredTransitions(){
-        if(forcedTransition == true){
-            return BreadthFirst.forcedTransitionBacktrack().size();
-        }
-        if(forcedTransition == false){
-            return BreadthFirst.getTransitions().size();
-        }
-        return 0;
+       
+        return BreadthFirst.getTransitions().size();
     }
     
     public ArrayList<Transition> getAllTransitions(){
@@ -1121,9 +1112,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         HashMap<Place, Long> showPlaces = new HashMap<>();
         String placeTextSuccess = "Transition has been used.";
         String placeTextFailure = "Transition has NOT been used.";
+        showTransition.addAll(BreadthFirst.getTransitions());
+        showPlaces.putAll(BreadthFirst.getVisitiedNodes());
         if(getForcedTransition()== true){
-            showTransition.addAll(BreadthFirst.getTransitions());
-            showPlaces.putAll(BreadthFirst.getUpdateFrame());
+            
+            System.out.println("WHAAAAAAT: "+ showPlaces);
             if(e.getStatus()== SUCCESS){
                 chosenAND.setForeground(new Color(0, 102, 0));
                 chosenAND.setText("Transition has been used.");
@@ -1139,10 +1132,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             
         }
         
-        if(getForcedTransition()==false){
-            showTransition.addAll(BreadthFirst.getTransitions());
-            showPlaces.putAll(BreadthFirst.getVisitiedNodes());
-        }
+      
         System.out.println("STATUS: "+e.getStatus()+" Transitions: "+ showTransition+" Places: "+showPlaces);
             switch (e.getStatus()) {
                 case RESTRICTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
@@ -1155,7 +1145,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
@@ -1187,7 +1177,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setForeground(new Color(0, 102, 0));
                     what.setText("[Success]"); 
                     firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: "+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
@@ -1203,7 +1193,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     if(eStart.equals(eTarget)){
                         nodes.add("[Startnode visited as target]");
                     }
@@ -1223,7 +1213,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     if(eStart.equals(eTarget)){
                         nodes.add("[Startnode NOT visited as target]");
                     }
@@ -1240,7 +1230,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
@@ -1256,7 +1246,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
@@ -1273,7 +1263,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    visitedNodeText.setText("Visited nodes [CPLT]: #"+getNumberVisitedNodes());
+                    visitedNodeText.setText("Token changed within nodes: #"+getNumberVisitedNodes());
                     for(ReachabilityNode r : BreadthFirst.getReachabilityNodeList()){
                         if(r.getSecondVisit()== true){
                             nodes.add("[Startnode visited as target]");

@@ -91,7 +91,7 @@
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="nodes" max="32767" attributes="0"/>
                                   <Component id="restorePN" alignment="1" pref="180" max="32767" attributes="0"/>
-                                  <Component id="visitedNodeText" alignment="0" min="-2" pref="150" max="-2" attributes="0"/>
+                                  <Component id="visitedNodeText" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -398,7 +398,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="visitedNodeText">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Visited Nodes [completely]:"/>
+        <Property name="text" type="java.lang.String" value="Token changed within nodes:"/>
       </Properties>
     </Component>
     <Component class="java.awt.List" name="transitionList">

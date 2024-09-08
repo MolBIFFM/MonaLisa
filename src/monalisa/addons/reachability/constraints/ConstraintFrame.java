@@ -525,6 +525,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             onTransition.remove(selectedString);
             save.add(0, selectedString);
             offTransition.add(selectedString, 0);
+            transitionList.remove(selectedString);
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -771,28 +772,25 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
    
     
-    // Restore PN.
+    /**
+     * Restores petri net.
+     * First clears all lists then fills them with original pn components.
+     * @param evt 
+     */
     private void restorePNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restorePNActionPerformed
-        // TODO add your handling code here:
-        // First clear all panels, then fill them again
-        System.out.println("RESTORE");
+        LOGGER.info("Restore petri net.");
         resetTable();
         clearMapsAndLists();
         backUFacade = pn;
         chooseButton.setText("Choose transition");
         tryAgain.setText("");
         chosenAND.setText("");
-        for(int i = 0; i<onTransition.getItemCount();i++){
-            onTransition.remove(onTransition.getItem(i));
-            onTransition.removeAll();
-            
-        }
         
-        for(int i = 0; i < offTransition.getItemCount(); i++){
-            if(offTransition.getItemCount()>0){
-            offTransition.removeAll();
-            }
-        }
+        transitionList.removeAll();
+        onTransition.removeAll();
+        offTransition.removeAll();
+        
+        
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : backupPN.places()) {
             System.out.println("CLEAR: "+p.toString());
@@ -812,6 +810,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
         for(Transition t : transitionSet){
                 onTransition.add(t.toString());
+                transitionList.add(t.toString());
             }
         visitedNodeText.setText("Visited nodes [CPLT]:");
         firedTransitionText.setText("Fired transitions: ");

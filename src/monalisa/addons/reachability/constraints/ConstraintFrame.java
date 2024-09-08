@@ -49,7 +49,6 @@ import org.apache.logging.log4j.Logger;
  * @author Kristin Haas
  */
 public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addons.reachability.ReachabilityListener {
-    // What is tht number for?
     private static final long serialVersionUID = -8541347764965669414L;
     BreadthFirst bf;
     public Pathfinder path;
@@ -94,7 +93,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         getPossibleStartNodes();
        
         // Fill combo boxes with places
-        //DefaultListModel model = new DefaultListModel();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         for (Place p : pn.places()) {
             System.out.println("ERstelle Table: "+p.toString());
@@ -118,8 +116,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : pn.places()) {
-            //model.addElement(p.inputs().getFirst());
-            
             if(p.inputs().size()>=1){
                 for(Transition t : p.inputs()){
                     //onTransition.add(t.toString());
@@ -140,14 +136,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 onTransition.add(t.toString());
                 transitionList.add(t.toString());
             }
-            
-        
-        /**for(HashMap.Entry<Place, Long> entry :this.start.entrySet()){
-            startNode.addItem(entry.toString());
-            for(Transition in: entry.getKey().inputs()){
-             
-            }
-        }*/
+      
         for(Map.Entry<Place, Long> entry : possibleStartNodes.entrySet()){
             startNode.addItem(entry.toString());
             
@@ -172,6 +161,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }
     
+    /**
+     * Computes possible startnodes.
+     * Only if transition after/before a node is enabled.
+     * @throws InterruptedException 
+     */
     private void getPossibleStartNodes() throws InterruptedException{
         Pathfinder pathfinder = new Pathfinder(pn, target, target, capacities, transitions, selectedTargetNodeVisible);
         HashSet<Transition> transitions = pathfinder.computeActiveTransitions(start);
@@ -538,28 +532,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
    
     /**
-     * actually doesn't do anything. Hasn't been used
      * @param evt 
      */
     private void algoSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_algoSelectActionPerformed
         // TODO add your handling code here:
         String selectedCombo = algoSelect.getSelectedItem().toString();
-        switch (selectedCombo) {
-            case "Breadth First Search":
-                
-                System.out.println("Breadth First Search");
-                break;
-            case "Best First Search":
-                System.out.println("Best First Search");
-
-                break;
-            case "A*":
-                System.out.println("A*");
-                break;
-           
-            default:
-                throw new AssertionError();
-        }
+        
 
     }//GEN-LAST:event_algoSelectActionPerformed
             
@@ -581,11 +559,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_onTransitionActionPerformed
 
+    /**
+     * Clears all used maps and lists directly after program terminates.
+     */
     private void clearMapsAndLists(){
         BreadthFirst.clearEnabledTransitions();
         BreadthFirst.clearMarkingHashMap();
         BreadthFirst.clearNodeslist();
-        BreadthFirst.clearTUpdatFrame();
         BreadthFirst.clearTBacktrack();
         BreadthFirst.clearUsedTransitions();
         BreadthFirst.clearUpdatedMarking();
@@ -626,7 +606,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // If program has been used already, clear all outputs.
         BreadthFirst.clearUsedTransitions();
-        BreadthFirst.getTUpdateFrame().clear();
         BreadthFirst.clearTBacktrack();
         
         if(pushed==true){
@@ -634,7 +613,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             chosenAND.setText("");
             chooseButton.setText("Check if already used");
             BreadthFirst.clearUsedTransitions();
-            BreadthFirst.getTUpdateFrame().clear();
             BreadthFirst.clearTBacktrack();
             //used.clear();
             //nodes.clear();
@@ -1060,17 +1038,25 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             
         }
     }
-    
+    /**
+     * Returns number of all nodes whose token changed throughout computing.
+     * @return 
+     */
     public int getNumberVisitedNodes(){
-       
         return BreadthFirst.getVisitiedNodes().size();
     } 
-    
+    /**
+     * Returns number of fired transitions.
+     * @return 
+     */
     public int getNumberFiredTransitions(){
-       
         return BreadthFirst.getTransitions().size();
     }
     
+    /**
+     * 
+     * @return 
+     */
     public ArrayList<Transition> getAllTransitions(){
         ArrayList<Transition> allTransitions = new ArrayList<>();
         for(Transition t : BreadthFirst.getTransitions()){
@@ -1078,21 +1064,25 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     allTransitions.add(t);
                 }
             }
-        
         return allTransitions;
     }
     
+    /**
+     * Used to visualize all nodes (whose token changed throughout computing)
+     * @return 
+     */
     public HashMap<Place, Long> getAllVisitedNodes(){
         HashMap<Place, Long> allUsedNodes = new HashMap<>();
         for(Map.Entry<Place,Long> entry : BreadthFirst.getVisitiedNodes().entrySet()){
-           
                 allUsedNodes.put(entry.getKey(), entry.getValue());
             }
-            
-        
         return allUsedNodes;
     }
     
+    /**
+     * Visualizes all fired transition in GUI
+     * @param transitions 
+     */
     public void enumerateUsedTransitions(ArrayList<Transition> transitions){
         for(Transition t : transitions){
             used.add(t.toString());
@@ -1103,6 +1093,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     
     /**
      * @param e 
+     * Visualizes results of computed calculation 
      */
     @Override
     public void update(ReachabilityEvent e) {
@@ -1116,7 +1107,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         showPlaces.putAll(BreadthFirst.getVisitiedNodes());
         if(getForcedTransition()== true){
             
-            System.out.println("WHAAAAAAT: "+ showPlaces);
             if(e.getStatus()== SUCCESS){
                 chosenAND.setForeground(new Color(0, 102, 0));
                 chosenAND.setText("Transition has been used.");
@@ -1132,8 +1122,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             
         }
         
-      
-        System.out.println("STATUS: "+e.getStatus()+" Transitions: "+ showTransition+" Places: "+showPlaces);
             switch (e.getStatus()) {
                 case RESTRICTED: // Aborted should be fired after stopButton was pressed and the thread was successfully canceled.
                     lock(false);
@@ -1141,7 +1129,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before execution was aborted.");
                     //progressLabel.setText("Number of nodes expanded before execution was aborted: " + Integer.toString(e.getSteps()));
                     what.setForeground(new Color(0, 0, 153));
-                    what.setText("[Restricted success] target node reached. Chosen Transition NOT used.");
+                    what.setText("[Restricted success] target node reached before chosen Transition fired.");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions());
@@ -1153,7 +1141,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                    break;
                 case PROBLEM:
                     what.setForeground(new Color(0, 0, 153));
-                    what.setText("[Problem] target reached before transition could be used!"); 
+                    what.setText("[Problem] Transition used, target not reached!"); 
                     setUsedTransitionTable(showTransition);
                     setVisitedNodes(showPlaces);
                     clearMapsAndLists();
@@ -1187,7 +1175,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     lock(false);
                     // Should probably handle displaying output
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
-                    //progressLabel.setText("Number of nodes expanded before target marking was successfully found: " + Integer.toString(e.getSteps()));
                     what.setForeground(new Color(0, 102, 0));
                     what.setText("[Success] Target node reached!");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
@@ -1198,7 +1185,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         nodes.add("[Startnode visited as target]");
                     }
                     updateMarkings();
-                    //setUsedTransitionTable(BreadthFirst.getTransitions());
                     enumerateUsedTransitions(showTransition);
                     setVisitedNodes(showPlaces);
                     clearMapsAndLists();
@@ -1207,7 +1193,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     lock(false);
                     // Should output failure.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
-                    //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
                     what.setForeground(new Color(204, 0, 0));
                     what.setText("[Failure] Target node not reachable!");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
@@ -1224,7 +1209,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     break;
                 case PROGRESS: // Fired every 100 expanded nodes.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
-                   // progressLabel.setText("Number of nodes expanded so far: " + Integer.toString(e.getSteps()));
                     what.setForeground(new Color(102, 0, 253));
                     what.setText("Progress");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
@@ -1239,8 +1223,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 case FINISHED: // Fired by FullReachability and FullCoverability on completion
                     lock(false);
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
-                    //progressLabel.setText("Number of nodes expanded until completion: " + Integer.toString(e.getSteps()));
-                    // Somehow display the graph? Otherwise this doesn't do much.
                     what.setForeground(new Color(0, 102, 0));
                     what.setText("Finished");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
@@ -1257,7 +1239,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     lock(false);
                     // Should output failure.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
-                    //progressLabel.setText("Number of nodes expanded before failure was determined: " + Integer.toString(e.getSteps()));
                     what.setForeground(new Color(204, 0, 0));
                     what.setText("[Aborted] Target node not reachable!");
                     PlaceTitel.setForeground(new Color(0, 0, 153));

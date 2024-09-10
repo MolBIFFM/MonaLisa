@@ -35,126 +35,222 @@ import sun.security.util.Debug;
 public class BreadthFirst extends AbstractReachabilityAlgorithm {
 
     ConstraintFrame cf;
-   private static final Logger LOGGER = LogManager.getLogger(BreadthFirst.class);
+    private static final Logger LOGGER = LogManager.getLogger(BreadthFirst.class);
    
-   private HashMap<Place, Long> eTarget;
-   private HashMap<Place, Long> eStart;
+    private HashMap<Place, Long> eTarget;
+    private HashMap<Place, Long> eStart;
    
-   private static HashMap<Place, Long> updateFrame = new HashMap<>();
-   //usedTransition part 1 of program
-   private static ArrayList<Transition> usedTransitions = new ArrayList<>();
-   private static HashMap<Place, Long> firstNode = new HashMap<>();
-   private static HashMap<Place, Long> visitedNodes = new HashMap<>();
-   private static ArrayList<ReachabilityNode> reachabilityNodes = new ArrayList<>();
-   private static boolean transitionFound = false;
-   private static boolean transitionBeforeTarget = false;
-
-   private static int count = 0;
-   private static HashSet<Transition> enabledTransitions = new HashSet<>();
-   private static HashMap<Place, Long> updatedMarking = new HashMap<>();
-   private static ArrayList<ReachabilityNode> nodes = new ArrayList<>();
-   private static ArrayList<Transition> tBacktrack = new ArrayList<>();
-   public static boolean setFoundTransitionFalse(){
-       return transitionFound = false;
+  
+   /**
+    * Used for part one of the program. Maps and lists to keep track of
+    * updated nodes and fired transitions.
+    */
+    private static HashMap<Place, Long> updateFrame = new HashMap<>();
+    private static ArrayList<Transition> usedTransitions = new ArrayList<>();
+    private static HashMap<Place, Long> firstNode = new HashMap<>();
+    private static HashMap<Place, Long> visitedNodes = new HashMap<>();
+    private static ArrayList<ReachabilityNode> reachabilityNodes = new ArrayList<>();
+   /**
+    * Used for part two of the program. Also to keep track of used nodes
+    * and fired transitions. 
+    */
+    private static int count = 0;
+    private static HashMap<Place, Long> updatedMarking = new HashMap<>();
+    private static HashSet<Transition> enabledTransitions = new HashSet<>();
+    private static boolean transitionFound = false;
+    private static boolean transitionBeforeTarget = false;
+    private static ArrayList<ReachabilityNode> nodes = new ArrayList<>();
+    private static ArrayList<Transition> tBacktrack = new ArrayList<>();
+    // Indicates if a node is found.
+    private static boolean found = false;
+  
+    /**
+    * 
+    * @return 
+    */
+    public static boolean setFoundTrue(){
+       return found = true;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public static boolean setFoundFalse(){
+       return found = false;
    }
-   public static HashMap<Place, Long> putUpdateMarking(Place p, long oldVal, long newVal){
+   
+    /**
+     * 
+     * @return 
+     */
+    public static boolean setFoundTransitionFalse(){
+       return transitionFound = false;
+    }
+    
+    /**
+     * 
+     * @param p
+     * @param oldVal
+     * @param newVal
+     * @return 
+     */
+    public static HashMap<Place, Long> putUpdateMarking(Place p, long oldVal, long newVal){
        updatedMarking.replace(p, oldVal, newVal);
        return updatedMarking;
-   }
-   
-   public static HashMap<Place, Long> getUpdatedMarking(){
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public static HashMap<Place, Long> getUpdatedMarking(){
        return updatedMarking;
-   }
-   
-   public static ArrayList<ReachabilityNode> getReachabilityNodeList(){
+    }
+    
+   /**
+    * 
+    * @return 
+    */
+    public static ArrayList<ReachabilityNode> getReachabilityNodeList(){
        return reachabilityNodes;
-   }
+    }
    
-   public static void clearReachabilityNodes(){
-       reachabilityNodes.clear();
-   }
-   
-   public static HashMap<Place, Long> getVisitiedNodes(){
+    /**
+     * 
+     * @return 
+     */
+    public static HashMap<Place, Long> getVisitiedNodes(){
        return visitedNodes;
-   }
+    }
    
-   public static void clearVisitedNodes(){
-       visitedNodes.clear();
-   }
-   
-   public static void addToVisitedNodes(HashMap<Place, Long> place){
+    /**
+     * 
+     * @param place 
+     */
+    public static void addToVisitedNodes(HashMap<Place, Long> place){
        visitedNodes.putAll(place);
-   }
-  
-   public static void clearTBacktrack(){
-      tBacktrack.clear();
-   }
+    }
    
-   public static void clearEnabledTransitions(){
-       enabledTransitions.clear();
-   }
-   
-   public static void clearMarkingHashMap(){
-       updatedMarking.clear();
-   }
-   
-   public static void clearNodeslist(){
-       nodes.clear();
-   }
-   
-
-   public static void clearUpdatedMarking(){
-       updatedMarking.clear();
-   }
-  
-   public ArrayList<Transition> getUsedTransitions(){
+    /**
+     * 
+     * @return 
+     */
+    public ArrayList<Transition> getUsedTransitions(){
        return tBacktrack;
-   }
+    }
    
-   public static void addUsedTransition(Transition transition){
+    /**
+     * 
+     * @param transition 
+     */
+    public static void addUsedTransition(Transition transition){
        usedTransitions.add(transition);
-   }
+    }
    
-   public static void clearUsedTransitions(){
-       usedTransitions.clear();
-   }
-   
-   public static ArrayList<Transition> getTransitions(){
-       return usedTransitions;
-   }
-   
-
-   
-   public static void clearUpdateFrame(){
-       updateFrame.clear();
-   }
-   
-   public static ArrayList<Transition> forcedTransitionBacktrack(){
-       ArrayList<Transition> cleanTransitions = new ArrayList<>();
-       for(Transition t : tBacktrack){
-           if(!cleanTransitions.contains(t)){
-               cleanTransitions.add(t);
-           }
-       }
-       return cleanTransitions;
-   }
-   
-         
-   public static HashMap<Place, Long> getUpdateFrame(){
+    /**
+     * 
+     * @return 
+     */    
+    public static HashMap<Place, Long> getUpdateFrame(){
        return updateFrame;
-   }
+    }
    
-   public static HashMap<Place, Long> putUpdateFrame(Place p, long oldVal, long newVal){
+    /**
+     * 
+     * @param p
+     * @param oldVal
+     * @param newVal
+     * @return 
+     */
+    public static HashMap<Place, Long> putUpdateFrame(Place p, long oldVal, long newVal){
        updateFrame.replace(p, oldVal, newVal);
        return updateFrame;
-   }
-   
-   public BreadthFirst(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
-        super(pf, marking, target);
-        
     }
-
    
+    /**
+     * 
+     * @return 
+     */
+    public static ArrayList<Transition> getTransitions(){
+       return usedTransitions;
+    }
+   
+   /**
+    * Clears Reachabilitynodes
+    */
+    public static void clearReachabilityNodes(){
+       reachabilityNodes.clear();
+    }
+   /**
+    * Clears visited nodes map.
+    */
+    public static void clearVisitedNodes(){
+       visitedNodes.clear();
+    }
+   
+   /**
+    * Clears tbacktrack list with fired transitions.
+    */
+    public static void clearTBacktrack(){
+      tBacktrack.clear();
+    }
+   
+   /**
+    * Clears enabled transitions list.
+    */
+    public static void clearEnabledTransitions(){
+       enabledTransitions.clear();
+    }
+   
+   /**
+    * Clears map
+    */
+    public static void clearMarkingHashMap(){
+       updatedMarking.clear();
+    }
+   
+   /**
+    * Clears node list
+    */
+    public static void clearNodeslist(){
+       nodes.clear();
+    }
+   
+    /**
+    * Clears map with updated marking.
+    */
+    public static void clearUpdatedMarking(){
+       updatedMarking.clear();
+    }
+  
+    /**
+    * Clears list with fired transitions.
+    */
+    public static void clearUsedTransitions(){
+       usedTransitions.clear();
+    }
+   
+    /**
+    * Clears updateFrame map, which keeps track of marking.
+    */
+    public static void clearUpdateFrame(){
+       updateFrame.clear();
+    }
+   /**
+    * Deletes transitions that occurre more than once.
+    * @return 
+    */
+    public static ArrayList<Transition> forcedTransitionBacktrack(){
+        ArrayList<Transition> cleanTransitions = new ArrayList<>();
+        for(Transition t : tBacktrack){
+            if(!cleanTransitions.contains(t)){
+                cleanTransitions.add(t);
+            }
+        }
+        return cleanTransitions;
+    }
+             
     /**
      * @param pf
      * @param marking
@@ -169,17 +265,33 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         
     }
     
+    /**
+     * 
+     * @param pf
+     * @param marking
+     * @param target
+     * @param eStart
+     * @param eTarget
+     * @param transition
+     * @throws InterruptedException 
+     */
     public BreadthFirst(Pathfinder pf, HashMap<Place, Long> marking,HashMap<Place, Long> target, HashMap<Place, Long> eStart, HashMap<Place, Long> eTarget, Transition transition ) throws InterruptedException{
         super(pf, marking, target);
         this.eStart = eStart;
         this.eTarget = eTarget;
-        //this.mustTransition = transition;
     }
     
-    public BreadthFirst testBreadthFirst(HashMap<Place, Long> tStart, HashMap<Place, Long> tTarget ){
-        return null;
+    /**
+     * 
+     * @param pf
+     * @param marking
+     * @param target 
+     */
+    public BreadthFirst(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
+        super(pf, marking, target);
+        
     }
-    
+
     @Override
     public void computePriority(ReachabilityNode node) {
         // Breadth First Search does not use a priority.
@@ -189,31 +301,23 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
      * include query  to ask for specific source and tagret
      */
     @Override
-   public void run()  {
+    public void run()  {
        /**
-        * Check ist explicit start and target are used.
-        * Additionally ask if a specific transition must be visited
+        * Check if explicit start and target are used.
+        * Additionally ask if a specific transition must be visited.
         */
         if(eStart != null && eTarget !=null){
+            // If a transition is chosen that must be use.
             if(ConstraintFrame.chooseTransition != null && ConstraintFrame.forcedTransition== true){
                 specificTransition();
-                
-                
-                
             }
+            // If no specific transition is chosen.
             if(ConstraintFrame.chooseTransition == null){
                 explicitStartAndTarget(eTarget);
-                
             }
-      
         }
         else{
-            
-        /**
-         * @author Marcel Gehrmann
-         */
         LOGGER.debug("Starting Breadth First Algorithm.");
-        
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -275,51 +379,30 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         }
     }
    
-   public void resetAll(){
+   /**
+    * Resets used transitions/marks them as not used.
+    */
+    public void resetAll(){
        for(Transition t : pf.getBackup().transitions()){
            t.resetTransitions();
        }
-   }
-   
-   
-  
-   
-   
+    }
+
    /**
     * Compute reachability with explicit start and target.
     */
-   private static boolean found = false;
-   public static boolean setFoundTrue(){
-       return found = true;
-   }
-   public static boolean setFoundFalse(){
-       return found = false;
-   }
-   public void explicitStartAndTarget(HashMap<Place,Long> targetNode){
+    public void explicitStartAndTarget(HashMap<Place,Long> targetNode){
         resetAll(); 
-            
         LOGGER.debug("Starting BFS with specific start and target node");
         PetriNet newPN = new PetriNet();
-        
-        /**If start and target are equal. Stop program.
-         * Can be used. Now computes complete path through PN
-         * back to the startnode.
-        if(eStart.equals(eTarget)){
-            fireReachabilityUpdate(ReachabilityEvent.Status.EQUALNODE, 0, null);
-            return;
-        }*/
-        
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
 
         HashMap<Place, Long> collect = new HashMap<>();
-
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edge = new HashSet<>();
-
         ArrayList<ReachabilityNode> verticesList = new ArrayList<>();
         ArrayList<ReachabilityNode> rNodeList = new ArrayList<>();
-
         ReachabilityNode root = new ReachabilityNode(null, null);
         HashMap<Place, Long> newMarkingMap = new HashMap<>();
         /**
@@ -329,35 +412,24 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
        for(Map.Entry<Place, Long> entry: marking.entrySet()){
             newMarkingMap.put(entry.getKey(), entry.getValue());
             HashMap<Place, Long> work = new HashMap<>();
-
             if(rNodeList.isEmpty()){
                 work.put(entry.getKey(), entry.getValue());
-                
                 ReachabilityNode firstNode = new ReachabilityNode(work, null);
                 rNodeList.add(firstNode);
                 root = firstNode;
-
-
             }
             ReachabilityNode lastNode = rNodeList.getLast();
             work.put(entry.getKey(), entry.getValue());
             ReachabilityNode currNode = new ReachabilityNode(work, lastNode);
             rNodeList.add(currNode);
-
-
         }
         // If first node has a prev-node exchange
         // Here pre node is last node -> has to be more complex and not hard coded
-
         if(rNodeList.get(0).getMarking().keySet().equals(rNodeList.get(1).getMarking().keySet())){
             rNodeList.remove(0);
             ReachabilityNode exchange = new ReachabilityNode(rNodeList.getFirst().getMarking(), rNodeList.getLast());
-            //rNodeList.remove(1);
-            
             rNodeList.remove(0);
             rNodeList.add(0, exchange);
-
-
         }
         verticesList.addAll(rNodeList);
         // Getting active transitions
@@ -368,11 +440,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         ArrayList<ReachabilityNode> reachabilityNodesList = new ArrayList<>();
         ArrayList<Transition> backtrack = new ArrayList<>();
 
-
-        visitedNodes.clear();//VISITCLEAR
+        visitedNodes.clear();
         HashMap<Place, Long> resetMap = new HashMap<>();
         firstNode = eStart;
-        
         //Set all nodes back to not visited
         for(ReachabilityNode r : rNodeList){
             r.setUnvisited();
@@ -391,10 +461,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             if (counter % 100 == 0) {
                fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
             }
-             // Grab node out of rNodeList. Remove same node out of list.
+             // Take node out of rNodeList. Remove same node out of list.
             ReachabilityNode workingNode = rNodeList.get(0);//Nimm den workingNode und gucke ihn an
             System.out.println("Anfang Node: "+ workingNode.getMarking());
-            
             // init previsited node
             ReachabilityNode preNode = workingNode;
             // if preNode is visited. Set current node as previouse node.
@@ -402,17 +471,12 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             if(preNode.getVisited()== true){
                 currNode = workingNode;
                 currNode.setPrev(preNode);
-                
             }
-            
-             // Examine transitions. Look for t that belongs to working node.
             System.out.println("WorkingNode: "+workingNode.getMarking());
             System.out.println("");
             System.out.println("");
             System.out.println("");
-            
-            
-            
+         
             for(Transition t : activeTransitions){
                 if(t.getUsed()== false){
                      System.out.println("Transition: "+t.toString());
@@ -424,8 +488,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     t.setUsed();
                     if(!usedTransitions.contains(t)){
                        addUsedTransition(t);
-                   }
-                   // addUsedTransition(t);
+                    }
                     System.out.println("--------------------------------");
                     System.out.println("--- NewMarking: "+getUpdateFrame()+" ---");
                     System.out.println("--------------------------------");
@@ -442,12 +505,11 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     rNodeList.remove(workingNode);
                     
                     if(found == true){
-                        
                         workingNode.setVisited();
                         vertices.add(workingNode);
-                        if(preNode.getVisited()== true && preNode.getVisited()== true){
+                        if(currNode.getVisited()== true && preNode.getVisited()== true){
                             edge.add(new ReachabilityEdge(preNode, currNode, t));
-                    }
+                        }
                         if(transitionBeforeTarget == true){
                             fireReachabilityUpdate(ReachabilityEvent.Status.RESTRICTED, count, backtrack);
                             transitionFound = false;
@@ -456,7 +518,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                         fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, count, backtrack);
                   
                         return;
-                        
                     }
                     workingNode.setVisited();
                     vertices.add(workingNode);
@@ -469,18 +530,15 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                             
                         }
                     }
-                        
-            }
+                }
            
-                
             }
 
-
-            }
-        
-        
+        }
+        /**
+         * Termination condition
+         */
         if( counter >= interrupt){
-           
             fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, count, backtrack);
             return;
         }
@@ -488,27 +546,23 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, count, backtrack);
             return;
         }
-   }
-   
-   
-   /**
+    }
+
+    /**
     * Method to force a chosen transition to be fired.
     */
-   public void specificTransition(){
+    public void specificTransition(){
         //transitionFound = false;
         transitionBeforeTarget = false;
         resetAll(); 
             
         LOGGER.debug("Starting BFS with specific transition to be used.");
         PetriNet newPN = new PetriNet();
-        
-        
-        
+
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
 
         HashSet<ReachabilityNode> tVertices = new HashSet<>();
         HashSet<ReachabilityEdge> tEdges = new HashSet<>();
-        
         ArrayList<ReachabilityNode> tVerticesList = new ArrayList<>();
         ArrayList<ReachabilityNode> reachabilityNodes = new ArrayList<>();
         ArrayList<ReachabilityNode> nodesCount = new ArrayList<>();
@@ -532,7 +586,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             ReachabilityNode currNode = new ReachabilityNode(work, lastNode);
             reachabilityNodes.add(currNode);
         }
-        
         if(reachabilityNodes.get(0).getMarking().keySet().equals(reachabilityNodes.get(1).getMarking().keySet())){
             reachabilityNodes.remove(0);
             ReachabilityNode exchange = new ReachabilityNode(reachabilityNodes.getFirst().getMarking(), reachabilityNodes.getLast());
@@ -551,7 +604,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         for(ReachabilityNode r : reachabilityNodes){
             r.setUnvisited();
         }
-    
         ArrayList<HashMap<Place, Long>> inputNodes = new ArrayList<>();
         ArrayList<HashMap<Place, Long>> outputNodes = new ArrayList<>();
        
@@ -564,7 +616,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     inputNodes.add(loadInput);
                 }
             }
-            
         }
         // Get all outputNodes of musthave transition
         for(Place output : ConstraintFrame.chooseTransition.outputs()){
@@ -595,8 +646,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 String stringBFS = BFS(eStart, inputMap, reachabilityNodes, secondPart, firstPart);
                 inputString.add(stringBFS);
                 
-                System.out.println("TEST: "+transitionFound+" frame: "+updateFrame+" out: "+stringBFS+" node: "+found+ " eTarget: "+eTarget+ "inMap: "+inputMap);
-                
                 if(stringBFS == "Success"){
                     firstPart = true;
                     if(transitionFound && found ){
@@ -606,12 +655,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                                       fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, count, tBacktrack);
                                         setFoundFalse();
                                         return;
-                            }
+                                }
                             }
                         }
-                        
-                      
-                        
                     }
                     break;
                 }
@@ -625,11 +671,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     setFoundFalse();
                     return;
                 }
-                
-        }
+            }
             inputNodes.remove(0);
-        
-    }
+        }
         firstPart = true;
         
         nodesCount.addAll(reachabilityNodes);
@@ -667,7 +711,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             explicitStartAndTarget(newTarget);
             transitionBeforeTarget = false;
         }
-        
         while(!outputNodes.isEmpty() && firstPart == true){
             secondPart = true;
             for(HashMap<Place, Long> outputMap : outputNodes){
@@ -695,117 +738,102 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     setFoundFalse();
                     return;
                 }
-                 
             }
            outputNodes.remove(0);
-        
         }
-  
    }
    
-   /**
-    * 
-    * @param start
-    * @param target
-    * @param nodeList
-    * @param finish
-    * @param secondPart
-    * @return 
-    */
-   public String BFS(HashMap<Place, Long> start, HashMap<Place, Long> targetNode, ArrayList<ReachabilityNode> nodeList, boolean secondPart, boolean firstPart){
-       int counter = 0;
+    /**
+     * 
+     * @param start
+     * @param targetNode
+     * @param nodeList
+     * @param secondPart
+     * @param firstPart
+     * @return 
+     */
+    public String BFS(HashMap<Place, Long> start, HashMap<Place, Long> targetNode, ArrayList<ReachabilityNode> nodeList, boolean secondPart, boolean firstPart){
+        int counter = 0;
+        HashSet<ReachabilityNode> vertices = new HashSet<>();
+        ArrayList<ReachabilityNode> reachNodeList = new ArrayList<>();
+        HashSet<ReachabilityEdge> edge = new HashSet<>();
+        /**
+         * If first part is already computed use updatedMarking 
+         * to compute active transitions.
+         */
+        if(secondPart == true){
+            HashSet<Transition>  enabledTransitions = pf.computeActiveTransitions(updateFrame);
+            BreadthFirst.enabledTransitions.addAll(enabledTransitions);
+            updateFrame.putAll(updatedMarking);
+        }
+        if(secondPart == false){
+            HashSet<Transition> enabledTransitions = pf.computeActiveTransitions(marking);
+            BreadthFirst.enabledTransitions.addAll(enabledTransitions);
+        }
+        BreadthFirst.enabledTransitions.forEach(b-> System.out.println("Trans: "+ b));
+        if(updatedMarking.isEmpty()){
+           for(ReachabilityNode r : nodeList){
+                updatedMarking.put(r.getMarking().keySet().iterator().next(), r.getMarking().values().iterator().next());
+            }
+            updateFrame.putAll(updatedMarking);
+        }
        
-       HashSet<ReachabilityNode> vertices = new HashSet<>();
-       ArrayList<ReachabilityNode> reachNodeList = new ArrayList<>();
-       HashSet<ReachabilityEdge> edge = new HashSet<>();
-       
-       /**
-        * If first part is already computed use updatedMarking 
-        * to compute active transitions.
-        */
-       if(secondPart == true){
-           HashSet<Transition>  enabledTransitions = pf.computeActiveTransitions(updateFrame);
-           BreadthFirst.enabledTransitions.addAll(enabledTransitions);
-           updateFrame.putAll(updatedMarking);
-         
-       }
-       if(secondPart == false){
-           HashSet<Transition> enabledTransitions = pf.computeActiveTransitions(marking);
-           BreadthFirst.enabledTransitions.addAll(enabledTransitions);
-           
-       }
-       BreadthFirst.enabledTransitions.forEach(b-> System.out.println("Trans: "+ b));
-       if(updatedMarking.isEmpty()){
-           //HashSet<Transition> enabledTransitions = pf.computeActiveTransitions(marking);
-          for(ReachabilityNode r : nodeList){
-               updatedMarking.put(r.getMarking().keySet().iterator().next(), r.getMarking().values().iterator().next());
-           }
-          updateFrame.putAll(updatedMarking);
-       }
-       
-      
-       int interrupt = nodeList.size();
-       
-       while(!nodeList.isEmpty()&& counter < interrupt){
-           counter += 1;
-           fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
-           if(counter % 100 == 0){
-               fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, tBacktrack);
-           }
-           ReachabilityNode workingNode = nodeList.get(0);
-           ReachabilityNode preNode = workingNode;
-           ReachabilityNode currNode = null;
-           if(preNode.getVisited() == true){
-               currNode = workingNode;
-               currNode.setPrev(preNode);
-           }
-           for(Transition t : enabledTransitions){
-               if(t.getUsed() == false){
-                   pf.computeSingleMarking(t, targetNode);
-                   updatedMarking.putAll(updateFrame);
-                   t.setUsed();
-                   // If transition equals chosen transition, set transitionFound true
-                   if(t.equals(ConstraintFrame.chooseTransition)){
-                     transitionFound = true;
-               }
-                   addUsedTransition(t);
+        int interrupt = nodeList.size();
+        while(!nodeList.isEmpty()&& counter < interrupt){
+            counter += 1;
+            fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
+            if(counter % 100 == 0){
+                fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, tBacktrack);
+            }
+            ReachabilityNode workingNode = nodeList.get(0);
+            ReachabilityNode preNode = workingNode;
+            ReachabilityNode currNode = null;
+            if(preNode.getVisited() == true){
+                currNode = workingNode;
+                currNode.setPrev(preNode);
+            }
+            for(Transition t : enabledTransitions){
+                if(t.getUsed() == false){
+                    pf.computeSingleMarking(t, targetNode);
+                    updatedMarking.putAll(updateFrame);
+                    t.setUsed();
+                    // If transition equals chosen transition, set transitionFound true
+                    if(t.equals(ConstraintFrame.chooseTransition)){
+                      transitionFound = true;
+                    }
+                    addUsedTransition(t);
               
-                   System.out.println("--------------------------------");
-                   System.out.println("------WorkingNode: "+workingNode.getMarking()+" ---------------");
-                   System.out.println("------UpdatedMarking: "+updatedMarking+" --------------------------------");
-                   System.out.println("------UpdatedFrame: "+updateFrame+" --------------------------------");
-                   System.out.println("------- Second: "+secondPart+" -------------");
-                   System.out.println("--------------------------------");
+                    System.out.println("--------------------------------");
+                    System.out.println("------WorkingNode: "+workingNode.getMarking()+" ---------------");
+                    System.out.println("------UpdatedMarking: "+updatedMarking+" --------------------------------");
+                    System.out.println("------UpdatedFrame: "+updateFrame+" --------------------------------");
+                    System.out.println("------- Second: "+secondPart+" -------------");
+                    System.out.println("--------------------------------");
 
-                   HashSet<Transition> activeTransitionUpdated = pf.computeActiveTransitions(updatedMarking);
-                   enabledTransitions = activeTransitionUpdated;
-                   nodeList.remove(0);
-                   // If transition used and target found in first part -> terminate
-                   if(found  && transitionFound){
-                       if(firstPart == false){
-                           System.out.println("Ausgabe: "+updateFrame);
-                           workingNode.setVisited();
-                           vertices.add(workingNode);
-                           if(currNode!= null && preNode.getVisited() == true && currNode.getVisited() == true){
+                    HashSet<Transition> activeTransitionUpdated = pf.computeActiveTransitions(updatedMarking);
+                    enabledTransitions = activeTransitionUpdated;
+                    nodeList.remove(0);
+                    // If transition used and target found in first part -> terminate
+                    if(found  && transitionFound){
+                        if(firstPart == false){
+                            System.out.println("Ausgabe: "+updateFrame);
+                            workingNode.setVisited();
+                            vertices.add(workingNode);
+                            if(currNode!= null && preNode.getVisited() == true && currNode.getVisited() == true){
                                edge.add(new ReachabilityEdge(preNode, currNode, t));
 
                            }
-                      
-                      // setFoundFalse();
-                            return "Success";
-                    }
-                       if(secondPart == true){
+                           return "Success";
+                        }
+                        if(secondPart == true){
                            workingNode.setVisited();
                            vertices.add(workingNode);
                            if(currNode!= null && preNode.getVisited() == true && currNode.getVisited() == true){
                               edge.add(new ReachabilityEdge(preNode, currNode, t));
-                           
-                       }
+                            }
                            return "Success";
-                           
                        }
                    }
-                       
                    if(transitionFound == true && found == false){
                        transitionBeforeTarget = true;
                    }
@@ -815,8 +843,10 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                    }
                }
            }
- 
        }
+       /**
+        * Termination condition. 
+        */
        if(counter >= interrupt){
            return "Aborted";
        }
@@ -825,12 +855,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
        }
    return null;
    }
-   
-   
-   
-   
-   
-   
 }
    
   

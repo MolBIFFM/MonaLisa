@@ -28,12 +28,13 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Marcel Gehrmann Should extend Thread class for parallelization later
  * on
+ * @author Kristin Haas
  */
 public class Pathfinder {
-
     private final HashMap<Place, Long> marking; // Start marking
     private final HashMap<Place, Long> target; // Target marking
     private final PetriNetFacade pnf;
+    private PetriNetFacade backup;
     private final String alg;
     private AbstractReachabilityAlgorithm algorithm;
     private Thread algoThread;
@@ -101,6 +102,16 @@ public class Pathfinder {
         initializeAlgorithm(alg, heuristic);
         LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
     }
+
+    public Pathfinder(HashMap<Place, Long> marking, HashMap<Place, Long> target, PetriNetFacade pnf, String alg, HashMap<Place, Long> capacities, boolean capacities_active, HashSet<Transition> transitions) {
+        this.marking = marking;
+        this.target = target;
+        this.pnf = pnf;
+        this.alg = alg;
+        this.capacities = capacities;
+        this.capacities_active = capacities_active;
+        this.transitions = transitions;
+    }
     
     /**
      * Pathfinder used by ConstrainFrame
@@ -113,11 +124,11 @@ public class Pathfinder {
      * @param eStart
      * @param eTarget
      * @throws java.lang.InterruptedException
-     * 
      */
     public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities,HashSet<Transition> knockout , String alg, HashMap<Place, Long> eStart, HashMap<Place,Long> eTarget) throws InterruptedException {
         LOGGER.info("Initializing pathfinder for reachability analysis with specific start and target.");
         this.pnf = pnf;
+        this.backup = pnf;
         this.marking = new HashMap<>();
         this.marking.putAll(marking);
         this.target = new HashMap<>();
@@ -133,6 +144,14 @@ public class Pathfinder {
         this.alg = alg;
         initializeAlgorithmExplicit(alg, null);
         LOGGER.info("Successfully initialized pathfinder for reachability analysis.");        
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public PetriNetFacade getBackup(){
+        return backup;
     }
 
     private void initializeAlgorithm(String alg, String heuristic) {
@@ -174,7 +193,7 @@ public class Pathfinder {
             LOGGER.info("Failed to initialize algorithm: " + alg + ".");
         }
     }
-    
+
     /**
      * Initializes algorithm. Should be used when explicit start and target 
      * are needed.
@@ -182,6 +201,8 @@ public class Pathfinder {
      * @param heuristic 
      */
     private void initializeAlgorithmExplicit(String alg, String heuristic ) throws InterruptedException {
+        // Reset 
+       
         LOGGER.info("Initializing algorithm: " + alg + ".");
         if (heuristic != null) {
             LOGGER.info("Initializing with heuristic: " + heuristic);
@@ -198,7 +219,6 @@ public class Pathfinder {
             if (alg == null) return;
             switch (alg) {
                 case "Breadth First Search":
-                    System.out.println("We are in pathfinder. Choosing Alg");
                     this.algorithm = new BreadthFirst(this,marking, target, eStart, eTarget);
                     break;
                 // Move FullReach and FullCover into separate classes and treat like algorithms
@@ -222,29 +242,45 @@ public class Pathfinder {
         }
     }
     
+    /**
+     * 
+     * @return 
+     */
+    public HashSet<Transition> allTransitions(){
+        return transitions;
+    }
+    
+    /**
+     * @param m
+     * @return 
+     */
     public HashSet<Transition> computeActiveTransitions(HashMap<Place, Long> m) {
         LOGGER.debug("Computing active transitions");  // debug
         HashSet<Transition> activeTransitions = new HashSet<>();
         for (Transition t : transitions) {
-            boolean active = true;
-            System.out.println("Transitions[Pathfinder|computeActive]: "+t);
+            t.setActive();
             for (Place p : t.inputs()) {
                 if (m.containsKey(p)) {
                 }
-                if (m.get(p) < pnf.getArc(p, t).weight()) {
-                    System.out.println("Transitions[Pathfinder|computeActive|False]: "+t+" T->P: "+p);
-                    active = false;
+                if (m.get(p) != null&& m.get(p) < pnf.getArc(p, t).weight()) {
+                    t.setNotActive();
                     break;
-                }
+                        }
+                    for(Map.Entry<Place, Long> entry : BreadthFirst.getUpdateFrame().entrySet()){
+                        if(p.equals(entry.getKey())){
+                            if (m.get(p) < pnf.getArc(p, t).weight()) {
+                                t.setNotActive();
+
+                                break;
+                            }
+                        }
+                    }
             }
-           if (active) {
+            if (t.getActive()==true) {
                 activeTransitions.add(t);
-                System.out.println("Transitions[Pathfinder|computeActive|Active]: "+t);
             }
         }
-        
         LOGGER.debug("Successfully computed active transitions.");  // debug
-        System.out.println("Transitions[Pathfinder|computeActive]: "+activeTransitions);
         return activeTransitions;
     }
 
@@ -259,27 +295,20 @@ public class Pathfinder {
         HashSet<Transition> activeTransitions = new HashSet<>();
         for (Transition t : transitions) {
             boolean active = true;
-            System.out.println("Transitions[Pathfinder|computeActive]: "+t);
             for (Place p : t.inputs()) {
                 if (m.containsKey(p)) {
                 }
                 if (m.get(p) < pnf.getArc(p, t).weight()) {
-                    System.out.println("Transitions[Pathfinder|computeActive|False]: "+t+" T->P: "+p);
                     active = false;
                     break;
                 }
             }
            if (active) {
                 activeTransitions.add(t);
-                System.out.println("Transitions[Pathfinder|computeActive|Active]: "+t);
             }
         }
-        // Deactivated -> deleted active Transitions -> Backtracking didn't work
-        /**if (capacities_active) {
-            activeTransitions = removeOverCapacity(activeTransitions, m);
-        }*/
+        
         LOGGER.debug("Successfully computed active transitions.");  // debug
-        System.out.println("Transitions[Pathfinder|computeActive]: "+activeTransitions);
         return activeTransitions;
     }
 
@@ -299,30 +328,86 @@ public class Pathfinder {
         activeTransitions.removeAll(toRemove);
         return activeTransitions;
     }
+    
+    /**
+     * @param old
+     * @param t
+     * @return 
+     */
+    private HashMap<Place, Long> newInput = new HashMap<>();
+    private HashMap<Place, Long> newOutput = new HashMap<>();
+    public void computeSingleMarking(Transition t, HashMap<Place,Long> targetNode){
+        LOGGER.debug("Computing new marking.");  // debug
+        HashMap<Place, Long> newTarget = targetNode;
+        /**
+         * When single nodes handled use two Hashmaps
+         */
+        
+        System.out.println("Input: "+newInput);
+        try {
+        for(Place p : t.inputs()){
+            
+            long oldToken = BreadthFirst.getUpdateFrame().get(p);
+            if(oldToken == 0){
+                System.out.println("OLD: "+oldToken+" frame: "+BreadthFirst.getUpdateFrame());
+            }
+            else{
+                newInput.put(p,  (oldToken - (pnf.getArc(p, t).weight())));
+                long newToken = (oldToken - (pnf.getArc(p, t).weight()));
+                BreadthFirst.putUpdateFrame(p, oldToken, newToken);
+                BreadthFirst.putUpdateMarking(p, oldToken, newToken);
+                HashMap<Place, Long> addToVisited = new HashMap<>();
+                addToVisited.put(p, newToken);
+                BreadthFirst.addToVisitedNodes(addToVisited);
+                if(p.toString() == newTarget.keySet().iterator().next().toString()){
+                    newTarget = eTarget;
+                }
+            }
+        }
+        
+        } catch (NullPointerException e) {
+   }
+        try {
+  
+            for(Place p : t.outputs()){
+                long oldToken = BreadthFirst.getUpdateFrame().get(p);
+                newOutput.put(p, (oldToken +( pnf.getArc(t, p).weight())));
+                long newToken = newOutput.put(p, (oldToken +( pnf.getArc(t, p).weight())));
+                HashMap<Place, Long> addToVisited = new HashMap<>();
+                addToVisited.put(p, newToken);
+                BreadthFirst.addToVisitedNodes(addToVisited);
+                BreadthFirst.putUpdateFrame(p, oldToken, newToken);
+                BreadthFirst.putUpdateMarking(p, oldToken, newToken);
+                System.out.println("FRAME: "+BreadthFirst.getUpdateFrame());
+                if(p.toString()== newTarget.keySet().iterator().next().toString()){
+                    BreadthFirst.setFoundTrue();
+                }
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Exception_Out: "+e);
+        }
+    }
 
     /**
      * Adjusts tokens 
      * @param old
      * @param t
      * @return 
+     * 
      */
-    public HashMap<Place, Long> computeMarking(HashMap<Place, Long> old, Transition t) {
+      public HashMap<Place, Long> computeMarking(HashMap<Place, Long> old, Transition t) {
         LOGGER.debug("Computing new marking.");  // debug
         HashMap<Place, Long> mNew = new HashMap<>();
         mNew.putAll(old);
         // deduct tokens from input places
         for (Place p : t.inputs()) {
-            if(mNew.get(p) != null){
-                long oldToken = mNew.get(p);
-                mNew.put(p, oldToken - pnf.getArc(p, t).weight());
-            }
+            long oldToken = mNew.get(p);
+            mNew.put(p, oldToken - pnf.getArc(p, t).weight());
         }
         // add tokens to output places
         for (Place p : t.outputs()) {
-            if(mNew.get(p)!= null){
-                long oldToken = mNew.get(p);
-                mNew.put(p, oldToken + pnf.getArc(t, p).weight());
-            }
+            long oldToken = mNew.get(p);
+            mNew.put(p, oldToken + pnf.getArc(t, p).weight());
         }
         LOGGER.debug("Successfully computed new marking.");  // debug
         return mNew;

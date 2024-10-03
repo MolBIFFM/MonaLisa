@@ -21,6 +21,39 @@ public final class Transition extends UniquePetriNetEntity implements Comparable
     private static final long serialVersionUID = -7083156416077840731L;
 
     private PetriNet container;
+    
+    private boolean used = false;
+    
+    private boolean active = true;
+    
+    public void resetTransitions(){
+        used = false;
+        active = true;
+    }
+    
+    public boolean setActive(){
+        return active = true;
+    }
+    
+    public boolean setNotActive(){
+        return active = false;
+    }
+    
+    public boolean getActive(){
+        return active;
+    }
+    
+    public boolean setUsed(){
+        return used = true;
+    }
+    
+    public boolean setNotUsed(){
+        return used = false;
+    }
+    
+    public boolean getUsed(){
+        return used;
+    }
 
     /**
      * Should be used only during deserialization.

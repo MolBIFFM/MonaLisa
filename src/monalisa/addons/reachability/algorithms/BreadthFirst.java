@@ -473,6 +473,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 currNode.setPrev(preNode);
             }
             System.out.println("WorkingNode: "+workingNode.getMarking());
+            System.out.println(" preNode: "+preNode.getMarking());
             System.out.println("");
             System.out.println("");
             System.out.println("");
@@ -507,7 +508,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                     if(found == true){
                         workingNode.setVisited();
                         vertices.add(workingNode);
-                        if(currNode.getVisited()== true && preNode.getVisited()== true){
+                        
+                        if(currNode != null && currNode.getVisited()== true && preNode.getVisited()== true){
+                            System.out.println("CurrNode: "+currNode.getMarking()+" preNode: "+preNode.getMarking());
                             edge.add(new ReachabilityEdge(preNode, currNode, t));
                         }
                         if(transitionBeforeTarget == true){

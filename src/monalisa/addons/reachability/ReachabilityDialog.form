@@ -147,6 +147,9 @@
         <Property name="text" type="java.lang.String" value="Breadth First Search"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="breadthRButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="bestRButton">
       <Properties>
@@ -179,6 +182,9 @@
           <Dimension value="[100, 29]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboHeuristicActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>

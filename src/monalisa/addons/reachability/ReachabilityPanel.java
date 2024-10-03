@@ -143,6 +143,11 @@ public class ReachabilityPanel extends AddonPanel implements ActionListener, Rea
         breadthRButton.setSelected(true);
         breadthRButton.setText("Breadth First Search");
         breadthRButton.setToolTipText("");
+        breadthRButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                breadthRButtonActionPerformed(evt);
+            }
+        });
 
         algoRadioGroup.add(bestRButton);
         bestRButton.setText("Best First Search");
@@ -298,6 +303,10 @@ public class ReachabilityPanel extends AddonPanel implements ActionListener, Rea
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
         pf.stopAlgorithm();
     }//GEN-LAST:event_stopButtonActionPerformed
+
+    private void breadthRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_breadthRButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_breadthRButtonActionPerformed
 
     @Override
     public void actionPerformed(ActionEvent e) {

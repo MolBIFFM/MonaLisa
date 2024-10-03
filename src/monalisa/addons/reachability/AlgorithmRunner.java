@@ -19,6 +19,16 @@ public class AlgorithmRunner extends Thread {
         this.algorithm = algorithm;
     }
 
+    
+   /** public void runExplicit(){
+        try {
+            algorithm.runExplicit();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    
+    }*/
+    
     @Override
     public void run() {
         try {

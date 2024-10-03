@@ -145,6 +145,7 @@ public class KnockoutFrame extends javax.swing.JFrame {
         }
         for (Transition t : toRemove) {
             activeModel.removeElement(t);
+            LOGGER.info("KNOCKOUT PRINT");
         }
     }//GEN-LAST:event_knockButtonActionPerformed
 

@@ -24,8 +24,12 @@ import monalisa.data.pn.Transition;
 public abstract class AbstractReachabilityAlgorithm extends Thread implements ReachabilityAlgorithm {
 
     protected final Pathfinder pf;
-    protected final HashMap<Place, Long> marking;
-    protected final HashMap<Place, Long> target;
+    protected  HashMap<Place, Long> marking;
+    protected HashMap<Place, Long> target;
+    protected  HashMap<Place, Long> start;
+
+    protected HashMap<Place, Long> eStart;
+    protected HashMap<Place, Long> eTarget;
     protected ReachabilityNode tar;
     protected ReachabilityGraph g;
     private List<ReachabilityListener> listeners = new ArrayList<>();
@@ -34,10 +38,30 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
         this.pf = pf;
         this.marking = marking;
         this.target = target;
+        this.start = null;
     }
+    
+    /**Single nodes in constructor.
+     * @author Kristin Haas
+     * @param pf
+     * @param marking
+     * @param target 
+     * @param eStart
+     * @param eTarget
+     */
+    public AbstractReachabilityAlgorithm(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> eStart, HashMap<Place, Long> eTarget) {
+        this.pf = pf;
+        this.start = marking;
+        this.target = target;  
+        this.eStart = eStart;
+        this.eTarget = eTarget;
+        System.out.println("In AbstractReach. Start: "+start+" target: "+target+" eStart: "+eStart+" eTarget: "+eTarget);
+    }
+    
+    
 
     @Override
-    public ArrayList<Transition> backtrack() {
+     public ArrayList<Transition> backtrack() {
         // Start from m*. Go back using m*.getPrev(). Always shortest path for BFS
         ArrayList<Transition> path = new ArrayList<>();
         ReachabilityNode currentNode = tar;
@@ -52,6 +76,24 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
          */
         return path;
     }
+     
+     
+     public ArrayList<Transition> backtrackList(ArrayList<Transition> backtrack) {
+        // Start from m*. Go back using m*.getPrev(). Always shortest path for BFS
+        ArrayList<Transition> returnBacktrack = new ArrayList<>();
+        for(Transition t : backtrack){
+            if(!returnBacktrack.contains(t)){
+                returnBacktrack.add(t);
+            }
+        }
+        //backtrack.reversed();
+        returnBacktrack.reversed();
+        return returnBacktrack;
+    }
+     
+     public void visitedPlaces(){
+         
+     }
 
     /**
      * Finds the position a node needs to be inserted in based on its priority

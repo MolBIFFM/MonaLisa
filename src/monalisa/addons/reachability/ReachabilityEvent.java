@@ -24,7 +24,12 @@ public class ReachabilityEvent {
         FAILURE,
         PROGRESS,
         ABORTED,
-        FINISHED // Finished is only used for creating a full graph.
+        FINISHED, // Finished is only used for creating a full graph.
+        EQUALNODE,
+        PROBLEM,
+        ALWAYSUSED,
+        RESTRICTED
+        
     }
 
     public ReachabilityEvent(Status status, int steps, ArrayList<Transition> backtrack) {

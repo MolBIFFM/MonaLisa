@@ -157,4 +157,5 @@ public class AStar extends AbstractReachabilityAlgorithm {
         prio += Collections.max(placewise); // Add heuristic
         node.setPriority(prio);
     }
+
 }

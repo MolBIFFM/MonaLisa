@@ -29,6 +29,9 @@ public class FullCoverability extends AbstractReachabilityAlgorithm {
     public FullCoverability(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
         super(pf, marking, target);
     }
+    public FullCoverability(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> eStart, HashMap<Place, Long> eTarget) {
+        super(pf, marking, target, eStart, eTarget);
+    }
 
     @Override
     public void run() {
@@ -86,9 +89,12 @@ public class FullCoverability extends AbstractReachabilityAlgorithm {
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }
+   
 
     @Override
     public void computePriority(ReachabilityNode node) {
         // Does not use a priority.
     }
+
+    
 }

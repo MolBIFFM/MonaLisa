@@ -339,9 +339,6 @@ public class Pathfinder {
     public void computeSingleMarking(Transition t, HashMap<Place,Long> targetNode){
         LOGGER.debug("Computing new marking.");  // debug
         HashMap<Place, Long> newTarget = targetNode;
-        /**
-         * When single nodes handled use two Hashmaps
-         */
         
         System.out.println("Input: "+newInput);
         try {

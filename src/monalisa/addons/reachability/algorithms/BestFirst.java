@@ -31,6 +31,8 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
         super(pf, marking, target);
         this.priority = heur;
     }
+    
+    
 
     @Override
     public void run() {
@@ -127,4 +129,6 @@ public class BestFirst extends AbstractReachabilityAlgorithm {
         }
         node.setPriority(prio);
     }
+
+    
 }

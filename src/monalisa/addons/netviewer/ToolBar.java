@@ -7,6 +7,8 @@ package monalisa.addons.netviewer;
 
 import monalisa.addons.netviewer.listener.MctsItemListener;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -25,11 +28,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 import monalisa.addons.netviewer.listener.McsItemListener;
 import monalisa.addons.netviewer.transformer.VertexIconTransformerPlace;
 import monalisa.addons.netviewer.wrapper.MctsWrapper;
 import monalisa.addons.netviewer.transformer.VertexShapeTransformer;
 import monalisa.addons.reachability.ReachabilityDialog;
+import monalisa.addons.reachability.constraints.ConstraintFrame;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.Place;
 import monalisa.data.pn.TInvariant;
@@ -223,6 +231,8 @@ public class ToolBar extends javax.swing.JPanel {
         CPILabel = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         reachabilityButton = new javax.swing.JButton();
+        comboBox = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         mctsPanel = new javax.swing.JPanel();
         mctsCb = new javax.swing.JComboBox();
         allMctsButton = new javax.swing.JButton();
@@ -732,16 +742,9 @@ public class ToolBar extends javax.swing.JPanel {
         analysisPane.addKeyListener(nvkl);
         analysisPane.setLayout(new java.awt.GridBagLayout());
 
-        InvPanel.setLayout(new java.awt.GridBagLayout());
-
         emLabel.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
+        emLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         emLabel.setText("Invariants");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 3, 0);
-        InvPanel.add(emLabel, gridBagConstraints);
 
         heatmapButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/monalisa/resources/map_color.png"))); // NOI18N
         heatmapButton.setToolTipText(strings.get("NVHeadMapButtonOff"));
@@ -752,11 +755,6 @@ public class ToolBar extends javax.swing.JPanel {
             }
         });
         heatmapButton.setVisible(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
-        InvPanel.add(heatmapButton, gridBagConstraints);
 
         computeInvsButton.setText("Compute Invariants");
         computeInvsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -764,41 +762,14 @@ public class ToolBar extends javax.swing.JPanel {
                 computeInvsButtonActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 0);
-        InvPanel.add(computeInvsButton, gridBagConstraints);
 
         TinvCheckBox.setText("Transition Invariants");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        InvPanel.add(TinvCheckBox, gridBagConstraints);
 
         MinvCheckBox.setText("Manatee Invariants");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        InvPanel.add(MinvCheckBox, gridBagConstraints);
 
         PinvCheckBox.setText("Place Invariants");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        InvPanel.add(PinvCheckBox, gridBagConstraints);
 
         jLabel2.setText("Select the Invariants you want to compute:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 5);
-        InvPanel.add(jLabel2, gridBagConstraints);
 
         InvTabbedPane.setMinimumSize(new java.awt.Dimension(370, 280));
         InvTabbedPane.setPreferredSize(new java.awt.Dimension(370, 280));
@@ -904,28 +875,7 @@ public class ToolBar extends javax.swing.JPanel {
 
         InvTabbedPane.addTab("P - Invariants", jScrollPane4);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        InvPanel.add(InvTabbedPane, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        InvPanel.add(CTILabel, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        InvPanel.add(CPILabel, gridBagConstraints);
-
         jCheckBox1.setText("Place bordered");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
-        InvPanel.add(jCheckBox1, gridBagConstraints);
 
         reachabilityButton.setText("Reachability");
         reachabilityButton.setActionCommand("Reach");
@@ -934,16 +884,93 @@ public class ToolBar extends javax.swing.JPanel {
                 reachabilityButtonActionPerformed(evt);
             }
         });
-        InvPanel.add(reachabilityButton, new java.awt.GridBagConstraints());
+
+        comboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Add constraints", "Without constraints" }));
+        comboBox.setActionCommand("comboBox");
+        comboBox.setName("comboBox"); // NOI18N
+        comboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText("Reachability Setup");
+
+        javax.swing.GroupLayout InvPanelLayout = new javax.swing.GroupLayout(InvPanel);
+        InvPanel.setLayout(InvPanelLayout);
+        InvPanelLayout.setHorizontalGroup(
+            InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InvPanelLayout.createSequentialGroup()
+                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(InvPanelLayout.createSequentialGroup()
+                        .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PinvCheckBox)
+                            .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(TinvCheckBox)
+                            .addComponent(MinvCheckBox)
+                            .addComponent(computeInvsButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(heatmapButton))
+                    .addGroup(InvPanelLayout.createSequentialGroup()
+                        .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(InvPanelLayout.createSequentialGroup()
+                                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CTILabel)
+                                    .addComponent(CPILabel))
+                                .addGap(148, 148, 148)
+                                .addComponent(emLabel))
+                            .addComponent(jLabel2)
+                            .addGroup(InvPanelLayout.createSequentialGroup()
+                                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(InvTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(reachabilityButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 35, Short.MAX_VALUE)))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+        InvPanelLayout.setVerticalGroup(
+            InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(InvPanelLayout.createSequentialGroup()
+                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(InvPanelLayout.createSequentialGroup()
+                        .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CTILabel)
+                            .addComponent(CPILabel))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, InvPanelLayout.createSequentialGroup()
+                        .addComponent(emLabel)
+                        .addGap(18, 18, 18)))
+                .addComponent(jLabel2)
+                .addGap(5, 5, 5)
+                .addComponent(TinvCheckBox)
+                .addGap(0, 0, 0)
+                .addComponent(MinvCheckBox)
+                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(InvPanelLayout.createSequentialGroup()
+                        .addComponent(PinvCheckBox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jCheckBox1))
+                    .addComponent(heatmapButton))
+                .addGap(79, 79, 79)
+                .addComponent(reachabilityButton))
+            .addGroup(InvPanelLayout.createSequentialGroup()
+                .addGap(125, 125, 125)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(InvPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(computeInvsButton)
+                    .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(InvTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         reachabilityButton.getAccessibleContext().setAccessibleParent(analysisPane);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        analysisPane.add(InvPanel, gridBagConstraints);
+        analysisPane.add(InvPanel, new java.awt.GridBagConstraints());
 
         mctsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -1270,6 +1297,61 @@ public class ToolBar extends javax.swing.JPanel {
             netViewer.correctCoordinates();
         }
     }//GEN-LAST:event_enableGridCheckBoxActionPerformed
+    //Function for combobox with reachabiity. Decide which panel to open.
+    //Selection between reachability with or without constraints.
+    private void comboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxActionPerformed
+        // TODO add your handling code here:
+        String selectedComboBox = comboBox.getSelectedItem().toString();
+        switch (selectedComboBox) {
+            case "Without constraints":
+                HashMap<Place, Long> marking = new HashMap<>();
+                System.out.print("HERE "+marking);
+                marking.putAll(netViewer.getProject().getPNFacade().marking());
+                if (netViewer.getProject().getToolManager().hasResult(PInvariantTool.class, new PInvariantsConfiguration())) {
+                    PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
+                    ReachabilityDialog rd = new ReachabilityDialog(netViewer.getProject().getPNFacade(), marking, pinvs);
+                    rd.setVisible(true);
+               }else {
+                    LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
+                    JOptionPane.showMessageDialog(null, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+        }
+                break;
+            case "Add constraints":
+                HashMap<Place, Long> markingStart = new HashMap<>();
+                HashMap<Place, Long> markingEnd = new HashMap<>();
+
+                //markingConst.putAll(netViewer.getProject().getPNFacade().marking());
+                markingStart.putAll(netViewer.getProject().getPNFacade().marking());
+                markingEnd.putAll(netViewer.getProject().getPNFacade().marking());
+                if (netViewer.getProject().getToolManager().hasResult(PInvariantTool.class, new PInvariantsConfiguration())) {
+                   
+                    PInvariants pinvs = netViewer.getProject().getToolManager().getResult(PInvariantTool.class, new PInvariantsConfiguration());      
+                    monalisa.addons.reachability.constraints.ConstraintFrame constraintFrame;
+            try {
+                constraintFrame = new ConstraintFrame(netViewer.getProject().getPNFacade(), markingStart, markingEnd, pinvs);
+                constraintFrame.setVisible(true);
+            } catch (InterruptedException ex) {
+                java.util.logging.Logger.getLogger(ToolBar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    screenSize.setSize(screenSize.width/2, screenSize.height);
+                    
+               }else {
+                    LOGGER.warn("Results for place invariants not found. Reachability analysis aborted.");
+                    JOptionPane.showMessageDialog(null, "No results for place invariants have been found. Please compute place invariants before starting the reachability analysis.");
+                    
+                }
+               
+                // TODO: Only close Panel not complete program
+                
+                break;
+            default:
+                throw new AssertionError();
+        }
+
+        
+           
+    }//GEN-LAST:event_comboBoxActionPerformed
 
     public boolean stackSelection() {
         return this.stackSelection.isSelected();
@@ -1326,6 +1408,7 @@ public class ToolBar extends javax.swing.JPanel {
     private javax.swing.JPanel analysisPane;
     private javax.swing.JLabel arrowSizeLabel;
     protected javax.swing.JSpinner arrowSizeSpinner;
+    private javax.swing.JComboBox<String> comboBox;
     private javax.swing.JButton computeInvsButton;
     private javax.swing.JPanel controlButtonPanel;
     private javax.swing.JPanel controlPane;
@@ -1346,6 +1429,7 @@ public class ToolBar extends javax.swing.JPanel {
     protected javax.swing.JButton inEdgeButton;
     protected javax.swing.JPanel inEdgePanel;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

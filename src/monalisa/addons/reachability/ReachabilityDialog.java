@@ -155,6 +155,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         breadthRButton.setSelected(true);
         breadthRButton.setText("Breadth First Search");
         breadthRButton.setToolTipText("");
+        breadthRButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                breadthRButtonActionPerformed(evt);
+            }
+        });
 
         algoRadioGroup.add(bestRButton);
         bestRButton.setText("Best First Search");
@@ -166,6 +171,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
 
         comboHeuristic.setEnabled(false);
         comboHeuristic.setPreferredSize(new java.awt.Dimension(100, 29));
+        comboHeuristic.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboHeuristicActionPerformed(evt);
+            }
+        });
 
         computeButton.setText("Compute selected");
         computeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -331,6 +341,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         kf.setVisible(true);
     }//GEN-LAST:event_knockoutButtonActionPerformed
 
+    private void breadthRButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_breadthRButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_breadthRButtonActionPerformed
+
+    private void comboHeuristicActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboHeuristicActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboHeuristicActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarRButton;
     private javax.swing.JLabel algoLabel;
@@ -384,6 +402,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
         }
         LOGGER.info("Successfully updated markings from table.");
+    }
+    
+    /**
+     * @author Kristin Haas
+     * Make updateMarkings usable in other classes.
+     */
+    public void useUpdateMarkings(){
+         updateMarkings();
     }
 
     /**

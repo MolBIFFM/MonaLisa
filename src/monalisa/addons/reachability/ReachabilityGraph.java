@@ -44,6 +44,7 @@ public class ReachabilityGraph {
      */
     public ReachabilityEdge getEdge(ReachabilityNode source, ReachabilityNode target) {
         for (ReachabilityEdge e : edges) {
+            System.out.println("SourceNode: "+e.getSource()+" TargetNode: "+e.getTarget());
             if (e.getSource().equals(source) && e.getTarget().equals(target)) {
                 return e;
             }

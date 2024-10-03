@@ -17,6 +17,8 @@ import monalisa.data.pn.Transition;
 public interface ReachabilityAlgorithm {
 
     public void run() throws InterruptedException;
+    
+    //public void runExplicit() throws InterruptedException;
 
     public void computePriority(ReachabilityNode node);
 

@@ -28,6 +28,24 @@ public class PetriNetFacade extends AbstractPetriNetEntity {
     public PetriNetFacade(PetriNet pn) {
         this.pn = pn;
     }
+    
+    /**
+     * Delete arc from Place to Transition
+     * @param from
+     * @param to 
+     */
+    public void deletePTArc(Place from,Transition to){
+        pn.removeArc(from, to); 
+    }
+    
+    /**
+     * Delete arc from Transition to Place
+     * @param from
+     * @param to 
+     */
+    public void deleteTPArc(Transition from, Place to){
+        pn.removeArc(from, to);
+    }
 
     /**
      * Return a copy of the actual PetriNet Instance

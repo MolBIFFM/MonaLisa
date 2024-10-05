@@ -219,7 +219,7 @@ public class Pathfinder {
             if (alg == null) return;
             switch (alg) {
                 case "Breadth First Search":
-                    this.algorithm = new BreadthFirst(this,marking, target, eStart, eTarget);
+                    this.algorithm = new BreadthFirst(this,marking, target);
                     break;
                 // Move FullReach and FullCover into separate classes and treat like algorithms
                 case "FullReach": {

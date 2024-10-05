@@ -86,6 +86,7 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
                 returnBacktrack.add(t);
             }
         }
+       
         //backtrack.reversed();
         returnBacktrack.reversed();
         return returnBacktrack;

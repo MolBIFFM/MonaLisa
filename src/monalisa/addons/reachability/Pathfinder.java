@@ -351,7 +351,7 @@ public class Pathfinder {
             else{
                 newInput.put(p,  (oldToken - (pnf.getArc(p, t).weight())));
                 long newToken = (oldToken - (pnf.getArc(p, t).weight()));
-                BreadthFirst.putUpdateFrame(p, oldToken, newToken);
+                BreadthFirst.putUpdateFrame(p, newToken);
                 BreadthFirst.putUpdateMarking(p, oldToken, newToken);
                 HashMap<Place, Long> addToVisited = new HashMap<>();
                 addToVisited.put(p, newToken);
@@ -373,7 +373,7 @@ public class Pathfinder {
                 HashMap<Place, Long> addToVisited = new HashMap<>();
                 addToVisited.put(p, newToken);
                 BreadthFirst.addToVisitedNodes(addToVisited);
-                BreadthFirst.putUpdateFrame(p, oldToken, newToken);
+                BreadthFirst.putUpdateFrame(p, newToken);
                 BreadthFirst.putUpdateMarking(p, oldToken, newToken);
                 System.out.println("FRAME: "+BreadthFirst.getUpdateFrame());
                 if(p.toString()== newTarget.keySet().iterator().next().toString()){

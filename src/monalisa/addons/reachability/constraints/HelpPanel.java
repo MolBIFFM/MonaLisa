@@ -36,7 +36,10 @@ public class HelpPanel extends javax.swing.JFrame {
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         jTextArea1.setRows(5);
-        jTextArea1.setText("\n\nStartnode: if the associated transition is enabled.\n\nTargetnode: every node within the net can be chosen.\n\nTransition on/off: you can choose to turn every transition on or off.\n\nMusthave transition: it is possible to force a transition to get fired,\n\t             iff the transition will get enabled within the computation.\n\t             => to choose a transition you have to select the transition \n                                           and push the button >>choose transition<<\n\t             => it is also possible to reset your choice.\n\t             => if already computed without a selected transition, you can check\n                                          if it already has been used.\n\nRestore PN: at any time it is possible to undo all your choices and \n                     return to the original petri net.                \n\n\nFORCE TRANSITION TO FIRE\n\nRestricted success: chosen transition has been used, but before target was reached.\n\nSuccess: chosen transition is fired and target is reached afterwards. If the target is one\n                 of the transitions output-nodes, it's also applied as a success.\n                 ");
+        jTextArea1.setText("--------------------------------------------------- Target marking ---------------------------------------------------\n\nTargetmarking: Edit tabel column 3 to wanted marking.\n\t   \n\n---------------------------------------------- Deaktivate transitions ----------------------------------------------\n\nTransition on/off: you can choose to turn every transition on or off.\n\n\n------------------------------------------------- Restore petri net --------------------------------------------------\n\nRestore PN: at any time it is possible to undo all your choices and \n                     return to the original petri net.                \n\n\n\n--------------------------------------------    Force transition to fire   --------------------------------------------\n\nForce transition: it is possible to force a transition to get fired,\n\t             iff the transition will get enabled within the computation.\n\t             => to choose a transition you have to select the transition \n                                           and push the button >>choose transition<<\n\t             => it is also possible to reset your choice.\n\t             => if already computed without a selected transition, you can check\n                                          if it already has been used.\n              \n\n\n                 ");
+        jTextArea1.setMaximumSize(new java.awt.Dimension(540, 450));
+        jTextArea1.setMinimumSize(new java.awt.Dimension(540, 450));
+        jTextArea1.setPreferredSize(new java.awt.Dimension(540, 450));
         jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -50,7 +53,7 @@ public class HelpPanel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(207, 207, 207)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(223, Short.MAX_VALUE))
+                .addContainerGap(244, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -58,7 +61,7 @@ public class HelpPanel extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

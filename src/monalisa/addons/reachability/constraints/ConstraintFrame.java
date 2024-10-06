@@ -65,11 +65,16 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private boolean computed = false;
     private boolean pushed = false;
     private HashSet<Transition> transitions = new HashSet<>();
-    public static Transition chooseTransition = null;
+    
     private HashMap<Place, Long> possibleStartNodes = new HashMap<>();
     public boolean resetTransition = false;
     public static boolean forcedTransition = false;
     
+    private static Transition chooseTransition = null;
+    
+    public static Transition getChosenTransition(){
+        return chooseTransition;
+    }
     /**
      * 
      * @return 
@@ -116,9 +121,16 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // Fill combo boxes with places
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         for (Place p : pn.places()) {
-            System.out.println("Erstelle Table: "+p.toString());
             
-            if(p.outputs().isEmpty()){
+            model.addRow(new Object[]{
+                p,
+                start.get(p),
+                //pn.getArc(p, t).weight()+"  ["+t+"]",
+                p.outputs(),
+                target.get(p)
+               
+            });
+            /**if(p.outputs().isEmpty()){
                 model.addRow(new Object[]{
                 p,
                 start.get(p),
@@ -139,7 +151,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             
             
                
-            }
+            }*/
             
         }
         HashSet<Transition> transitionSet = new HashSet<>();
@@ -181,16 +193,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 if(model.getValueAt(i, 0).equals(entry.getKey())){
                     String sLong = model.getValueAt(i, 3).toString();
                     
-                    
                     target.replace(entry.getKey(), Long.parseLong(sLong));
-                    System.out.println("WHY: "+target);
                    // target.replace(entry.getKey(), Long.parseLong(sLong));
                 }
             }
-           
         }
-        //target.putAll(t);
-        System.out.println("NEW TARGET: "+target+" "+t);
         return null;
     }
     
@@ -301,8 +308,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         });
 
         onTransition.setMaximumSize(new java.awt.Dimension(200, 80));
-        onTransition.setMinimumSize(new java.awt.Dimension(200, 80));
-        onTransition.setPreferredSize(new java.awt.Dimension(200, 80));
         onTransition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onTransitionActionPerformed(evt);
@@ -310,8 +315,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         });
 
         offTransition.setMaximumSize(new java.awt.Dimension(155, 80));
-        offTransition.setMinimumSize(new java.awt.Dimension(155, 80));
-        offTransition.setPreferredSize(new java.awt.Dimension(200, 80));
         offTransition.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 offTransitionActionPerformed(evt);
@@ -330,7 +333,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
             },
             new String [] {
-                "Place [Name]", "Available [#Token]", "Arc P=>T [Weight]", "Target [#Token]"
+                "Place [Name]", "Available [#Token]", "Post [Transitions]", "Target [#Token]"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -341,6 +344,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 return canEdit [columnIndex];
             }
         });
+        markingTable.setMaximumSize(new java.awt.Dimension(300, 0));
+        markingTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(markingTable);
         if (markingTable.getColumnModel().getColumnCount() > 0) {
             markingTable.getColumnModel().getColumn(0).setResizable(false);
@@ -354,7 +359,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         what.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         used.setMaximumSize(new java.awt.Dimension(155, 80));
-        used.setPreferredSize(new java.awt.Dimension(155, 80));
         used.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usedActionPerformed(evt);
@@ -411,9 +415,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                         .addComponent(Reachability)
                         .addGap(212, 212, 212))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(what, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -453,29 +454,29 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(chosenAND, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(60, 60, 60))))
+                        .addGap(60, 60, 60))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel4)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Reachability)
-                            .addComponent(jButton3))))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Reachability)
+                    .addComponent(jButton3))
+                .addGap(98, 98, 98)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(offTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(offTransition, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                     .addComponent(onTransition, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(35, 35, 35)
                 .addComponent(jLabel8)
@@ -693,13 +694,15 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         HashMap<Place, Long> placesInTable = new HashMap<>();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         placesInTable.putAll(BreadthFirst.getUpdateFrame());
-       
+        System.out.println("Update Frame: "+BreadthFirst.getUpdateFrame()+" Updated Marking "+BreadthFirst.getUpdatedMarking());
         for (int i = 0; i < markingTable.getRowCount(); ++i) {
             for(int j = 0; j < placesInTable.size(); j++){
+            //for(int j = 0; j < markingTable.getRowCount(); j++){
                 Place p = pn.findPlace(j); //gibt place aus           
                 model.setValueAt(placesInTable.get(p), j, 1);
-              
+                System.out.println("Ausgabe: "+p+" table: "+placesInTable.get(p)+" row: "+j+" Model: "+model.getValueAt( j, 1));
                 for(Map.Entry<Place, Long> entry : placesInTable.entrySet()){
+                    System.out.println("ENTRY: "+entry.getKey()+" "+entry.getValue());
                 }
                 LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
             }
@@ -852,7 +855,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void offTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_offTransitionActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_offTransitionActionPerformed
 
     /**
@@ -1072,7 +1075,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     
                     what.setText("[Success] Target marking found!");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
                     updateMarkings();
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
@@ -1085,7 +1089,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
                     what.setForeground(new Color(204, 0, 0));
                     what.setText("[Failure] Target marking not reachable!");
-                    
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     
                     updateMarkings();
@@ -1097,7 +1102,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
                     what.setForeground(new Color(102, 0, 253));
                     what.setText("Progress");
-                   
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);

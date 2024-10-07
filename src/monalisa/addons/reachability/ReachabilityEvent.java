@@ -26,7 +26,7 @@ public class ReachabilityEvent {
         ABORTED,
         FINISHED, // Finished is only used for creating a full graph.
         EQUALNODE,
-        PROBLEM,
+        STOPED,
         ALWAYSUSED,
         RESTRICTED
         

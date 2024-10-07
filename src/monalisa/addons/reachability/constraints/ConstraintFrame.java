@@ -62,14 +62,14 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private final PInvariants pinvs;
     private HashMap<Place, Long> eStart = null;
     private HashMap<Place, Long> eTarget = null;
-    private boolean computed = false;
+    
     private boolean pushed = false;
     private HashSet<Transition> transitions = new HashSet<>();
     
     private HashMap<Place, Long> possibleStartNodes = new HashMap<>();
     public boolean resetTransition = false;
     public static boolean forcedTransition = false;
-    
+    private static boolean stopProgram = false;
     private static Transition chooseTransition = null;
     
     public static Transition getChosenTransition(){
@@ -81,6 +81,26 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
      */
     public boolean getForcedTransition(){
         return forcedTransition;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public static boolean setStopProgramTrue(){
+        return stopProgram = true;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    public static boolean setStopProgramFalse(){
+        return stopProgram = false;
+    }
+    
+    public static boolean getStopProgram(){
+        return stopProgram;
     }
     
     /**
@@ -261,6 +281,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         tryAgain = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         counterText = new javax.swing.JLabel();
+        stopButton = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(650, 900));
         setMinimumSize(getSize());
@@ -361,7 +382,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         what.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         used.setMaximumSize(new java.awt.Dimension(155, 80));
-        used.setPreferredSize(new java.awt.Dimension(40, 900));
         used.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 usedActionPerformed(evt);
@@ -408,6 +428,13 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         counterText.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
+        stopButton.setText("Stop");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -416,11 +443,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Reachability)
-                        .addGap(212, 212, 212))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -428,6 +450,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(Reachability)
+                                .addGap(79, 79, 79)
+                                .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(counterText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(algoSelect, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -472,7 +500,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Reachability)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(stopButton))
                 .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -870,6 +899,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
     }//GEN-LAST:event_offTransitionActionPerformed
 
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        setStopProgramTrue();
+    }//GEN-LAST:event_stopButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -934,6 +967,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private java.awt.List offTransition;
     private java.awt.List onTransition;
     private javax.swing.JButton restorePN;
+    private javax.swing.JButton stopButton;
     private java.awt.List transitionList;
     private javax.swing.JLabel tryAgain;
     private java.awt.List used;
@@ -1042,33 +1076,11 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         }
             switch (e.getStatus()) {
-                
-                case PROBLEM:
-                    what.setForeground(new Color(0, 0, 153));
-                    what.setText("[Problem] Transition used, target not reached!"); 
-                    setUsedTransitionTable(showTransition);
-                    clearMapsAndLists();
-                    BreadthFirst.setFoundTransitionFalse();
-                    break;
+               
                 case STARTED: // Should be fired after Compute or either of the full-Buttons was pressed and the algorithm is started.
                     lock(true); // Ensures that only one algorithm runs at a time.
                     break;
                 
-                case EQUALNODE:
-                    lock(false);
-                   // progressLabel.setForeground(new Color(0, 0, 153));
-                    //progressLabel.setText("Start- and targetnode are equal!");
-                    what.setForeground(new Color(0, 102, 0));
-                    what.setText("[Success]"); 
-                    counterText.setForeground(new Color(0, 0, 153));
-                    // +1to count start marking
-                    counterText.setText("#Reachabilitynodes: "+ e.getSteps()+1);
-                    firedTransitionText.setText("Fired transitions: "+ getNumberFiredTransitions());
-                    updateMarkings();
-                    setUsedTransitionTable(showTransition);
-                    clearMapsAndLists();
-                    BreadthFirst.setFoundTransitionFalse();
-                    break;
                 case SUCCESS: // Fired when an algorithm successfully finds the target marking.
                     lock(false);
                     // Should probably handle displaying output
@@ -1084,6 +1096,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
+                    setStopProgramFalse();
                     BreadthFirst.setFoundTransitionFalse();
                     
                     break;
@@ -1101,6 +1114,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
+                    setStopProgramFalse();
                     BreadthFirst.setFoundTransitionFalse();
                     break;
                 case PROGRESS: // Fired every 100 expanded nodes.
@@ -1126,6 +1140,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     BreadthFirst.setFoundTransitionFalse();
+                    setStopProgramFalse();
                     break;
                     
                 case ABORTED: // Fired when an algorithm fails to find the target marking.
@@ -1136,11 +1151,30 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setText("[Aborted] Target node not reachable!");
                    
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
-                    
+                    setStopProgramFalse();
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     BreadthFirst.setFoundFalse();
+                    break;
+                    
+                case STOPED:
+                    lock(false);
+                    // Should probably handle displaying output
+                    what.setForeground(new Color(102, 0, 153));
+                   
+                    what.setText("[STOPED] Prgram stopped manually!");
+                    firedTransitionText.setText("Fired transitions: #"+used.getItemCount());
+                    PlaceTitel.setForeground(new Color(0, 0, 153));
+                    PlaceTitel.setText("Places and token after firing.");
+                    counterText.setForeground(new Color(0, 0, 153));
+                    counterText.setText("#Reachabilitynodes: "+ e.getSteps()+1);
+                    updateMarkings();
+                    enumerateUsedTransitions(showTransition);
+                    clearMapsAndLists();
+                    setStopProgramFalse();
+                    BreadthFirst.setFoundTransitionFalse();
+                    
                     break;
                 default:
                     break;

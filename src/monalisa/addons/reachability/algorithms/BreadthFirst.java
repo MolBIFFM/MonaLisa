@@ -382,6 +382,14 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         HashMap<Place, Long> mapForFrame = new HashMap<>();
         while(!markingList.isEmpty() && !isInterrupted()){
             counter += 1;
+            if (counter % 100 == 0) {
+                fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
+            }
+             if(ConstraintFrame.getStopProgram() == true){
+                fillUpdateFrame(mapForFrame);
+                fireReachabilityUpdate(ReachabilityEvent.Status.STOPED, counter, backtrack());
+                return;
+            }
             ReachabilityNode currNode = markingList.get(0);
             markingList.remove(0);
             HashSet<Transition> activeTransitions = pf.computeActive(currNode.getMarking());
@@ -434,7 +442,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
                 }
             }
-            if(isInterrupted()){
+            if(isInterrupted() || ConstraintFrame.getStopProgram() == true){
                 fillUpdateFrame(mapForFrame);
                 fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, backtrack());
             }

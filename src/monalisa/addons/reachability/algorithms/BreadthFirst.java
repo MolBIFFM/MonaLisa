@@ -51,42 +51,17 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
     * Used for part two of the program. Also to keep track of used nodes
     * and fired transitions. 
     */
-    private static int count = 0;
     private static HashMap<Place, Long> updatedMarking = new HashMap<>();
     private static HashSet<Transition> enabledTransitions = new HashSet<>();
-    private static boolean transitionFound = false;
-    private static boolean transitionBeforeTarget = false;
+  
     private static ArrayList<ReachabilityNode> nodes = new ArrayList<>();
     private static ArrayList<Transition> tBacktrack = new ArrayList<>();
     // Indicates if a node is found.
-    private static boolean found = false;
   
     public static ReachabilityGraph getReachabilityGraph(){
         return reachabilityGraph;
     }
-    /**
-    * 
-    * @return 
-    */
-    public static boolean setFoundTrue(){
-       return found = true;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    public static boolean setFoundFalse(){
-       return found = false;
-   }
-   
-    /**
-     * 
-     * @return 
-     */
-    public static boolean setFoundTransitionFalse(){
-       return transitionFound = false;
-    }
+ 
     
     /**
      * 
@@ -270,13 +245,20 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         // Breadth First Search does not use a priority.
     }
     
+    /**
+     * 
+     * @param old 
+     */
     public void fillUpdateFrame(HashMap<Place, Long> old){
         HashMap<Place, Long> oldy = old;
         for(Map.Entry<Place, Long> entry : oldy.entrySet()){
-            System.out.println("FILL: "+entry.getKey()+" "+entry.getValue());
             updateFrame.put(entry.getKey(), entry.getValue());
         }
-        System.out.println("Map: "+updateFrame);
+    }
+    
+    public void setTransitionsUnused(){
+        HashSet<Transition> transition = new HashSet<>();
+        
     }
     
     /**
@@ -356,18 +338,14 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         }
         }
     }
+    
+  
    
-   /**
-    * Resets used transitions/marks them as not used.
-    */
-    public void resetAll(){
-       for(Transition t : pf.getBackup().transitions()){
-           t.resetTransitions();
-       }
-    }
+  
 
     public void bfs(Transition forceTransition){
         int counter = 0;
+        Pathfinder.setUnused();
         Transition chosenTransition = forceTransition;
         PetriNet newPN = new PetriNet();
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
@@ -400,6 +378,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 transition.setUsed();
                 usedTransitions.add(transition);
                 mapForFrame = newNode.getMarking();
+                System.out.println("TRANSITION: "+transition+" USED: " +transition.getUsed()+" chosenTransition: "+chosenTransition);
                 if(chosenTransition == null){
                     // if target marking is found
                     if(newNode.equals(tar)){
@@ -418,15 +397,16 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 if(chosenTransition != null ){
                     // If target marking equals current marking and transition has been fired.
                     if(newNode.equals(tar) && chosenTransition.getUsed() == true){
-                    tar = newNode;
-                    vertices.add(tar);
-                    edges.add(new ReachabilityEdge(currNode, tar, transition));
-                    // g also defined in AbstractReachabilityAlgorithm 
-                    g = new ReachabilityGraph(vertices, edges);
-                    reachabilityGraph = g;
-                    fillUpdateFrame(newNode.getMarking());
-                    fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
-                    return;
+                        System.out.println("TEST: "+newNode.getMarking()+ " used: "+chosenTransition.getUsed());
+                        tar = newNode;
+                        vertices.add(tar);
+                        edges.add(new ReachabilityEdge(currNode, tar, transition));
+                        // g also defined in AbstractReachabilityAlgorithm 
+                        g = new ReachabilityGraph(vertices, edges);
+                        reachabilityGraph = g;
+                        fillUpdateFrame(newNode.getMarking());
+                        fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());
+                        return;
                     }
                 }
                 

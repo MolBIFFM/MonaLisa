@@ -625,10 +625,25 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         BreadthFirst.clearUsedTransitions();
         BreadthFirst.clearUpdatedMarking();
         BreadthFirst.clearUpdateFrame();
-        BreadthFirst.setFoundFalse();
         BreadthFirst.clearReachabilityNodes();
         BreadthFirst.clearVisitedNodes();
-        System.out.println("CLEAR: "+BreadthFirst.forcedTransitionBacktrack()+" | "+BreadthFirst.getUpdateFrame());
+        HashSet<Transition> transitionSet = new HashSet<>();
+        for (Place p : backupPN.places()) {
+            if(p.inputs().size()>=1){
+                for(Transition t : p.inputs()){
+                    transitionSet.add(t);
+                }
+            }
+            if(p.outputs().size()>=1){
+                for(Transition t : p.outputs()){
+                    transitionSet.add(t);
+                }
+            }
+        }
+        for(Transition t : transitionSet){
+                t.setNotUsed(); //setting all transitions back to default
+                
+            }
     }
     /**
      * 
@@ -660,6 +675,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // If program has been used already, clear all outputs.
         BreadthFirst.clearUsedTransitions();
+        clearMapsAndLists();
+        
         BreadthFirst.clearTBacktrack();
         readTable();
         if(pushed==true){
@@ -804,6 +821,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         }
         for(Transition t : transitionSet){
+                t.setNotUsed(); //setting all transitions back to default
                 onTransition.add(t.toString());
                 transitionList.add(t.toString());
             }
@@ -1117,7 +1135,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
-                    BreadthFirst.setFoundTransitionFalse();
                     
                     break;
                 case FAILURE: // Fired when an algorithm fails to find the target marking.
@@ -1135,7 +1152,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
-                    BreadthFirst.setFoundTransitionFalse();
                     break;
                 case PROGRESS: // Fired every 100 expanded nodes.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
@@ -1146,8 +1162,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
-                    clearMapsAndLists();
-                    BreadthFirst.setFoundTransitionFalse();
                     break;
                 case FINISHED: // Fired by FullReachability and FullCoverability on completion
                     lock(false);
@@ -1159,7 +1173,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
-                    BreadthFirst.setFoundTransitionFalse();
                     setStopProgramFalse();
                     break;
                     
@@ -1175,7 +1188,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
-                    BreadthFirst.setFoundFalse();
                     break;
                     
                 case STOPED:
@@ -1193,7 +1205,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
-                    BreadthFirst.setFoundTransitionFalse();
                     
                     break;
                 default:

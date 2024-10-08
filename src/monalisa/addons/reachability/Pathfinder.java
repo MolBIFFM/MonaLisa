@@ -41,11 +41,16 @@ public class Pathfinder {
     private final static Logger LOGGER = LogManager.getLogger(Pathfinder.class);
     private final HashMap<Place, Long> capacities;
     private final boolean capacities_active;
-    private final HashSet<Transition> transitions;
+    private static HashSet<Transition> transitions;
     private HashMap<Place, Long> eStart;
     private HashMap<Place, Long> eTarget;
     private HashSet<Transition> knockout;
 
+    public static void setUnused(){
+        for(Transition transition : transitions){
+            transition.setNotUsed();
+        }
+    }
     /**
      * Constructor used for algorithms without a heuristic.
      *
@@ -111,6 +116,7 @@ public class Pathfinder {
         this.capacities = capacities;
         this.capacities_active = capacities_active;
         this.transitions = transitions;
+        
     }
     
     /**
@@ -145,7 +151,8 @@ public class Pathfinder {
         initializeAlgorithmExplicit(alg, null);
         LOGGER.info("Successfully initialized pathfinder for reachability analysis.");        
     }
-    
+   
+     
     /**
      * 
      * @return 
@@ -202,7 +209,6 @@ public class Pathfinder {
      */
     private void initializeAlgorithmExplicit(String alg, String heuristic ) throws InterruptedException {
         // Reset 
-       
         LOGGER.info("Initializing algorithm: " + alg + ".");
         if (heuristic != null) {
             LOGGER.info("Initializing with heuristic: " + heuristic);
@@ -376,9 +382,7 @@ public class Pathfinder {
                 BreadthFirst.putUpdateFrame(p, newToken);
                 BreadthFirst.putUpdateMarking(p, oldToken, newToken);
                 System.out.println("FRAME: "+BreadthFirst.getUpdateFrame());
-                if(p.toString()== newTarget.keySet().iterator().next().toString()){
-                    BreadthFirst.setFoundTrue();
-                }
+               
             }
         } catch (NullPointerException e) {
             System.out.println("Exception_Out: "+e);

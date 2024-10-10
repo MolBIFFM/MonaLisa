@@ -739,7 +739,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }   else {
                 path = new Pathfinder(copyPN, start, target, capacities, null, algo);
         }
-        if (!path.checkPIs(pinvs, start, target)) {
+        // If transition deactivated 
+        if (!path.checkPIs(pinvs, start, target)&& offTransition.getItemCount() == 0) {
             LOGGER.warn("Aborting reachability analysis.");
             JOptionPane.showMessageDialog(this, "Start marking and target marking are incompatible. Sums for place invariants do not match.");            
             return;
@@ -777,9 +778,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             //for(int j = 0; j < markingTable.getRowCount(); j++){
                 Place p = pn.findPlace(j); //gibt place aus           
                 model.setValueAt(placesInTable.get(p), j, 1);
-                System.out.println("Ausgabe: "+p+" table: "+placesInTable.get(p)+" row: "+j+" Model: "+model.getValueAt( j, 1));
+               // System.out.println("Ausgabe: "+p+" table: "+placesInTable.get(p)+" row: "+j+" Model: "+model.getValueAt( j, 1));
+               // System.out.println("Ausgabe: "+p+" table: "+placesInTable.get(p)+" row: "+i+" Model: "+model.getValueAt( i, 1));
                 for(Map.Entry<Place, Long> entry : placesInTable.entrySet()){
-                    System.out.println("ENTRY: "+entry.getKey()+" "+entry.getValue());
+                    //System.out.println("ENTRY: "+entry.getKey()+" "+entry.getValue());
                 }
                 LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
             }

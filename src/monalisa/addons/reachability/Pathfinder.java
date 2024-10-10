@@ -42,8 +42,6 @@ public class Pathfinder {
     private final HashMap<Place, Long> capacities;
     private final boolean capacities_active;
     private static HashSet<Transition> transitions;
-    private HashMap<Place, Long> eStart;
-    private HashMap<Place, Long> eTarget;
     private HashSet<Transition> knockout;
 
     public static void setUnused(){
@@ -119,38 +117,6 @@ public class Pathfinder {
         
     }
     
-    /**
-     * Pathfinder used by ConstrainFrame
-     * @param pnf
-     * @param marking
-     * @param target
-     * @param capacities
-     * @param knockout
-     * @param alg 
-     * @param eStart
-     * @param eTarget
-     * @throws java.lang.InterruptedException
-     */
-    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities,HashSet<Transition> knockout , String alg, HashMap<Place, Long> eStart, HashMap<Place,Long> eTarget) throws InterruptedException {
-        LOGGER.info("Initializing pathfinder for reachability analysis with specific start and target.");
-        this.pnf = pnf;
-        this.backup = pnf;
-        this.marking = new HashMap<>();
-        this.marking.putAll(marking);
-        this.target = new HashMap<>();
-        this.target.putAll(target);
-        this.capacities = capacities;
-        this.capacities_active = checkCapacityActive();
-        this.transitions = new HashSet<>();
-        this.transitions.addAll(pnf.transitions());
-        LOGGER.warn(this.transitions.toString());
-        this.eStart = eStart;
-        this.eTarget = eTarget;
-        this.transitions.removeAll(knockout);
-        this.alg = alg;
-        initializeAlgorithmExplicit(alg, null);
-        LOGGER.info("Successfully initialized pathfinder for reachability analysis.");        
-    }
    
      
     /**
@@ -334,60 +300,7 @@ public class Pathfinder {
         activeTransitions.removeAll(toRemove);
         return activeTransitions;
     }
-    
-    /**
-     * @param old
-     * @param t
-     * @return 
-     */
-    private HashMap<Place, Long> newInput = new HashMap<>();
-    private HashMap<Place, Long> newOutput = new HashMap<>();
-    public void computeSingleMarking(Transition t, HashMap<Place,Long> targetNode){
-        LOGGER.debug("Computing new marking.");  // debug
-        HashMap<Place, Long> newTarget = targetNode;
-        
-        System.out.println("Input: "+newInput);
-        try {
-        for(Place p : t.inputs()){
-            
-            long oldToken = BreadthFirst.getUpdateFrame().get(p);
-            if(oldToken == 0){
-                System.out.println("OLD: "+oldToken+" frame: "+BreadthFirst.getUpdateFrame());
-            }
-            else{
-                newInput.put(p,  (oldToken - (pnf.getArc(p, t).weight())));
-                long newToken = (oldToken - (pnf.getArc(p, t).weight()));
-                BreadthFirst.putUpdateFrame(p, newToken);
-                BreadthFirst.putUpdateMarking(p, oldToken, newToken);
-                HashMap<Place, Long> addToVisited = new HashMap<>();
-                addToVisited.put(p, newToken);
-                BreadthFirst.addToVisitedNodes(addToVisited);
-                if(p.toString() == newTarget.keySet().iterator().next().toString()){
-                    newTarget = eTarget;
-                }
-            }
-        }
-        
-        } catch (NullPointerException e) {
-   }
-        try {
-  
-            for(Place p : t.outputs()){
-                long oldToken = BreadthFirst.getUpdateFrame().get(p);
-                newOutput.put(p, (oldToken +( pnf.getArc(t, p).weight())));
-                long newToken = newOutput.put(p, (oldToken +( pnf.getArc(t, p).weight())));
-                HashMap<Place, Long> addToVisited = new HashMap<>();
-                addToVisited.put(p, newToken);
-                BreadthFirst.addToVisitedNodes(addToVisited);
-                BreadthFirst.putUpdateFrame(p, newToken);
-                BreadthFirst.putUpdateMarking(p, oldToken, newToken);
-                System.out.println("FRAME: "+BreadthFirst.getUpdateFrame());
-               
-            }
-        } catch (NullPointerException e) {
-            System.out.println("Exception_Out: "+e);
-        }
-    }
+   
 
     /**
      * Adjusts tokens 

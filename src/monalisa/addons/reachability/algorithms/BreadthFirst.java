@@ -378,7 +378,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 transition.setUsed();
                 usedTransitions.add(transition);
                 mapForFrame = newNode.getMarking();
-                System.out.println("TRANSITION: "+transition+" USED: " +transition.getUsed()+" chosenTransition: "+chosenTransition);
                 if(chosenTransition == null){
                     // if target marking is found
                     if(newNode.equals(tar)){
@@ -397,7 +396,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 if(chosenTransition != null ){
                     // If target marking equals current marking and transition has been fired.
                     if(newNode.equals(tar) && chosenTransition.getUsed() == true){
-                        System.out.println("TEST: "+newNode.getMarking()+ " used: "+chosenTransition.getUsed());
                         tar = newNode;
                         vertices.add(tar);
                         edges.add(new ReachabilityEdge(currNode, tar, transition));

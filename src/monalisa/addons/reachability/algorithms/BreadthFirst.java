@@ -340,7 +340,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
     }
     
   
-   
+    
   
 
     public void bfs(Transition forceTransition){
@@ -358,7 +358,8 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         ArrayList<ReachabilityNode> markingList = new ArrayList<>();
         markingList.add(rootNode);
         HashMap<Place, Long> mapForFrame = new HashMap<>();
-        while(!markingList.isEmpty() && !isInterrupted()){
+        System.out.println("MARK: "+markingList.getFirst().getMarking());
+        while(!markingList.isEmpty() || !isInterrupted()){
             counter += 1;
             if (counter % 100 == 0) {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
@@ -368,8 +369,8 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.STOPED, counter, backtrack());
                 return;
             }
-            ReachabilityNode currNode = markingList.get(0);
-            markingList.remove(0);
+            ReachabilityNode currNode = markingList.getFirst();
+            markingList.removeFirst();
             HashSet<Transition> activeTransitions = pf.computeActive(currNode.getMarking());
             for(Transition transition : activeTransitions){
                 HashMap<Place, Long> newMarking = pf.computeMarking(currNode.getMarking(), transition);
@@ -419,17 +420,17 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 markingList.add(newNode);
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
                 }
-            }
-            if(isInterrupted() || ConstraintFrame.getStopProgram() == true){
-                fillUpdateFrame(mapForFrame);
-                fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, backtrack());
-            }
-            else{
+            
+            if(markingList.isEmpty()){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);
                 fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, backtrack());
                 LOGGER.info("Target marking could not be reached from start marking.");
             }
+            
+        }
+          
+            
     }
 }
    

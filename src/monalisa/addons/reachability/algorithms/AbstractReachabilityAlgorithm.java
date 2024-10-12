@@ -28,12 +28,13 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
     protected HashMap<Place, Long> target;
     protected  HashMap<Place, Long> start;
 
-    protected HashMap<Place, Long> eStart;
-    protected HashMap<Place, Long> eTarget;
+    
     protected ReachabilityNode tar;
     protected ReachabilityGraph g;
     private List<ReachabilityListener> listeners = new ArrayList<>();
 
+    
+    
     public AbstractReachabilityAlgorithm(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
         this.pf = pf;
         this.marking = marking;
@@ -41,22 +42,7 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
         this.start = null;
     }
     
-    /**Single nodes in constructor.
-     * @author Kristin Haas
-     * @param pf
-     * @param marking
-     * @param target 
-     * @param eStart
-     * @param eTarget
-     */
-    public AbstractReachabilityAlgorithm(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> eStart, HashMap<Place, Long> eTarget) {
-        this.pf = pf;
-        this.start = marking;
-        this.target = target;  
-        this.eStart = eStart;
-        this.eTarget = eTarget;
-        System.out.println("In AbstractReach. Start: "+start+" target: "+target+" eStart: "+eStart+" eTarget: "+eTarget);
-    }
+    
     
     
 

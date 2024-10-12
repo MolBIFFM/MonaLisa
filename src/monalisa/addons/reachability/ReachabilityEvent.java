@@ -28,7 +28,7 @@ public class ReachabilityEvent {
         EQUALNODE,
         STOPED,
         ALWAYSUSED,
-        RESTRICTED
+        
         
     }
 

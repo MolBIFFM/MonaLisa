@@ -29,10 +29,7 @@ public class FullReachability extends AbstractReachabilityAlgorithm {
     public FullReachability(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target) {
         super(pf, marking, target);
     }
-    
-    public FullReachability(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place,  Long> eStart, HashMap<Place, Long> eTarget) {
-        super(pf, marking, target, eStart, eTarget);
-    }
+  
     
     
 

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -31,6 +32,7 @@ import static monalisa.addons.reachability.ReachabilityEvent.Status.STARTED;
 import static monalisa.addons.reachability.ReachabilityEvent.Status.SUCCESS;
 import monalisa.addons.reachability.ReachabilityListener;
 import monalisa.addons.reachability.ReachabilityNode;
+import monalisa.addons.reachability.algorithms.AbstractReachabilityAlgorithm;
 import monalisa.addons.reachability.algorithms.BreadthFirst;
 import monalisa.addons.reachability.algorithms.ReachabilityAlgorithm;
 import monalisa.data.pn.Arc;
@@ -60,17 +62,20 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private HashMap<Place, Long> target;
     private final HashMap<Place, Long> capacities; 
     private final PInvariants pinvs;
-    private HashMap<Place, Long> eStart = null;
-    private HashMap<Place, Long> eTarget = null;
+    
     
     private boolean pushed = false;
-    private HashSet<Transition> transitions = new HashSet<>();
+    private static HashSet<Transition> transitions = new HashSet<>();
     
-    private HashMap<Place, Long> possibleStartNodes = new HashMap<>();
     public boolean resetTransition = false;
     public static boolean forcedTransition = false;
     private static boolean stopProgram = false;
     private static Transition chooseTransition = null;
+    private boolean possible = true;
+    
+    public static HashSet<Transition> getTransitions(){
+        return transitions;
+    }
     
     public static Transition getChosenTransition(){
         return chooseTransition;
@@ -82,6 +87,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     public boolean getForcedTransition(){
         return forcedTransition;
     }
+    
     
     /**
      * 
@@ -137,7 +143,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         this.capacities = new HashMap<>();
         this.pinvs = pinvs;
         initComponents();
-        getPossibleStartNodes();
         // Fill combo boxes with places
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         for (Place p : pn.places()) {
@@ -197,8 +202,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         
         transitions = transitionSet;
         algoSelect.setActionCommand("Breadth First Search");
-        algoSelect.setActionCommand("Best First Search");
-        algoSelect.setActionCommand("A*");
+        
   
         LOGGER.info("Successfully initialized ConstraintFrame.");
     
@@ -215,35 +219,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     
                     target.replace(entry.getKey(), Long.parseLong(sLong));
                    // target.replace(entry.getKey(), Long.parseLong(sLong));
+                   if(pn.getInputTransitionsFor(entry.getKey()).isEmpty()){
+                       possible = false;
+                       System.out.println(entry.getKey());
+                   }
                 }
             }
         }
         return null;
     }
     
-    /**
-     * Computes possible startnodes.
-     * Only if transition after/before a node is enabled.
-     * @throws InterruptedException 
-     */
-    private void getPossibleStartNodes() throws InterruptedException{
-        Pathfinder pathfinder = new Pathfinder(pn, target, target, capacities, transitions, selectedTargetNodeVisible);
-        HashSet<Transition> transitions = pathfinder.computeActiveTransitions(start);
-        for(Transition t : transitions){
-            if(t.getActive() == true){
-                if(!t.inputs().isEmpty()){
-                    for(Place pIN : t.inputs()){
-                        possibleStartNodes.put(pIN, pn.getTokens(pIN) );
-                    }
-                }
-                if(!t.outputs().isEmpty()){
-                    for(Place pOUT : t.outputs()){
-                        possibleStartNodes.put(pOUT, pn.getTokens(pOUT));
-                    }
-                }
-            }
-        }
-    }
+  
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -731,6 +717,10 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 }
             }
         }
+        if(possible == false){
+            path = new Pathfinder(copyPN, start, target, capacities, null, null);
+            path.getStatus();
+        }
         //  Start and Target Hashmap change in if
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoSelect.getSelectedItem().toString();
@@ -1154,6 +1144,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
+                    possible = true;
                     break;
                 case PROGRESS: // Fired every 100 expanded nodes.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes so far.");
@@ -1183,9 +1174,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     // Should output failure.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
                     what.setForeground(new Color(204, 0, 0));
-                    what.setText("[Aborted] Target node not reachable!");
+                    what.setText("[Aborted] Target node not reachable! One or more places not reachable");
                    
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    //firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     setStopProgramFalse();
                     updateMarkings();
                     setUsedTransitionTable(showTransition);

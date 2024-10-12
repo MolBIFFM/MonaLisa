@@ -117,7 +117,11 @@ public class Pathfinder {
         
     }
     
-   
+    
+    
+    public void getStatus(){
+        algorithm.fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, 0, null);
+    }
      
     /**
      * 
@@ -167,52 +171,7 @@ public class Pathfinder {
         }
     }
 
-    /**
-     * Initializes algorithm. Should be used when explicit start and target 
-     * are needed.
-     * @param alg
-     * @param heuristic 
-     */
-    private void initializeAlgorithmExplicit(String alg, String heuristic ) throws InterruptedException {
-        // Reset 
-        LOGGER.info("Initializing algorithm: " + alg + ".");
-        if (heuristic != null) {
-            LOGGER.info("Initializing with heuristic: " + heuristic);
-            if (alg == null) return;
-            switch (alg) {
-                case "A*":
-                    this.algorithm = new AStar(this, pnf, marking, target, heuristic);
-                    break;
-                case "Best First Search":
-                    this.algorithm = new BestFirst(this, marking, target, heuristic);
-                    break;
-            }
-        } else {
-            if (alg == null) return;
-            switch (alg) {
-                case "Breadth First Search":
-                    this.algorithm = new BreadthFirst(this,marking, target);
-                    break;
-                // Move FullReach and FullCover into separate classes and treat like algorithms
-                case "FullReach": {
-                    this.algorithm = new FullReachability(this, marking, target);
-                    break;
-                }
-                case "FullCover": {
-                    this.algorithm = new FullCoverability(this, marking, target);
-                    break;
-                }
-                default:
-                    this.algorithm = null;
-                    break;
-            }
-        }
-        if (this.algorithm != null) {
-            LOGGER.info("Successfully initialized algorithm: " + alg + ".");
-        } else {
-            LOGGER.info("Failed to initialize algorithm: " + alg + ".");
-        }
-    }
+    
     
     /**
      * 

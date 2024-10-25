@@ -345,6 +345,8 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
 
     public void bfs(Transition forceTransition){
         int counter = 0;
+        int spinner = ConstraintFrame.getSpinVal();
+        int wantedTransitionCounter = 0;
         Pathfinder.setUnused();
         Transition chosenTransition = forceTransition;
         PetriNet newPN = new PetriNet();
@@ -376,6 +378,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 HashMap<Place, Long> newMarking = pf.computeMarking(currNode.getMarking(), transition);
                 ReachabilityNode newNode = new ReachabilityNode(newMarking, currNode);
                 // Set transition used
+               
                 transition.setUsed();
                 usedTransitions.add(transition);
                 mapForFrame = newNode.getMarking();
@@ -395,6 +398,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 }
                 // If a transition is chosen to be forced to fire.
                 if(chosenTransition != null ){
+                    if(transition.equals(chosenTransition)){
+                        wantedTransitionCounter += 1;
+                    }
                     // If target marking equals current marking and transition has been fired.
                     if(newNode.equals(tar) && chosenTransition.getUsed() == true){
                         tar = newNode;
@@ -420,6 +426,12 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 markingList.add(newNode);
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
                 }
+            if(chosenTransition != null && spinner > 0 && spinner == wantedTransitionCounter){
+                g = new ReachabilityGraph(vertices, edges);
+                fillUpdateFrame(mapForFrame);
+                fireReachabilityUpdate(ReachabilityEvent.Status.SPINNER, spinner, backtrack());
+                return;
+            }
             
             if(markingList.isEmpty()){
                 g = new ReachabilityGraph(vertices, edges);

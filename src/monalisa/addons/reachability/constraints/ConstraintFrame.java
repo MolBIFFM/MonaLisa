@@ -1212,7 +1212,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     // Should output failure.
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before failure was determined.");
                     what.setForeground(new Color(204, 0, 0));
-                    what.setText("[Failure] MAX number of chosen transition fired: "+spinVal+" ");
+                    what.setText("[Failure] MAX number of chosen transition to be fired: "+spinVal+" ");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());

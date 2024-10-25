@@ -519,7 +519,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Max. number of reachabilitynodes:"/>
+        <Property name="text" type="java.lang.String" value="Max. number of reachability nodes:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="spinR">

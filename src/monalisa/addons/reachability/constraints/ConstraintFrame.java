@@ -463,7 +463,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         jLabel3.setText("Max. number of chosen transition to fire:");
 
-        jLabel5.setText("Max. number of reachabilitynodes:");
+        jLabel5.setText("Max. number of reachability nodes:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

@@ -346,6 +346,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
     public void bfs(Transition forceTransition){
         int counter = 0;
         int spinner = ConstraintFrame.getSpinVal();
+        int spinReach = ConstraintFrame.getSpinReach();
         int wantedTransitionCounter = 0;
         Pathfinder.setUnused();
         Transition chosenTransition = forceTransition;
@@ -371,6 +372,8 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.STOPED, counter, backtrack());
                 return;
             }
+             System.out.println("COUNTER "+counter);
+            
             ReachabilityNode currNode = markingList.getFirst();
             markingList.removeFirst();
             HashSet<Transition> activeTransitions = pf.computeActive(currNode.getMarking());
@@ -426,10 +429,19 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 markingList.add(newNode);
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
                 }
+            
+            if(spinReach > 0 && counter == spinReach){
+                g = new ReachabilityGraph(vertices, edges);
+                fillUpdateFrame(mapForFrame);
+                fireReachabilityUpdate(ReachabilityEvent.Status.MAXREACH, counter, backtrack());
+                return;
+            }
+            
+            
             if(chosenTransition != null && spinner > 0 && spinner == wantedTransitionCounter){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);
-                fireReachabilityUpdate(ReachabilityEvent.Status.SPINNER, spinner, backtrack());
+                fireReachabilityUpdate(ReachabilityEvent.Status.SPINNER, counter, backtrack());
                 return;
             }
             

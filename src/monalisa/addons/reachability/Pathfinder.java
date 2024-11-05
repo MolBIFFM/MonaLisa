@@ -70,7 +70,10 @@ public class Pathfinder {
         this.capacities_active = checkCapacityActive();
         this.transitions = new HashSet<>();
         this.transitions.addAll(pnf.transitions());
-        this.transitions.removeAll(knockouts);
+        if(knockouts != null){
+           this.transitions.removeAll(knockouts); 
+        }
+        
         this.alg = alg;
         initializeAlgorithm(alg, null);
         LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
@@ -118,10 +121,7 @@ public class Pathfinder {
     }
     
     
-    
-    public void getStatus(){
-        algorithm.fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, 0, null);
-    }
+ 
      
     /**
      * 

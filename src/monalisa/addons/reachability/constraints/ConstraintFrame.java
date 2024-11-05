@@ -772,7 +772,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
         if(possible == false){
             path = new Pathfinder(copyPN, start, target, capacities, null, null);
-            path.getStatus();
         }
         //  Start and Target Hashmap change in if
         LOGGER.info("Requested computation of a path from start to target marking.");

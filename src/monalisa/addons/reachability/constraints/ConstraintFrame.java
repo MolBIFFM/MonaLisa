@@ -293,6 +293,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         spinR = new javax.swing.JSpinner();
+        transition = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(650, 900));
         setMinimumSize(getSize());
@@ -465,6 +466,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
 
         jLabel5.setText("Max. number of reachability nodes:");
 
+        transition.setText("Transition fired: ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -472,9 +475,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             .addGroup(layout.createSequentialGroup()
                 .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(firedTransitionText, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -533,7 +533,12 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(spinR, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                                     .addComponent(spinner))))
-                        .addGap(60, 60, 60))))
+                        .addGap(60, 60, 60))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(firedTransitionText, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(transition, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,7 +561,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(offTransition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                    .addComponent(offTransition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                     .addComponent(onTransition, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel8)
@@ -571,7 +576,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(chooseText)
                     .addComponent(chosenAND, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(3, 3, 3)
+                .addComponent(transition)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tryAgain, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
                 .addComponent(PlaceTitel)
@@ -602,7 +609,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(224, Short.MAX_VALUE))
         );
 
         pack();
@@ -801,6 +808,18 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         }
     }
     
+    public int countTransition(){
+        String chosenString = transitionList.getSelectedItem();
+        int count = 0;
+        for(int i = 0; i< used.getItemCount(); i++){
+            if(used.getItem(i)== chosenString){
+                count +=1;
+            }
+        }
+        System.out.println("COUNT: "+count);
+        return count;
+    }
+    
     /**
      * Updates table in JFrame
      */
@@ -896,7 +915,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         // TODO add your handling code here:
     }//GEN-LAST:event_usedActionPerformed
     
-   
+    public String stringTransition = "";
     /**
      * 
      * @param evt 
@@ -914,6 +933,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(Transition t : transitions){
             if(t.toString()== selectedTransition){
                 chooseTransition = t;
+                stringTransition = selectedTransition;
+                
+                
             }
         }
         // When computed without forced transition. Check if transition has 
@@ -929,13 +951,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             System.out.println("HASbeenUSED: "+hasBeenUsed+" pushed: "+pushed+" List: "+search);
             //for(Transition t : search){
                 for(int i = 0; i < used.getItemCount(); i++){
+                    int count = 0;
                // System.out.println("Transition in GUI: "+t+" selected: "+selectedTransition);
-                if(used.getItem(i).toString()==selectedTransition ){
-                    hasBeenUsed = true;
-                    chosenAND.setForeground(new Color(0, 102, 0));
-                    chosenAND.setText("Transition has been used.");
-                    tryAgain.setText("");
-                }   
+                    if(used.getItem(i).toString()==selectedTransition ){
+                        count +=1;
+                        hasBeenUsed = true;
+                        chosenAND.setForeground(new Color(0, 102, 0));
+                        chosenAND.setText("Transition has been used.");
+                        tryAgain.setText("");
+                        
+                    }  
+                    transition.setText("Transition fired: "+countTransition());
             }
             if(hasBeenUsed == false){
                 chosenAND.setForeground(new Color(204, 0, 0));
@@ -1048,6 +1074,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
     private javax.swing.JSpinner spinR;
     private javax.swing.JSpinner spinner;
     private javax.swing.JButton stopButton;
+    private javax.swing.JLabel transition;
     private java.awt.List transitionList;
     private javax.swing.JLabel tryAgain;
     private java.awt.List used;
@@ -1071,6 +1098,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         for(Transition t : tList){
             used.add(t.toString());
         }
+
     }
     
     
@@ -1142,6 +1170,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         showPlaces.putAll(BreadthFirst.getVisitiedNodes());
         System.out.println("AUSGABE: "+showPlaces );
         if(getForcedTransition()== true){
+           
             if(e.getStatus()== SUCCESS){
                 chosenAND.setForeground(new Color(0, 102, 0));
                 chosenAND.setText("Transition has been used.");
@@ -1177,7 +1206,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
-                    
+                    transition.setText("Transition fired: "+countTransition());
                     break;
                 case FAILURE: // Fired when an algorithm fails to find the target marking.
                     lock(false);
@@ -1191,6 +1220,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     counterText.setForeground(new Color(0, 0, 153));
                     counterText.setText("#Reachabilitynodes (inc. root): "+ Integer.toString(e.getSteps()+1));
                     updateMarkings();
+                    transition.setText("Transition fired: "+countTransition());
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
@@ -1245,7 +1275,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes to complete the graph.");
                     what.setForeground(new Color(0, 102, 0));
                     what.setText("Finished");
-                   
+                    
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);

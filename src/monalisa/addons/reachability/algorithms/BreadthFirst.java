@@ -38,6 +38,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
     private static final Logger LOGGER = LogManager.getLogger(BreadthFirst.class);
     private static ReachabilityGraph reachabilityGraph = null;
    
+    private static int chosenTransitionCount = 0;
   
    /**
     * Used for part one of the program. Maps and lists to keep track of
@@ -62,6 +63,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         return reachabilityGraph;
     }
  
+    public static int getChosenTransitionCount(){
+        return chosenTransitionCount;
+    }
     
     /**
      * 
@@ -348,6 +352,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         int spinner = ConstraintFrame.getSpinVal();
         int spinReach = ConstraintFrame.getSpinReach();
         int wantedTransitionCounter = 0;
+       
         Pathfinder.setUnused();
         Transition chosenTransition = forceTransition;
         PetriNet newPN = new PetriNet();
@@ -403,6 +408,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 if(chosenTransition != null ){
                     if(transition.equals(chosenTransition)){
                         wantedTransitionCounter += 1;
+                        chosenTransitionCount += 1;
                     }
                     // If target marking equals current marking and transition has been fired.
                     if(newNode.equals(tar) && chosenTransition.getUsed() == true){
@@ -438,7 +444,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
             }
             
             
-            if(chosenTransition != null && spinner > 0 && spinner == wantedTransitionCounter){
+            if(chosenTransition != null && spinner > 0 && spinner == wantedTransitionCounter ){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);
                 fireReachabilityUpdate(ReachabilityEvent.Status.SPINNER, counter, backtrack());

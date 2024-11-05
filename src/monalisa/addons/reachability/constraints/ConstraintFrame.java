@@ -806,17 +806,9 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             }
         }
     }
-    
+   
     public int countTransition(){
-        String chosenString = transitionList.getSelectedItem();
-        int count = 0;
-        for(int i = 0; i< used.getItemCount(); i++){
-            if(used.getItem(i)== chosenString){
-                count +=1;
-            }
-        }
-        System.out.println("COUNT: "+count);
-        return count;
+        return BreadthFirst.getChosenTransitionCount();
     }
     
     /**
@@ -902,6 +894,17 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
      */
     private static String selectedTargetNodeVisible = "";
     
+    public int countTransitionAfterComputation(){
+        String chosenString = transitionList.getSelectedItem();
+        int count = 0;
+        for(int i = 0; i< used.getItemCount(); i++){
+            if(used.getItem(i)== chosenString){
+                count +=1;
+            }
+        }
+        System.out.println("COUNT: "+count);
+        return count;
+    }
     /**
      * 
      * @return 
@@ -933,8 +936,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             if(t.toString()== selectedTransition){
                 chooseTransition = t;
                 stringTransition = selectedTransition;
-                
-                
+       
             }
         }
         // When computed without forced transition. Check if transition has 
@@ -958,14 +960,16 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         chosenAND.setForeground(new Color(0, 102, 0));
                         chosenAND.setText("Transition has been used.");
                         tryAgain.setText("");
+                        transition.setText("Transition fired: "+countTransitionAfterComputation());
                         
                     }  
-                    transition.setText("Transition fired: "+countTransition());
+                    //transition.setText("Transition fired: "+countTransition());
             }
             if(hasBeenUsed == false){
                 chosenAND.setForeground(new Color(204, 0, 0));
                 chosenAND.setText("Transition has NOT been used. ");
                 tryAgain.setText("Compute again with musthave transition.");
+                transition.setText("Transition fired: "+countTransitionAfterComputation());
             }
         }
     }//GEN-LAST:event_chooseButtonActionPerformed
@@ -1234,6 +1238,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
+                    transition.setText("Transition fired: "+countTransition());
                     break;
                 case SPINNER: // Fired when an algorithm fails to find the target marking.
                     lock(false);
@@ -1250,6 +1255,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
+                    transition.setText("Transition fired: "+countTransition());
                     possible = true;
                     break;
                 case MAXREACH: // Fired when an algorithm fails to find the target marking.
@@ -1264,6 +1270,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     counterText.setForeground(new Color(0, 0, 153));
                     counterText.setText("#Reachabilitynodes (inc. root): "+ Integer.toString(e.getSteps()+1));
                     updateMarkings();
+                    transition.setText("Transition fired: "+countTransition());
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
@@ -1280,6 +1287,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
+                    transition.setText("Transition fired: "+countTransition());
                     break;
                     
                 case ABORTED: // Fired when an algorithm fails to find the target marking.
@@ -1295,6 +1303,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
+                    transition.setText("Transition fired: "+countTransition());
                     break;
                     
                 case STOPED:
@@ -1312,7 +1321,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     enumerateUsedTransitions(showTransition);
                     clearMapsAndLists();
                     setStopProgramFalse();
-                    
+                    transition.setText("Transition fired: "+countTransition());
                     break;
                 default:
                     break;

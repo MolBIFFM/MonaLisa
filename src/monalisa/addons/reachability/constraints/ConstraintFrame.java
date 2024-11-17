@@ -947,7 +947,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
             search.addAll(BreadthFirst.getTransitions());
         }
         if(used.getItemCount() > 0){
-            System.out.println("HASbeenUSED: "+hasBeenUsed+" pushed: "+pushed+" List: "+search);
             //for(Transition t : search){
                 for(int i = 0; i < used.getItemCount(); i++){
                     int count = 0;
@@ -958,7 +957,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                         chosenAND.setForeground(new Color(0, 102, 0));
                         chosenAND.setText("Transition has been used.");
                         tryAgain.setText("");
-                        transition.setText("Transition fired: "+countTransitionAfterComputation());
+                        transition.setText("Transition fired: ");
                         
                     }  
                     //transition.setText("Transition fired: "+countTransition());

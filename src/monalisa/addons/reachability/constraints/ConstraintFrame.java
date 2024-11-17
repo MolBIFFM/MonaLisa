@@ -818,7 +818,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         HashMap<Place, Long> placesInTable = new HashMap<>();
         DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
         placesInTable.putAll(BreadthFirst.getUpdateFrame());
-        System.out.println("Update Frame: "+BreadthFirst.getUpdateFrame()+" Updated Marking "+BreadthFirst.getUpdatedMarking());
         for (int i = 0; i < markingTable.getRowCount(); ++i) {
             for(int j = 0; j < placesInTable.size(); j++){
             //for(int j = 0; j < markingTable.getRowCount(); j++){
@@ -856,7 +855,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         counterText.setText("");
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : backupPN.places()) {
-            System.out.println("CLEAR: "+p.toString());
             if(p.inputs().size()>=1){
                 for(Transition t : p.inputs()){
                     transitionSet.add(t);
@@ -1198,9 +1196,8 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     // Should probably handle displaying output
                     LOGGER.info("Expanded " + Integer.toString(e.getSteps()) + " nodes before successfully finding target marking.");
                     what.setForeground(new Color(0, 102, 0));
-                   
                     what.setText("[Success] Target marking found!");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     counterText.setForeground(new Color(0, 0, 153));
@@ -1219,7 +1216,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setText("[Failure] Target marking not reachable!");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     counterText.setForeground(new Color(0, 0, 153));
                     counterText.setText("#Reachabilitynodes (inc. root): "+ Integer.toString(e.getSteps()+1));
                     updateMarkings();
@@ -1235,7 +1232,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setText("Progress");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     transition.setText("Transition fired: "+countTransition());
@@ -1248,7 +1245,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setText("[Failure] MAX number of chosen transition to be fired: "+spinVal+" ");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     counterText.setForeground(new Color(0, 0, 153));
                     counterText.setText("#Reachabilitynodes (inc. root): "+ Integer.toString(e.getSteps()+1));
                     updateMarkings();
@@ -1266,7 +1263,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setText("[Failure] MAX number of reachabilitynodes built: "+spinReach+" ");
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     counterText.setForeground(new Color(0, 0, 153));
                     counterText.setText("#Reachabilitynodes (inc. root): "+ Integer.toString(e.getSteps()+1));
                     updateMarkings();
@@ -1282,7 +1279,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setForeground(new Color(0, 102, 0));
                     what.setText("Finished");
                     
-                    firedTransitionText.setText("Fired transitions: #"+getNumberFiredTransitions());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     updateMarkings();
                     setUsedTransitionTable(showTransition);
                     clearMapsAndLists();
@@ -1312,7 +1309,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
                     what.setForeground(new Color(102, 0, 153));
                    
                     what.setText("[STOPED] Prgram stopped manually!");
-                    firedTransitionText.setText("Fired transitions: #"+used.getItemCount());
+                    firedTransitionText.setText("Fired transitions: "+getNumberFiredTransitions()+ " / "+pn.transitions().size());
                     PlaceTitel.setForeground(new Color(0, 0, 153));
                     PlaceTitel.setText("Places and token after firing.");
                     counterText.setForeground(new Color(0, 0, 153));

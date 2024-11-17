@@ -366,7 +366,6 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         ArrayList<ReachabilityNode> markingList = new ArrayList<>();
         markingList.add(rootNode);
         HashMap<Place, Long> mapForFrame = new HashMap<>();
-        System.out.println("MARK: "+markingList.getFirst().getMarking());
         while(!markingList.isEmpty() || !isInterrupted()){
             counter += 1;
             if (counter % 100 == 0) {
@@ -377,18 +376,19 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.STOPED, counter, backtrack());
                 return;
             }
-             System.out.println("COUNTER "+counter);
             
             ReachabilityNode currNode = markingList.getFirst();
             markingList.removeFirst();
             HashSet<Transition> activeTransitions = pf.computeActive(currNode.getMarking());
+            
             for(Transition transition : activeTransitions){
                 HashMap<Place, Long> newMarking = pf.computeMarking(currNode.getMarking(), transition);
                 ReachabilityNode newNode = new ReachabilityNode(newMarking, currNode);
                 // Set transition used
-               
+                
                 transition.setUsed();
-                usedTransitions.add(transition);
+                if(!usedTransitions.contains(transition)){
+                    usedTransitions.add(transition);
                 mapForFrame = newNode.getMarking();
                 if(chosenTransition == null){
                     // if target marking is found
@@ -423,18 +423,23 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                         return;
                     }
                 }
-                
                 for(ReachabilityNode vertice : vertices){
                     if(vertice.equals(newNode)){
                         vertice.setVisited();
                         edges.add(new ReachabilityEdge(currNode, vertice, transition));
+                       
+                        
                         break;
                     }
                 }
                 vertices.add(newNode);
                 markingList.add(newNode);
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
+                
+                
                 }
+   
+               }
             
             if(spinReach > 0 && counter == spinReach){
                 g = new ReachabilityGraph(vertices, edges);

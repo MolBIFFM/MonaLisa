@@ -715,7 +715,7 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         setSpinReach();
         BreadthFirst.clearUsedTransitions();
         clearMapsAndLists();
-        
+        BreadthFirst.setChosenTransitionCount();
         BreadthFirst.clearTBacktrack();
         readTable();
         if(pushed==true){
@@ -851,7 +851,6 @@ public class ConstraintFrame extends javax.swing.JFrame implements monalisa.addo
         transitionList.removeAll();
         onTransition.removeAll();
         offTransition.removeAll();
-        
         counterText.setText("");
         HashSet<Transition> transitionSet = new HashSet<>();
         for (Place p : backupPN.places()) {

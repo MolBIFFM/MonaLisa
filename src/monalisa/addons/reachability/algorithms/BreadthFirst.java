@@ -67,6 +67,10 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         return chosenTransitionCount;
     }
     
+    public static int setChosenTransitionCount(){
+        return chosenTransitionCount = 0;
+    }
+    
     /**
      * 
      * @param p

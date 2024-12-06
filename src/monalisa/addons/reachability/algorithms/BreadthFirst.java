@@ -393,7 +393,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 transition.setUsed();
                 if(!usedTransitions.contains(transition)){
                     usedTransitions.add(transition);
-                mapForFrame = newNode.getMarking();
+                mapForFrame = newNode.getMarking();}
                 if(chosenTransition == null){
                     // if target marking is found
                     if(newNode.equals(tar)){
@@ -441,7 +441,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 edges.add(new ReachabilityEdge(currNode, newNode, transition));
                 
                 
-                }
+                
    
                }
             

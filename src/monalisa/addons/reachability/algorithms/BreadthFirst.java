@@ -63,10 +63,17 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         return reachabilityGraph;
     }
  
+    /**
+     * 
+     * @return 
+     */
     public static int getChosenTransitionCount(){
         return chosenTransitionCount;
     }
-    
+    /**
+     * 
+     * @return 
+     */
     public static int setChosenTransitionCount(){
         return chosenTransitionCount = 0;
     }
@@ -264,6 +271,9 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         }
     }
     
+    /**
+     * Sets transition as used
+     */
     public void setTransitionsUnused(){
         HashSet<Transition> transition = new HashSet<>();
         
@@ -279,6 +289,10 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         * Additionally ask if a specific transition must be visited.
         */
         boolean myFrame = true;
+        /**
+         * If reachability analysis with constraints is opened, use 
+         * BSF with constraints
+         */
         if(myFrame){
             
            bfs(ConstraintFrame.getChosenTransition());
@@ -350,8 +364,12 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
   
     
   
-
+    /**
+     * Breadth first search for reachability analysis with constraints.
+     * @param forceTransition 
+     */
     public void bfs(Transition forceTransition){
+        // All counters that are used as condition
         int counter = 0;
         int spinner = ConstraintFrame.getSpinVal();
         int spinReach = ConstraintFrame.getSpinReach();
@@ -364,7 +382,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edges = new HashSet<>();
         ReachabilityNode rootNode = new ReachabilityNode(marking, null);
-        // tar in AbstractReachabilityAlgorithm 
+         
         tar = new ReachabilityNode(target, null);
         vertices.add(rootNode);
         ArrayList<ReachabilityNode> markingList = new ArrayList<>();
@@ -427,6 +445,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                         return;
                     }
                 }
+                // Add edge to nodes
                 for(ReachabilityNode vertice : vertices){
                     if(vertice.equals(newNode)){
                         vertice.setVisited();
@@ -444,7 +463,7 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 
    
                }
-            
+            // If max. reachabilitynodes are created, terminate.
             if(spinReach > 0 && counter == spinReach){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);
@@ -452,14 +471,15 @@ public class BreadthFirst extends AbstractReachabilityAlgorithm {
                 return;
             }
             
-            
+            // If a transition is chosen to fire and max. reachabilitynodes are
+            // created and chosen transition is used max. times, terminate.
             if(chosenTransition != null && spinner > 0 && spinner == wantedTransitionCounter ){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);
                 fireReachabilityUpdate(ReachabilityEvent.Status.SPINNER, counter, backtrack());
                 return;
             }
-            
+            // If list is empty
             if(markingList.isEmpty()){
                 g = new ReachabilityGraph(vertices, edges);
                 fillUpdateFrame(mapForFrame);

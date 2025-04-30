@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +44,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private Pathfinder pf;
     private final PInvariants pinvs;
     private HashSet<Transition> knockouts;
+    private HashMap<Transition, Double> firingRates = new HashMap<>();
 
     /**
      * Creates new form ReachabilityDialog
@@ -80,6 +83,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         breadthRButton.setActionCommand("Breadth First Search");
         bestRButton.addActionListener(this);
         bestRButton.setActionCommand("Best First Search");
+        aplusgRButton.addActionListener(this);
+        aplusgRButton.setActionCommand("AplusG");
         LOGGER.info("Successfully initialized ReachabilityDialog.");
     }
 
@@ -109,6 +114,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         progressLabel = new javax.swing.JLabel();
         capacityButton = new javax.swing.JButton();
         knockoutButton = new javax.swing.JButton();
+        aplusgRButton = new javax.swing.JRadioButton();
+        firingrateButton = new javax.swing.JButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton2 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -212,6 +221,21 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
+        algoRadioGroup.add(aplusgRButton);
+        aplusgRButton.setText("AplusG");
+
+        firingrateButton.setText("Firing rates");
+        firingrateButton.setActionCommand("FiringRates");
+        firingrateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                firingrateButtonActionPerformed(evt);
+            }
+        });
+
+        jRadioButton1.setText("jRadioButton1");
+
+        jRadioButton2.setText("jRadioButton2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -223,28 +247,40 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(breadthRButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(bestRButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(aStarRButton))
-                    .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(startLabel)
-                    .addComponent(algoLabel)
-                    .addComponent(jLabel1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(startLabel)
+                            .addComponent(firingrateButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(breadthRButton)
+                                    .addComponent(jRadioButton2))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(bestRButton)
+                                    .addComponent(jRadioButton1))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(aplusgRButton)
+                                    .addComponent(aStarRButton))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(capacityButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(reachButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(coverButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(computeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(stopButton))
-                    .addComponent(progressLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(capacityButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(reachButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(coverButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(computeButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(stopButton))
+                            .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(progressLabel)
+                            .addComponent(algoLabel))
+                        .addGap(0, 110, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -264,20 +300,26 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addComponent(capacityButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(firingrateButton)
                     .addComponent(knockoutButton))
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(aplusgRButton)
+                    .addComponent(jRadioButton1)
+                    .addComponent(jRadioButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(progressLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reachButton)
                     .addComponent(coverButton)
                     .addComponent(computeButton)
                     .addComponent(stopButton))
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -331,17 +373,30 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         kf.setVisible(true);
     }//GEN-LAST:event_knockoutButtonActionPerformed
 
+    private FiringrateFrame ff = null;
+    private void firingrateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firingrateButtonActionPerformed
+        if (ff == null) {
+            ff = new FiringrateFrame(this, pnf.transitions());
+        }
+        // FiringrateFrame ff = new FiringrateFrame(this, pnf.transitions());
+        ff.setVisible(true);
+    }//GEN-LAST:event_firingrateButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarRButton;
     private javax.swing.JLabel algoLabel;
     private javax.swing.ButtonGroup algoRadioGroup;
+    private javax.swing.JRadioButton aplusgRButton;
     private javax.swing.JRadioButton bestRButton;
     private javax.swing.JRadioButton breadthRButton;
     private javax.swing.JButton capacityButton;
     private javax.swing.JComboBox<String> comboHeuristic;
     private javax.swing.JButton computeButton;
     private javax.swing.JButton coverButton;
+    private javax.swing.JButton firingrateButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JButton knockoutButton;
     private javax.swing.JTable markingTable;
     private javax.swing.JLabel progressLabel;
@@ -371,6 +426,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 comboHeuristic.setEnabled(false);
                 comboHeuristic.removeAllItems();
                 break;
+            case "AplusG":
+                comboHeuristic.setEnabled(true);
+                comboHeuristic.removeAllItems();
+                comboHeuristic.addItem("Default");
+                break;
             default:
                 break;
         }
@@ -384,6 +444,15 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             LOGGER.debug("Updated values for Place " + ((Place) markingTable.getValueAt(i, 0)).getProperty("name"));
         }
         LOGGER.info("Successfully updated markings from table.");
+    }
+
+    public void updateFiringRates(HashMap<Transition, Double> firingRates) {
+        this.firingRates.clear();
+        this.firingRates.putAll(firingRates);
+        // System.out.println("Firing rates updated in ReachabilityDialog:");
+        // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
+        //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
+        // }
     }
 
     /**
@@ -402,6 +471,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         aStarRButton.setEnabled(!b);
         bestRButton.setEnabled(!b);
         breadthRButton.setEnabled(!b);
+        aplusgRButton.setEnabled(!b);
     }
 
     @Override

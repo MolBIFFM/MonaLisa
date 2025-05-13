@@ -193,7 +193,7 @@ public class FiringrateFrame extends javax.swing.JFrame {
                 model.addRow(new Object[]{t, rate});
             }
 
-            rd.updateFiringRates(firingRates);
+            rd.setFiringRates(firingRates);
     
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error importing XML: " + ex.getMessage(),
@@ -209,9 +209,9 @@ public class FiringrateFrame extends javax.swing.JFrame {
             firingRates.put(t, rate);
         }
 
-        rd.updateFiringRates(firingRates);
+        rd.setFiringRates(firingRates);
+        this.dispose();
 
-        // 示例：打印数据
         // System.out.println("Saved Firing Rates:");
         // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
         //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());

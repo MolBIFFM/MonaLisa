@@ -76,6 +76,7 @@
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="progressLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="algoLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="stochreachButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="110" max="32767" attributes="0"/>
                   </Group>
@@ -111,7 +112,7 @@
                   <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="15" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="comboHeuristic" min="-2" max="-2" attributes="0"/>
@@ -124,7 +125,9 @@
                   <Component id="computeButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="stopButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="stochreachButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="46" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -288,6 +291,14 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="jRadioButton2"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="stochreachButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Stochastic Full Reachability"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stochreachButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

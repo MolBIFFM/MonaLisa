@@ -118,6 +118,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         firingrateButton = new javax.swing.JButton();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
+        stochreachButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -236,6 +237,13 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
 
         jRadioButton2.setText("jRadioButton2");
 
+        stochreachButton.setText("Stochastic Full Reachability");
+        stochreachButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stochreachButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,7 +287,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                             .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
                             .addComponent(progressLabel)
-                            .addComponent(algoLabel))
+                            .addComponent(algoLabel)
+                            .addComponent(stochreachButton))
                         .addGap(0, 110, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -307,7 +316,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addComponent(aplusgRButton)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -319,7 +328,9 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addComponent(coverButton)
                     .addComponent(computeButton)
                     .addComponent(stopButton))
-                .addGap(18, 18, 18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(stochreachButton)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         pack();
@@ -382,6 +393,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         ff.setVisible(true);
     }//GEN-LAST:event_firingrateButtonActionPerformed
 
+    private void stochreachButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stochreachButtonActionPerformed
+        updateMarkings();
+//        LOGGER.info("Requested computation of full reachability graph.");
+        pf = new Pathfinder(pnf, start, target, capacities, knockouts, "StochFullReach", firingRates);
+        pf.addListenerToAlgorithm(this);
+        pf.run();
+    }//GEN-LAST:event_stochreachButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarRButton;
     private javax.swing.JLabel algoLabel;
@@ -402,6 +421,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JLabel progressLabel;
     private javax.swing.JButton reachButton;
     private javax.swing.JLabel startLabel;
+    private javax.swing.JButton stochreachButton;
     private javax.swing.JButton stopButton;
     private javax.swing.JScrollPane tableScrollPane;
     // End of variables declaration//GEN-END:variables
@@ -446,14 +466,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         LOGGER.info("Successfully updated markings from table.");
     }
 
-    public void updateFiringRates(HashMap<Transition, Double> firingRates) {
-        this.firingRates.clear();
-        this.firingRates.putAll(firingRates);
-        // System.out.println("Firing rates updated in ReachabilityDialog:");
-        // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
-        //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
-        // }
-    }
 
     /**
      * Locks or unlocks the GUI. If b is true, the GUI will be locked. If b is
@@ -512,6 +524,15 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             default:
                 break;
         }
+    }
+
+    protected void setFiringRates(HashMap<Transition, Double> firingRates) {
+        this.firingRates.clear();
+        this.firingRates.putAll(firingRates);
+        // System.out.println("Firing rates updated in ReachabilityDialog:");
+        // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
+        //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
+        // }
     }
 
     protected void setCapacities(HashMap<Place, Long> caps) {

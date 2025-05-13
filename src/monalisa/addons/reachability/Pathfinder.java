@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import monalisa.addons.reachability.algorithms.BestFirst;
 import monalisa.addons.reachability.algorithms.AStar;
 import monalisa.addons.reachability.algorithms.BreadthFirst;
+//import monalisa.addons.reachability.algorithms.StochAStar;
+import monalisa.addons.reachability.algorithms.StochFullReach;
+import monalisa.addons.tokensimulator.utils.Utilities;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +45,7 @@ public class Pathfinder {
     private final HashMap<Place, Long> capacities;
     private final boolean capacities_active;
     private final HashSet<Transition> transitions;
+    private HashMap<Transition, Double> firingRates;
 
     /**
      * Constructor used for algorithms without a heuristic.
@@ -99,6 +104,26 @@ public class Pathfinder {
         LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
     }
 
+    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities, HashSet<Transition> knockouts, String alg, 
+    HashMap<Transition, Double> firingRates) {
+        // LOGGER.info("Initializing pathfinder for reachability analysis without a heuristic.");
+        this.pnf = pnf;
+        this.marking = new HashMap<>();
+        this.marking.putAll(marking);
+        this.target = new HashMap<>();
+        this.target.putAll(target);
+        this.capacities = capacities;
+        this.capacities_active = checkCapacityActive();
+        this.transitions = new HashSet<>();
+        this.transitions.addAll(pnf.transitions());
+        this.transitions.removeAll(knockouts);
+        this.alg = alg;
+        this.firingRates = new HashMap<>();
+        this.firingRates.putAll(firingRates);
+        initializeAlgorithm(alg, null);
+        // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
+    }
+
     private void initializeAlgorithm(String alg, String heuristic) {
         LOGGER.info("Initializing algorithm: " + alg + ".");
         if (heuristic != null) {
@@ -111,6 +136,9 @@ public class Pathfinder {
                 case "Best First Search":
                     this.algorithm = new BestFirst(this, marking, target, heuristic);
                     break;
+                // case "AplusG":
+                //     this.algorithm = new AplusG(this, marking, target);
+                //     break;
             }
         } else {
             if (alg == null) return;
@@ -125,6 +153,10 @@ public class Pathfinder {
                 }
                 case "FullCover": {
                     this.algorithm = new FullCoverability(this, marking, target);
+                    break;
+                }
+                case "StochFullReach": {
+                    this.algorithm = new StochFullReach(this, pnf, marking, target, firingRates);
                     break;
                 }
                 default:
@@ -161,6 +193,17 @@ public class Pathfinder {
         }
         LOGGER.debug("Successfully computed active transitions.");  // debug
         return activeTransitions;
+    }
+
+    // only for active transition
+    public double computeReactionRate(Transition t, HashMap<Place, Long> marking, HashMap<Transition, Double> firingRates) {
+        long h = 1;
+        for ( Place p : t.inputs()) {
+            long token = marking.get(p);
+            long weight = pnf.getArc(p,t).weight();
+            h *= Utilities.binomialCoefficient(token, weight);
+        }
+        return h * firingRates.get(t);
     }
 
     public HashSet<Transition> removeOverCapacity (HashSet<Transition> activeTransitions, HashMap<Place, Long> m) {

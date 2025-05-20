@@ -16,7 +16,7 @@ public class ReachabilityEdge {
     private final ReachabilityNode source;
     private final ReachabilityNode target;
     private final Transition t;
-    private double probabiility;
+    private double probability;//final
 
     public ReachabilityEdge(ReachabilityNode from, ReachabilityNode to,
             Transition t) {
@@ -29,7 +29,7 @@ public class ReachabilityEdge {
         this.source = from;
         this.target = to;
         this.t = t;
-        this.probabiility = probability;
+        this.probability = probability;
     }
 
     /**
@@ -51,5 +51,9 @@ public class ReachabilityEdge {
      */
     public Transition getTransition() {
         return t;
+    }
+
+    public double getProbability() {
+        return probability;
     }
 }

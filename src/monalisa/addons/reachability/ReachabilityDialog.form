@@ -50,7 +50,7 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="aplusgRButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="stochastarRButton" min="-2" max="-2" attributes="0"/>
                                   <Component id="aStarRButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -108,7 +108,7 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="aplusgRButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="stochastarRButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jRadioButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jRadioButton2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -265,12 +265,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="knockoutButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="aplusgRButton">
+    <Component class="javax.swing.JRadioButton" name="stochastarRButton">
       <Properties>
         <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
           <ComponentRef name="algoRadioGroup"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="AplusG"/>
+        <Property name="text" type="java.lang.String" value="Stochastic A*"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="firingrateButton">
@@ -285,16 +286,19 @@
     <Component class="javax.swing.JRadioButton" name="jRadioButton1">
       <Properties>
         <Property name="text" type="java.lang.String" value="jRadioButton1"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JRadioButton" name="jRadioButton2">
       <Properties>
         <Property name="text" type="java.lang.String" value="jRadioButton2"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="stochreachButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Stochastic Full Reachability"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="stochreachButtonActionPerformed"/>

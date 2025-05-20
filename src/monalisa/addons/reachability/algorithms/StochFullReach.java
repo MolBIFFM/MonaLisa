@@ -38,9 +38,14 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edges = new HashSet<>();
-        // begin expanding the reachability graph from m0
+        HashSet<ReachabilityNode> leafNodes = new HashSet<>();
+         // begin expanding the reachability graph from m0
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
-        workingList.add(new ReachabilityNode(marking, null));
+        ReachabilityNode root = new ReachabilityNode(marking, null);
+        root.setProbability(1);
+        workingList.add(root);
+        // workingList.add(new ReachabilityNode(marking, null, 1));
+        // workingList.add(new ReachabilityNode(marking, null));
         while (!workingList.isEmpty() && !isInterrupted()) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
@@ -52,20 +57,28 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             // System.out.println("Depth: "+workingNode.getDepth());
             workingList.remove(workingNode);
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
-            HashMap<Transition, Double> rateMap = new HashMap<>();
+            if(activeTransitions.isEmpty()){
+                leafNodes.add(workingNode);
+                continue;
+            }
+            HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
             for (Transition t : activeTransitions) {
                 // compute reaction rate
                 double rate = pf.computeReactionRate(t, workingNode.getMarking(), firingRates);
-                rateMap.put(t, rate);
+                rates.put(t, rate);
                 ratesSum += rate;
             }
             for (Transition t : activeTransitions) {
                 // transfrom reaction rate to probability
-                double probability = rateMap.get(t) / ratesSum;
+                double probability = rates.get(t) / ratesSum;
                 // compute new marking
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
+                // compute probability for reachability node
+                double prob_node = workingNode.getProbability() * probability;
+                // ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode, prob_node);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
+                newNode.setProbability(prob_node);
                 // Check for boundedness
                 ReachabilityNode mBack = workingNode;
                 while ((mBack != null) && (!newNode.largerThan(mBack))) {
@@ -83,12 +96,17 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                     for (ReachabilityNode v : vertices) {
                         if (v.equals(newNode)) {
                             unvisited = false;
+                            v.setProbability(v.getProbability()+prob_node);
                         }
                     }
                     if (unvisited) {
                         vertices.add(newNode);
                         workingList.add(newNode);
                     }
+                    // if(!vertices.contains(newNode)){
+                    //     vertices.add(newNode);
+                    //     workingList.add(newNode);
+                    // }
                 }
             }
         }
@@ -98,8 +116,33 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         } else {
             // LOGGER.info("Completed creation of Reachability Graph.");
             g = new ReachabilityGraph(vertices, edges);
+            // System.out.println("vertices has "+vertices.size()+" nodes");
+            System.out.println("=== Reachability Nodes (Vertices) ===");
+            for (ReachabilityNode node : vertices) {
+                StringBuilder sb = new StringBuilder("Marking: ");
+                sb.append("( ");
+                for (Place p : node.getMarking().keySet()) {
+                    // sb.append(p.toString())
+                    //   .append("=")
+                    sb.append(node.getMarking().get(p))
+                      .append(", ");
+                }
+                sb.append(" )"+"; Probability: "+node.getProbability()+"; Depth: "+node.getDepth());
+                System.out.println(sb.toString());}
+            HashMap<ReachabilityNode, ArrayList<Transition>> paths = new HashMap<>();
+            for (ReachabilityNode leaf : leafNodes) {
+                System.out.println("Ptobability of leaf node: "+leaf.getProbability()+"; Depth"+leaf.getDepth());
+                // this.tar = leaf;
+                // ArrayList<Transition> path = backtrack();
+                // paths.put(leaf, path);
+                // System.out.println("Path of start to leaf: ");
+                // for (Transition t : path) {
+                //     System.out.print(t.toString() + " ");
+                // }
+                // System.out.println();
+            }
+            // System.out.flush();
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
-
         }
     }
     

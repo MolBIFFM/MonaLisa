@@ -6,6 +6,8 @@
 package monalisa.addons.reachability;
 
 import java.util.HashMap;
+import java.util.Map;
+
 import monalisa.data.pn.Place;
 
 /**
@@ -18,6 +20,7 @@ public class ReachabilityNode {
     private ReachabilityNode prev;
     private double priority = 0;
     private int depth;
+    private double probability;
 
     public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev) {
         this.marking = marking;
@@ -26,6 +29,15 @@ public class ReachabilityNode {
             this.depth = 0;
         }
     }
+
+    // public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev, double  probability) {
+    //     this.marking = marking;
+    //     this.prev = prev;
+    //     if (prev == null) {
+    //         this.depth = 0;
+    //     }
+    //     this.probability = probability;
+    // }
 
     /**
      * @return the marking.
@@ -95,5 +107,44 @@ public class ReachabilityNode {
             }
         }
         return true;
+    }
+
+    public boolean strictlyequals(ReachabilityNode other){
+        if (!this.equals(other)){
+            return false;
+        }
+        if (prev == null && other.getPrev() == null){
+            return true;
+        }
+        if (prev == null || other.getPrev() == null){
+            return false;
+        }
+        return prev.equals(other.getPrev());
+    }
+
+    // @Override
+    // public int hashCode() {
+    //     int result = 17;
+
+    //     // 标记部分哈希
+    //     for (Map.Entry<Place, Long> entry : marking.entrySet()) {
+    //         result = 31 * result + entry.getKey().hashCode();
+    //         result = 31 * result + entry.getValue().hashCode();
+    //     }
+
+    //     // 如果路径也需要考虑，则加上 prev 的 hash
+    //     if (prev != null) {
+    //         result = 31 * result + prev.hashCode();
+    //     }
+
+    //     return result;
+    // }
+
+    public double getProbability() {
+        return probability;
+    }
+
+    public void setProbability(double probability) {
+        this.probability = probability;
     }
 }

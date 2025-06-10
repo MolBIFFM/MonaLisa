@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SimulationSetup>
+  <places>
+    <place id="0" isConstant="false" name="P1" nrOfTokens="2"/>
+    <place id="1" isConstant="false" name="P2" nrOfTokens="0"/>
+    <place id="2" isConstant="false" name="P3" nrOfTokens="0"/>
+    <place id="3" isConstant="false" name="P4" nrOfTokens="0"/>
+  </places>
+  <transitions>
+    <transition firingRate="0.4" id="0" name="T1"/>
+    <transition firingRate="0.1" id="1" name="T2"/>
+    <transition firingRate="1" id="2" name="T3"/>
+  </transitions>
+</SimulationSetup>

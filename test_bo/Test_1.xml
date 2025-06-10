@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!-- Created by MonaLisa version MonaLisa 1.1.2 on 2025-04-22 at 23:19:12 CEST with JSBML version 1.4. -->
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" layout:required="false" level="3" version="1" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+  <model id="MonaLisaExport">
+    <layout:listOfLayouts xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <layout:layout>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="SGP1" layout:species="P1">
+            <layout:boundingBox>
+              <layout:position layout:x="440" layout:y="370" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SGP3" layout:species="P3">
+            <layout:boundingBox>
+              <layout:position layout:x="720" layout:y="320" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SGP4" layout:species="P4">
+            <layout:boundingBox>
+              <layout:position layout:x="720" layout:y="430" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SGP7" layout:species="P7">
+            <layout:boundingBox>
+              <layout:position layout:x="920" layout:y="370" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfReactionGlyphs>
+          <layout:reactionGlyph layout:id="RGT2" layout:reaction="T2">
+            <layout:boundingBox>
+              <layout:position layout:x="570" layout:y="320" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="RGT5" layout:reaction="T5">
+            <layout:boundingBox>
+              <layout:position layout:x="580" layout:y="430" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="RGT6" layout:reaction="T6">
+            <layout:boundingBox>
+              <layout:position layout:x="820" layout:y="370" layout:z="0"/>
+            </layout:boundingBox>
+          </layout:reactionGlyph>
+        </layout:listOfReactionGlyphs>
+      </layout:layout>
+    </layout:listOfLayouts>
+    <listOfSpecies>
+      <species boundaryCondition="false" constant="false" hasOnlySubstanceUnits="true" id="P1" initialAmount="2" name="P1"/>
+      <species boundaryCondition="false" constant="false" hasOnlySubstanceUnits="true" id="P3" initialAmount="0" name="P2"/>
+      <species boundaryCondition="false" constant="false" hasOnlySubstanceUnits="true" id="P4" initialAmount="0" name="P3"/>
+      <species boundaryCondition="false" constant="false" hasOnlySubstanceUnits="true" id="P7" initialAmount="0" name="P4"/>
+    </listOfSpecies>
+    <listOfReactions>
+      <reaction fast="false" id="T2" name="T1" reversible="false">
+        <listOfReactants>
+          <speciesReference constant="true" species="P1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" species="P3" stoichiometry="1"/>
+        </listOfProducts>
+      </reaction>
+      <reaction fast="false" id="T5" name="T2" reversible="false">
+        <listOfReactants>
+          <speciesReference constant="true" species="P1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" species="P4" stoichiometry="2"/>
+        </listOfProducts>
+      </reaction>
+      <reaction fast="false" id="T6" name="T3" reversible="false">
+        <listOfReactants>
+          <speciesReference constant="true" species="P3" stoichiometry="1"/>
+          <speciesReference constant="true" species="P4" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference constant="true" species="P7" stoichiometry="1"/>
+        </listOfProducts>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

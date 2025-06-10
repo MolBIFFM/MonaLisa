@@ -119,6 +119,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         stochreachButton = new javax.swing.JButton();
+        stochpathButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -248,6 +249,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
+        stochpathButton.setText("Stochastic Full Path");
+        stochpathButton.setEnabled(false);
+        stochpathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stochpathButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -292,7 +301,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                             .addComponent(jLabel1)
                             .addComponent(progressLabel)
                             .addComponent(algoLabel)
-                            .addComponent(stochreachButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(stochreachButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(stochpathButton)))
                         .addGap(0, 110, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -333,8 +345,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addComponent(computeButton)
                     .addComponent(stopButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(stochreachButton)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(stochreachButton)
+                    .addComponent(stochpathButton))
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         pack();
@@ -405,6 +419,13 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         pf.run();
     }//GEN-LAST:event_stochreachButtonActionPerformed
 
+    private void stochpathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stochpathButtonActionPerformed
+        updateMarkings();
+        pf = new Pathfinder(pnf, start, target, capacities, knockouts, "StochFullPath", firingRates);
+        pf.addListenerToAlgorithm(this);
+        pf.run();
+    }//GEN-LAST:event_stochpathButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JRadioButton aStarRButton;
     private javax.swing.JLabel algoLabel;
@@ -425,6 +446,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JButton reachButton;
     private javax.swing.JLabel startLabel;
     private javax.swing.JRadioButton stochastarRButton;
+    private javax.swing.JButton stochpathButton;
     private javax.swing.JButton stochreachButton;
     private javax.swing.JButton stopButton;
     private javax.swing.JScrollPane tableScrollPane;
@@ -490,6 +512,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         stochastarRButton.setEnabled(!b);
         firingrateButton.setEnabled(!b);
         stochreachButton.setEnabled(!b);
+        stochpathButton.setEnabled(!b);
     }
 
     @Override
@@ -539,6 +562,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         this.firingRatesImported = true;
         stochreachButton.setEnabled(firingRatesImported);
         stochastarRButton.setEnabled(firingRatesImported);
+        stochpathButton.setEnabled(firingRatesImported);
         // System.out.println("In setFiringRates, firingRatesImported set to true.");
         // System.out.println("Firing rates updated in ReachabilityDialog:");
         // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {

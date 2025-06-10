@@ -20,6 +20,7 @@ import java.util.Map;
 import monalisa.addons.reachability.algorithms.AbstractReachabilityAlgorithm;
 import monalisa.addons.reachability.algorithms.FullCoverability;
 import monalisa.addons.reachability.algorithms.FullReachability;
+import monalisa.addons.reachability.algorithms.StochFullPath;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PetriNetFacade;
 import monalisa.data.pn.Place;
@@ -159,6 +160,10 @@ public class Pathfinder {
                     this.algorithm = new StochFullReach(this, pnf, marking, target, firingRates);
                     break;
                 }
+                case "StochFullPath": {
+                    this.algorithm = new StochFullPath(this, pnf, marking, target, firingRates);
+                    break;
+                }
                 default:
                     this.algorithm = null;
                     break;
@@ -195,7 +200,7 @@ public class Pathfinder {
         return activeTransitions;
     }
 
-    // only for active transition
+    // used for stochastic petri net and active transition
     public double computeReactionRate(Transition t, HashMap<Place, Long> marking, HashMap<Transition, Double> firingRates) {
         long h = 1;
         for ( Place p : t.inputs()) {

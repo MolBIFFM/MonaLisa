@@ -1,8 +1,11 @@
 package monalisa.addons.reachability.algorithms;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityEdge;
 import monalisa.addons.reachability.ReachabilityEvent;
@@ -19,12 +22,12 @@ import org.apache.logging.log4j.Logger;
  *
  * @author Bo
  */
-public class StochFullReach extends AbstractReachabilityAlgorithm{
+public class StochFullPath extends AbstractReachabilityAlgorithm{
     // private static final Logger LOGGER = LogManager.getLogger(FullReachability.class);
     private final PetriNetFacade pnf;
     private final HashMap<Transition, Double> firingRates; 
 
-    public StochFullReach(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target, 
+    public StochFullPath(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target, 
     HashMap<Transition, Double> firingRates) {
         super(pf, marking, target);
         this.pnf = pnf;
@@ -55,8 +58,13 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             }
             // get a node to expand
             ReachabilityNode workingNode = workingList.get(0);
-            // System.out.println("Depth: "+workingNode.getDepth());
             workingList.remove(workingNode);
+            // set the depth of search
+            if (workingNode.getDepth() >= 5){
+                    depthLimitReached = true;
+                    //clear the working list
+                    break;
+                }
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             if(activeTransitions.isEmpty()){
                 leafNodes.add(workingNode);
@@ -80,21 +88,20 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
                 newNode.setProbability(prob_node);
                 // check for the loop
-                boolean isCycle = false;
-                ReachabilityNode cycleCheck = workingNode;
-                while (cycleCheck != null) {
-                    if (newNode.equals(cycleCheck)) {
-                        isCycle = true;
-                        break;
-                    }
-                    cycleCheck = cycleCheck.getPrev();
-                }
-                if (isCycle) {
-                    edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-                    counter -= 1; // do not count this node
-                    // do not add further node to working list
-                    continue;
-                }
+                // boolean isCycle = false;
+                // ReachabilityNode cycleCheck = workingNode;
+                // while (cycleCheck != null) {
+                //     if (newNode.equals(cycleCheck)) {
+                //         isCycle = true;
+                //         break;
+                //     }
+                //     cycleCheck = cycleCheck.getPrev();
+                // }
+                // if (isCycle) {
+                //     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
+                //     counter -= 1; // do not count this node
+                //     continue;// do not add further node to working list
+                // }
                 // Check for boundedness
                 ReachabilityNode mBack = workingNode;
                 while ((mBack != null) && (!newNode.largerThan(mBack))) {
@@ -106,23 +113,8 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                     return;
                 } else {
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-//                     System.out.println("Transition: "+t.toString()+"; Probability: " + probability);
-//                     System.out.println("------------------------------");
-                    boolean unvisited = true;
-                    for (ReachabilityNode v : vertices) {
-                        if (v.equals(newNode)) {
-                            // converging node
-                            if (!v.strictlyequals(newNode)){
-                                unvisited = false;
-                                v.setProbability(v.getProbability()+prob_node);
-                                // break;
-                            }
-                        }
-                    }
-                    if (unvisited) {
-                        vertices.add(newNode);
-                        workingList.add(newNode);
-                    }
+                    vertices.add(newNode);
+                    workingList.add(newNode);
                 }
             }
         }
@@ -134,8 +126,9 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             g = new ReachabilityGraph(vertices, edges);
             // System.out.println("vertices has "+vertices.size()+" nodes");
             System.out.println("=== Reachability Nodes (Vertices) ===");
-            
-            for (ReachabilityNode node : vertices) {
+            List<ReachabilityNode> sortedNodes = new ArrayList<>(vertices);
+            sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
+            for (ReachabilityNode node : sortedNodes) {
                 StringBuilder sb = new StringBuilder("Marking: ");
                 sb.append("( ");
                 for (Place p : node.getMarking().keySet()) {
@@ -148,9 +141,9 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             StringBuilder sb = new StringBuilder("Transitions: ");
             for (ReachabilityEdge edge : edges) {
                 sb.append(edge.getTransition().toString())
-                //   .append(", ")
+                //   .append(":")
                 //   .append(firingRates.get(edge.getTransition()))
-                  .append(", ");
+                  .append(",  ");
             }
             System.out.println(sb.toString());
             HashMap<ReachabilityNode, ArrayList<Transition>> paths = new HashMap<>();
@@ -165,7 +158,6 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                 // }
                 // System.out.println();
             }
-            // System.out.flush();
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }

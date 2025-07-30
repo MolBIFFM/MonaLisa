@@ -206,6 +206,15 @@ public class FiringrateFrame extends javax.swing.JFrame {
         for (int i = 0; i < model.getRowCount(); i++) {
             Transition t = (Transition) model.getValueAt(i, 0);
             double rate = Double.parseDouble(model.getValueAt(i, 1).toString());
+
+            if (rate == 0.0) {
+                int result = JOptionPane.showConfirmDialog(this,
+                        "Firing rate is 0.0 for transition \"" + t.toString() + "\". Do you want to continue?",
+                    "Zero Firing Rate",
+                        JOptionPane.YES_NO_OPTION);
+                if (result != JOptionPane.YES_OPTION) return;
+            }
+
             firingRates.put(t, rate);
         }
 

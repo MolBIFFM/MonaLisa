@@ -45,6 +45,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private final PInvariants pinvs;
     private HashSet<Transition> knockouts;
     private HashMap<Transition, Double> firingRates = new HashMap<>();
+    private int maxDepth;
 
     /**
      * Creates new form ReachabilityDialog
@@ -84,7 +85,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         bestRButton.addActionListener(this);
         bestRButton.setActionCommand("Best First Search");
         stochastarRButton.addActionListener(this);
-        stochastarRButton.setActionCommand("AplusG");
+        stochastarRButton.setActionCommand("StochAStar");
         LOGGER.info("Successfully initialized ReachabilityDialog.");
     }
 
@@ -120,6 +121,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         jRadioButton2 = new javax.swing.JRadioButton();
         stochreachButton = new javax.swing.JButton();
         stochpathButton = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -257,6 +260,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
+        jLabel2.setText("Max Depth:");
+
+        jTextField1.setColumns(10);
+        jTextField1.setText("-1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -289,22 +297,27 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                             .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(reachButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(coverButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(computeButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(stopButton))
                             .addComponent(comboHeuristic, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
                             .addComponent(progressLabel)
                             .addComponent(algoLabel)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(stochreachButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(stochpathButton)))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(stochreachButton)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(stochpathButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(reachButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(coverButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(computeButton)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(stopButton))))
                         .addGap(0, 110, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -347,7 +360,9 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stochreachButton)
-                    .addComponent(stochpathButton))
+                    .addComponent(stochpathButton)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(86, Short.MAX_VALUE))
         );
 
@@ -374,7 +389,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         updateMarkings();
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoRadioGroup.getSelection().getActionCommand();
-        if (algo.equals("Breadth First Search")) {
+        if(algo.equals("StochAStar")){
+            pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, firingRates);
+        }
+        else if (algo.equals("Breadth First Search")) {
             pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo);
         } else {
             pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, (String) comboHeuristic.getSelectedItem());
@@ -421,7 +439,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
 
     private void stochpathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stochpathButtonActionPerformed
         updateMarkings();
-        pf = new Pathfinder(pnf, start, target, capacities, knockouts, "StochFullPath", firingRates);
+        maxDepth  = Integer.parseInt(jTextField1.getText().trim());
+        pf = new Pathfinder(pnf, start, target, capacities, knockouts, "StochFullPath", firingRates, maxDepth);
         pf.addListenerToAlgorithm(this);
         pf.run();
     }//GEN-LAST:event_stochpathButtonActionPerformed
@@ -438,8 +457,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JButton coverButton;
     private javax.swing.JButton firingrateButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton knockoutButton;
     private javax.swing.JTable markingTable;
     private javax.swing.JLabel progressLabel;
@@ -472,11 +493,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 comboHeuristic.setEnabled(false);
                 comboHeuristic.removeAllItems();
                 break;
-            case "AplusG":
-                comboHeuristic.setEnabled(true);
-                comboHeuristic.removeAllItems();
-                comboHeuristic.addItem("Default");
-                break;
+            // case "StochAStar":
+            //     comboHeuristic.setEnabled(true);
+            //     comboHeuristic.removeAllItems();
+            //     comboHeuristic.addItem("Default");
+            //     break;
             default:
                 break;
         }
@@ -554,6 +575,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 break;
         }
     }
+
     private boolean firingRatesImported = false;
     
     protected void setFiringRates(HashMap<Transition, Double> firingRates) {
@@ -561,18 +583,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         this.firingRates.putAll(firingRates);
         this.firingRatesImported = true;
         stochreachButton.setEnabled(firingRatesImported);
-        stochastarRButton.setEnabled(firingRatesImported);
         stochpathButton.setEnabled(firingRatesImported);
+        stochastarRButton.setEnabled(firingRatesImported);
         // System.out.println("In setFiringRates, firingRatesImported set to true.");
         // System.out.println("Firing rates updated in ReachabilityDialog:");
         // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
         //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
         // }
     }
-
-    // protected boolean isFiringRatesImported() {
-    //     return firingRatesImported;
-    // }
 
     protected void setCapacities(HashMap<Place, Long> caps) {
         this.capacities.putAll(caps);

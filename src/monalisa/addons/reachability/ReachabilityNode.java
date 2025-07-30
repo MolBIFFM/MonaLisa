@@ -6,9 +6,11 @@
 package monalisa.addons.reachability;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import monalisa.data.pn.Place;
+// import monalisa.addons.reachability.ReachabilityLoop;
 
 /**
  *
@@ -21,6 +23,7 @@ public class ReachabilityNode {
     private double priority = 0;
     private int depth;
     private double probability;
+    private double time;
 
     public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev) {
         this.marking = marking;
@@ -122,6 +125,22 @@ public class ReachabilityNode {
         return prev.equals(other.getPrev());
     }
 
+//    public boolean extremlyequals(ReachabilityNode other) {
+//    ReachabilityNode thisNode = this;
+//    ReachabilityNode otherNode = other;
+//
+//    while (thisNode != null && otherNode != null) {
+//        if (!thisNode.equals(otherNode)) {
+//            return false;
+//        }
+//        thisNode = thisNode.getPrev();
+//        otherNode = otherNode.getPrev();
+//    }
+//
+//    // If both reached null at the same time, paths are identical
+//    return thisNode == null && otherNode == null;
+//    }
+    
     // @Override
     // public int hashCode() {
     //     int result = 17;
@@ -146,5 +165,37 @@ public class ReachabilityNode {
 
     public void setProbability(double probability) {
         this.probability = probability;
+    }
+
+    // public boolean inAnyLoop(List<ReachabilityLoop> loops) {
+    //     for (ReachabilityLoop loop : loops) {
+    //         if (loop.contains(this)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    /**check if the marking of this node is in any loop
+     */
+    public boolean inAnyLoop() {
+        ReachabilityNode mBack = this.getPrev();
+        while (mBack != null) {
+            if (this.equals(mBack)) {
+                return true;
+            }
+            mBack = mBack.getPrev();
+        }
+        return false;
+    }
+
+    /**get the accumulated reaction time
+     */
+    public double getTime(){
+        return time;
+    }
+
+    public void setTime(double time){
+        this.time = time;
     }
 }

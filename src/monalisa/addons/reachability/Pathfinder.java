@@ -20,6 +20,7 @@ import java.util.Map;
 import monalisa.addons.reachability.algorithms.AbstractReachabilityAlgorithm;
 import monalisa.addons.reachability.algorithms.FullCoverability;
 import monalisa.addons.reachability.algorithms.FullReachability;
+import monalisa.addons.reachability.algorithms.StochAStar;
 import monalisa.addons.reachability.algorithms.StochFullPath;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PetriNetFacade;
@@ -47,6 +48,7 @@ public class Pathfinder {
     private final boolean capacities_active;
     private final HashSet<Transition> transitions;
     private HashMap<Transition, Double> firingRates;
+    private int maxDepth; // -1 for infinite depth, used in StochFullPath
 
     /**
      * Constructor used for algorithms without a heuristic.
@@ -125,6 +127,27 @@ public class Pathfinder {
         // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
     }
 
+    public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities, HashSet<Transition> knockouts, String alg, 
+    HashMap<Transition, Double> firingRates, int maxDepth) {
+        // LOGGER.info("Initializing pathfinder for reachability analysis without a heuristic.");
+        this.pnf = pnf;
+        this.marking = new HashMap<>();
+        this.marking.putAll(marking);
+        this.target = new HashMap<>();
+        this.target.putAll(target);
+        this.capacities = capacities;
+        this.capacities_active = checkCapacityActive();
+        this.transitions = new HashSet<>();
+        this.transitions.addAll(pnf.transitions());
+        this.transitions.removeAll(knockouts);
+        this.alg = alg;
+        this.firingRates = new HashMap<>();
+        this.firingRates.putAll(firingRates);
+        this.maxDepth = maxDepth;
+        initializeAlgorithm(alg, null);
+        // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
+    }
+
     private void initializeAlgorithm(String alg, String heuristic) {
         LOGGER.info("Initializing algorithm: " + alg + ".");
         if (heuristic != null) {
@@ -137,9 +160,6 @@ public class Pathfinder {
                 case "Best First Search":
                     this.algorithm = new BestFirst(this, marking, target, heuristic);
                     break;
-                // case "AplusG":
-                //     this.algorithm = new AplusG(this, marking, target);
-                //     break;
             }
         } else {
             if (alg == null) return;
@@ -161,7 +181,11 @@ public class Pathfinder {
                     break;
                 }
                 case "StochFullPath": {
-                    this.algorithm = new StochFullPath(this, pnf, marking, target, firingRates);
+                    this.algorithm = new StochFullPath(this, pnf, marking, target, firingRates, maxDepth);
+                    break;
+                }
+                case "StochAStar": {
+                    this.algorithm = new StochAStar(this, marking, target, firingRates);
                     break;
                 }
                 default:

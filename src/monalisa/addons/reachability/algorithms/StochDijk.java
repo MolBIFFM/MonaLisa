@@ -18,13 +18,13 @@ import monalisa.data.pn.Transition;
  * @author Bo
  */
 
-public class StochAStar extends AbstractReachabilityAlgorithm {
+public class StochDijk extends AbstractReachabilityAlgorithm {
 
     // private final PetriNetFacade pnf;
     // private final String heur;
     private final HashMap<Transition, Double> firingRates; 
 
-    public StochAStar(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target,
+    public StochDijk(Pathfinder pf, HashMap<Place, Long> marking, HashMap<Place, Long> target,
             HashMap<Transition, Double> firingRates) // String heur,  PetriNetFacade pnf,
             {
         super(pf, marking, target);
@@ -42,7 +42,8 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         // initialize for m0 as root
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
-        root.setTime(0);
+        // root.setTime(0);
+        root.setCost(0);
         tar = new ReachabilityNode(target, null);
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         workingList.add(root);
@@ -70,16 +71,19 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 // LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                double probability = rates.get(t) / ratesSum;
-                double prob_node = workingNode.getProbability() * probability;
+                double prob_t = rates.get(t) / ratesSum;
+                double prob_node = workingNode.getProbability() * prob_t;
                 newNode.setProbability(prob_node);
-                double reactionTime = 1 / rates.get(t);
-                newNode.setTime(workingNode.getTime() + reactionTime);
+                double cost_t = -Math.log(prob_t);//priority for Dijkstra's algorithm
+                double newCost = workingNode.getCost() + cost_t;
+                newNode.setCost(newCost);
+                // double reactionTime = 1 / rates.get(t);
+                // newNode.setTime(workingNode.getTime() + reactionTime);
                 if (newNode.equals(tar)) {
                     System.out.println("Probability of this path to target: " + newNode.getProbability());
                     tar = newNode;
                     vertices.add(tar);
-                    edges.add(new ReachabilityEdge(workingNode, tar, t, probability));
+                    edges.add(new ReachabilityEdge(workingNode, tar, t, prob_t));
                     g = new ReachabilityGraph(vertices, edges);
                     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());                    
                     // LOGGER.debug("Target marking has been reached.");
@@ -90,11 +94,11 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 for (ReachabilityNode v : vertices) {
                     if (v.equals(newNode)) {
                         unvisited = false;
-                        edges.add(new ReachabilityEdge(workingNode, v, t, probability));
+                        edges.add(new ReachabilityEdge(workingNode, v, t, prob_t));
                         // Potentially update depth
-                        if (v.getTime() > newNode.getTime()) {
+                        if (v.getCost() > newNode.getCost()) {
                             v.setPrev(workingNode);
-                            v.setTime(newNode.getTime());
+                            v.setCost(newCost);
                             v.setProbability(prob_node);
                         }
                         break;
@@ -104,15 +108,15 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 if (unvisited) {
                     insertNode(newNode, workingList);
                     vertices.add(newNode);
-                    edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
+                    edges.add(new ReachabilityEdge(workingNode, newNode, t, prob_t));
                 } // If it has been seen before, check if it has been expanded yet
                 else {
                     for (ReachabilityNode v : workingList) {
                         if (v.equals(newNode)) {
                             // If it hasn't been expanded, the priority might have to be updated.
-                            if (v.getTime() > newNode.getTime()) {
+                            if (v.getCost() > newNode.getCost()) {
                                 v.setPrev(workingNode);
-                                v.setTime(newNode.getTime());
+                                v.setCost(newCost);
                                 v.setProbability(prob_node);
                                 updatePosition(v, workingList);
                                 break;
@@ -148,34 +152,6 @@ private void updatePosition(ReachabilityNode node, ArrayList<ReachabilityNode> w
 
     @Override
     public void computePriority(ReachabilityNode node) {
-        // double prio = node.getDepth();
-        double prio = node.getTime();
-        HashMap<Place, Long> diff = tar.getDifference(node);
-        HashSet<Double> placewise = new HashSet<>();
-        for (Place p : tar.getMarking().keySet()) {
-            HashSet<Double> intermediate = new HashSet<>();
-            ArrayList<Transition> validTransitions = new ArrayList<>();
-            // The place still has too many tokens compared to the target marking
-            // LOGGER.debug(p.getProperty("name") + "\t" + diff.get(p));
-            if (diff.get(p) < 0) {
-                validTransitions.addAll(p.outputs());
-                for (Transition t : validTransitions) {
-                    // intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
-                    intermediate.add(Math.floor(diff.get(p) / (-1 * pf.computeReactionRate(t, node.getMarking(), firingRates))));
-                }
-                placewise.add(Collections.min(intermediate));                
-            } // The place still has too few tokens compared to the target marking
-            else if (diff.get(p) > 0) {
-                validTransitions.addAll(p.inputs());
-                for (Transition t : validTransitions) {
-                    // intermediate.add(Math.floor(diff.get(p) / pnf.getArc(t, p).weight()));
-                    intermediate.add(Math.floor(diff.get(p) / pf.computeReactionRate(t, node.getMarking(), firingRates)));
-                }
-                placewise.add(Collections.min(intermediate));                
-            }
-        }
-        // LOGGER.debug("Depth: " + Double.toString(prio) + " Heur: " + Double.toString(Collections.max(placewise)));
-        prio += Collections.max(placewise); // Add heuristic
-        node.setPriority(prio);
+       node.setPriority(node.getCost());
     }
 }

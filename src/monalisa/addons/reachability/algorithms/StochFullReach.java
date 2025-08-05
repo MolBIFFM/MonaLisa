@@ -45,8 +45,8 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         root.setProbability(1);
         workingList.add(root);
         vertices.add(root);
-        boolean depthLimitReached = false;
-        while (!workingList.isEmpty() && !isInterrupted() && !depthLimitReached) {
+        // boolean depthLimitReached = false;//&& !depthLimitReached
+        while (!workingList.isEmpty() && !isInterrupted() ) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
             if (counter % 100 == 0) {

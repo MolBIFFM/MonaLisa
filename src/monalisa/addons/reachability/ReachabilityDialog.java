@@ -86,6 +86,8 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         bestRButton.setActionCommand("Best First Search");
         stochastarRButton.addActionListener(this);
         stochastarRButton.setActionCommand("StochAStar");
+        dijkstraRButton.addActionListener(this);
+        dijkstraRButton.setActionCommand("Dijkstra");
         LOGGER.info("Successfully initialized ReachabilityDialog.");
     }
 
@@ -117,7 +119,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         knockoutButton = new javax.swing.JButton();
         stochastarRButton = new javax.swing.JRadioButton();
         firingrateButton = new javax.swing.JButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        dijkstraRButton = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         stochreachButton = new javax.swing.JButton();
         stochpathButton = new javax.swing.JButton();
@@ -238,8 +240,9 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
-        jRadioButton1.setText("jRadioButton1");
-        jRadioButton1.setEnabled(false);
+        algoRadioGroup.add(dijkstraRButton);
+        dijkstraRButton.setText("Dijkstra");
+        dijkstraRButton.setEnabled(false);
 
         jRadioButton2.setText("jRadioButton2");
         jRadioButton2.setEnabled(false);
@@ -286,7 +289,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(bestRButton)
-                                    .addComponent(jRadioButton1))
+                                    .addComponent(dijkstraRButton))
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(stochastarRButton)
@@ -343,7 +346,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stochastarRButton)
-                    .addComponent(jRadioButton1)
+                    .addComponent(dijkstraRButton)
                     .addComponent(jRadioButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
@@ -389,7 +392,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         updateMarkings();
         LOGGER.info("Requested computation of a path from start to target marking.");
         String algo = algoRadioGroup.getSelection().getActionCommand();
-        if(algo.equals("StochAStar")){
+        if(algo.equals("StochAStar") || algo.equals("Dijkstra")){
             pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, firingRates);
         }
         else if (algo.equals("Breadth First Search")) {
@@ -455,10 +458,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JComboBox<String> comboHeuristic;
     private javax.swing.JButton computeButton;
     private javax.swing.JButton coverButton;
+    private javax.swing.JRadioButton dijkstraRButton;
     private javax.swing.JButton firingrateButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JButton knockoutButton;
@@ -493,11 +496,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                 comboHeuristic.setEnabled(false);
                 comboHeuristic.removeAllItems();
                 break;
-            // case "StochAStar":
-            //     comboHeuristic.setEnabled(true);
-            //     comboHeuristic.removeAllItems();
-            //     comboHeuristic.addItem("Default");
-            //     break;
             default:
                 break;
         }
@@ -585,6 +583,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         stochreachButton.setEnabled(firingRatesImported);
         stochpathButton.setEnabled(firingRatesImported);
         stochastarRButton.setEnabled(firingRatesImported);
+        dijkstraRButton.setEnabled(firingRatesImported);
         // System.out.println("In setFiringRates, firingRatesImported set to true.");
         // System.out.println("Firing rates updated in ReachabilityDialog:");
         // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {

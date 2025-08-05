@@ -21,6 +21,7 @@ import monalisa.addons.reachability.algorithms.AbstractReachabilityAlgorithm;
 import monalisa.addons.reachability.algorithms.FullCoverability;
 import monalisa.addons.reachability.algorithms.FullReachability;
 import monalisa.addons.reachability.algorithms.StochAStar;
+import monalisa.addons.reachability.algorithms.StochDijk;
 import monalisa.addons.reachability.algorithms.StochFullPath;
 import monalisa.data.pn.PInvariant;
 import monalisa.data.pn.PetriNetFacade;
@@ -186,6 +187,10 @@ public class Pathfinder {
                 }
                 case "StochAStar": {
                     this.algorithm = new StochAStar(this, marking, target, firingRates);
+                    break;
+                }
+                case "Dijkstra": {
+                    this.algorithm = new StochDijk(this, marking, target, firingRates);
                     break;
                 }
                 default:

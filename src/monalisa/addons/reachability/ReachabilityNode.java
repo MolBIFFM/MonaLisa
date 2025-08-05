@@ -23,7 +23,8 @@ public class ReachabilityNode {
     private double priority = 0;
     private int depth;
     private double probability;
-    private double time;
+    private double time; // for StochAStar, but not real time
+    private double cost; //for Dijkstra's algorithm
 
     public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev) {
         this.marking = marking;
@@ -197,5 +198,13 @@ public class ReachabilityNode {
 
     public void setTime(double time){
         this.time = time;
+    }
+
+    public double getCost(){
+        return cost;
+    }
+
+    public void setCost(double cost){
+        this.cost = cost;
     }
 }

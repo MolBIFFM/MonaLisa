@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SimulationSetup>
+  <places>
+    <place id="0" isConstant="false" name="MediumGen" nrOfTokens="2000"/>
+    <place id="1" isConstant="false" name="SalMediumStart" nrOfTokens="0"/>
+    <place id="2" isConstant="false" name="SalMedium" nrOfTokens="0"/>
+    <place id="3" isConstant="false" name="SalSurface" nrOfTokens="0"/>
+    <place id="4" isConstant="false" name="NrRuffle" nrOfTokens="0"/>
+    <place id="5" isConstant="false" name="CapSurface" nrOfTokens="1"/>
+    <place id="6" isConstant="false" name="SalRuffle" nrOfTokens="0"/>
+    <place id="7" isConstant="false" name="CellCyt" nrOfTokens="0"/>
+    <place id="8" isConstant="false" name="SalCyt" nrOfTokens="0"/>
+    <place id="9" isConstant="false" name="SalVac" nrOfTokens="0"/>
+    <place id="10" isConstant="false" name="DiviCyt" nrOfTokens="0"/>
+    <place id="11" isConstant="false" name="DiviVac" nrOfTokens="0"/>
+    <place id="12" isConstant="false" name="Decision" nrOfTokens="1"/>
+    <place id="13" isConstant="false" name="CellVac" nrOfTokens="0"/>
+    <place id="14" isConstant="false" name="CapCyt" nrOfTokens="700"/>
+    <place id="15" isConstant="false" name="CapVac" nrOfTokens="150"/>
+    <place id="16" isConstant="false" name="SigCyt1" nrOfTokens="1"/>
+    <place id="17" isConstant="false" name="SigVac" nrOfTokens="1"/>
+    <place id="18" isConstant="false" name="AdaIniCyt" nrOfTokens="0"/>
+    <place id="19" isConstant="false" name="AdaIniVac" nrOfTokens="0"/>
+    <place id="20" isConstant="false" name="AdaCyt" nrOfTokens="0"/>
+    <place id="21" isConstant="false" name="AdaVac" nrOfTokens="0"/>
+    <place id="22" isConstant="false" name="DeathSigCyt" nrOfTokens="0"/>
+    <place id="23" isConstant="false" name="DeathSigVac" nrOfTokens="0"/>
+    <place id="24" isConstant="false" name="WashSig" nrOfTokens="0"/>
+    <place id="25" isConstant="false" name="WashCounter" nrOfTokens="0"/>
+    <place id="26" isConstant="false" name="WashIni" nrOfTokens="1"/>
+    <place id="27" isConstant="false" name="SigCyt2" nrOfTokens="1"/>
+    <place id="28" isConstant="false" name="XenoIni" nrOfTokens="0"/>
+    <place id="29" isConstant="false" name="XenoEnd" nrOfTokens="0"/>
+    <place id="30" isConstant="false" name="XenoIniCounter" nrOfTokens="0"/>
+    <place id="31" isConstant="false" name="XenoSig" nrOfTokens="0"/>
+    <place id="32" isConstant="false" name="XenoEndCounter" nrOfTokens="0"/>
+  </places>
+  <transitions>
+    <transition firingRate="975.0" id="0" name="remove"/>
+    <transition firingRate="25.0" id="1" name="add"/>
+    <transition firingRate="0.0019" id="2" name="firstlanding"/>
+    <transition firingRate="0.0384" id="3" name="landing"/>
+    <transition firingRate="0.67" id="4" name="take_off"/>
+    <transition firingRate="0.004" id="5" name="enter_cyt"/>
+    <transition firingRate="0.005" id="6" name="joining"/>
+    <transition firingRate="5.0E-4" id="7" name="initiation"/>
+    <transition firingRate="1000.0" id="8" name="cap_reached"/>
+    <transition firingRate="0.006" id="9" name="stay_vac"/>
+    <transition firingRate="5.95E-7" id="10" name="pro_cyt"/>
+    <transition firingRate="4.11E-7" id="11" name="pro_vac"/>
+    <transition firingRate="350.0" id="12" name="cell_cyt"/>
+    <transition firingRate="650.0" id="13" name="cell_vac"/>
+    <transition firingRate="1000.0" id="14" name="divi_cyt"/>
+    <transition firingRate="1000.0" id="15" name="divi_vac"/>
+    <transition firingRate="1000.0" id="16" name="adasig_cyt"/>
+    <transition firingRate="1000.0" id="17" name="adasig_vac"/>
+    <transition firingRate="0.167" id="18" name="ada_cyt"/>
+    <transition firingRate="0.036" id="19" name="ada_vac"/>
+    <transition firingRate="1000.0" id="20" name="death_cyt1"/>
+    <transition firingRate="1000.0" id="21" name="death_vac1"/>
+    <transition firingRate="1000.0" id="22" name="death_cyt2"/>
+    <transition firingRate="1000.0" id="23" name="death_vac2"/>
+    <transition firingRate="1000.0" id="24" name="death2"/>
+    <transition firingRate="1000.0" id="25" name="death1"/>
+    <transition firingRate="1000.0" id="26" name="washing1"/>
+    <transition firingRate="1000.0" id="27" name="washing2"/>
+    <transition firingRate="1000.0" id="28" name="washing3"/>
+    <transition firingRate="1000.0" id="29" name="wash_start"/>
+    <transition firingRate="1.67" id="30" name="wash_count"/>
+    <transition firingRate="1000.0" id="31" name="xeno_sig"/>
+    <transition firingRate="3.7E-4" id="32" name="xeno_deg"/>
+    <transition firingRate="1000" id="33" name="xeno_ini"/>
+    <transition firingRate="0.56" id="34" name="xeno_ini_count"/>
+    <transition firingRate="0.069" id="35" name="xeno_end_count"/>
+    <transition firingRate="1000" id="36" name="xeno_end"/>
+  </transitions>
+</SimulationSetup>

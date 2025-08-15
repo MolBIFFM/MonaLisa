@@ -96,15 +96,15 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                     continue;
                 }
                 // Check for boundedness
-                ReachabilityNode mBack = workingNode;
-                while ((mBack != null) && (!newNode.largerThan(mBack))) {
-                    mBack = mBack.getPrev();
-                }
-                if (mBack != null) {
-                    // LOGGER.error("Graph has been determined to be unbounded. Aborting algorithm.");
-                    fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
-                    return;
-                } else {
+                // ReachabilityNode mBack = workingNode;
+                // while ((mBack != null) && (!newNode.largerThan(mBack))) {
+                //     mBack = mBack.getPrev();
+                // }
+                // if (mBack != null) {
+                //     // LOGGER.error("Graph has been determined to be unbounded. Aborting algorithm.");
+                //     fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
+                //     return;
+                // } else {
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
 //                     System.out.println("Transition: "+t.toString()+"; Probability: " + probability);
 //                     System.out.println("------------------------------");
@@ -123,7 +123,7 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                         vertices.add(newNode);
                         workingList.add(newNode);
                     }
-                }
+                // }
             }
         }
         if (isInterrupted()) {

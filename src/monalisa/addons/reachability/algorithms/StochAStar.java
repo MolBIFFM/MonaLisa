@@ -35,6 +35,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
     @Override
     public void run() {
         // LOGGER.debug("Starting AplusG Algorithm.");
+        System.out.println("\nStarting Stochastic A* Algorithm.");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
         int counter = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
@@ -58,6 +59,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
             vertices.add(workingNode);
             // LOGGER.debug("Expanding new marking with priority " + workingNode.getPriority());
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
+            // System.out.println("activeTransitions: "+activeTransitions);
             HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
             for (Transition t : activeTransitions) {
@@ -102,6 +104,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 }
                 // If it hasn't been seen before, add it to vertices and workingList
                 if (unvisited) {
+                    // System.out.println("Current transition:" +t.toString());
                     insertNode(newNode, workingList);
                     vertices.add(newNode);
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
@@ -158,22 +161,36 @@ private void updatePosition(ReachabilityNode node, ArrayList<ReachabilityNode> w
             // The place still has too many tokens compared to the target marking
             // LOGGER.debug(p.getProperty("name") + "\t" + diff.get(p));
             if (diff.get(p) < 0) {
-                validTransitions.addAll(p.outputs());
-                for (Transition t : validTransitions) {
-                    // intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
-                    intermediate.add(Math.floor(diff.get(p) / (-1 * pf.computeReactionRate(t, node.getMarking(), firingRates))));
-                }
-                placewise.add(Collections.min(intermediate));                
+                if (!p.outputs().isEmpty()){
+                    validTransitions.addAll(p.outputs());
+                    for (Transition t : validTransitions) {
+                        // intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
+                        double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+                        intermediate.add(diff.get(p) / (-1* rate));
+                    }
+                    // System.out.println("ValidTransitions_1: " + validTransitions);
+                    // System.out.println("Intermediate: " + intermediate);
+                    placewise.add(Collections.min(intermediate));  
+                    }
+                              
             } // The place still has too few tokens compared to the target marking
             else if (diff.get(p) > 0) {
-                validTransitions.addAll(p.inputs());
-                for (Transition t : validTransitions) {
-                    // intermediate.add(Math.floor(diff.get(p) / pnf.getArc(t, p).weight()));
-                    intermediate.add(Math.floor(diff.get(p) / pf.computeReactionRate(t, node.getMarking(), firingRates)));
+                if (!p.inputs().isEmpty()){
+                    validTransitions.addAll(p.inputs());
+                    for (Transition t : validTransitions) {
+                        // intermediate.add(Math.floor(diff.get(p) / pnf.getArc(t, p).weight()));
+                        double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+                        intermediate.add(diff.get(p) / rate);
+                        
+                    }
+                    // System.out.println("ValidTransitions_2: " + validTransitions);
+                    // System.out.println("Intermediate: " + intermediate);
+                    placewise.add(Collections.min(intermediate));   
                 }
-                placewise.add(Collections.min(intermediate));                
+                             
             }
         }
+        //  System.out.println("-------------------------");
         // LOGGER.debug("Depth: " + Double.toString(prio) + " Heur: " + Double.toString(Collections.max(placewise)));
         prio += Collections.max(placewise); // Add heuristic
         node.setPriority(prio);

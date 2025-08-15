@@ -532,6 +532,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         firingrateButton.setEnabled(!b);
         stochreachButton.setEnabled(!b);
         stochpathButton.setEnabled(!b);
+        dijkstraRButton.setEnabled(!b);
     }
 
     @Override

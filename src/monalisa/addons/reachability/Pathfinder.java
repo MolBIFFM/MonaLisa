@@ -235,6 +235,11 @@ public class Pathfinder {
         for ( Place p : t.inputs()) {
             long token = marking.get(p);
             long weight = pnf.getArc(p,t).weight();
+            
+            if (token < weight) {
+                return 0; // transition is not enabled
+            }
+
             h *= Utilities.binomialCoefficient(token, weight);
         }
         return h * firingRates.get(t);

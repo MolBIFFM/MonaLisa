@@ -889,7 +889,7 @@
 		</annotation>
 	</datatype>
 
-	<datatype id="MIR:00000018" pattern="^REACT_\d+(\.\d+)?$">
+	<datatype id="MIR:00000018" pattern="^(R-[A-Z]{3}-\d+(-\d+)?(\.\d+)?)|(REACT_\d+(\.\d+)?)$">
 		<name>Reactome</name>
 		<synonyms>
 			<synonym>Reactome Stable ID</synonym>

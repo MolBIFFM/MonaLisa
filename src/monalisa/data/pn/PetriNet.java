@@ -55,7 +55,8 @@ public final class PetriNet
     // Inverse lookup tables.
     private final Map<Place, List<Transition>> preTransitions = new HashMap<>();
     private final Map<Transition, List<Place>> prePlaces = new HashMap<>();
-
+    private final List<Compartment> compartments = new ArrayList<>();
+    private final Map<UniquePetriNetEntity, Compartment> compartmentMap = new HashMap<>();
     private static final Logger LOGGER = LogManager.getLogger(PetriNet.class);
 
     /**
@@ -328,6 +329,85 @@ public final class PetriNet
         LOGGER.debug("Successfully removed transition from Petri net");
     }
 
+    /**
+     * Adds a compartment to the Petri net
+     *
+     * @param c
+     */
+    public void addCompartment(Compartment c) {
+        this.compartments.add(c);
+    }
+
+    /**
+     * Removes a compartment
+     *
+     * @param c
+     */
+    public void removeCompartment(Compartment c) {
+        if (this.compartments.contains(c)) {
+            this.compartments.remove(c);
+            for (Place p : places()) {
+                if (this.compartmentMap.containsKey(p)) {
+                    p.unsetCompartment(c);
+                }
+            }
+
+            for (Transition t : transitions()) {
+                if (this.compartmentMap.containsKey(t)) {
+                    t.unsetCompartment(c);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns a list of all compartments
+     *
+     * @return
+     */
+    public List<Compartment> getCompartments() {
+        if (this.compartments == null) {
+            return new ArrayList<>();
+        } else {
+            return this.compartments;
+        }
+    }
+
+    /**
+     * Returns the map of node to compartment
+     *
+     * @return
+     */
+    public Map<UniquePetriNetEntity, Compartment> getCompartmentMap() {
+        if (this.compartmentMap == null) {
+            return new HashMap<>();
+        } else {
+            return Collections.unmodifiableMap(this.compartmentMap);
+        }
+    }
+
+    /**
+     * Set the compartment for a UniquePetriNetEntity
+     *
+     * @param upne
+     * @param c
+     */
+    public void setCompartment(UniquePetriNetEntity upne, Compartment c) {
+        this.compartmentMap.put(upne, c);
+    }
+
+    /**
+     * Remove a compartment for a UniquePetriNetEntity
+     *
+     * @param upne
+     * @param c
+     */
+    public void unsetCompartment(UniquePetriNetEntity upne, Compartment c) {
+        if (this.compartmentMap.containsKey(upne)) {
+            this.compartmentMap.remove(upne);
+        }
+    }
+    
     /**
      * Returns the token count associated with a place. Default is 0.
      *

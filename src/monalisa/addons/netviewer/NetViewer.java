@@ -1705,12 +1705,24 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param color
      * @param strokeColor
      */
-    public void writeVertexSetup(NetViewerNode nvNode, Position lablePosition, Color color, Color strokeColor) {
+    public void writeVertexSetup(NetViewerNode nvNode, Position lablePosition, Compartment compartment, Color color, Color strokeColor) {
         LOGGER.info("Multiple vertices edited, updating setup");
         nvNode.getMasterNode().setColorForAllNodes(color);
         nvNode.getMasterNode().setStrokeColorForAllNodes(strokeColor);
         nvNode.setLabelPosition(lablePosition);
 
+        if (compartment != null) {
+            nvNode.putProperty("compartment", compartment);
+
+            if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
+                Place place = synchronizer.getPetriNet().findPlace(nvNode.getMasterNode().getId());
+                place.setCompartment(compartment);
+            } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
+                Transition transition = synchronizer.getPetriNet().findTransition(nvNode.getId());
+                transition.setCompartment(compartment);
+            }
+        }
+        
         vv.repaint();
         updateSearchBar(g.getVertices());
         project.setProjectChanged(true);
@@ -1731,7 +1743,7 @@ public class NetViewer extends JFrame implements ActionListener {
      * @param lablePosition
      * @return
      */
-    public boolean writeVertexSetup(NetViewerNode nvNode, Color color, Color strokeColor, String name, Long tokens, String toolTip, Position lablePosition) {
+    public boolean writeVertexSetup(NetViewerNode nvNode, Color color, Color strokeColor, String name, Long tokens, String toolTip, Position lablePosition, Compartment compartment) {
         LOGGER.info("Single vertex edited, updating setup");
         if (!name.equals(nvNode.getName())) {
             if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.PLACE)) {
@@ -1757,6 +1769,10 @@ public class NetViewer extends JFrame implements ActionListener {
         nvNode.getMasterNode().setStrokeColorForAllNodes(strokeColor);
         nvNode.getMasterNode().setNameForAllNodes(name);
 
+        if (compartment != null) {
+            nvNode.putProperty("compartment", compartment);
+        }
+        
         nvNode.setLabelPosition(lablePosition);
 
         if (!toolTip.isEmpty()) {
@@ -1767,12 +1783,18 @@ public class NetViewer extends JFrame implements ActionListener {
             Place place = synchronizer.getPetriNet().findPlace(nvNode.getMasterNode().getId());
             place.putProperty("name", name);
             project.getPetriNet().setTokens(place, tokens);
+            if (compartment != null) {
+                place.setCompartment(compartment);
+            }
             if (!toolTip.isEmpty()) {
                 place.putProperty("toolTip", toolTip);
             }
         } else if (nvNode.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {
             Transition transition = synchronizer.getPetriNet().findTransition(nvNode.getId());
             transition.putProperty("name", name);
+            if (compartment != null) {
+                transition.setCompartment(compartment);
+            }
             if (!toolTip.isEmpty()) {
                 transition.putProperty("toolTip", toolTip);
             }
@@ -3256,6 +3278,9 @@ public class NetViewer extends JFrame implements ActionListener {
             nvNode = new NetViewerNode(place.id(), PLACE, labelName);
             placeMap.put(place.id(), nvNode); // this map is needed to synchrone the PN with ne Netviewer graph and for coloring of the nodes
             graph.addVertex(nvNode);
+            if (place.getCompartment() != null) {
+                nvNode.putProperty("compartment", place.getCompartment());
+            }
             // save all properties from place to nvNode
             Iterator it = place.getPropertyList().iterator();
             while (it.hasNext()) {
@@ -3275,6 +3300,10 @@ public class NetViewer extends JFrame implements ActionListener {
             nvNode = new NetViewerNode(transition.id(), TRANSITION, labelName);
             transitionMap.put(transition.id(), nvNode);
             graph.addVertex(nvNode);
+             // has the transition a compartment?
+            if (transition.getCompartment() != null) {
+                nvNode.putProperty("compartment", transition.getCompartment());
+            }
             // save all properties from place to nvNode
             Iterator it = transition.getPropertyList().iterator();
             while (it.hasNext()) {

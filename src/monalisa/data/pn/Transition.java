@@ -55,6 +55,20 @@ public final class Transition extends UniquePetriNetEntity implements Comparable
         return container.getInputPlacesFor(this);
     }
 
+    public Compartment getCompartment() {
+        return container.getCompartmentMap().get(this);
+    }
+
+    public void setCompartment(Compartment c) {
+        container.setCompartment(this, c);
+        this.putProperty("compartment", c);
+    }
+
+    public void unsetCompartment(Compartment c) {
+        container.unsetCompartment(this, c);
+        this.putProperty("compartment", null);
+    }
+    
     @Override
     public int compareTo(Transition o) {
         return id() - o.id();

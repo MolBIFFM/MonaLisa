@@ -26,7 +26,7 @@ public class VertexPaintTransformer implements Transformer<NetViewerNode, Paint>
     private Boolean hideColor = false;
 
     @Override
-    public Paint transform(NetViewerNode n) { // probably useless?
+    public Paint transform(NetViewerNode n) { 
         if (hideColor) {
             Color color;
             if (n.getNodeType().equalsIgnoreCase(NetViewer.TRANSITION)) {

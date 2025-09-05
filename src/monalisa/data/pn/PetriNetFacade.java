@@ -39,6 +39,21 @@ public class PetriNetFacade extends AbstractPetriNetEntity {
     }
 
     /**
+     * @see monalisa.data.pn.PetriNet#getCompartments()
+     */
+    public List<Compartment> getCompartments() {
+        return pn.getCompartments();
+    }
+
+    /**
+     * @see monalisa.data.pn.PetriNet#getCompartmentMap()
+     */
+    public Map<UniquePetriNetEntity, Compartment> getCompartmentMap() {
+        return pn.getCompartmentMap();
+    }
+
+    
+    /**
      * @see monalisa.data.pn.PetriNet#getTokens(Place)
      */
     public Long getTokens(Place place) {

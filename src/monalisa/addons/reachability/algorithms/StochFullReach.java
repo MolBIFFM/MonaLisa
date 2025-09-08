@@ -1,8 +1,13 @@
 package monalisa.addons.reachability.algorithms;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityEdge;
 import monalisa.addons.reachability.ReachabilityEvent;
@@ -46,6 +51,8 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         workingList.add(root);
         vertices.add(root);
         // boolean depthLimitReached = false;//&& !depthLimitReached
+        int counter_visited = 0;
+
         while (!workingList.isEmpty() && !isInterrupted() ) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
@@ -116,6 +123,7 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                                 unvisited = false;
                                 v.setProbability(v.getProbability()+prob_node);
                                 // break;
+                                counter_visited += 1;
                             }
                         }
                     }
@@ -131,41 +139,13 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
         } else {
             // LOGGER.info("Completed creation of Reachability Graph.");
-            g = new ReachabilityGraph(vertices, edges);
-            // System.out.println("vertices has "+vertices.size()+" nodes");
-            System.out.println("=== Reachability Nodes (Vertices) ===");
-            
-            for (ReachabilityNode node : vertices) {
-                StringBuilder sb = new StringBuilder("Marking: ");
-                sb.append("( ");
-                for (Place p : node.getMarking().keySet()) {
-                    sb.append(node.getMarking().get(p))
-                      .append(", ");
-                }
-                sb.append(" )"+"; Probability: "+node.getProbability()+"; Depth: "+node.getDepth());
-                System.out.println(sb.toString());}
-            System.out.println("=== Reachability Edges ===");
-            StringBuilder sb = new StringBuilder("Transitions: ");
-            for (ReachabilityEdge edge : edges) {
-                sb.append(edge.getTransition().toString())
-                //   .append(", ")
-                //   .append(firingRates.get(edge.getTransition()))
-                  .append(", ");
-            }
-            System.out.println(sb.toString());
-            HashMap<ReachabilityNode, ArrayList<Transition>> paths = new HashMap<>();
-            for (ReachabilityNode leaf : leafNodes) {
-                System.out.println("Probability of leaf node: "+leaf.getProbability()+"; Depth"+leaf.getDepth());
-                // this.tar = leaf;
-                // ArrayList<Transition> path = backtrack();
-                // paths.put(leaf, path);
-                // System.out.println("Path of start to leaf: ");
-                // for (Transition t : path) {
-                //     System.out.print(t.toString() + " ");
-                // }
-                // System.out.println();
-            }
-            // System.out.flush();
+            // g = new ReachabilityGraph(vertices, edges);
+            // // System.out.println("vertices has "+vertices.size()+" nodes");
+            // System.out.println("=== Reachability Nodes (Vertices) ===");
+           
+            System.out.println("Totally has found "+counter_visited+" visited nodes.");
+            String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\fullreach.csv";
+            exportNodesToCSV(vertices, filePath);
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }
@@ -173,5 +153,34 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
     @Override
     public void computePriority(ReachabilityNode node) {
         // Does not use a priority.
+    }
+
+    private void exportNodesToCSV(HashSet<ReachabilityNode> vertices, String filePath) {
+    List<ReachabilityNode> sortedNodes  = new ArrayList<>(vertices);
+    sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
+
+    try (FileWriter writer = new FileWriter(filePath)) {
+        // 写标题
+        writer.append("Depth,Probability");
+        for (Place place : pnf.places()) {
+            writer.append(",").append(place.toString()); // 或 place.getId()
+        }
+        writer.append("\n");
+
+        // 写每行数据
+        for (ReachabilityNode node : sortedNodes) {
+            writer.append(String.valueOf(node.getDepth()))
+                  .append(",")
+                  .append(String.valueOf(node.getProbability()));
+
+            for (Place place : pnf.places()) {
+                Long tokens = node.getMarking().get(place);
+                writer.append(",").append(String.valueOf(tokens != null ? tokens : 0));
+            }
+            writer.append("\n");
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
 }

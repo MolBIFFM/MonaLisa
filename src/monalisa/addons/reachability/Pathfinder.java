@@ -49,7 +49,7 @@ public class Pathfinder {
     private final boolean capacities_active;
     private final HashSet<Transition> transitions;
     private HashMap<Transition, Double> firingRates;
-    private int maxDepth; // -1 for infinite depth, used in StochFullPath
+    private int max; // -1 for infinite depth, used in StochFullPath// 10 for infinite paths, used in StochAStar 
 
     /**
      * Constructor used for algorithms without a heuristic.
@@ -128,8 +128,9 @@ public class Pathfinder {
         // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
     }
 
+    // added max Depth/Paths for StochFullPath/StochAStar
     public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities, HashSet<Transition> knockouts, String alg, 
-    HashMap<Transition, Double> firingRates, int maxDepth) {
+    HashMap<Transition, Double> firingRates, int max) {
         // LOGGER.info("Initializing pathfinder for reachability analysis without a heuristic.");
         this.pnf = pnf;
         this.marking = new HashMap<>();
@@ -144,10 +145,12 @@ public class Pathfinder {
         this.alg = alg;
         this.firingRates = new HashMap<>();
         this.firingRates.putAll(firingRates);
-        this.maxDepth = maxDepth;
+        this.max = max;
         initializeAlgorithm(alg, null);
         // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
     }
+
+   
 
     private void initializeAlgorithm(String alg, String heuristic) {
         LOGGER.info("Initializing algorithm: " + alg + ".");
@@ -182,11 +185,11 @@ public class Pathfinder {
                     break;
                 }
                 case "StochFullPath": {
-                    this.algorithm = new StochFullPath(this, pnf, marking, target, firingRates, maxDepth);
+                    this.algorithm = new StochFullPath(this, pnf, marking, target, firingRates, max);
                     break;
                 }
                 case "StochAStar": {
-                    this.algorithm = new StochAStar(this, marking, target, firingRates);
+                    this.algorithm = new StochAStar(this, pnf, marking, target, firingRates, max);
                     break;
                 }
                 case "Dijkstra": {

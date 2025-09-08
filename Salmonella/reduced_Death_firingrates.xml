@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SimulationSetup>
+  <places>
+    <place id="0" isConstant="false" name="SalCyt" nrOfTokens="0"/>
+    <place id="1" isConstant="false" name="SalVac" nrOfTokens="0"/>
+    <place id="2" isConstant="false" name="SigCyt" nrOfTokens="1"/>
+    <place id="3" isConstant="false" name="SigVac" nrOfTokens="1"/>   
+    <place id="4" isConstant="false" name="AdaCyt" nrOfTokens="0"/>
+    <place id="5" isConstant="false" name="AdaVac" nrOfTokens="0"/> 
+    <place id="6" isConstant="false" name="DeathSigCyt" nrOfTokens="0"/>
+    <place id="7" isConstant="false" name="DeathSigVac" nrOfTokens="0"/> 
+    <place id="8" isConstant="false" name="SalCyt100" nrOfTokens="0"/>
+    <place id="9" isConstant="false" name="SalRuffle" nrOfTokens="2"/>   
+    <place id="10" isConstant="false" name="Decision" nrOfTokens="1"/>
+    <place id="11" isConstant="false" name="CellCyt" nrOfTokens="0"/>
+    <place id="12" isConstant="false" name="CellVac" nrOfTokens="0"/>
+    <place id="13" isConstant="false" name="SigEnter" nrOfTokens="1"/>
+    <place id="14" isConstant="false" name="SigStay" nrOfTokens="1"/>
+    <place id="15" isConstant="false" name="CapCyt" nrOfTokens="7"/> 
+    <place id="16" isConstant="false" name="SalVac50" nrOfTokens="0"/>
+    <place id="17" isConstant="false" name="CapVac" nrOfTokens="3"/>
+  </places>
+  <transitions>
+    <transition firingRate="0.004" id="0" name="enter_cyt"/>
+    <transition firingRate="0.006" id="1" name="stay_vac"/>
+    <transition firingRate="0.167" id="2" name="ada_cyt"/>
+    <transition firingRate="0.036" id="3" name="ada_vac"/>
+    <transition firingRate="5.95E-9" id="4" name="pro_cyt"/>
+    <transition firingRate="4.11E-9" id="5" name="pro_vac"/>  
+    <transition firingRate="1000.0" id="6" name="death_cyt"/>
+    <transition firingRate="1000.0" id="7" name="death_vac"/> 
+    <transition firingRate="3.7E-256" id="8" name="xeno_deg"/>  
+    <transition firingRate="350.0" id="9" name="cell_cyt"/>
+    <transition firingRate="650.0" id="10" name="cell_vac"/>
+  </transitions>
+</SimulationSetup>

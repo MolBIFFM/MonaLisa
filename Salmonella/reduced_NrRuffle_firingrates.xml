@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SimulationSetup>
+  <places>
+    <place id="0" isConstant="false" name="SalSurface" nrOfTokens="4"/>
+    <place id="1" isConstant="false" name="NrRuffle" nrOfTokens="0"/>
+    <place id="2" isConstant="false" name="CapSurface" nrOfTokens="1"/>
+    <place id="3" isConstant="false" name="SalRuffle" nrOfTokens="0"/>
+  </places>
+  <transitions>
+    <transition firingRate="0.005" id="0" name="joining"/>
+    <transition firingRate="5.0E-4" id="1" name="initiation"/>
+    <transition firingRate="1000.0" id="2" name="cap_reached"/>
+</transitions>
+</SimulationSetup>

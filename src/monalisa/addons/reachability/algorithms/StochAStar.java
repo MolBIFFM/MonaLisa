@@ -48,7 +48,6 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         HashSet<ReachabilityEdge> edges = new HashSet<>();
         ArrayList <ReachabilityNode> targets = new ArrayList<>();
         int foundPaths = 0;
-        // int maxPaths = 5;
         // initialize for m0 as root
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
@@ -56,10 +55,6 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         tar = new ReachabilityNode(target, null);
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         workingList.add(root);
-
-        // for reduced Salmonella model
-        Transition xeno_deg = pnf.findTransition(8);
-        Place SalCyt100= pnf.findPlace(8);
 
         String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\astar.csv";
 
@@ -70,24 +65,25 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
             }
             ReachabilityNode workingNode = workingList.get(0);
-            System.out.println("working node depth:" + workingNode.getDepth());
-            System.out.println("working node probability:" + workingNode.getProbability());
+            // if(workingNode.getPrev()!= null){
+            //     g = new ReachabilityGraph(vertices, edges);
+            //     System.out.println("------------");
+            //     System.out.println("Via Transition: "+g.getEdge(workingNode.getPrev(), workingNode).getTransition().toString());
+            // }
+            
+            // System.out.println("working node depth:" + workingNode.getDepth());
+            // System.out.println("working node probability:" + workingNode.getProbability());
+            
             workingList.remove(workingNode);
             // vertices.add(workingNode);
             // LOGGER.debug("Expanding new marking with priority " + workingNode.getPriority());
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
-            // System.out.println("activeTransitions: "+activeTransitions);
             HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
             for (Transition t : activeTransitions) {
                 // compute reaction rate
                 double rate = 0;
-                if(t == xeno_deg){
-                    rate = firingRates.get(xeno_deg)/ workingNode.getMarking().get(SalCyt100);
-                }else{
-                    rate = pf.computeReactionRate(t, workingNode.getMarking(), firingRates);
-                }
-                
+                rate = pf.computeReactionRate(t, workingNode.getMarking(), firingRates);
                 rates.put(t, rate);
                 ratesSum += rate;
             }
@@ -122,7 +118,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 double reactionTime = 1 / rates.get(t);
                 newNode.setTime(workingNode.getTime() + reactionTime);
                 if (newNode.equals(tar)) {
-                    System.out.println("Probability of this path to target: " + newNode.getProbability());
+                    // System.out.println("Probability of this path to target: " + newNode.getProbability());
                     targets.add(newNode);
                     foundPaths += 1;
                     if (maxPaths != -1 && foundPaths >= maxPaths){
@@ -135,7 +131,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                     // tar = newNode;
                     vertices.add(tar);
                     edges.add(new ReachabilityEdge(workingNode, tar, t, probability));
-                    // g = new ReachabilityGraph(vertices, edges);
+                    g = new ReachabilityGraph(vertices, edges);
                                        
                     // LOGGER.debug("Target marking has been reached.");
                     // return;
@@ -160,6 +156,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                 // if (unvisited) {
                     // System.out.println("Current transition:" +t.toString());
                     insertNode(newNode, workingList);
+                    // System.out.println("Marking via Transition: "+t.toString()+"; getPriority: "+newNode.getPriority());
                     vertices.add(newNode);
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
                 // } // If it has been seen before, check if it has been expanded yet
@@ -183,16 +180,16 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
             System.out.println("Search ends, founded paths: " + targets.size());
             exportPathsToCSV(targets, filePath);
             g = new ReachabilityGraph(vertices, edges);
-            for (ReachabilityNode node : targets) {
-                System.out.println("Probability of node: "+node.getProbability()+"; Depth"+node.getDepth());
-                tar = node;
-                ArrayList<Transition> path = backtrack();
-                System.out.println("Path of start to tar: ");
-                for (Transition t : path) {
-                    System.out.print(t.toString() + " ");
-                }
-                System.out.println();
-            }
+            // for (ReachabilityNode node : targets) {
+            //     System.out.println("Probability of node: "+node.getProbability()+"; Depth"+node.getDepth());
+            //     tar = node;
+            //     ArrayList<Transition> path = backtrack();
+            //     System.out.println("Path of start to tar: ");
+            //     for (Transition t : path) {
+            //         System.out.print(t.toString() + " ");
+            //     }
+            //     System.out.println();
+            // }
             fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, null);
             return;
         }
@@ -238,8 +235,9 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                     for (Transition t : validTransitions) {
                         // intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
                         double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+                        // System.out.println("transition1: "+t.toString()+"; Rate: "+rate);
                         if (rate != 0){
-                            intermediate.add(diff.get(p) / (-1* rate));
+                            intermediate.add(diff.get(p) / (-1* rate * pnf.getArc(p, t).weight()));
                         }
                     }
                     // System.out.println("ValidTransitions_1: " + validTransitions);
@@ -261,8 +259,9 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                     for (Transition t : validTransitions) {
                         // intermediate.add(Math.floor(diff.get(p) / pnf.getArc(t, p).weight()));
                         double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+                        // System.out.println("transition2: "+t.toString()+"; Rate: "+rate);
                         if (rate != 0){
-                            intermediate.add(diff.get(p) / (1* rate));
+                            intermediate.add(diff.get(p) / (1* rate * pnf.getArc(t, p).weight()));
                         }
                     }
                     // System.out.println("ValidTransitions_2: " + validTransitions);
@@ -286,6 +285,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         }
         else{
             prio = Double.POSITIVE_INFINITY;
+            // System.out.println("no valid transitions for heuristic calculation");
         }
         node.setPriority(prio);
     }

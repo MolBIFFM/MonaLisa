@@ -299,7 +299,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="firingrateButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Firing rates"/>
+        <Property name="text" type="java.lang.String" value="Stochastic PN Setting"/>
         <Property name="actionCommand" type="java.lang.String" value="FiringRates"/>
       </Properties>
       <Events>

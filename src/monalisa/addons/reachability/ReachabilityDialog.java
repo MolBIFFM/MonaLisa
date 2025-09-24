@@ -38,7 +38,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
 
     private final PetriNetFacade pnf;
     private final HashMap<Place, Long> start;
-    private final HashMap<Place, Long> target;
+    private HashMap<Place, Long> target;
     private final HashMap<Place, Long> capacities;    
     private static final Logger LOGGER = LogManager.getLogger(ReachabilityDialog.class);
     private Pathfinder pf;
@@ -235,7 +235,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         stochastarRButton.setText("Stochastic A*");
         stochastarRButton.setEnabled(false);
 
-        firingrateButton.setText("Firing rates");
+        firingrateButton.setText("Stochastic PN Setting");
         firingrateButton.setActionCommand("FiringRates");
         firingrateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -440,10 +440,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         kf.setVisible(true);
     }//GEN-LAST:event_knockoutButtonActionPerformed
 
-    private FiringrateFrame ff = null;
+    private SPNSettingFrame ff = null;
     private void firingrateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firingrateButtonActionPerformed
         if (ff == null) {
-            ff = new FiringrateFrame(this, pnf.transitions());
+            ff = new SPNSettingFrame(this, pnf);
         }
         // FiringrateFrame ff = new FiringrateFrame(this, pnf.transitions());
         ff.setVisible(true);
@@ -617,5 +617,20 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
 
     protected void setKnockouts(HashSet<Transition> knocks) {
         this.knockouts = knocks;
+    }
+
+    protected void setTarget(HashMap<Place, Long> target){
+        this.target.clear();
+        this.target.putAll(target);
+        DefaultTableModel model = (DefaultTableModel) markingTable.getModel();
+        for (int i = 0; i < markingTable.getRowCount(); i++) {
+            Place p = (Place) model.getValueAt(i, 0);
+            Long tar = this.target.get(p);
+            model.setValueAt(tar, i, 2); // 更新第3列（Target Token Amount）
+        }
+    }
+
+    public HashMap<Place, Long> getTargets() {
+    return target;
     }
 }

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import monalisa.addons.reachability.Pathfinder;
 import monalisa.addons.reachability.ReachabilityEdge;
@@ -48,16 +49,21 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         HashSet<ReachabilityEdge> edges = new HashSet<>();
         ArrayList <ReachabilityNode> targets = new ArrayList<>();
         int foundPaths = 0;
+        int xeno_counter = 0;
         // initialize for m0 as root
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
         root.setTime(0);
+        root.setRealTime(0);
+        root.setCost(0);
+        root.setXeno_counter(0);
         tar = new ReachabilityNode(target, null);
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         workingList.add(root);
+        targets.add(root);
 
         String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\astar.csv";
-
+        
         while (!workingList.isEmpty() && !isInterrupted()) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
@@ -108,30 +114,48 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
             // candidateTs.retainAll(valid_activeTs);
             // for (Transition t : candidateTs) {
             //-------------------------------------
+            // System.out.println("-------------");
             for (Transition t : activeTransitions) {
                 // LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
-                double probability = rates.get(t) / ratesSum;
-                double prob_node = workingNode.getProbability() * probability;
+                double prob_t = rates.get(t) / ratesSum;
+                double prob_node = workingNode.getProbability() * prob_t;
                 newNode.setProbability(prob_node);
+                // double reactionTime = 1 / (rates.get(t)* prob_t);
                 double reactionTime = 1 / rates.get(t);
                 newNode.setTime(workingNode.getTime() + reactionTime);
+                double reactionRealTime = 1 / ratesSum ;
+                newNode.setRealTime(workingNode.getRealTime() + reactionRealTime);
+                // System.out.println("reaction rate of "+t.toString()+":" + rates.get(t));
+                // System.out.println("reaction rate sum:" + ratesSum);
+                
+                double cost_t = -Math.log(prob_t);
+                double newCost = workingNode.getCost() + cost_t;
+                newNode.setCost(newCost);
+                if(t.toString().equals("xeno_deg")){
+                    xeno_counter = workingNode.getXeno_counter() + 1;
+                    newNode.setXeno_counter(xeno_counter);
+                }else{
+                    newNode.setXeno_counter(workingNode.getXeno_counter());
+                }
                 if (newNode.equals(tar)) {
                     // System.out.println("Probability of this path to target: " + newNode.getProbability());
                     targets.add(newNode);
                     foundPaths += 1;
+                    // tar = newNode;
+                    vertices.add(tar);
+                    edges.add(new ReachabilityEdge(workingNode, tar, t, prob_t));
+                    g = new ReachabilityGraph(vertices, edges);
                     if (maxPaths != -1 && foundPaths >= maxPaths){
-                        System.out.println("Number of paths has been reached: " + targets.size());
-                        exportPathsToCSV(targets, filePath);
+                        System.out.println("Number of paths has been reached: " + (targets.size()-1));
+                        // g = new ReachabilityGraph(vertices, edges);
+                        exportTargetsToCSV(targets, filePath);
                         fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, null);
                         return; 
                     }
 
-                    // tar = newNode;
-                    vertices.add(tar);
-                    edges.add(new ReachabilityEdge(workingNode, tar, t, probability));
-                    g = new ReachabilityGraph(vertices, edges);
+                    
                                        
                     // LOGGER.debug("Target marking has been reached.");
                     // return;
@@ -158,7 +182,7 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                     insertNode(newNode, workingList);
                     // System.out.println("Marking via Transition: "+t.toString()+"; getPriority: "+newNode.getPriority());
                     vertices.add(newNode);
-                    edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
+                    edges.add(new ReachabilityEdge(workingNode, newNode, t, prob_t));
                 // } // If it has been seen before, check if it has been expanded yet
                 // else {
                     // for (ReachabilityNode v : workingList) {
@@ -177,9 +201,9 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
             }
         }
         if (!targets.isEmpty()) {
-            System.out.println("Search ends, founded paths: " + targets.size());
-            exportPathsToCSV(targets, filePath);
-            g = new ReachabilityGraph(vertices, edges);
+            System.out.println("Search ends, founded paths: " + (targets.size()-1));     
+            g = new ReachabilityGraph(vertices, edges);     
+            exportTargetsToCSV(targets, filePath);
             // for (ReachabilityNode node : targets) {
             //     System.out.println("Probability of node: "+node.getProbability()+"; Depth"+node.getDepth());
             //     tar = node;
@@ -225,6 +249,17 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         double prio = node.getTime();
         HashMap<Place, Long> diff = tar.getDifference(node);
         HashSet<Double> placewise = new HashSet<>();
+        HashSet<Transition> activeTransitions = pf.computeActive(node.getMarking());
+        // HashMap<Transition, Double> rates = new HashMap<>();
+        double ratesSum = 0;
+        for (Transition t : activeTransitions) {
+            // compute reaction rate
+            double rate = 0;
+            rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+            // rates.put(t, rate);
+            ratesSum += rate;
+        }
+
         for (Place p : tar.getMarking().keySet()) {
             HashSet<Double> intermediate = new HashSet<>();
             ArrayList<Transition> validTransitions = new ArrayList<>();
@@ -235,8 +270,11 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                     for (Transition t : validTransitions) {
                         // intermediate.add(Math.floor(diff.get(p) / (-1 * pnf.getArc(p, t).weight())));
                         double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
+                        // double rate = rates.get(t);
                         // System.out.println("transition1: "+t.toString()+"; Rate: "+rate);
                         if (rate != 0){
+                            double probPenalty = Math.log(ratesSum / rate);
+                            //probPenalty * 
                             intermediate.add(diff.get(p) / (-1* rate * pnf.getArc(p, t).weight()));
                         }
                     }
@@ -261,7 +299,9 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
                         double rate = pf.computeReactionRate(t, node.getMarking(), firingRates);
                         // System.out.println("transition2: "+t.toString()+"; Rate: "+rate);
                         if (rate != 0){
-                            intermediate.add(diff.get(p) / (1* rate * pnf.getArc(t, p).weight()));
+                            double probPenalty = Math.log(ratesSum / rate);
+                            //probPenalty *
+                            intermediate.add( diff.get(p) / (1* rate * pnf.getArc(t, p).weight()));
                         }
                     }
                     // System.out.println("ValidTransitions_2: " + validTransitions);
@@ -290,13 +330,15 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
         node.setPriority(prio);
     }
 
-    private void exportPathsToCSV(ArrayList<ReachabilityNode> targets, String filePath) {
+    private void exportTargetsToCSV(ArrayList<ReachabilityNode> targets, String filePath) {
     // List<ReachabilityNode> sortedMatchedNodes = new ArrayList<>(matchedNodes);
     // sortedMatchedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
     try (FileWriter writer = new FileWriter(filePath)) {
         // titles of columns
-        writer.append("Time, Depth, Probability");
+        writer.append("Time, RealTime, Depth, Probability, -log(p), path, pathtime, pathRealTime, xeno_counter");
+        //
+
         for (Place place : pnf.places()) {
             writer.append(",").append(place.toString()); 
         }
@@ -304,11 +346,36 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
 
         // 写每行数据
         for (ReachabilityNode node : targets) {
-            writer.append(String.valueOf(node.getTime()))
+            tar = node;
+            ArrayList<Transition> path = backtrack();
+            String pathStr = path.stream()
+                     .map(t -> t.toString())  
+                     .collect(Collectors.joining(","));
+
+            ArrayList<String> pathtime = backtrack(node);
+            String pathtimeStr = String.join(",", pathtime);
+
+            ArrayList<String> pathrealtime = backtrackRealtime(node);
+            String pathrealtimeStr = String.join(",", pathrealtime);
+
+            writer.append(round1(node.getTime()))
+                .append(",")
+                .append(round1(node.getRealTime()))
                 .append(",")
                 .append(String.valueOf(node.getDepth()))
                 .append(",")
-                .append(String.valueOf(node.getProbability()));
+                .append(String.valueOf(node.getProbability()))
+                .append(",")
+                .append(String.valueOf(node.getCost()))
+                .append(",")
+                .append(String.valueOf("\"" + pathStr + "\""))
+                .append(",")
+                .append(String.valueOf("\"" + pathtimeStr + "\""))
+                .append(",")
+                .append(String.valueOf("\"" + pathrealtimeStr + "\""))
+                .append(",")
+                .append(String.valueOf(node.getXeno_counter()))
+                ;
 
             for (Place place : pnf.places()) {
                 Long tokens = node.getMarking().get(place);
@@ -319,5 +386,9 @@ public class StochAStar extends AbstractReachabilityAlgorithm {
     } catch (IOException e) {
         e.printStackTrace();
     }
+    }
+
+    private static String round1(double val) {
+    return String.valueOf(Math.round(val * 10.0) / 10.0);
     }
 }

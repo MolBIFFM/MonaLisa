@@ -24,7 +24,9 @@ public class ReachabilityNode {
     private int depth;
     private double probability;
     private double time; // for StochAStar, but not real time
+    private double realtime;
     private double cost; //for Dijkstra's algorithm
+    private int xeno_counter;
 
     public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev) {
         this.marking = marking;
@@ -200,11 +202,27 @@ public class ReachabilityNode {
         this.time = time;
     }
 
+    public double getRealTime(){
+        return realtime;
+    }
+
+    public void setRealTime(double realtime){
+        this.realtime = realtime;
+    }
+
     public double getCost(){
         return cost;
     }
 
     public void setCost(double cost){
         this.cost = cost;
+    }
+
+    public int getXeno_counter(){
+        return xeno_counter;
+    }
+
+    public void setXeno_counter(int xeno_counter){
+        this.xeno_counter = xeno_counter;
     }
 }

@@ -3,6 +3,7 @@ package monalisa.addons.reachability.algorithms;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -142,10 +143,9 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             // g = new ReachabilityGraph(vertices, edges);
             // // System.out.println("vertices has "+vertices.size()+" nodes");
             // System.out.println("=== Reachability Nodes (Vertices) ===");
-           
             System.out.println("Totally has found "+counter_visited+" visited nodes.");
             String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\fullreach.csv";
-            exportNodesToCSV(vertices, filePath);
+            exportNodesToCSV(vertices, leafNodes, filePath);
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }
@@ -155,23 +155,41 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         // Does not use a priority.
     }
 
-    private void exportNodesToCSV(HashSet<ReachabilityNode> vertices, String filePath) {
+    private void exportNodesToCSV(HashSet<ReachabilityNode> vertices, HashSet<ReachabilityNode> leafNodes, String filePath) {
     List<ReachabilityNode> sortedNodes  = new ArrayList<>(vertices);
     sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
     try (FileWriter writer = new FileWriter(filePath)) {
+        // metadata
+        // writer.append("# ");
+        // boolean wroteMetadata = false; 
+        // List<String> selectedTransitions = Arrays.asList("remove", "add", "wash_count");
+        // for (Transition t : firingRates.keySet()) {
+        //     if (selectedTransitions.contains(t.toString())) {
+        //         writer.append(t.toString())
+        //               .append(" = ")
+        //               .append(String.valueOf(firingRates.get(t)))
+        //               .append("; ");
+        //     }
+        // }
+        // writer.append("\n"); // 空行分隔信息区与数据区
+
         // 写标题
-        writer.append("Depth,Probability");
+        writer.append("Depth,Probability,LeafNode");
         for (Place place : pnf.places()) {
             writer.append(",").append(place.toString()); // 或 place.getId()
         }
         writer.append("\n");
 
+        boolean wroteMetadata = false;
         // 写每行数据
         for (ReachabilityNode node : sortedNodes) {
+            boolean isLeaf = leafNodes.contains(node);
             writer.append(String.valueOf(node.getDepth()))
                   .append(",")
-                  .append(String.valueOf(node.getProbability()));
+                  .append(String.valueOf(node.getProbability()))
+                  .append(",")
+                  .append(isLeaf ? "leaf" : "");
 
             for (Place place : pnf.places()) {
                 Long tokens = node.getMarking().get(place);

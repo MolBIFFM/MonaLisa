@@ -410,7 +410,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         if(algo.equals("StochAStar")){
             pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, firingRates, maxPaths);
         }else if(algo.equals("Dijkstra")){
-            pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, firingRates);
+            pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo, firingRates, maxPaths);
         }
         else if (algo.equals("Breadth First Search")) {
             pf = new Pathfinder(pnf, start, target, capacities, knockouts, algo);

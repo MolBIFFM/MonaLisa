@@ -49,7 +49,7 @@ public class Pathfinder {
     private final boolean capacities_active;
     private final HashSet<Transition> transitions;
     private HashMap<Transition, Double> firingRates;
-    private int max; // -1 for infinite depth, used in StochFullPath// 10 for infinite paths, used in StochAStar 
+    private int max; // -1 for infinite depth, used in StochFullPath// 10 for default paths, used in StochAStar 
 
     /**
      * Constructor used for algorithms without a heuristic.
@@ -193,7 +193,7 @@ public class Pathfinder {
                     break;
                 }
                 case "Dijkstra": {
-                    this.algorithm = new StochDijk(this, marking, target, firingRates);
+                    this.algorithm = new StochDijk(this, pnf, marking, target, firingRates, max);
                     break;
                 }
                 default:
@@ -252,7 +252,12 @@ public class Pathfinder {
         HashSet<Transition> toRemove = new HashSet<>();
         for (Transition t : activeTransitions) {
             for (Place p : t.outputs()) {
-                if (((m.get(p) + pnf.getArc(t, p).weight()) > capacities.get(p)) && capacities.get(p) != 0) {
+                if(t.inputs().contains(p)){
+                    if (((m.get(p) - pnf.getArc(p,t).weight() + pnf.getArc(t, p).weight()) > capacities.get(p)) && capacities.get(p) != 0) {
+                        toRemove.add(t);
+                        break;
+                    }
+                }else if (((m.get(p) + pnf.getArc(t, p).weight()) > capacities.get(p)) && capacities.get(p) != 0) {
                     toRemove.add(t);
                     break;
                 }

@@ -1,5 +1,6 @@
 package monalisa.addons.reachability.algorithms;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +42,14 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
     public void run() {
         // LOGGER.info("Starting Full Reachability Algorithm");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
+        long startTime = System.nanoTime();
         int counter = 0;
+        int counter_visited = 0;
+        int counter_expanded = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edges = new HashSet<>();
         HashSet<ReachabilityNode> leafNodes = new HashSet<>();
+        HashSet<ReachabilityNode> CycleNodes = new HashSet<>();
          // begin expanding the reachability graph from m0
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         ReachabilityNode root = new ReachabilityNode(marking, null);
@@ -52,23 +57,24 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         workingList.add(root);
         vertices.add(root);
         // boolean depthLimitReached = false;//&& !depthLimitReached
-        int counter_visited = 0;
+        
 
         while (!workingList.isEmpty() && !isInterrupted() ) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
             if (counter % 100 == 0) {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
-                // System.out.println("processing.... "+counter+"...");
             }
             // get a node to expand
             ReachabilityNode workingNode = workingList.get(0);
-            // System.out.println("Depth: "+workingNode.getDepth());
+            counter_visited += 1;
             workingList.remove(workingNode);
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             if(activeTransitions.isEmpty()){
                 leafNodes.add(workingNode);
                 continue;
+            }else{
+                counter_expanded += 1;
             }
             HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
@@ -99,7 +105,7 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                 }
                 if (isCycle) {
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-                    counter -= 1; // do not count this node
+                    // counter -= 1; // do not count this node
                     // do not add further node to working list
                     continue;
                 }
@@ -120,12 +126,14 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                     for (ReachabilityNode v : vertices) {
                         if (v.equals(newNode)) {
                             // converging node
-                            if (!v.strictlyequals(newNode)){
+                            //remove strictlyequals() to keep the uniqueness of nodes in the graph, 
+                            //if there are two trasntitions with different rates between two places
+                            // if (!v.strictlyequals(newNode)){ 
                                 unvisited = false;
                                 v.setProbability(v.getProbability()+prob_node);
                                 // break;
-                                counter_visited += 1;
-                            }
+                                // counter_visited += 1;
+                            // }
                         }
                     }
                     if (unvisited) {
@@ -143,9 +151,20 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             // g = new ReachabilityGraph(vertices, edges);
             // // System.out.println("vertices has "+vertices.size()+" nodes");
             // System.out.println("=== Reachability Nodes (Vertices) ===");
-            System.out.println("Totally has found "+counter_visited+" visited nodes.");
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+            // System.out.println("StochFullReach Execution time: " + (duration / 1_000_000.0) + " ms");
+            // System.out.println("StochFullReach Totally has found "+counter_visited+" visited nodes.");
             String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\fullreach.csv";
             exportNodesToCSV(vertices, leafNodes, filePath);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+                writer.write("Type,Visited,Expanded,Stored,Time(ms)");//new added nodes //newvisited nodes
+                writer.newLine();
+                writer.write("Reach" + "," + counter_visited + "," + counter_expanded + "," + vertices.size() + "," + (duration / 1_000_000.0));
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }
@@ -156,49 +175,49 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
     }
 
     private void exportNodesToCSV(HashSet<ReachabilityNode> vertices, HashSet<ReachabilityNode> leafNodes, String filePath) {
-    List<ReachabilityNode> sortedNodes  = new ArrayList<>(vertices);
-    sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
+        List<ReachabilityNode> sortedNodes  = new ArrayList<>(vertices);
+        sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
-    try (FileWriter writer = new FileWriter(filePath)) {
-        // metadata
-        // writer.append("# ");
-        // boolean wroteMetadata = false; 
-        // List<String> selectedTransitions = Arrays.asList("remove", "add", "wash_count");
-        // for (Transition t : firingRates.keySet()) {
-        //     if (selectedTransitions.contains(t.toString())) {
-        //         writer.append(t.toString())
-        //               .append(" = ")
-        //               .append(String.valueOf(firingRates.get(t)))
-        //               .append("; ");
-        //     }
-        // }
-        // writer.append("\n"); // 空行分隔信息区与数据区
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // metadata
+            // writer.append("# ");
+            // boolean wroteMetadata = false; 
+            // List<String> selectedTransitions = Arrays.asList("remove", "add", "wash_count");
+            // for (Transition t : firingRates.keySet()) {
+            //     if (selectedTransitions.contains(t.toString())) {
+            //         writer.append(t.toString())
+            //               .append(" = ")
+            //               .append(String.valueOf(firingRates.get(t)))
+            //               .append("; ");
+            //     }
+            // }
+            // writer.append("\n"); // 空行分隔信息区与数据区
 
-        // 写标题
-        writer.append("Depth,Probability,LeafNode");
-        for (Place place : pnf.places()) {
-            writer.append(",").append(place.toString()); // 或 place.getId()
-        }
-        writer.append("\n");
-
-        boolean wroteMetadata = false;
-        // 写每行数据
-        for (ReachabilityNode node : sortedNodes) {
-            boolean isLeaf = leafNodes.contains(node);
-            writer.append(String.valueOf(node.getDepth()))
-                  .append(",")
-                  .append(String.valueOf(node.getProbability()))
-                  .append(",")
-                  .append(isLeaf ? "leaf" : "");
-
+            // 写标题
+            writer.append("Depth,Probability,LeafNode");
             for (Place place : pnf.places()) {
-                Long tokens = node.getMarking().get(place);
-                writer.append(",").append(String.valueOf(tokens != null ? tokens : 0));
+                writer.append(",").append(place.toString()); // 或 place.getId()
             }
             writer.append("\n");
+
+            boolean wroteMetadata = false;
+            // 写每行数据
+            for (ReachabilityNode node : sortedNodes) {
+                boolean isLeaf = leafNodes.contains(node);
+                writer.append(String.valueOf(node.getDepth()))
+                    .append(",")
+                    .append(String.valueOf(node.getProbability()))
+                    .append(",")
+                    .append(isLeaf ? "leaf" : "");
+
+                for (Place place : pnf.places()) {
+                    Long tokens = node.getMarking().get(place);
+                    writer.append(",").append(String.valueOf(tokens != null ? tokens : 0));
+                }
+                writer.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
     }
 }

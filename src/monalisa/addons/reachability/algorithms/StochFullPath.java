@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -46,7 +48,9 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
     public void run() {
         // LOGGER.info("Starting Full Reachability Algorithm");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
+        long startTime = System.nanoTime();
         int counter = 0;
+        int counter_expanded = 0;
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edges = new HashSet<>();
         HashSet<ReachabilityNode> leafNodes = new HashSet<>();
@@ -55,16 +59,18 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
         ArrayList <ReachabilityNode> matchedNodes = new ArrayList<>();
         //initialization of target places for fuzzy search
         int counter_match = 0;
-        DeathSigCyt = pnf.findPlace(22);
-        DeathSigVac = pnf.findPlace(23);
+        // DeathSigCyt = pnf.findPlace(22);
+        // DeathSigVac = pnf.findPlace(23);
         // NrRuffle = pnf.findPlace(4);
-        NrRuffle = pnf.findPlace(3); // reduced model
+        // NrRuffle = pnf.findPlace(3); // reduced model
         // p1 = pnf.findPlace(0);
         // p2 = pnf.findPlace(1);
         // begin expanding the reachability graph from m0
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
+        root.setCost(0);
+        root.setRealTime(0);
         workingList.add(root);
         vertices.add(root);
         matchedNodes.add(root);
@@ -72,7 +78,7 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
         while (!workingList.isEmpty() && !isInterrupted() ) {
             // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
-            if (counter % 10000 == 0) {
+            if (counter % 100 == 0) {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
             }
             // if(counter_match != 0 && counter_match % 10 == 0){
@@ -82,12 +88,12 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
             ReachabilityNode workingNode = workingList.get(0);
             workingList.remove(workingNode);
             
-            if (counter % 1000 == 0) {
-                System.out.println("----------------");
-                System.out.println("processing.... "+ counter +" nodes have been expanded.");
-                System.out.println("... has reached "+ workingNode.getDepth()+" depth.");
-                System.out.println(".... has found "+ counter_match+" hits.");
-            }
+            // if (counter % 1000 == 0) {
+            //     System.out.println("----------------");
+            //     System.out.println("processing.... "+ counter +" nodes have been expanded.");
+            //     System.out.println("... has reached "+ workingNode.getDepth()+" depth.");
+            //     System.out.println(".... has found "+ counter_match+" hits.");
+            // }
 
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
             if(activeTransitions.isEmpty()){
@@ -103,6 +109,8 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
                 deadNodes.add(workingNode);
                 // }
                 continue;
+            }else{
+                counter_expanded += 1;
             }
             // set the depth of search
             if (maxDepth != -1 && workingNode.getDepth() >= maxDepth){
@@ -120,12 +128,17 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
             }
             for (Transition t : activeTransitions) {
                 // transfrom reaction rate to probability
-                double probability = rates.get(t) / ratesSum;
+                double prob_t = rates.get(t) / ratesSum;
                 // compute new marking
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 // compute probability for reachability node
-                double prob_node = workingNode.getProbability() * probability;
+                double prob_node = workingNode.getProbability() * prob_t;
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
+                double cost_t = -Math.log(prob_t);//priority for Dijkstra's algorithm
+                double newCost = workingNode.getCost() + cost_t;
+                newNode.setCost(newCost);
+                double reactionRealTime = 1 / ratesSum ;
+                newNode.setRealTime(workingNode.getRealTime() + reactionRealTime);
                 //For Salmonella model, set a threshold to avoid explosion of state space
                 // if (newNode.getMarking().get(NrRuffle)> 4){
                 //     continue;
@@ -136,8 +149,8 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
                     matchedNodes.add(newNode);
                     counter_match += 1;
                 // }
-                // edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-                // vertices.add(newNode);
+                edges.add(new ReachabilityEdge(workingNode, newNode, t, prob_t));
+                vertices.add(newNode);
                 workingList.add(newNode);
             }
         }
@@ -145,11 +158,21 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
             // LOGGER.warn("Execution has been aborted.");
             fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
         } else {
-            System.out.println("Totally has found "+counter_match+" hits.");
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+            // System.out.println("Totally has found "+counter_match+" hits.");
             String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\fullpath.csv";
-            exportMatchedNodesToCSV(matchedNodes, filePath);
+            g = new ReachabilityGraph(vertices, edges);
+            exportMatchedNodesToCSV(matchedNodes, leafNodes, filePath);
             // LOGGER.info("Completed creation of Reachability Graph.");
-            // g = new ReachabilityGraph(vertices, edges);
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+                writer.write("Type,Visited,Expanded,Stored,Time(ms)");//new added nodes //newvisited nodes
+                writer.newLine();
+                writer.write("Reach" + "," + counter + "," + counter_expanded + "," + matchedNodes.size() + "," + (duration / 1_000_000.0));
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             fireReachabilityUpdate(ReachabilityEvent.Status.FINISHED, counter, null);
         }
     }
@@ -175,13 +198,13 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
         return false;
     }
 
-    private void exportMatchedNodesToCSV(ArrayList<ReachabilityNode> matchedNodes, String filePath) {
+    private void exportMatchedNodesToCSV(ArrayList<ReachabilityNode> matchedNodes, HashSet<ReachabilityNode> leafNodes,String filePath) {
     // List<ReachabilityNode> sortedMatchedNodes = new ArrayList<>(matchedNodes);
     // sortedMatchedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
     try (FileWriter writer = new FileWriter(filePath)) {
         // 写标题
-        writer.append("Depth,Probability");
+        writer.append("Depth, Probability, -log(p), RealTime, LeafNode, path");//
         for (Place place : pnf.places()) {
             writer.append(",").append(place.toString()); // 或 place.getId()
         }
@@ -189,9 +212,25 @@ public class StochFullPath extends AbstractReachabilityAlgorithm{
 
         // 写每行数据
         for (ReachabilityNode node : matchedNodes) {
+            tar = node;
+            ArrayList<Transition> path = backtrack();
+            String pathStr = path.stream()
+                     .map(t -> t.toString())  
+                     .collect(Collectors.joining(","));
+
+            boolean isLeaf = leafNodes.contains(node);
             writer.append(String.valueOf(node.getDepth()))
                   .append(",")
-                  .append(String.valueOf(node.getProbability()));
+                  .append(String.valueOf(node.getProbability()))
+                  .append(",")
+                  .append(String.valueOf(node.getCost()))
+                  .append(",")
+                  .append(String.valueOf(node.getRealTime()))
+                  .append(",")
+                  .append(isLeaf ? "leaf" : "")
+                  .append(",")
+                  .append(String.valueOf("\"" + pathStr + "\""))
+                  ;
 
             for (Place place : pnf.places()) {
                 Long tokens = node.getMarking().get(place);

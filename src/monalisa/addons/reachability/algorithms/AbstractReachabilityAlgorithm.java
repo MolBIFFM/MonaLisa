@@ -53,32 +53,6 @@ public abstract class AbstractReachabilityAlgorithm extends Thread implements Re
         return path;
     }
 
-    public ArrayList<String> backtrack(ReachabilityNode node) {
-        // Start from m*. Go back using m*.getPrev(). Always shortest path for BFS
-        ArrayList<String> path = new ArrayList<>();
-        ReachabilityNode currentNode = node;
-        while (currentNode.getPrev() != null) {
-            Transition t = g.getEdge(currentNode.getPrev(), currentNode).getTransition();
-            double time = currentNode.getTime() - currentNode.getPrev().getTime();
-            path.add(0, t.toString() + ":" + String.format("%.1f", time));
-            currentNode = currentNode.getPrev();
-        }
-        return path;
-    }
-
-    public ArrayList<String> backtrackRealtime(ReachabilityNode node) {
-        // Start from m*. Go back using m*.getPrev(). Always shortest path for BFS
-        ArrayList<String> path = new ArrayList<>();
-        ReachabilityNode currentNode = node;
-        while (currentNode.getPrev() != null) {
-            Transition t = g.getEdge(currentNode.getPrev(), currentNode).getTransition();
-            double realtime = currentNode.getRealTime() - currentNode.getPrev().getRealTime();
-            path.add(0, t.toString() + ":" + String.format("%.1f", realtime));// String.format("%.1f", realtime)
-            currentNode = currentNode.getPrev();
-        }
-        return path;
-    }
-
     /**
      * Finds the position a node needs to be inserted in based on its priority
      * using binary search.

@@ -23,10 +23,9 @@ public class ReachabilityNode {
     private double priority = 0;
     private int depth;
     private double probability;
-    private double time; // for StochAStar, but not real time
-    private double realtime;
-    private double cost; //for Dijkstra's algorithm
-    private int xeno_counter;
+    private double time; 
+    private double realtime; // for Stochastic AStar
+    private double cost; // for Stochastic Dijkstra
 
     public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev) {
         this.marking = marking;
@@ -35,15 +34,6 @@ public class ReachabilityNode {
             this.depth = 0;
         }
     }
-
-    // public ReachabilityNode(HashMap<Place, Long> marking, ReachabilityNode prev, double  probability) {
-    //     this.marking = marking;
-    //     this.prev = prev;
-    //     if (prev == null) {
-    //         this.depth = 0;
-    //     }
-    //     this.probability = probability;
-    // }
 
     /**
      * @return the marking.
@@ -115,53 +105,6 @@ public class ReachabilityNode {
         return true;
     }
 
-    public boolean strictlyequals(ReachabilityNode other){
-        if (!this.equals(other)){
-            return false;
-        }
-        if (prev == null && other.getPrev() == null){
-            return true;
-        }
-        if (prev == null || other.getPrev() == null){
-            return false;
-        }
-        return prev.equals(other.getPrev());
-    }
-
-//    public boolean extremlyequals(ReachabilityNode other) {
-//    ReachabilityNode thisNode = this;
-//    ReachabilityNode otherNode = other;
-//
-//    while (thisNode != null && otherNode != null) {
-//        if (!thisNode.equals(otherNode)) {
-//            return false;
-//        }
-//        thisNode = thisNode.getPrev();
-//        otherNode = otherNode.getPrev();
-//    }
-//
-//    // If both reached null at the same time, paths are identical
-//    return thisNode == null && otherNode == null;
-//    }
-    
-    // @Override
-    // public int hashCode() {
-    //     int result = 17;
-
-    //     // 标记部分哈希
-    //     for (Map.Entry<Place, Long> entry : marking.entrySet()) {
-    //         result = 31 * result + entry.getKey().hashCode();
-    //         result = 31 * result + entry.getValue().hashCode();
-    //     }
-
-    //     // 如果路径也需要考虑，则加上 prev 的 hash
-    //     if (prev != null) {
-    //         result = 31 * result + prev.hashCode();
-    //     }
-
-    //     return result;
-    // }
-
     public double getProbability() {
         return probability;
     }
@@ -170,30 +113,6 @@ public class ReachabilityNode {
         this.probability = probability;
     }
 
-    // public boolean inAnyLoop(List<ReachabilityLoop> loops) {
-    //     for (ReachabilityLoop loop : loops) {
-    //         if (loop.contains(this)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
-
-    /**check if the marking of this node is in any loop
-     */
-    public boolean inAnyLoop() {
-        ReachabilityNode mBack = this.getPrev();
-        while (mBack != null) {
-            if (this.equals(mBack)) {
-                return true;
-            }
-            mBack = mBack.getPrev();
-        }
-        return false;
-    }
-
-    /**get the accumulated reaction time
-     */
     public double getTime(){
         return time;
     }
@@ -202,27 +121,24 @@ public class ReachabilityNode {
         this.time = time;
     }
 
+    // for Stochastic AStar
     public double getRealTime(){
         return realtime;
     }
 
+    // for Stochastic AStar
     public void setRealTime(double realtime){
         this.realtime = realtime;
     }
 
+    // for Stochastic Dijkstra
     public double getCost(){
         return cost;
     }
 
+    // for Stochastic Dijkstra
     public void setCost(double cost){
         this.cost = cost;
     }
 
-    public int getXeno_counter(){
-        return xeno_counter;
-    }
-
-    public void setXeno_counter(int xeno_counter){
-        this.xeno_counter = xeno_counter;
-    }
 }

@@ -121,7 +121,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         stochastarRButton = new javax.swing.JRadioButton();
         firingrateButton = new javax.swing.JButton();
         dijkstraRButton = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
         stochreachButton = new javax.swing.JButton();
         stochpathButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -244,13 +243,10 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         });
 
         algoRadioGroup.add(dijkstraRButton);
-        dijkstraRButton.setText("Dijkstra");
+        dijkstraRButton.setText("Stochastic Dijkstra");
         dijkstraRButton.setEnabled(false);
 
-        jRadioButton2.setText("jRadioButton2");
-        jRadioButton2.setEnabled(false);
-
-        stochreachButton.setText("Stochastic Full Reachability");
+        stochreachButton.setText("Stochastic Reachability Graph");
         stochreachButton.setEnabled(false);
         stochreachButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,7 +254,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
             }
         });
 
-        stochpathButton.setText("Stochastic Full Path");
+        stochpathButton.setText("Stochastic Reachability Path");
         stochpathButton.setEnabled(false);
         stochpathButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -285,12 +281,11 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(startLabel)
-                            .addComponent(firingrateButton)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(breadthRButton)
-                                    .addComponent(jRadioButton2))
-                                .addGap(18, 18, 18)
+                                    .addComponent(firingrateButton))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(bestRButton)
                                     .addComponent(dijkstraRButton))
@@ -303,7 +298,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(pathsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(capacityButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(knockoutButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -330,7 +325,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                                     .addComponent(computeButton)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(stopButton))))
-                        .addGap(0, 121, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -352,16 +347,14 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
                     .addComponent(aStarRButton)
                     .addComponent(capacityButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(firingrateButton)
-                    .addComponent(knockoutButton))
+                .addComponent(knockoutButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stochastarRButton)
                     .addComponent(dijkstraRButton)
-                    .addComponent(jRadioButton2)
                     .addComponent(jLabel3)
-                    .addComponent(pathsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pathsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firingrateButton))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -445,7 +438,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         if (ff == null) {
             ff = new SPNSettingFrame(this, pnf);
         }
-        // FiringrateFrame ff = new FiringrateFrame(this, pnf.transitions());
         ff.setVisible(true);
     }//GEN-LAST:event_firingrateButtonActionPerformed
 
@@ -481,7 +473,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JButton knockoutButton;
     private javax.swing.JTable markingTable;
     private javax.swing.JTextField pathsTextField;
@@ -604,11 +595,6 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         stochpathButton.setEnabled(firingRatesImported);
         stochastarRButton.setEnabled(firingRatesImported);
         dijkstraRButton.setEnabled(firingRatesImported);
-        // System.out.println("In setFiringRates, firingRatesImported set to true.");
-        // System.out.println("Firing rates updated in ReachabilityDialog:");
-        // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
-        //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
-        // }
     }
 
     protected void setCapacities(HashMap<Place, Long> caps) {
@@ -626,7 +612,7 @@ public class ReachabilityDialog extends JFrame implements ActionListener, Reacha
         for (int i = 0; i < markingTable.getRowCount(); i++) {
             Place p = (Place) model.getValueAt(i, 0);
             Long tar = this.target.get(p);
-            model.setValueAt(tar, i, 2); // 更新第3列（Target Token Amount）
+            model.setValueAt(tar, i, 2); // update target in 3rd column
         }
     }
 

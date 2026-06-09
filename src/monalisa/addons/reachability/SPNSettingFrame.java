@@ -52,7 +52,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
         }
 
         for (Place p : pnf.places()) {
-            long defaultCapTar = 0L;  // 默认容量为 0
+            long defaultCapTar = 0L;  
             captarModel.addRow(new Object[]{
                 p, 
                 defaultCapTar,
@@ -83,14 +83,14 @@ public class SPNSettingFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        firingrateLabel.setText("Firing rates");
+        firingrateLabel.setText("Sochastic Reachtion Constants");
 
         firingrateTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Transition", "Firing rate"
+                "Transition", "cₜ"
             }
         ) {
             Class[] types = new Class [] {
@@ -193,15 +193,15 @@ public class SPNSettingFrame extends javax.swing.JFrame {
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         Preferences prefs = Preferences.userRoot().node(getClass().getName());
-        String lastDir = prefs.get("lastXmlDir", null);  // 读取上次路径
+        String lastDir = prefs.get("lastXmlDir", null);  // read last used directory
         
         JFileChooser fc = new JFileChooser();
         if (lastDir != null) {
-            fc.setCurrentDirectory(new File(lastDir));  // 设置默认目录
+            fc.setCurrentDirectory(new File(lastDir));  // set to last used directory if available
         }
         if (fc.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
         File inFile = fc.getSelectedFile();
-        prefs.put("lastXmlDir", inFile.getParent());  // 保存新的路径
+        prefs.put("lastXmlDir", inFile.getParent());  // save current directory for next time
     
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -277,7 +277,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
     
             parser.close();
     
-            // 更新 firingRates 中的值
+            // update stochastic reaction constants
             for (Transition t : firingRates.keySet()) {
                 String name = (String) t.toString();
                 if (nameToRate.containsKey(name)) {
@@ -285,7 +285,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
                 }
             }
     
-            // 更新 capacities
+            // update capacities
              for (Place p : capacities.keySet()) {
                 String name = (String) p.toString();
                 if (nameToCapacity.containsKey(name)) {
@@ -293,7 +293,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
                 }
             }
 
-            // 更新 targets
+            // update targets
              for (Place p : targets.keySet()) {
                 String name = (String) p.toString();
                 if (nametoTarget.containsKey(name)) {
@@ -301,7 +301,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
                 }
             }
 
-            // 刷新表格内容
+            // refresh firing rate table
             DefaultTableModel firingmodel = (DefaultTableModel) firingrateTable.getModel();
             firingmodel.setRowCount(0); // 清空表格
             for (Transition t : firingRates.keySet()) {
@@ -309,7 +309,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
                 firingmodel.addRow(new Object[]{t, rate});
             }
 
-            // 刷新 capacity 表格
+            // refresh capacity and target tables
             DefaultTableModel captarModel = (DefaultTableModel) captarTable.getModel();
             captarModel.setRowCount(0);
             for (Place p : capacities.keySet()) {
@@ -357,14 +357,7 @@ public class SPNSettingFrame extends javax.swing.JFrame {
         rd.setFiringRates(firingRates);
         rd.setCapacities(capacities);
         rd.setTarget(targets);
-        this.dispose();
-
-        // System.out.println("Saved Firing Rates:");
-        // for (Map.Entry<Transition, Double> entry : firingRates.entrySet()) {
-        //     System.out.println(entry.getKey().getProperty("name") + ": " + entry.getValue());
-        // }
-
-        
+        this.dispose();        
     
     }//GEN-LAST:event_saveButtonActionPerformed
 

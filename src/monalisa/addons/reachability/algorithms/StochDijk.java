@@ -1,10 +1,10 @@
 package monalisa.addons.reachability.algorithms;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -19,30 +19,31 @@ import monalisa.data.pn.Place;
 import monalisa.data.pn.Transition;
 
 /**
- *
+ * Stochastic Dijkstra search for stochastic Petri nets. 
+ * This implementation performs a cost-based search with a top-K path constraint 
+ * over the reachability tree, 
  * @author Bo
  */
-
 public class StochDijk extends AbstractReachabilityAlgorithm {
 
     private final PetriNetFacade pnf;
-    // private final String heur;
     private final HashMap<Transition, Double> firingRates; 
-    private final int maxPaths;
+    private final int maxPaths; // K
 
     public StochDijk(Pathfinder pf, PetriNetFacade pnf, HashMap<Place, Long> marking, HashMap<Place, Long> target,
-            HashMap<Transition, Double> firingRates, int maxPaths) // String heur,  
+            HashMap<Transition, Double> firingRates, int maxPaths)  
             {
         super(pf, marking, target);
         this.pnf = pnf;
         this.firingRates = firingRates;
-        this.maxPaths = maxPaths;
+        this.maxPaths = maxPaths; 
     }
 
     @Override
     public void run() {
-        // LOGGER.debug("Starting AplusG Algorithm.");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
+
+        // Initialization
         long startTime = System.nanoTime();
         int counter = 0;
         int foundPaths = 0;
@@ -51,48 +52,46 @@ public class StochDijk extends AbstractReachabilityAlgorithm {
         ArrayList <ReachabilityNode> targets = new ArrayList<>();
         ArrayList <ReachabilityNode> expanded = new ArrayList<>();
         ArrayList <ReachabilityNode> addedtoQ = new ArrayList<>();
-        // initialize for m0 as root
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
-        // root.setTime(0);
         root.setCost(0);
         root.setRealTime(0);
         tar = new ReachabilityNode(target, null);
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         workingList.add(root);
-        // targets.add(root);
 
-        String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\dijkstra.csv";
-        String filePath_expanded = "C:\\Users\\61634\\Desktop\\Salmonella_output\\dijkstra_expanded.csv";
-        String filePath_addedtoQ = "C:\\Users\\61634\\Desktop\\Salmonella_output\\dijkstra_addedtoQ.csv";
+        File dir = new File("output");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+        String filePath = "output/dijkstra.csv";
+        String filePath_expanded = "output/dijkstra_expanded.csv";
+        String filePath_addedtoQ = "output/dijkstra_addedtoQ.csv";
 
-
+        // Expansion loop
         while (!workingList.isEmpty() && !isInterrupted()) {
-            // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
             if (counter % 100 == 0) {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
             }
+
             ReachabilityNode workingNode = workingList.get(0);
-            // System.out.println("working node probability:" + workingNode.getProbability());
             workingList.remove(workingNode);
 
+            // termination condition
             if (maxPaths != -1  && targets.size() == maxPaths 
                     && workingList.get(0).getCost()>=targets.get(maxPaths-1).getCost()){
                         long endTime = System.nanoTime();
                         long duration = endTime - startTime;
                         System.out.println("Dijkstra Number of paths has been reached: " + (targets.size()));
-                        // g = new ReachabilityGraph(vertices, edges);
-                        fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());                    
-                        // LOGGER.debug("Target marking has been reached.");
+                        fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());     
+                        
+                        // Output export
                         exportTargetsToCSV(targets, filePath);
-                       
                         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-                            writer.write("Type,Time(ms),founded Paths");//new added nodes //newvisited nodes
-                            // Visited,Expanded,Stored,
+                            writer.write("Type,Time(ms),founded Paths");
                             writer.newLine();
                             writer.write("Dijkstra" + "," + (duration / 1_000_000.0) + "," + foundPaths);
-                            //  counter + "," + counter_expanded + "," + matchedNodes.size() + "," +
                             writer.newLine();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -104,8 +103,10 @@ public class StochDijk extends AbstractReachabilityAlgorithm {
 
             expanded.add(workingNode);
             vertices.add(workingNode);
-            // LOGGER.debug("Expanding new marking with priority " + workingNode.getPriority());
+
             HashSet<Transition> activeTransitions = pf.computeActive(workingNode.getMarking());
+
+            // calculate the sum of all active transitions
             HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
             for (Transition t : activeTransitions) {
@@ -114,106 +115,44 @@ public class StochDijk extends AbstractReachabilityAlgorithm {
                 rates.put(t, rate);
                 ratesSum += rate;
             }
-            for (Transition t : activeTransitions) {
-                // LOGGER.debug("Created new node by firing transition " + t.getProperty("name") + ".");  // debug                                    
+            for (Transition t : activeTransitions) {      
+                // get new marking                            
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
+                // transfrom reaction rate to probability
                 double prob_t = rates.get(t) / ratesSum;
+                // compute probability for reachability node
                 double prob_node = workingNode.getProbability() * prob_t;
                 newNode.setProbability(prob_node);
-                double cost_t = -Math.log(prob_t);
-                double newCost = workingNode.getCost() + cost_t;//priority for Dijkstra's algorithm
+                double cost_t = -Math.log(prob_t); // cost for the Stochastic Dijkstra
+                double newCost = workingNode.getCost() + cost_t;
                 newNode.setCost(newCost);
-                double reactionRealTime = 1 / ratesSum ;
+                double reactionRealTime = 1 / ratesSum ; // cost for the Stochastic A*
                 newNode.setRealTime(workingNode.getRealTime() + reactionRealTime);
-                // double reactionTime = 1 / rates.get(t);
-                // newNode.setTime(workingNode.getTime() + reactionTime);
-                //changed at 28.04
+
+                // pruning condition
                 if (targets.size() == maxPaths) {
                     double worstTargetCost = targets.get(maxPaths - 1).getCost();
                     if (newCost >= worstTargetCost) {
                         continue;
                     }
                 }
+
+                // maintain top K targets
                 if (newNode.equals(tar)) {
-                    // System.out.println("Probability of this path to target: " + newNode.getProbability());
-                    // System.out.println("Cost of this path to target: " + newNode.getCost());
-                    // targets.add(newNode);
-                    insertAndMaintainTopK(targets, newNode, maxPaths); //changed at 28.04
+                    insertAndMaintainTopK(targets, newNode, maxPaths); 
                     foundPaths += 1;
                     tar = newNode;
                     vertices.add(tar);
                     edges.add(new ReachabilityEdge(workingNode, tar, t, prob_t));
                     g = new ReachabilityGraph(vertices, edges);
-                    // if (maxPaths != -1 && foundPaths >= maxPaths){
-                    // changed at 28.04
-                    // if (maxPaths != -1  && targets.size() == maxPaths 
-                    // && workingList.get(0).getCost()>=targets.get(maxPaths-1).getCost()){
-                    //     long endTime = System.nanoTime();
-                    //     long duration = endTime - startTime;
-                    //     System.out.println("Dijkstra Number of paths has been reached: " + (targets.size()));
-                    //     // g = new ReachabilityGraph(vertices, edges);
-                    //     fireReachabilityUpdate(ReachabilityEvent.Status.SUCCESS, counter, backtrack());                    
-                    //     // LOGGER.debug("Target marking has been reached.");
-                    //     exportTargetsToCSV(targets, filePath);
-                       
-                    //     try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-                    //         writer.write("Type,Time(ms),founded Paths");//new added nodes //newvisited nodes
-                    //         // Visited,Expanded,Stored,
-                    //         writer.newLine();
-                    //         writer.write("Dijkstra" + "," + (duration / 1_000_000.0) + "," + foundPaths);
-                    //         //  counter + "," + counter_expanded + "," + matchedNodes.size() + "," +
-                    //         writer.newLine();
-                    //     } catch (IOException e) {
-                    //         e.printStackTrace();
-                    //     } 
-                    //     exportTargetsToCSV(expanded, filePath_expanded);
-                    //     exportTargetsToCSV(addedtoQ, filePath_addedtoQ);
-                    //     return;
-                    // }
-                    // continue;
                 }
+
+                // Insert node into priority-ordered working list
                 insertNode(newNode, workingList);
                 addedtoQ.add(newNode);
                 vertices.add(newNode);
                 edges.add(new ReachabilityEdge(workingNode, newNode, t, prob_t));
-                //-------------------------------------
-                // boolean unvisited = true;
-                // // Has the node been seen before?
-                // for (ReachabilityNode v : vertices) {
-                //     if (v.equals(newNode)) {
-                //         unvisited = false;
-                //         edges.add(new ReachabilityEdge(workingNode, v, t, prob_t));
-                //         // Potentially update depth
-                //         if (v.getCost() > newNode.getCost()) {
-                //             v.setPrev(workingNode);
-                //             v.setCost(newCost);
-                //             v.setProbability(prob_node);
-                //         }
-                //         break;
-                //     }
-                // }
-                // // If it hasn't been seen before, add it to vertices and workingList
-                // if (unvisited) {
-                //     insertNode(newNode, workingList);
-                //     vertices.add(newNode);
-                //     edges.add(new ReachabilityEdge(workingNode, newNode, t, prob_t));
-                // } // If it has been seen before, check if it has been expanded yet
-                // else {
-                //     for (ReachabilityNode v : workingList) {
-                //         if (v.equals(newNode)) {
-                //             // If it hasn't been expanded, the priority might have to be updated.
-                //             if (v.getCost() > newNode.getCost()) {
-                //                 v.setPrev(workingNode);
-                //                 v.setCost(newCost);
-                //                 v.setProbability(prob_node);
-                //                 updatePosition(v, workingList);
-                //                 break;
-                //             }
-                //         }
-                //     }
-                // }
-                //------------------------------------
             }
         }
          if (!targets.isEmpty()) {
@@ -221,14 +160,13 @@ public class StochDijk extends AbstractReachabilityAlgorithm {
             long duration = endTime - startTime;
             System.out.println("Dijkstra Search ends or aborted, founded paths: " + targets.size());     
             g = new ReachabilityGraph(vertices, edges);     
-            exportTargetsToCSV(targets, filePath);
             
+            // Output export
+            exportTargetsToCSV(targets, filePath);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-                writer.write("Type,Time(ms),founded Paths");//new added nodes //newvisited nodes
-                // Visited,Expanded,Stored,
+                writer.write("Type,Time(ms),founded Paths");
                 writer.newLine();
                 writer.write("Dijkstra" + "," + (duration / 1_000_000.0) + "," + foundPaths);
-                //  counter + "," + counter_expanded + "," + matchedNodes.size() + "," +
                 writer.newLine();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -239,59 +177,41 @@ public class StochDijk extends AbstractReachabilityAlgorithm {
             return;
         }
         if (isInterrupted()) {
-            // LOGGER.warn("Execution has been aborted.");
             fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
         } else {
-            // LOGGER.info("Target marking could not be reached from start marking.");
             g = new ReachabilityGraph(vertices, edges);
             fireReachabilityUpdate(ReachabilityEvent.Status.FAILURE, counter, null);
         }
     }
 
-
-
-private void updatePosition(ReachabilityNode node, ArrayList<ReachabilityNode> workingList) {
-        workingList.remove(node);
-        insertNode(node, workingList);
-    }
-
     private void insertNode(ReachabilityNode node, ArrayList<ReachabilityNode> workingList) {
         computePriority(node);
         int pos = findPos(workingList, node);
-        // LOGGER.debug("Current priority: " + node.getPriority());
         workingList.add(pos, node);
     }
 
-    // changed at 28.04 
     public void insertAndMaintainTopK(ArrayList<ReachabilityNode> targets,
                                     ReachabilityNode candidate,
                                     int K) {
 
         double cost = candidate.getCost();
-
-        // 👉 1. 如果还没满，直接插入到正确位置
         if (targets.size() < K) {
             int pos = findInsertPosition(targets, cost);
             targets.add(pos, candidate);
             return;
         }
 
-        // 👉 2. 如果已经满了，先判断是否有资格进入
         double worstCost = targets.get(targets.size() - 1).getCost();
-
         if (cost >= worstCost) {
-            return; // ❌ 比最差的还差，直接丢弃
+            return; 
         }
 
-        // 👉 3. 插入 + 删除最后一个
+        // insert candidate, remove the worst target
         int pos = findInsertPosition(targets, cost);
         targets.add(pos, candidate);
-
-        // 保持 size = K
         targets.remove(targets.size() - 1);
     }
 
-    // changed at 28.04 
     private int findInsertPosition(ArrayList<ReachabilityNode> targets, double cost) {
         int left = 0;
         int right = targets.size();
@@ -315,47 +235,45 @@ private void updatePosition(ReachabilityNode node, ArrayList<ReachabilityNode> w
     }
 
     private void exportTargetsToCSV(ArrayList<ReachabilityNode> targets, String filePath) {
-    // List<ReachabilityNode> sortedMatchedNodes = new ArrayList<>(matchedNodes);
-    // sortedMatchedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
-    try (FileWriter writer = new FileWriter(filePath)) {
-        // titles of columns
-        writer.append("Depth,  Probability, -log(p), RealTime, path");
-        // 
-        for (Place place : pnf.places()) {
-            writer.append(",").append(place.toString()); 
-        }
-        writer.append("\n");
-
-        // 写每行数据
-        for (ReachabilityNode node : targets) {
-            tar = node;
-            ArrayList<Transition> path = backtrack();
-            String pathStr = path.stream()
-                     .map(t -> t.toString())  
-                     .collect(Collectors.joining(","));
-
-            writer.append(String.valueOf(node.getDepth()))
-                .append(",")
-                .append(String.valueOf(node.getProbability()))
-                .append(",")
-                .append(String.valueOf(node.getCost()))
-                .append(",")
-                .append(String.valueOf(node.getRealTime()))
-                .append(",")
-                .append(String.valueOf("\"" + pathStr + "\""))
-                ;
-                
-
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // header
+            writer.append("Depth,  Probability, -log(p), RealTime, path");
             for (Place place : pnf.places()) {
-                Long tokens = node.getMarking().get(place);
-                writer.append(",").append(String.valueOf(tokens != null ? tokens : 0));
+                writer.append(",").append(place.toString()); 
             }
             writer.append("\n");
+
+            // write node data
+            for (ReachabilityNode node : targets) {
+
+                //Reconstruct the path from root to the current node
+                tar = node;
+                ArrayList<Transition> path = backtrack();
+                String pathStr = path.stream()
+                        .map(t -> t.toString())  
+                        .collect(Collectors.joining(","));
+
+                writer.append(String.valueOf(node.getDepth()))
+                    .append(",")
+                    .append(String.valueOf(node.getProbability()))
+                    .append(",")
+                    .append(String.valueOf(node.getCost()))
+                    .append(",")
+                    .append(String.valueOf(node.getRealTime()))
+                    .append(",")
+                    .append(String.valueOf("\"" + pathStr + "\""))
+                    ;
+                
+                for (Place place : pnf.places()) {
+                    Long tokens = node.getMarking().get(place);
+                    writer.append(",").append(String.valueOf(tokens != null ? tokens : 0));
+                }
+                writer.append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
     }
 
 }

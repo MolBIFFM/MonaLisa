@@ -16,7 +16,7 @@ public class ReachabilityEdge {
     private final ReachabilityNode source;
     private final ReachabilityNode target;
     private final Transition t;
-    private double probability;//final
+    private double probability;
 
     public ReachabilityEdge(ReachabilityNode from, ReachabilityNode to,
             Transition t) {

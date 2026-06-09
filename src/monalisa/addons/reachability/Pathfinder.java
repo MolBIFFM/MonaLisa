@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import monalisa.addons.reachability.algorithms.BestFirst;
 import monalisa.addons.reachability.algorithms.AStar;
 import monalisa.addons.reachability.algorithms.BreadthFirst;
-//import monalisa.addons.reachability.algorithms.StochAStar;
 import monalisa.addons.reachability.algorithms.StochFullReach;
 import monalisa.addons.tokensimulator.utils.Utilities;
 
@@ -108,6 +107,7 @@ public class Pathfinder {
         LOGGER.info("Successfully initialized pathfinder for reachability analysis with a heuristic.");        
     }
 
+    // constructor used for stochastic algorithms with firing rates
     public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities, HashSet<Transition> knockouts, String alg, 
     HashMap<Transition, Double> firingRates) {
         // LOGGER.info("Initializing pathfinder for reachability analysis without a heuristic.");
@@ -128,7 +128,8 @@ public class Pathfinder {
         // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
     }
 
-    // added max Depth/Paths for StochFullPath/StochAStar
+    // constructor used for stochastic algorithms with firing rates and max depth/paths
+    // max Depth/Paths for StochFullPath/StochDijk/StochAStar
     public Pathfinder(PetriNetFacade pnf, Map<Place, Long> marking, HashMap<Place, Long> target, HashMap<Place, Long> capacities, HashSet<Transition> knockouts, String alg, 
     HashMap<Transition, Double> firingRates, int max) {
         // LOGGER.info("Initializing pathfinder for reachability analysis without a heuristic.");
@@ -149,8 +150,6 @@ public class Pathfinder {
         initializeAlgorithm(alg, null);
         // LOGGER.info("Successfully initialized pathfinder for reachability analysis without a heuristic.");
     }
-
-   
 
     private void initializeAlgorithm(String alg, String heuristic) {
         LOGGER.info("Initializing algorithm: " + alg + ".");

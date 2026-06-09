@@ -1,10 +1,10 @@
 package monalisa.addons.reachability.algorithms;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,11 +23,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Stochastic full reachability graph construction for stochastic Petri nets.
+ * This implementation builds a full reachability graph with probabilistic transitions
+ * based on firing rates, and exports marking-level statistics for analysis.
  * @author Bo
  */
 public class StochFullReach extends AbstractReachabilityAlgorithm{
-    // private static final Logger LOGGER = LogManager.getLogger(FullReachability.class);
     private final PetriNetFacade pnf;
     private final HashMap<Transition, Double> firingRates; 
 
@@ -40,27 +41,24 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
 
     @Override
     public void run() {
-        // LOGGER.info("Starting Full Reachability Algorithm");
         fireReachabilityUpdate(ReachabilityEvent.Status.STARTED, 0, null);
+        
+        // Initialization
         long startTime = System.nanoTime();
         int counter = 0;
-        int counter_visited = 0;
-        int counter_expanded = 0;
+        int counter_visited = 0; // number of nodes dequeued
+        int counter_expanded = 0; // number of nodes with successors
         HashSet<ReachabilityNode> vertices = new HashSet<>();
         HashSet<ReachabilityEdge> edges = new HashSet<>();
-        HashSet<ReachabilityNode> leafNodes = new HashSet<>();
-        HashSet<ReachabilityNode> CycleNodes = new HashSet<>();
-         // begin expanding the reachability graph from m0
+        HashSet<ReachabilityNode> leafNodes = new HashSet<>(); 
         ArrayList<ReachabilityNode> workingList = new ArrayList<>();
         ReachabilityNode root = new ReachabilityNode(marking, null);
         root.setProbability(1);
         workingList.add(root);
         vertices.add(root);
-        // boolean depthLimitReached = false;//&& !depthLimitReached
-        
-
+    
+        // Expansion loop
         while (!workingList.isEmpty() && !isInterrupted() ) {
-            // LOGGER.debug("Starting expansion for a new node."); // debug
             counter += 1;
             if (counter % 100 == 0) {
                 fireReachabilityUpdate(ReachabilityEvent.Status.PROGRESS, counter, null);
@@ -76,6 +74,8 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
             }else{
                 counter_expanded += 1;
             }
+
+            // calculate the sum of all active transitions
             HashMap<Transition, Double> rates = new HashMap<>();
             double ratesSum = 0;
             for (Transition t : activeTransitions) {
@@ -84,16 +84,19 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                 rates.put(t, rate);
                 ratesSum += rate;
             }
+
             for (Transition t : activeTransitions) {
                 // transfrom reaction rate to probability
                 double probability = rates.get(t) / ratesSum;
-                // compute new marking
+                // get new marking
                 HashMap<Place, Long> mNew = pf.computeMarking(workingNode.getMarking(), t);
                 // compute probability for reachability node
                 double prob_node = workingNode.getProbability() * probability;
+                // generate new reachability node
                 ReachabilityNode newNode = new ReachabilityNode(mNew, workingNode);
                 newNode.setProbability(prob_node);
-                // check for the loop
+
+                // Cycle detection
                 boolean isCycle = false;
                 ReachabilityNode cycleCheck = workingNode;
                 while (cycleCheck != null) {
@@ -105,60 +108,41 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
                 }
                 if (isCycle) {
                     edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-                    // counter -= 1; // do not count this node
                     // do not add further node to working list
                     continue;
                 }
-                // Check for boundedness
-                // ReachabilityNode mBack = workingNode;
-                // while ((mBack != null) && (!newNode.largerThan(mBack))) {
-                //     mBack = mBack.getPrev();
-                // }
-                // if (mBack != null) {
-                //     // LOGGER.error("Graph has been determined to be unbounded. Aborting algorithm.");
-                //     fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
-                //     return;
-                // } else {
-                    edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
-//                     System.out.println("Transition: "+t.toString()+"; Probability: " + probability);
-//                     System.out.println("------------------------------");
-                    boolean unvisited = true;
-                    for (ReachabilityNode v : vertices) {
-                        if (v.equals(newNode)) {
-                            // converging node
-                            //remove strictlyequals() to keep the uniqueness of nodes in the graph, 
-                            //if there are two trasntitions with different rates between two places
-                            // if (!v.strictlyequals(newNode)){ 
-                                unvisited = false;
-                                v.setProbability(v.getProbability()+prob_node);
-                                // break;
-                                // counter_visited += 1;
-                            // }
-                        }
+
+                edges.add(new ReachabilityEdge(workingNode, newNode, t, probability));
+                boolean unvisited = true;
+                for (ReachabilityNode v : vertices) {
+                    if (v.equals(newNode)) {
+                        // converging node, update probability
+                        unvisited = false;
+                        v.setProbability(v.getProbability()+prob_node);
                     }
-                    if (unvisited) {
-                        vertices.add(newNode);
-                        workingList.add(newNode);
-                    }
-                // }
+                }
+                if (unvisited) {
+                    vertices.add(newNode);
+                    workingList.add(newNode);
+                }
             }
         }
         if (isInterrupted()) {
-            // LOGGER.warn("Execution has been aborted.");
             fireReachabilityUpdate(ReachabilityEvent.Status.ABORTED, counter, null);
         } else {
-            // LOGGER.info("Completed creation of Reachability Graph.");
-            // g = new ReachabilityGraph(vertices, edges);
-            // // System.out.println("vertices has "+vertices.size()+" nodes");
-            // System.out.println("=== Reachability Nodes (Vertices) ===");
+            g = new ReachabilityGraph(vertices, edges);
             long endTime = System.nanoTime();
             long duration = endTime - startTime;
-            // System.out.println("StochFullReach Execution time: " + (duration / 1_000_000.0) + " ms");
-            // System.out.println("StochFullReach Totally has found "+counter_visited+" visited nodes.");
-            String filePath = "C:\\Users\\61634\\Desktop\\Salmonella_output\\fullreach.csv";
+
+            // Output export
+            File dir = new File("output");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            String filePath = "output/fullreach.csv";
             exportNodesToCSV(vertices, leafNodes, filePath);
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-                writer.write("Type,Visited,Expanded,Stored,Time(ms)");//new added nodes //newvisited nodes
+                writer.write("Type,Visited,Expanded,Stored,Time(ms)");
                 writer.newLine();
                 writer.write("Reach" + "," + counter_visited + "," + counter_expanded + "," + vertices.size() + "," + (duration / 1_000_000.0));
                 writer.newLine();
@@ -179,29 +163,14 @@ public class StochFullReach extends AbstractReachabilityAlgorithm{
         sortedNodes.sort(Comparator.comparingInt(ReachabilityNode::getDepth));
 
         try (FileWriter writer = new FileWriter(filePath)) {
-            // metadata
-            // writer.append("# ");
-            // boolean wroteMetadata = false; 
-            // List<String> selectedTransitions = Arrays.asList("remove", "add", "wash_count");
-            // for (Transition t : firingRates.keySet()) {
-            //     if (selectedTransitions.contains(t.toString())) {
-            //         writer.append(t.toString())
-            //               .append(" = ")
-            //               .append(String.valueOf(firingRates.get(t)))
-            //               .append("; ");
-            //     }
-            // }
-            // writer.append("\n"); // 空行分隔信息区与数据区
-
-            // 写标题
+            // header
             writer.append("Depth,Probability,LeafNode");
             for (Place place : pnf.places()) {
                 writer.append(",").append(place.toString()); // 或 place.getId()
             }
             writer.append("\n");
 
-            boolean wroteMetadata = false;
-            // 写每行数据
+            // write node data
             for (ReachabilityNode node : sortedNodes) {
                 boolean isLeaf = leafNodes.contains(node);
                 writer.append(String.valueOf(node.getDepth()))

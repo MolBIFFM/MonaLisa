@@ -2,20 +2,61 @@
 
 All experiments in this work are conducted within the MonaLisa SPN analysis framework.
 
+### Running the Application
+
+A pre-built executable version of MonaLisa is provided in the `dist/` directory.
+
+The application can be started in one of the following ways:
+
+- Double-click `MonaLisa.jar` 
+- Command line execution (If jar file is not linked to Java)
+
+```bash
+java -jar path/to/MonaLisa.jar
+```
+
+**note**
+
+Ensure that the `lib/` folder remains in the same directory as `MonaLisa.jar`, as it contains required dependencies.
+
+### Project Directory Structure
+
+The MonaLisa repository is structured as follows:
+```
+(parent directory)
+MonaLisa/                (GitHub repository)
+├──dist/
+│   ├── MonaLisa.jar     (executable application)        
+│   ├── lib/             (required dependencies)
+│   ├── output/          (runtime-generated, NOT included in repository)
+│
+├──experiments_setup/    (models, parameters, and experiment scripts)
+│   ├──analysis_scripts/ 
+│   ├── cyclic_model.xml
+│   ├── acyclic_model.xml
+│   ├── parameters.xml
+│
+├── src/                 (modified MonaLisa source code)
+├── ...
+```
+
+### Accessing the Reachability Analysis Interface
+
 To access the reachability analysis environment, the following steps are required:
 
-1. Run MonaLisa and import the model file.
-2. Show Petri net and navigate to the "Analysis".
-3. Select "Place Invariants" and click "Compute Invariants".
-4. Click "Reachability" to open the reachability analysis interface.
-5. In the "Reachability" interface, click "Stochastic PN Setting" to open the parameter configuration panel.
+1. Run the executable JAR file `MonaLisa.jar` from the `dist/` directory.
+2. Import the model file from the `experiments_setup/` folder.
+3. Show Petri net and navigate to the "Analysis".
+4. Select "Place Invariants" and click "Compute Invariants".
+5. Click "Reachability" to open the reachability analysis interface.
+6. In the "Reachability" interface, click "Stochastic PN Setting" to import the parameter file from `experiments_setup/`.
 
 All subsequent experiments and algorithm executions are performed within the "Reachability" interface.
 
 Within the "Reachability" interface:
 
 - Initial marking and target marking can be configured directly.
-- Stochastic reaction constants must be configured in the "Stochastic PN Setting" panel.
+<!-- - Stochastic reaction constants must be configured in the "Stochastic PN Setting" panel. -->
 
 Within the "Stochastic PN Setting" interface:
 
@@ -29,23 +70,6 @@ This study uses two Petri net models and one parameter file:
 - cyclic_model.xml
 - parameters.xml  
 <!-- All files are provided in the "experiments_setup" folder of the repository. -->
-
-### Project Directory Structure
-
-The MonaLisa repository is structured as follows:
-```
-(parent directory)
-├── MonaLisa/                (GitHub repository)
-│   ├──experiments_setup/    (models, parameters, and experiment scripts)
-│   │   ├──analysis_scripts/ (experiment scripts)
-│   │   ├── cyclic_model.xml
-│   │   ├── acyclic_model.xml
-│   │   ├── parameters.xml
-│   ├── src/                 (modified MonaLisa source code)
-│   ├── ...
-│
-├── output/                  (runtime-generated, NOT included in repository)
-```
 
 ## Figure 6: State Space Analysis
 

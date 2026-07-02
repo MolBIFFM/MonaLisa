@@ -47,15 +47,16 @@ To access the reachability analysis environment, the following steps are require
 1. Run the executable JAR file `MonaLisa.jar` from the `dist/` directory.
 2. Import the model file from the `experiments_setup/` folder.
 3. Show Petri net and navigate to the "Analysis".
-4. Select "Place Invariants" and click "Compute Invariants".
+4. Select "Place Invariants" and click "Compute Invariants"(required to enable reachability analysis).
 5. Click "Reachability" to open the reachability analysis interface.
 6. In the "Reachability" interface, click "Stochastic PN Setting" to import the parameter file from `experiments_setup/`.
 
-All subsequent experiments and algorithm executions are performed within the "Reachability" interface.
+All subsequent experiments and algorithm executions are performed within the "Reachability" interface. The reachability interface becomes available only after computing place invariants, as required by the underlying framework design [30].
 
 Within the "Reachability" interface:
 
-- Initial marking and target marking can be configured directly.
+- The initial marking can be configured via the "Starting Token Amount" column.
+- The target marking can be configured via the "Target Token Amount" column.
 <!-- - Stochastic reaction constants must be configured in the "Stochastic PN Setting" panel. -->
 
 Within the "Stochastic PN Setting" interface:
@@ -70,6 +71,18 @@ This study uses two Petri net models and one parameter file:
 - cyclic_model.xml
 - parameters.xml  
 <!-- All files are provided in the "experiments_setup" folder of the repository. -->
+
+### Running the Analysis Scripts
+
+The Python scripts used for figure reproduction can be executed using:
+
+```bash
+python fig_x.py
+```
+
+where `fig_x.py` corresponds to the script associated with each figure.
+
+Ensure that Python is installed and that all required data files are prepared as described in the corresponding sections before running the scripts.
 
 ## Figure 6: State Space Analysis
 
@@ -90,6 +103,11 @@ After each modification, the following steps are executed:
 
 - Click "Stochastic Reachability Graph"<br>
 - Click "Stochastic Reachability Path"
+
+The generated output files are:
+
+- `fullreach.csv` (reachability graph results)
+- `fullpath.csv` (reachability path results)
 
 All output files are stored in the default `output` directory.
 
@@ -112,7 +130,34 @@ For the cyclic model, an additional step is required:
 Each result file contains a field `Stored`, indicating the number of stored markings.<br>
 This value is used as input for the Python script `fig_6.py`, which reconstructs Figure 6.
 
-The `Probability` column from reachability graph results is treated as the reference total probability for all subsequent analyses.
+The results are mapped to fixed array positions in `fig_6.py`:
+
+- index 0–9 correspond to `SalMediumStart = 1–10`
+- missing values are set to `NaN`
+
+Arrays:
+- `tree_1`, `graph_1`: cyclic model
+- `tree_2`, `graph_2`: acyclic model
+
+The `Probability` column from reachability graph results is used as the reference total probability for all subsequent analyses.
+
+**note**
+
+For some initial markings, the reachability tree may grow very large. In such cases, the node counter displayed in the "Reachability" interface can be used as input data.
+
+Following the experimental setting in the thesis, a threshold of 120,000 nodes is applied:
+
+- If the node counter exceeds 120,000, manually stop the computation by clicking "Stop computation".
+- In this case, the corresponding result is not recorded and used as input data.
+
+In addition, for cases where the node counter remains below the threshold but is still very large:
+
+- The interface may become unresponsive during CSV file writing.
+- In this situation, record the node counter value directly.
+- The "Reachability" interface can then be safely closed without waiting for the file export to complete.
+
+Only results within the threshold are retained for further analysis and used in `fig_6.py`.
+
 
 ## Figure 7: Comparative Analysis of Stochastic Dijkstra and A*
 Figure 7 is conducted using the acyclic model `acyclic_model.xml` and the parameter file `parameters.xml`.
